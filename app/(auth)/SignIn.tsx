@@ -23,9 +23,9 @@ export default function SignIn() {
   async function handleSubmit() {
     try {
       const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
+        auth,
+        email,
+        password
       );
       console.log(userCredential.user);
       signIn();
@@ -73,11 +73,11 @@ export default function SignIn() {
             >
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
-            <Link asChild href={"/SignUp"}>
-              <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
+            <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
+              <Link asChild href={"/SignUp"}>
                 <Text style={styles.buttonText}>Sign Up</Text>
-              </Pressable>
-            </Link>
+              </Link>
+            </Pressable>
           </View>
         </KeyboardAvoidingView>
       </View>

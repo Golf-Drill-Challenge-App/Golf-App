@@ -11,7 +11,7 @@ import { KeyboardAvoidingView, StyleSheet } from "react-native";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
-import SelectorButton from "../../components/SelectorButton";
+import { Link } from "expo-router";
 
 export default function SignUp() {
   const accentColor = useThemeColor({}, "accent");
@@ -45,7 +45,6 @@ export default function SignUp() {
 
   return (
       <View style={styles.container}>
-        <KeyboardAvoidingView behavior="padding">
           <View style={styles.section}>
             <Image
                 style={styles.image}
@@ -57,6 +56,7 @@ export default function SignUp() {
               Oregon State Golf
             </Text>
           </View>
+          <KeyboardAvoidingView behavior="padding">
           <View style={styles.section}>
             <TextInput
                 autoCapitalize="none"
@@ -96,6 +96,11 @@ export default function SignUp() {
                 onPress={handleSubmit}
             >
               <Text style={styles.buttonText}>Submit</Text>
+            </Pressable>
+            <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
+              <Link asChild href={"/SignIn"}>
+                <Text style={styles.buttonText}>Back to SignIn</Text>
+              </Link>
             </Pressable>
           </View>
         </KeyboardAvoidingView>
