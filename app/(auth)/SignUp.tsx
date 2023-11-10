@@ -32,9 +32,9 @@ export default function SignUp() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
+        auth,
+        email,
+        password
       );
       console.log(userCredential.user);
       signIn();
