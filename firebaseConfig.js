@@ -23,8 +23,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {
-  persistence: reactNativeLocalPersistence
-})
+  persistence: reactNativeLocalPersistence,
+});
 const storage = getStorage(app);
 const db = getFirestore(app);
 

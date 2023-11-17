@@ -23,7 +23,6 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
-
   async function handleSubmit() {
     if (password !== passwordCheck) {
       alert("passwords don't match");
@@ -44,67 +43,67 @@ export default function SignUp() {
   }
 
   return (
-      <View style={styles.container}>
-          <View style={styles.section}>
-            <Image
-                style={styles.image}
-                source={require("../../assets/images/appLogo.png")}
-                contentFit="contain"
-                contentPosition="center"
-            />
-            <Text style={[styles.title, { color: accentColor }]}>
-              Oregon State Golf
-            </Text>
-          </View>
-          <KeyboardAvoidingView behavior="padding">
-          <View style={styles.section}>
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="name"
-                onChangeText={setName}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Name"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                onChangeText={setEmail}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Email"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="password-new"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Password"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="password-new"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPasswordCheck}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Confirm Password"
-            />
-            <Pressable
-                style={[styles.button, { backgroundColor: accentColor }]}
-                onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>Submit</Text>
-            </Pressable>
-            <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
-              <Link asChild href={"/SignIn"}>
-                <Text style={styles.buttonText}>Back to SignIn</Text>
-              </Link>
-            </Pressable>
-          </View>
-        </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <View style={styles.section}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/images/appLogo.png")}
+          contentFit="contain"
+          contentPosition="center"
+        />
+        <Text style={[styles.title, { color: accentColor }]}>
+          Oregon State Golf
+        </Text>
       </View>
+      <KeyboardAvoidingView behavior="padding">
+        <View style={styles.section}>
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="name"
+            onChangeText={setName}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Name"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+            onChangeText={setEmail}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Email"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPassword}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Password"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPasswordCheck}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Confirm Password"
+          />
+          <Pressable
+            style={[styles.button, { backgroundColor: accentColor }]}
+            onPress={handleSubmit}
+          >
+            <Text style={styles.buttonText}>Submit</Text>
+          </Pressable>
+          <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
+            <Link asChild href={"/SignIn"}>
+              <Text style={styles.buttonText}>Back to SignIn</Text>
+            </Link>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 

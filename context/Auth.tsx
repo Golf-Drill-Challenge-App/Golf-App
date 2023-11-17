@@ -9,7 +9,8 @@ import React, {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
-type User = { //user type will be stored in a different thing, either in teams or users tables
+type User = {
+  //user type will be stored in a different thing, either in teams or users tables
   name: string;
   email: string;
 };
@@ -52,7 +53,8 @@ export const Provider: React.FC<PropsWithChildren> = ({ children }) => {
 
   useProtectedRoute(user);
 
-  useEffect(() => { //if this code is not in here, it'll run for infinite times
+  useEffect(() => {
+    //if this code is not in here, it'll run for infinite times
     onAuthStateChanged(auth, (user) => {
       console.log("user changed");
 
@@ -63,14 +65,15 @@ export const Provider: React.FC<PropsWithChildren> = ({ children }) => {
         });
       }
     });
-
   }, []);
   return (
     <AuthContext.Provider
       value={{
         user,
-        signIn: () => {return;},
-          // setUser({ name: "Test", email: "test@example.com", type: type }),
+        signIn: () => {
+          return;
+        },
+        // setUser({ name: "Test", email: "test@example.com", type: type }),
         signOut: () => setUser(null),
       }}
     >

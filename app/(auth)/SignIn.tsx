@@ -34,53 +34,53 @@ export default function SignIn() {
     }
   }
   return (
-      <View style={styles.container}>
-        <View style={styles.section}>
-          <Image
-              style={styles.image}
-              source={require("../../assets/images/appLogo.png")}
-              contentFit="contain"
-              contentPosition="center"
-          />
-          <Text style={[styles.title, { color: accentColor }]}>
-            Oregon State Golf
-          </Text>
-        </View>
-        <KeyboardAvoidingView behavior="padding">
-          <View style={styles.section}>
-            {/* TODO: Refactor TextInput into Themed */}
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                onChangeText={setEmail}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Email"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="password-new"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Password"
-            />
-            <Text style={{ alignSelf: "flex-start" }}>Forgot your password?</Text>
-            <Pressable
-                style={[styles.button, { backgroundColor: accentColor }]}
-                onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
-            <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
-              <Link asChild href={"/SignUp"}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </Link>
-            </Pressable>
-          </View>
-        </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <View style={styles.section}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/images/appLogo.png")}
+          contentFit="contain"
+          contentPosition="center"
+        />
+        <Text style={[styles.title, { color: accentColor }]}>
+          Oregon State Golf
+        </Text>
       </View>
+      <KeyboardAvoidingView behavior="padding">
+        <View style={styles.section}>
+          {/* TODO: Refactor TextInput into Themed */}
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+            onChangeText={setEmail}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Email"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPassword}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Password"
+          />
+          <Text style={{ alignSelf: "flex-start" }}>Forgot your password?</Text>
+          <Pressable
+            style={[styles.button, { backgroundColor: accentColor }]}
+            onPress={handleSubmit}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </Pressable>
+          <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
+            <Link asChild href={"/SignUp"}>
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </Link>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
