@@ -9,14 +9,13 @@ import React, {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
-type User = {
-  type: "coach" | "player";
+type User = { //user type will be stored in a different thing, either in teams or users tables
   name: string;
   email: string;
 };
 
 const AuthContext = createContext<{
-  signIn: (type: User["type"]) => void;
+  signIn: () => void;
   signOut: () => void;
   user: User | null;
 }>({
@@ -53,23 +52,24 @@ export const Provider: React.FC<PropsWithChildren> = ({ children }) => {
 
   useProtectedRoute(user);
 
-  onAuthStateChanged(auth, (user) => {
-    console.log("user changed");
+  useEffect(() => { //if this code is not in here, it'll run for infinite times
+    onAuthStateChanged(auth, (user) => {
+      console.log("user changed");
 
-    if (user) {
-      setUser({
-        name: user.displayName ?? "Error",
-        email: user.email ?? "Error@email.com",
-        type: "coach",
-      });
-    }
-  });
+      if (user) {
+        setUser({
+          name: user.displayName ?? "Error",
+          email: user.email ?? "Error@email.com",
+        });
+      }
+    });
 
+  }, []);
   return (
     <AuthContext.Provider
       value={{
         user,
-        signIn: (type) => {return;},
+        signIn: () => {return;},
           // setUser({ name: "Test", email: "test@example.com", type: type }),
         signOut: () => setUser(null),
       }}
