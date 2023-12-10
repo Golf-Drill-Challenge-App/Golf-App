@@ -46,6 +46,12 @@ Cross Platform Mobile app for the OSU Men's Golf Team.
 - `npm run format`
   - Run Prettier script to reformat code (standardize indents etc)
 
+### App Compilation Troubleshooting
+
+- Hot Reload should be enabled by default, but ocassionally you may run into bugs where the app won't connect. Particularly if you have run the Expo Go app on your physical phone awhile ago
+- [See instructions here](https://docs.expo.dev/debugging/tools/#developer-menu) for how to open dev menu to refresh app manually
+  - Debug menu should look something like [this](https://media.discordapp.net/attachments/1018323831468851202/1183520198486130699/image.png?ex=6588a214&is=65762d14&hm=95ef60ae26f1b3dc93891d1f898557f9b065904ec56e996bce7d1e208945c1b4&=&format=webp&quality=lossless&width=311&height=670)
+
 ## Tech Stack
 
 - [React Native](https://reactnative.dev/)
