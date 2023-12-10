@@ -10,7 +10,7 @@ import {
 } from "../../components/Themed";
 import { useAuth } from "../../context/Auth";
 
-// renamed signOut to signOutFireBase to avoid confusion with signOut in AuthContext
+// renamed signOut to signOutFireBase to avoid confusion with signOut from useAuth
 import { signOut as signoutFireBase } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 
