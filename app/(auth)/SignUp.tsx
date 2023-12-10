@@ -7,11 +7,12 @@ import {
 } from "../../components/Themed";
 import { Image } from "expo-image";
 import { useAuth } from "../../context/Auth";
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { Link } from "expo-router";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function SignUp() {
   const accentColor = useThemeColor({}, "accent");
@@ -55,8 +56,8 @@ export default function SignUp() {
           Oregon State Golf
         </Text>
       </View>
-      <KeyboardAvoidingView behavior="padding">
-        <View style={styles.section}>
+      <View style={styles.section}>
+        <KeyboardAwareScrollView>
           <TextInput
             autoCapitalize="none"
             autoComplete="name"
@@ -101,8 +102,8 @@ export default function SignUp() {
               <Text style={styles.buttonText}>Back to SignIn</Text>
             </Link>
           </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 }
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
   section: {
     height: "50%",
     width: "85%",
+    maxWidth: "85%",
     alignItems: "center",
     justifyContent: "center",
   },
