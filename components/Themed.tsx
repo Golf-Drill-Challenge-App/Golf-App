@@ -96,7 +96,13 @@ export function TextInput(props: TextInputProps) {
     <DefaultTextInput
       placeholderTextColor={textColor + "8"}
       style={[
-        { backgroundColor, padding: 8, borderRadius: 8, fontSize: 16, fontFamily: "Karma" },
+        {
+          backgroundColor,
+          padding: 8,
+          borderRadius: 8,
+          fontSize: 16,
+          fontFamily: "Karma",
+        },
         style,
       ]}
       {...otherProps}

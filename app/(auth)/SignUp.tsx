@@ -7,11 +7,12 @@ import {
 } from "../../components/Themed";
 import { Image } from "expo-image";
 import { useAuth } from "../../context/Auth";
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { Link } from "expo-router";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function SignUp() {
   const accentColor = useThemeColor({}, "accent");
@@ -22,7 +23,6 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-
 
   async function handleSubmit() {
     if (password !== passwordCheck) {
@@ -44,67 +44,67 @@ export default function SignUp() {
   }
 
   return (
-      <View style={styles.container}>
-          <View style={styles.section}>
-            <Image
-                style={styles.image}
-                source={require("../../assets/images/appLogo.png")}
-                contentFit="contain"
-                contentPosition="center"
-            />
-            <Text style={[styles.title, { color: accentColor }]}>
-              Oregon State Golf
-            </Text>
-          </View>
-          <KeyboardAvoidingView behavior="padding">
-          <View style={styles.section}>
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="name"
-                onChangeText={setName}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Name"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                onChangeText={setEmail}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Email"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="password-new"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Password"
-            />
-            <TextInput
-                autoCapitalize="none"
-                autoComplete="password-new"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPasswordCheck}
-                style={[{ color: textColor }, styles.input]}
-                placeholder="Confirm Password"
-            />
-            <Pressable
-                style={[styles.button, { backgroundColor: accentColor }]}
-                onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>Submit</Text>
-            </Pressable>
-            <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
-              <Link asChild href={"/SignIn"}>
-                <Text style={styles.buttonText}>Back to SignIn</Text>
-              </Link>
-            </Pressable>
-          </View>
-        </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <View style={styles.section}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/images/appLogo.png")}
+          contentFit="contain"
+          contentPosition="center"
+        />
+        <Text style={[styles.title, { color: accentColor }]}>
+          Oregon State Golf
+        </Text>
       </View>
+      <View style={styles.section}>
+        <KeyboardAwareScrollView>
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="name"
+            onChangeText={setName}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Name"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+            onChangeText={setEmail}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Email"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPassword}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Password"
+          />
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPasswordCheck}
+            style={[{ color: textColor }, styles.input]}
+            placeholder="Confirm Password"
+          />
+          <Pressable
+            style={[styles.button, { backgroundColor: accentColor }]}
+            onPress={handleSubmit}
+          >
+            <Text style={styles.buttonText}>Submit</Text>
+          </Pressable>
+          <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
+            <Link asChild href={"/SignIn"}>
+              <Text style={styles.buttonText}>Back to SignIn</Text>
+            </Link>
+          </Pressable>
+        </KeyboardAwareScrollView>
+      </View>
+    </View>
   );
 }
 
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   section: {
     height: "50%",
     width: "85%",
+    maxWidth: "85%",
     alignItems: "center",
     justifyContent: "center",
   },
