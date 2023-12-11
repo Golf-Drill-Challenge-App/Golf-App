@@ -1,4 +1,5 @@
-import { KeyboardAvoidingView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Pressable,
   Text,
@@ -46,8 +47,8 @@ export default function SignIn() {
           Oregon State Golf
         </Text>
       </View>
-      <KeyboardAvoidingView behavior="padding">
-        <View style={styles.section}>
+      <View style={styles.section}>
+        <KeyboardAwareScrollView>
           {/* TODO: Refactor TextInput into Themed */}
           <TextInput
             autoCapitalize="none"
@@ -78,8 +79,8 @@ export default function SignIn() {
               <Text style={styles.buttonText}>Sign Up</Text>
             </Link>
           </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+      </View>
     </View>
   );
 }
