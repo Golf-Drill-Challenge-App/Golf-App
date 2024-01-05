@@ -1,3 +1,12 @@
+// see console warning (after updating dependencies): You are initializing Firebase Auth for React Native without providing
+// AsyncStorage... In order to persist auth state, install the package "@react-native-async-storage/async-storage" and
+// provide it to initializeAuth:
+
+// see console warning (after updating dependencies): The <SplashScreen /> component is deprecated. Use
+// `SplashScreen.preventAutoHideAsync()` and `SplashScreen.hideAsync` from `expo-router` instead.
+
+// both ignorable for now but could be good idea to update in future
+
 import { useRouter, useSegments } from "expo-router";
 import React, {
   PropsWithChildren,

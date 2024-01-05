@@ -6,14 +6,31 @@ Cross Platform Mobile app for the OSU Men's Golf Team.
 
 ### Install dependencies
 
-- `npm i`
+- `npm install --global yarn`
+- `yarn`
+  - yarn seems to play nicer with peer-dependency conflicts? Not sure
+
+### Dependency Debugging
+
+#### Expo
+
+- `npx expo install --fix`
+- https://docs.expo.dev/more/expo-cli/
+
+#### NodeJS
+
+NodeJS Version if it matters: 18.18.2
+Install specific NodeJS versions with nvm:
+
+- [nvm for MacOS / Linux](https://github.com/nvm-sh/nvm)
+- [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 
 ### Running App on a Physical Mobile Device
 
 - Install Expo Go mobile app to run the app dev build
   - [iOS](https://apps.apple.com/us/app/expo-go/id982107779)
   - [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US)
-- `npm run start`
+- `yarn start`
   - Run app, scan QR code on physical phone
 
 ### Running App on Android Emulator (on Windows PC)
@@ -25,25 +42,25 @@ Cross Platform Mobile app for the OSU Men's Golf Team.
 - Command to run Android Emulator:
   - `C:\Users\<username>\AppData\Local\Android\Sdk\emulator\emulator -avd <emulated phone name> -feature -Vulkan`
     - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulator\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
-- `npm run android` to run the app
+- `yarn android` to run the app
 
 ### Running App in iOS Emulator (on MacOS PC)
 
 - Note that Expo Go will be automatically installed on the emulated mobile device for you
 - Documentation: https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device
 - Should be more straightforwards than Android, you shouldn't need to use command line to open iOS emulator
-- `npm run ios` to run the app
+- `yarn ios` to run the app
 
 ### Run App as a Website
 
-- `npm run starttunnel`
+- `yarn starttunnel`
   - Go to http://localhost:19000 (default option) in browser
   - Styling may be a little wonky vs on phone, but might help for some CSS debugging with Inspect Element
   - Probably a better option for opening the app as a webpage in PC browser, due to [tunnelling](https://docs.expo.dev/more/expo-cli/?redirected#tunneling)
 
 ### Formatting Script
 
-- `npm run format`
+- `yarn format`
   - Run Prettier script to reformat code (standardize indents etc)
 
 ### App Compilation Troubleshooting

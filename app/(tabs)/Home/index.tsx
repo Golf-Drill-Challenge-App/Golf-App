@@ -20,6 +20,11 @@ const MenuOptions = [
     title: "Progress",
     icon: require("../../../assets/icons/progressIcon.png"),
   },
+  {
+    href: "/Home/GraphTest/GraphTest",
+    title: "Graph Test",
+    icon: require("../../../assets/icons/progressIcon.png"),
+  },
 ];
 
 export default function Home() {
@@ -45,10 +50,16 @@ export default function Home() {
         darkColor="rgba(255,255,255,0.1)"
       />
       {MenuOptions.map(({ href, title, icon }, i) => (
+        // Something with <Link> and refs (href) is different in updated expo-router dependency I think
+        // (applicable to signin page too, and maybe any other place <Link> and props are passed to inner component)
+        // "ERROR  Warning: Function components cannot be given refs.Attempts to access this ref will fail."
+        // Should be safe to ignore
         <Link href={href} key={i} asChild>
           <PageButton>
             <Image
-              style={[styles.icons, { tintColor: color }]}
+              // After updating dependencies, "{ tintColor: color }" in style prop somehow made the icons invisible on light mode,
+              // so I removed it
+              style={styles.icons}
               contentFit="contain"
               contentPosition="center"
               source={icon}
