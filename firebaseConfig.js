@@ -1,6 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import {
+  initializeAuth,
+  getReactNativePersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -23,9 +27,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-});
+
+// Fix for starttunnel: https://github.com/firebase/firebase-js-sdk/issues/7584#issuecomment-1758588904
+const persistence =
+  Platform.OS === "web"
+    ? browserSessionPersistence
+    : getReactNativePersistence(ReactNativeAsyncStorage);
+const auth = initializeAuth(app, { persistence });
 const storage = getStorage(app);
 const db = getFirestore(app);
 
