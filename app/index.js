@@ -1,25 +1,16 @@
-import { Link, Redirect } from "expo-router";
-import { useState } from "react";
-import { PaperProvider, Text } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
-//This is the root file
-export default function Index() {
-  const [signedIn, setSignedin] = useState(true);
-  return (
-    <PaperProvider>
-      <SafeAreaView
-        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        {signedIn ? (
-          <Redirect href={"/content"} />
-        ) : (
-          <Text>Open up App.js to start working on your app!</Text>
-        )}
+import React from 'react';
+import { GluestackUIProvider, Text, Box } from "@gluestack-ui/themed"
+import { config } from "@gluestack-ui/config"
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-        <Text>Open up App.js to start working on your app!</Text>
-        <Link href={"/content"}>go to content</Link>
-        <Link href={"/drill/1234"}>/drill/1234 slug</Link>
-      </SafeAreaView>
-    </PaperProvider>
-  );
+export default function Index() {
+    return (
+        <GluestackUIProvider config={config}>
+            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Box>
+                    <Text>Open up App.js to start working on your app!</Text>
+                </Box>
+            </SafeAreaView>
+        </GluestackUIProvider>
+    );
 }
