@@ -1,25 +1,9 @@
 import { useRouter, useSegments } from "expo-router";
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
-type User = {
-  //user type will be stored in a different thing, either in teams or users tables
-  name: string;
-  email: string;
-};
-
-const AuthContext = createContext<{
-  signIn: () => void;
-  signOut: () => void;
-  user: User | null;
-}>({
+const AuthContext = createContext({
   signIn() {
     return;
   },
@@ -33,7 +17,7 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-function useProtectedRoute(user: object | null) {
+function useProtectedRoute(user) {
   const segments = useSegments();
   const router = useRouter();
 
@@ -48,8 +32,8 @@ function useProtectedRoute(user: object | null) {
   }, [user, segments]);
 }
 
-export const Provider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const Provider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
   useProtectedRoute(user);
 

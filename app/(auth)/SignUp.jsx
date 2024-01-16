@@ -1,29 +1,28 @@
-import { StyleSheet } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Pressable,
-  Text,
-  View,
-  TextInput,
-  useThemeColor,
-} from "../../components/Themed";
-import { useAuth } from "../../context/Auth";
 import { Image } from "expo-image";
-import { Link } from "expo-router";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import { useAuth } from "../../context/Auth";
+import { StyleSheet, Pressable, Text, TextInput, View } from "react-native";
 import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
+import { Link } from "expo-router";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-export default function SignIn() {
+export default function SignUp() {
   const { signIn } = useAuth();
-  const accentColor = useThemeColor({}, "accent");
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const textColor = useThemeColor({}, "text");
+  const [passwordCheck, setPasswordCheck] = useState("");
 
   async function handleSubmit() {
+    if (password !== passwordCheck) {
+      alert("passwords don't match");
+      return;
+    }
+
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
@@ -34,6 +33,7 @@ export default function SignIn() {
       console.error("Error signing user up:", e);
     }
   }
+
   return (
     <View style={styles.container}>
       <View style={styles.section}>
@@ -43,19 +43,23 @@ export default function SignIn() {
           contentFit="contain"
           contentPosition="center"
         />
-        <Text style={[styles.title, { color: accentColor }]}>
-          Oregon State Golf
-        </Text>
+        <Text style={[styles.title]}>Oregon State Golf</Text>
       </View>
       <View style={styles.section}>
         <KeyboardAwareScrollView>
-          {/* TODO: Refactor TextInput into Themed */}
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="name"
+            onChangeText={setName}
+            style={[styles.input]}
+            placeholder="Name"
+          />
           <TextInput
             autoCapitalize="none"
             autoComplete="email"
             autoCorrect={false}
             onChangeText={setEmail}
-            style={[{ color: textColor }, styles.input]}
+            style={[styles.input]}
             placeholder="Email"
           />
           <TextInput
@@ -64,19 +68,24 @@ export default function SignIn() {
             autoCorrect={false}
             secureTextEntry={true}
             onChangeText={setPassword}
-            style={[{ color: textColor }, styles.input]}
+            style={[styles.input]}
             placeholder="Password"
           />
-          <Text style={{ alignSelf: "flex-start" }}>Forgot your password?</Text>
-          <Pressable
-            style={[styles.button, { backgroundColor: accentColor }]}
-            onPress={handleSubmit}
-          >
-            <Text style={styles.buttonText}>Login</Text>
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPasswordCheck}
+            style={[styles.input]}
+            placeholder="Confirm Password"
+          />
+          <Pressable style={[styles.button]} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Submit</Text>
           </Pressable>
-          <Pressable style={[styles.button, { backgroundColor: accentColor }]}>
-            <Link asChild href={"/SignUp"}>
-              <Text style={styles.buttonText}>Sign Up</Text>
+          <Pressable style={[styles.button]}>
+            <Link asChild href={"/SignIn"}>
+              <Text style={styles.buttonText}>Back to SignIn</Text>
             </Link>
           </Pressable>
         </KeyboardAwareScrollView>
@@ -94,6 +103,7 @@ const styles = StyleSheet.create({
   section: {
     height: "50%",
     width: "85%",
+    maxWidth: "85%",
     alignItems: "center",
     justifyContent: "center",
   },
