@@ -1,6 +1,5 @@
 import React from "react";
-import { GluestackUIProvider, Text, Box } from "@gluestack-ui/themed";
-import { config } from "@gluestack-ui/config";
+import { PaperProvider, Text, MD3LightTheme } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Pressable } from "react-native";
 import { signOut as signoutFireBase } from "firebase/auth";
@@ -10,24 +9,20 @@ import { useAuth } from "../../context/Auth";
 export default function Index() {
   const { signOut } = useAuth();
   return (
-    <GluestackUIProvider config={config}>
+    <PaperProvider theme={MD3LightTheme}>
       <SafeAreaView
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <Box>
-          <Text>Open up App.js to start working on your app!</Text>
-        </Box>
-        <Box>
-          <Pressable
-            onPress={() => {
-              signoutFireBase(auth);
-              signOut();
-            }}
-          >
-            <Text> Sign Out </Text>
-          </Pressable>
-        </Box>
+        <Text>Open up App.js to start working on your app!</Text>
+        <Pressable
+          onPress={() => {
+            signoutFireBase(auth);
+            signOut();
+          }}
+        >
+          <Text> Sign Out </Text>
+        </Pressable>
       </SafeAreaView>
-    </GluestackUIProvider>
+    </PaperProvider>
   );
 }
