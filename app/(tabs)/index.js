@@ -2,14 +2,12 @@ import { Text, View, StyleSheet, Pressable } from "react-native";
 import { signOut as signoutFireBase } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useAuth } from "../../context/Auth";
-import { Link } from "expo-router";
 
-export default function Home() {
+export default function index() {
   const { signOut } = useAuth();
   return (
     <View style={styles.container}>
       <Text>Home</Text>
-      <Link href="/TestPage">Click here to go to Test Page</Link>
       <Pressable
         style={[styles.button]}
         onPress={() => {
