@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { useAuth } from "../../context/Auth";
 import { StyleSheet, Pressable, Text, TextInput, View } from "react-native";
 import { useState } from "react";
@@ -37,12 +36,6 @@ export default function SignUp() {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Image
-          style={styles.image}
-          source={require("../../assets/images/appLogo.png")}
-          contentFit="contain"
-          contentPosition="center"
-        />
         <Text style={[styles.title]}>Oregon State Golf</Text>
       </View>
       <View style={styles.section}>
@@ -122,7 +115,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: "white",
+    color: "black",
     paddingVertical: 8,
     paddingHorizontal: 35,
   },

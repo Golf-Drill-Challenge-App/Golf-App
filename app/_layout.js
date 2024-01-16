@@ -21,8 +21,6 @@ export default function RootLayout() {
       try {
         // Pre-load fonts, make any API calls you need to do here
         await Font.loadAsync({
-          SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-          Karma: require("../assets/fonts/Karma-Regular.ttf"),
           ...FontAwesome.font,
         });
       } catch (e) {
