@@ -28,12 +28,6 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Image
-          style={styles.image}
-          source={require("../../assets/images/appLogo.png")}
-          contentFit="contain"
-          contentPosition="center"
-        />
         <Text style={[styles.title]}>Oregon State Golf</Text>
       </View>
       <View style={styles.section}>
