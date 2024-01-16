@@ -1,40 +1,33 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import React from "react";
+import { GluestackUIProvider, Text, Box } from "@gluestack-ui/themed";
+import { config } from "@gluestack-ui/config";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Pressable } from "react-native";
 import { signOut as signoutFireBase } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useAuth } from "../../context/Auth";
 
-export default function index() {
+export default function Index() {
   const { signOut } = useAuth();
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-      <Pressable
-        style={[styles.button]}
-        onPress={() => {
-          signoutFireBase(auth);
-          signOut();
-        }}
+    <GluestackUIProvider config={config}>
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <Text> Sign Out </Text>
-      </Pressable>
-    </View>
+        <Box>
+          <Text>Open up App.js to start working on your app!</Text>
+        </Box>
+        <Box>
+          <Pressable
+            onPress={() => {
+              signoutFireBase(auth);
+              signOut();
+            }}
+          >
+            <Text> Sign Out </Text>
+          </Pressable>
+        </Box>
+      </SafeAreaView>
+    </GluestackUIProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  button: {
-    borderRadius: 12,
-    marginVertical: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "white",
-    paddingVertical: 8,
-    paddingHorizontal: 35,
-  },
-});
