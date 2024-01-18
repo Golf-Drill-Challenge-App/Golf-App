@@ -1,13 +1,16 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PaperProvider, Text } from 'react-native-paper';
+import { Provider as PaperProvider, Text } from 'react-native-paper';
+import NavigationBar from './NavigationBar';
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function Index() {
     return (
         <PaperProvider>
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>Open up App.js to start working on your app!</Text>
-            </SafeAreaView>
+            <NavigationContainer independent={true}>
+                <NavigationBar />
+            </NavigationContainer>
+
         </PaperProvider>
     );
 }

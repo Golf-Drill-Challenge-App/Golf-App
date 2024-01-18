@@ -1,4 +1,4 @@
-import {Stack} from "expo-router";
+import { Stack } from "expo-router";
 
 export default function RootLayoutNav() {
     return (
@@ -8,7 +8,7 @@ export default function RootLayoutNav() {
                     headerShown: false,
                 }}
             >
-                <Stack.Screen name="index"/>
+                <Stack.Screen name="index" />
             </Stack>
         </>
     );
