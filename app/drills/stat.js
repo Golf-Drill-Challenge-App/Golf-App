@@ -7,17 +7,25 @@ import {useWindowDimensions} from 'react-native';
 import * as scale from 'd3-scale';
 import * as shape from 'd3-shape';
 import {clampNumber} from "../../Utility";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const data = [-2,4,-3,-3,-8,9,-10,1,-6,4,-8,3,-3,6,10,-5,-8,-8,-5,4,5,-8,5,-7,-8,7,-7,8,1,1,6,10,-10,-8,2,2,-7,3,-3,10,9,0,-5,-8,-7,4,-6,2,-4,3,-7,8,7,-10,-9,2,-10,-8,-7,-4,-4,0,-4,-2,-8,-10,9,-5,-4,10,8,-6,-9,1,-7,-8,5,-7,9,-10,-5,-7,6,0,-3,6,-2,-6,5,-3,-1,6,-9,-1,10,6,-1,-5,-4,8]
 
 export default function Stat() {
     const [scrollPosition, setScrollPosition] = useState(0)
     const [movingAvgRange, setMovingAvgRange] = useState(5)
+    const [movingAvgRangeValues, setMovingAvgRangeValues] = useState([
+        {label: "3" ,value: 3},
+        {label: "5" ,value: 5},
+        {label: "10" ,value: 10},
+        {label: "15" ,value: 15},
+    ])
+    const [movingAvgRangeDropdownOpen, setMovingAvgRangeDropdownOpen] = useState(false)
+    const [movingAvgRangeDropdownOpen2, setMovingAvgRangeDropdownOpen2] = useState(false)
     const {width} = useWindowDimensions()
     const fill = 'rgb(134, 65, 244)'
     const [selected, setSelected] = useState(data.length - 1)
     const scrollViewRef = useRef();
-    const [selector1, setSelector1] = useState("1")
 
     const barWidth = 50
 
@@ -58,7 +66,7 @@ export default function Stat() {
         (value, index) => (
             (index + 1) >= movingAvgRange ? data.slice(index - movingAvgRange + 1, index + 1).reduce((a, b) => a + b, 0) / movingAvgRange : 0))
 
-    console.log(processedData)
+    // console.log(processedData)
 
     // Calculate scales
     const scaleY = scale.scaleLinear()
@@ -87,6 +95,31 @@ export default function Stat() {
     return (
         <SafeAreaView>
             <Text>Open up App.js to start working on your app!asef</Text>
+            <View style={{
+                zIndex: 99,
+                flexDirection:"row"
+            }}>
+                <DropDownPicker
+                    setValue={setMovingAvgRange}
+                    value={movingAvgRange}
+                    items={movingAvgRangeValues}
+                    open={movingAvgRangeDropdownOpen}
+                    setOpen={setMovingAvgRangeDropdownOpen}
+                    containerStyle={{width: 100}}
+                style={{
+                    width: 100
+                }}/>
+                <DropDownPicker
+                    setValue={setMovingAvgRange}
+                    value={movingAvgRange}
+                    items={movingAvgRangeValues}
+                    open={movingAvgRangeDropdownOpen2}
+                    setOpen={setMovingAvgRangeDropdownOpen2}
+                    containerStyle={{width: 100}}
+                    style={{
+                        width: 100
+                    }}/>
+            </View>
             <View>
                 <YAxis
                     data={data}
