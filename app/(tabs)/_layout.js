@@ -9,6 +9,7 @@ export default function RootLayoutNav() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen name="drills" />
       </Stack>
     </>
   );

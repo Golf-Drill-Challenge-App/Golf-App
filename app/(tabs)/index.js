@@ -5,6 +5,7 @@ import { Pressable } from "react-native";
 import { signOut as signoutFireBase } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useAuth } from "../../context/Auth";
+import { Link } from 'expo-router';
 
 export default function Index() {
   const { signOut } = useAuth();
@@ -22,6 +23,7 @@ export default function Index() {
         >
           <Text> Sign Out </Text>
         </Pressable>
+        <Link href = "/drills">Drills</Link>
       </SafeAreaView>
     </PaperProvider>
   );
