@@ -1,0 +1,96 @@
+{
+  "users": [
+    {
+      "uid": "1", //all ids must be a string
+      "email": "john.doe@gmail.com",
+      "teams": [ //just in case there's a billion teams and lookup is slow
+        {
+          "tid": "1",
+          "name": "Team 1"
+        },
+        {
+          "tid": "2",
+          "name": "Team 2"
+        }
+      ]
+    },
+    {
+      "uid": "2",
+      "email": "doe.john@gmail.com",
+      "teams": [
+        {
+          "tid": "1",
+          "name": "Team 1"
+        }
+      ]
+    }
+  ],
+  "teams": [
+    {
+      "tid": "1",
+      "name": "Team 1",
+      "users": [
+        {
+          "uid": "1", //correspond with users list above
+          "name": "John Doe", //putting name here allows different names for different teams
+          "role": "owner", //creator and only person who can delete a team. Value can be "owner", "coach", or "student"
+          "pfp": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw2RRsjaQh-Xim5xBxZtZOH5&ust=1705254265605000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODT36j12oMDFQAAAAAdAAAAABAD",
+          "history": {
+            "732489": [ //which drill
+              { //one attempt
+                "time": 1705166892, //unix time stamp
+                "strokesGained": 3, //and other stats
+                "attempts": [
+                  {
+                    "aid": 1,
+                    "distance": 45,
+                    "sideLanding": 3
+                  },
+                  {
+                    "aid": 2,
+                    "distance": 45,
+                    "sideLanding": 3
+                  }
+                ]
+              },
+              { //2nd attempt
+                "time": 1705166999, //unix time stamp
+                "strokesGained": 3, //and other stats
+                "attempts": [
+                  {
+                    "aid": 1,
+                    "distance": 45,
+                    "sideLanding": 3
+                  },
+                  {
+                    "aid": 2,
+                    "distance": 45,
+                    "sideLanding": 3
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "uid": "2"
+        }
+      ],
+      "drills": [
+        {
+          "did": "732489", //drill id
+          "drillType": "20 Shot Challenge",
+          "spec": "50ft - 150ft",
+          "shotType": "arg",
+          "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+          "inputs": { //I'm down to changing this to a list of inputs (["distance", "sideLanding", etc.]) instead of this true false toggle
+            "distance": true,
+            "sideLanding": true,
+            "strokes": false,
+            "reps": 20
+          }
+        }
+      ]
+    }
+  ]
+}
