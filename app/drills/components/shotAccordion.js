@@ -12,7 +12,7 @@ function ShotAccordion(props) {
                     justifyContent: 'space-between',
                     alignSelf: 'stretch',
                 }}>
-                    <Text><Text style={{fontWeight: "bold"}}>Shot: {props.shot["sid"]}/</Text>20</Text>
+                    <Text><Text style={{fontWeight: "bold"}}>Shot: {props.shot["sid"]}/</Text>{props.total}</Text>
                     <Text><Text style={{fontWeight: "bold"}}>Target:</Text> {props.shot["target"]} yd</Text>
                     <Text><Text style={{fontWeight: "bold"}}>SG:</Text> {numTrunc(props.shot["strokesGained"])}</Text>
                 </View>
