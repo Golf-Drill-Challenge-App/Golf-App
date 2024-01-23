@@ -1,31 +1,37 @@
 import {StatusBar} from 'expo-status-bar';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {BarChart, Grid, YAxis} from "react-native-svg-charts";
 import {Path} from "react-native-svg";
-import {memo, useEffect, useMemo, useRef, useState} from "react";
-import {useWindowDimensions} from 'react-native';
+import React, {useMemo, useRef, useState} from "react";
 import * as scale from 'd3-scale';
 import * as shape from 'd3-shape';
-import {clampNumber} from "../../Utility";
+import {clampNumber, formatDate, numTrunc} from "../../Utility";
 import DropDownPicker from "react-native-dropdown-picker";
 
-const data = [-2,4,-3,-3,-8,9,-10,1,-6,4,-8,3,-3,6,10,-5,-8,-8,-5,4,5,-8,5,-7,-8,7,-7,8,1,1,6,10,-10,-8,2,2,-7,3,-3,10,9,0,-5,-8,-7,4,-6,2,-4,3,-7,8,7,-10,-9,2,-10,-8,-7,-4,-4,0,-4,-2,-8,-10,9,-5,-4,10,8,-6,-9,1,-7,-8,5,-7,9,-10,-5,-7,6,0,-3,6,-2,-6,5,-3,-1,6,-9,-1,10,6,-1,-5,-4,8]
+import drillData from "../../drill_data.json"
+import ShotAccordion from "./components/shotAccordion";
 
 export default function Stat() {
+    const drillDataSorted = drillData.sort((a, b) => a.time - b.time)
+    const data = drillDataSorted.map(value => value["strokesGained"])
+
     const [scrollPosition, setScrollPosition] = useState(0)
     const [movingAvgRange, setMovingAvgRange] = useState(5)
     const [movingAvgRangeValues, setMovingAvgRangeValues] = useState([
-        {label: "3" ,value: 3},
-        {label: "5" ,value: 5},
-        {label: "10" ,value: 10},
-        {label: "15" ,value: 15},
+        {label: "3", value: 3},
+        {label: "5", value: 5},
+        {label: "10", value: 10},
+        {label: "15", value: 15},
     ])
     const [movingAvgRangeDropdownOpen, setMovingAvgRangeDropdownOpen] = useState(false)
-    const [movingAvgRangeDropdownOpen2, setMovingAvgRangeDropdownOpen2] = useState(false)
+
     const {width} = useWindowDimensions()
     const fill = 'rgb(134, 65, 244)'
-    const [selected, setSelected] = useState(data.length - 1)
+    const [selected, setSelected] = useState(0)
     const scrollViewRef = useRef();
+    const scrollViewShotRef = useRef();
+
+    const dateString = formatDate(drillDataSorted[selected]["time"])
 
     const barWidth = 50
 
@@ -37,7 +43,7 @@ export default function Stat() {
         return clampNumber(Math.floor((scrollPosition + barWidth / 2) / barWidth), 0, data.length - 1)
     }
 
-    const processedData = useMemo(()=> {
+    const processedData = useMemo(() => {
         return data.map((value, index) => ({
             value: value,
             index: index,
@@ -74,16 +80,16 @@ export default function Stat() {
         .range([chartHeight, 0]);
 
     const line = shape.line()
-        .x((_, index) => halfScreenCompensation + barWidth/2 + index * ((chartWidth - 2*halfScreenCompensation) / movingAvgData.length))
+        .x((_, index) => halfScreenCompensation + barWidth / 2 + index * ((chartWidth - 2 * halfScreenCompensation) / movingAvgData.length))
         .y(d => scaleY(d))(movingAvgData)
 
-    const handleScroll = function(event) {
+    const handleScroll = function (event) {
         setScrollPosition(event.nativeEvent.contentOffset.x);
         setSelected(selectedBar(event.nativeEvent.contentOffset.x))
     }
 
-    const MovingAvgPath = function MovingAvgPath({ line }){
-        return(
+    const MovingAvgPath = function MovingAvgPath({line}) {
+        return (
             <Path
                 d={line}
                 stroke={'rgba(134, 65, 244, 1)'}
@@ -95,35 +101,27 @@ export default function Stat() {
     return (
         <SafeAreaView>
             <Text>Open up App.js to start working on your app!asef</Text>
-            <View style={{
-                zIndex: 99,
-                flexDirection:"row"
-            }}>
+            <View style={{zIndex: 3}}>
+                <Text>Moving Avg.</Text>
                 <DropDownPicker
                     setValue={setMovingAvgRange}
                     value={movingAvgRange}
                     items={movingAvgRangeValues}
                     open={movingAvgRangeDropdownOpen}
                     setOpen={setMovingAvgRangeDropdownOpen}
-                    containerStyle={{width: 100}}
-                style={{
-                    width: 100
-                }}/>
-                <DropDownPicker
-                    setValue={setMovingAvgRange}
-                    value={movingAvgRange}
-                    items={movingAvgRangeValues}
-                    open={movingAvgRangeDropdownOpen2}
-                    setOpen={setMovingAvgRangeDropdownOpen2}
-                    containerStyle={{width: 100}}
+                    containerStyle={{
+                        width: 300,
+                    }}
                     style={{
-                        width: 100
+                        width: 300
                     }}/>
             </View>
-            <View>
+            <View style={{
+                marginTop: 20,
+                marginBottom: 20
+            }}>
                 <YAxis
                     data={data}
-                    contentInset={{top: 30, bottom: 30}}
                     svg={{
                         fill: 'grey',
                         fontSize: 10,
@@ -139,7 +137,7 @@ export default function Stat() {
                         backgroundColor: 'white'
                     })}
                 />
-                <View
+                <View //middle select line
                     style={{
                         position: 'absolute',
                         left: (width / 2) - 1, // Adjust this to place the line in the middle
@@ -172,8 +170,8 @@ export default function Stat() {
                             }}
                             data={processedData}
                             svg={{fill}}
-                            contentInset={{top: 30, bottom: 30, left: halfScreenCompensation, right: halfScreenCompensation}}
-                            yAccessor={({ item }) => item.value}
+                            contentInset={{left: halfScreenCompensation, right: halfScreenCompensation}}
+                            yAccessor={({item}) => item.value}
                             pointerEvents={'none'}
                         >
                             <Grid
@@ -181,7 +179,7 @@ export default function Stat() {
                             <MovingAvgPath
                                 line={line}
                                 pointerEvents={'none'}
-                                style={{ pointerEvents: 'none' }}
+                                style={{pointerEvents: 'none'}}
                             />
                         </BarChart>
                         <BarChart
@@ -194,28 +192,35 @@ export default function Stat() {
                             }}
                             data={transparentData}
                             svg={{fill}}
-                            contentInset={{top: 30, bottom: 30, left: halfScreenCompensation, right: halfScreenCompensation}}
-                            yAccessor={({ item }) => item.value}
+                            contentInset={{left: halfScreenCompensation, right: halfScreenCompensation}}
+                            yAccessor={({item}) => item.value}
                         ></BarChart>
                     </View>
                 </ScrollView>
             </View>
-            <Text>Moving Avg Range: {movingAvgRange}</Text>
-            <Text>Scroll Position: {scrollPosition}</Text>
-            <Text>Last Clicked: {selected}</Text>
-            <Text>Slice: {JSON.stringify(processedData[selected]["slice"])}</Text>
-            <Text>Reduce: {processedData[selected]["reduce"]}</Text>
-            <Text>Moving Average: {processedData[selected]["movingAvg"]}</Text>
+            <View style={{
+                flexDirection: "row",
+                justifyContent: 'space-between',
+            }}>
+                <Text>{dateString}</Text>
+                <Text>MA: {numTrunc(movingAvgData[selected])}</Text>
+                <Text>SG: {numTrunc(data[selected])}</Text>
+            </View>
+
+            <ScrollView ref={scrollViewShotRef}
+                        onContentSizeChange={() => scrollViewShotRef.current.scrollTo({y: scrollViewShotRef.current.scrollY})}>
+                {drillDataSorted[selected]["shots"].map(
+                    (shot) =>
+                        <ShotAccordion key={shot["sid"]} shot={shot}/>
+                )}
+            </ScrollView>
+            {/*<Text>Moving Avg Range: {movingAvgRange}</Text>*/}
+            {/*<Text>Scroll Position: {scrollPosition}</Text>*/}
+            {/*<Text>Last Clicked: {selected}</Text>*/}
+            {/*<Text>Slice: {JSON.stringify(processedData[selected]["slice"])}</Text>*/}
+            {/*<Text>Reduce: {processedData[selected]["reduce"]}</Text>*/}
+            {/*<Text>Moving Average: {processedData[selected]["movingAvg"]}</Text>*/}
             <StatusBar style="auto"/>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

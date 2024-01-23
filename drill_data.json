@@ -1,0 +1,6102 @@
+[
+  {
+    "time": 1745184567,
+    "strokesGained": -0.6039999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 100,
+        "carry": 92.73871443576004,
+        "sideLanding": 13.182231098291911,
+        "carryDiff": -7.261285564239948,
+        "proxHole": 25.46188581267557,
+        "baseline": 2.8,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.13400000000000012
+      },
+      {
+        "sid": 2,
+        "target": 134,
+        "carry": 129.3476235950809,
+        "sideLanding": 30.74834510885364,
+        "carryDiff": -4.652376404919105,
+        "proxHole": 33.76776840199239,
+        "baseline": 2.88,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.121
+      },
+      {
+        "sid": 3,
+        "target": 141,
+        "carry": 141.04328476258445,
+        "sideLanding": 19.835335745730728,
+        "carryDiff": 0.04328476258445413,
+        "proxHole": 19.83576079412915,
+        "baseline": 2.91,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.04700000000000015
+      },
+      {
+        "sid": 4,
+        "target": 120,
+        "carry": 112.67356883371302,
+        "sideLanding": 29.555726358920058,
+        "carryDiff": -7.326431166286984,
+        "proxHole": 36.83246262894233,
+        "baseline": 2.85,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.17399999999999993
+      },
+      {
+        "sid": 5,
+        "target": 118,
+        "carry": 126.40910658695472,
+        "sideLanding": 33.48647646144628,
+        "carryDiff": 8.409106586954714,
+        "proxHole": 41.925669560782,
+        "baseline": 2.84,
+        "expectedPutts": 2.062,
+        "strokesGained": -0.22199999999999998
+      }
+    ]
+  },
+  {
+    "time": 1666345418,
+    "strokesGained": -0.1279999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 100,
+        "carry": 102.03595587838626,
+        "sideLanding": 18.595475661945432,
+        "carryDiff": 2.0359558783862592,
+        "proxHole": 19.572883337480583,
+        "baseline": 2.8,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.06300000000000017
+      },
+      {
+        "sid": 2,
+        "target": 124,
+        "carry": 117.75297229834136,
+        "sideLanding": 21.087203105888044,
+        "carryDiff": -6.247027701658632,
+        "proxHole": 28.21167011675465,
+        "baseline": 2.85,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.11099999999999999
+      },
+      {
+        "sid": 3,
+        "target": 130,
+        "carry": 131.26905115736253,
+        "sideLanding": 33.25644396346217,
+        "carryDiff": 1.2690511573625187,
+        "proxHole": 33.4736535600004,
+        "baseline": 2.88,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.121
+      },
+      {
+        "sid": 4,
+        "target": 135,
+        "carry": 125.90468232358079,
+        "sideLanding": 20.842639293570283,
+        "carryDiff": -9.09531767641921,
+        "proxHole": 34.3356788987306,
+        "baseline": 2.895,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.11399999999999988
+      },
+      {
+        "sid": 5,
+        "target": 150,
+        "carry": 153.42623962602678,
+        "sideLanding": 4.7594180799280625,
+        "carryDiff": 3.426239626026778,
+        "proxHole": 11.32714095587016,
+        "baseline": 2.95,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.28100000000000014
+      }
+    ]
+  },
+  {
+    "time": 1735270690,
+    "strokesGained": -0.21799999999999975,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 122,
+        "carry": 118.46913849714471,
+        "sideLanding": 8.991452506007326,
+        "carryDiff": -3.5308615028552897,
+        "proxHole": 13.894209755826166,
+        "baseline": 2.85,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.11299999999999999
+      },
+      {
+        "sid": 2,
+        "target": 136,
+        "carry": 128.85837286111496,
+        "sideLanding": 31.158189359858063,
+        "carryDiff": -7.141627138885052,
+        "proxHole": 37.81346728220658,
+        "baseline": 2.895,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.137
+      },
+      {
+        "sid": 3,
+        "target": 116,
+        "carry": 121.97160451099607,
+        "sideLanding": 11.148480402705442,
+        "carryDiff": 5.971604510996073,
+        "proxHole": 21.100454004860776,
+        "baseline": 2.84,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.051000000000000156
+      },
+      {
+        "sid": 4,
+        "target": 114,
+        "carry": 118.24136463862669,
+        "sideLanding": 9.950775735451556,
+        "carryDiff": 4.241364638626688,
+        "proxHole": 16.153033885849045,
+        "baseline": 2.825,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.014000000000000234
+      },
+      {
+        "sid": 5,
+        "target": 105,
+        "carry": 112.26084867098028,
+        "sideLanding": 20.60663012689478,
+        "carryDiff": 7.260848670980277,
+        "proxHole": 29.985204951651273,
+        "baseline": 2.813,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.1569999999999998
+      }
+    ]
+  },
+  {
+    "time": 1699816045,
+    "strokesGained": -0.07800000000000007,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 124,
+        "carry": 130.02361212601562,
+        "sideLanding": 34.024221337920594,
+        "carryDiff": 6.02361212601561,
+        "proxHole": 38.525352237895916,
+        "baseline": 2.85,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.18900000000000006
+      },
+      {
+        "sid": 2,
+        "target": 126,
+        "carry": 127.58466923028371,
+        "sideLanding": 19.02296078011662,
+        "carryDiff": 1.5846692302837067,
+        "proxHole": 19.607999030154165,
+        "baseline": 2.865,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.002000000000000224
+      },
+      {
+        "sid": 3,
+        "target": 117,
+        "carry": 117.901957224816,
+        "sideLanding": 7.749843481661149,
+        "carryDiff": 0.9019572248159964,
+        "proxHole": 8.208642732439131,
+        "baseline": 2.84,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.32499999999999996
+      },
+      {
+        "sid": 4,
+        "target": 122,
+        "carry": 126.665407230303,
+        "sideLanding": 23.353724110693776,
+        "carryDiff": 4.665407230303005,
+        "proxHole": 27.226653328300777,
+        "baseline": 2.85,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.10299999999999998
+      },
+      {
+        "sid": 5,
+        "target": 130,
+        "carry": 127.34475533127379,
+        "sideLanding": 31.84825165407329,
+        "carryDiff": -2.6552446687262066,
+        "proxHole": 32.829316954185515,
+        "baseline": 2.88,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.11300000000000021
+      }
+    ]
+  },
+  {
+    "time": 1740734742,
+    "strokesGained": -0.5250000000000001,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 140,
+        "carry": 134.98840120428073,
+        "sideLanding": 29.161853536978207,
+        "carryDiff": -5.011598795719269,
+        "proxHole": 32.80943163353279,
+        "baseline": 2.91,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 2,
+        "target": 141,
+        "carry": 134.91241290542987,
+        "sideLanding": 4.3805085082172015,
+        "carryDiff": -6.087587094570126,
+        "proxHole": 18.780769539514456,
+        "baseline": 2.91,
+        "expectedPutts": 1.848,
+        "strokesGained": 0.062000000000000055
+      },
+      {
+        "sid": 3,
+        "target": 102,
+        "carry": 108.6364524707148,
+        "sideLanding": 25.803613107660397,
+        "carryDiff": 6.636452470714794,
+        "proxHole": 32.591547400734626,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      },
+      {
+        "sid": 4,
+        "target": 128,
+        "carry": 121.19524185301836,
+        "sideLanding": 16.954078462034833,
+        "carryDiff": -6.804758146981644,
+        "proxHole": 26.536453746630333,
+        "baseline": 2.865,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.07899999999999974
+      },
+      {
+        "sid": 5,
+        "target": 100,
+        "carry": 93.42844931198465,
+        "sideLanding": 32.2072818920813,
+        "carryDiff": -6.571550688015346,
+        "proxHole": 37.76210419034383,
+        "baseline": 2.8,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.2320000000000002
+      }
+    ]
+  },
+  {
+    "time": 1711512370,
+    "strokesGained": -0.3199999999999996,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 114,
+        "carry": 110.08243714457646,
+        "sideLanding": 22.90948823986571,
+        "carryDiff": -3.9175628554235464,
+        "proxHole": 25.748210422246704,
+        "baseline": 2.825,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.10899999999999976
+      },
+      {
+        "sid": 2,
+        "target": 149,
+        "carry": 144.90618681834422,
+        "sideLanding": 15.777823072606735,
+        "carryDiff": -4.093813181655781,
+        "proxHole": 19.99433565305857,
+        "baseline": 2.93,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.06700000000000017
+      },
+      {
+        "sid": 3,
+        "target": 146,
+        "carry": 148.6821700779837,
+        "sideLanding": 32.07226890681556,
+        "carryDiff": 2.6821700779836846,
+        "proxHole": 33.06624804504084,
+        "baseline": 2.93,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.07099999999999973
+      },
+      {
+        "sid": 4,
+        "target": 133,
+        "carry": 138.57206613554672,
+        "sideLanding": 9.390119876147907,
+        "carryDiff": 5.572066135546708,
+        "proxHole": 19.173044631945807,
+        "baseline": 2.88,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.016999999999999904
+      },
+      {
+        "sid": 5,
+        "target": 102,
+        "carry": 93.97140236571283,
+        "sideLanding": 26.861094591278288,
+        "carryDiff": -8.028597634287173,
+        "proxHole": 36.07830126822955,
+        "baseline": 2.8,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.2240000000000002
+      }
+    ]
+  },
+  {
+    "time": 1712798488,
+    "strokesGained": -0.04100000000000015,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 131,
+        "carry": 122.26494822208004,
+        "sideLanding": 15.838106395216919,
+        "carryDiff": -8.735051777919963,
+        "proxHole": 30.6195326589531,
+        "baseline": 2.88,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.09800000000000009
+      },
+      {
+        "sid": 2,
+        "target": 116,
+        "carry": 112.41512454291711,
+        "sideLanding": 15.060613653558491,
+        "carryDiff": -3.58487545708289,
+        "proxHole": 18.506325189159238,
+        "baseline": 2.84,
+        "expectedPutts": 1.848,
+        "strokesGained": -0.00800000000000023
+      },
+      {
+        "sid": 3,
+        "target": 132,
+        "carry": 133.62770443557113,
+        "sideLanding": 10.388267534196704,
+        "carryDiff": 1.6277044355711308,
+        "proxHole": 11.478714994643202,
+        "baseline": 2.88,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.21099999999999985
+      },
+      {
+        "sid": 4,
+        "target": 150,
+        "carry": 156.4273027236146,
+        "sideLanding": 34.58524218454957,
+        "carryDiff": 6.427302723614588,
+        "proxHole": 39.59710797107282,
+        "baseline": 2.95,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.09699999999999998
+      },
+      {
+        "sid": 5,
+        "target": 129,
+        "carry": 131.47465354872742,
+        "sideLanding": 22.344423616524736,
+        "carryDiff": 2.474653548727426,
+        "proxHole": 23.545455154461795,
+        "baseline": 2.865,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.04899999999999971
+      }
+    ]
+  },
+  {
+    "time": 1686817259,
+    "strokesGained": -0.6589999999999998,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 142,
+        "carry": 139.95355333785523,
+        "sideLanding": 34.34094544373561,
+        "carryDiff": -2.046446662144783,
+        "proxHole": 34.88541284604007,
+        "baseline": 2.91,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.09899999999999975
+      },
+      {
+        "sid": 2,
+        "target": 107,
+        "carry": 109.77332470333562,
+        "sideLanding": 34.43729185794476,
+        "carryDiff": 2.773324703335616,
+        "proxHole": 35.42808264217036,
+        "baseline": 2.813,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.20299999999999985
+      },
+      {
+        "sid": 3,
+        "target": 117,
+        "carry": 124.63322630528015,
+        "sideLanding": 25.31421772130643,
+        "carryDiff": 7.633226305280154,
+        "proxHole": 34.13509796807814,
+        "baseline": 2.84,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.16900000000000004
+      },
+      {
+        "sid": 4,
+        "target": 133,
+        "carry": 135.08679026386523,
+        "sideLanding": 28.83239283945611,
+        "carryDiff": 2.0867902638652147,
+        "proxHole": 29.50422205883395,
+        "baseline": 2.88,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.09000000000000008
+      },
+      {
+        "sid": 5,
+        "target": 136,
+        "carry": 132.16415203463185,
+        "sideLanding": 30.286124531159352,
+        "carryDiff": -3.8358479653681314,
+        "proxHole": 32.39865592331975,
+        "baseline": 2.895,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.09800000000000009
+      }
+    ]
+  },
+  {
+    "time": 1698235658,
+    "strokesGained": -0.5139999999999996,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 111,
+        "carry": 111.19043602403109,
+        "sideLanding": 32.7542616719231,
+        "carryDiff": 0.19043602403108828,
+        "proxHole": 32.75924374258432,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 2,
+        "target": 122,
+        "carry": 118.06091783416036,
+        "sideLanding": 24.10161882560592,
+        "carryDiff": -3.939082165839638,
+        "proxHole": 26.84278943772284,
+        "baseline": 2.85,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.09399999999999986
+      },
+      {
+        "sid": 3,
+        "target": 136,
+        "carry": 139.63133250946152,
+        "sideLanding": 33.57254358770793,
+        "carryDiff": 3.6313325094615063,
+        "proxHole": 35.29581937137878,
+        "baseline": 2.895,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.121
+      },
+      {
+        "sid": 4,
+        "target": 140,
+        "carry": 146.12379980088997,
+        "sideLanding": 20.457757859849877,
+        "carryDiff": 6.123799800889973,
+        "proxHole": 27.495966479916106,
+        "baseline": 2.91,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.04299999999999993
+      },
+      {
+        "sid": 5,
+        "target": 126,
+        "carry": 116.88246516322396,
+        "sideLanding": 3.1687401648431486,
+        "carryDiff": -9.117534836776045,
+        "proxHole": 27.53553863157053,
+        "baseline": 2.865,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.08799999999999986
+      }
+    ]
+  },
+  {
+    "time": 1747818032,
+    "strokesGained": -0.41300000000000026,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 133,
+        "carry": 136.18100131878427,
+        "sideLanding": 17.722385713882687,
+        "carryDiff": 3.181001318784272,
+        "proxHole": 20.12838493030672,
+        "baseline": 2.88,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.0020000000000000018
+      },
+      {
+        "sid": 2,
+        "target": 102,
+        "carry": 107.6575501838298,
+        "sideLanding": 1.7998770880420474,
+        "carryDiff": 5.6575501838298,
+        "proxHole": 17.06781838065522,
+        "baseline": 2.8,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.03000000000000025
+      },
+      {
+        "sid": 3,
+        "target": 140,
+        "carry": 142.9659977713178,
+        "sideLanding": 28.615640126078322,
+        "carryDiff": 2.9659977713177987,
+        "proxHole": 29.967134411557993,
+        "baseline": 2.91,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.05999999999999983
+      },
+      {
+        "sid": 4,
+        "target": 103,
+        "carry": 95.52757025425213,
+        "sideLanding": 3.5867938586097377,
+        "carryDiff": -7.472429745747875,
+        "proxHole": 22.70242160938783,
+        "baseline": 2.8,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.1030000000000002
+      },
+      {
+        "sid": 5,
+        "target": 111,
+        "carry": 104.04032110134665,
+        "sideLanding": 33.951547209016034,
+        "carryDiff": -6.959678898653349,
+        "proxHole": 39.85776876892748,
+        "baseline": 2.825,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.22199999999999998
+      }
+    ]
+  },
+  {
+    "time": 1788221696,
+    "strokesGained": 0.7890000000000006,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 131,
+        "carry": 131.0245628431649,
+        "sideLanding": 3.1737595647494663,
+        "carryDiff": 0.024562843164893877,
+        "proxHole": 3.174614901719232,
+        "baseline": 2.88,
+        "expectedPutts": 1.053,
+        "strokesGained": 0.827
+      },
+      {
+        "sid": 2,
+        "target": 150,
+        "carry": 144.77150223602683,
+        "sideLanding": 0.12667624074677253,
+        "carryDiff": -5.228497763973172,
+        "proxHole": 15.686004803034514,
+        "baseline": 2.95,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.16000000000000014
+      },
+      {
+        "sid": 3,
+        "target": 143,
+        "carry": 134.42704798953991,
+        "sideLanding": 2.095842005858567,
+        "carryDiff": -8.572952010460082,
+        "proxHole": 25.804110317474333,
+        "baseline": 2.91,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0239999999999998
+      },
+      {
+        "sid": 4,
+        "target": 149,
+        "carry": 143.71934155632212,
+        "sideLanding": 28.55521957123314,
+        "carryDiff": -5.280658443677886,
+        "proxHole": 32.65530197610206,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      },
+      {
+        "sid": 5,
+        "target": 105,
+        "carry": 111.19417229631125,
+        "sideLanding": 15.790327727882177,
+        "carryDiff": 6.194172296311251,
+        "proxHole": 24.38533132195322,
+        "baseline": 2.813,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.11099999999999977
+      }
+    ]
+  },
+  {
+    "time": 1623191888,
+    "strokesGained": 0.10800000000000054,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 113,
+        "carry": 104.5738687428101,
+        "sideLanding": 0.7883464803892426,
+        "carryDiff": -8.426131257189892,
+        "proxHole": 25.290683696643605,
+        "baseline": 2.825,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.10899999999999976
+      },
+      {
+        "sid": 2,
+        "target": 107,
+        "carry": 103.4530640944429,
+        "sideLanding": 33.600925325169285,
+        "carryDiff": -3.546935905557107,
+        "proxHole": 35.245552507667895,
+        "baseline": 2.813,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.20299999999999985
+      },
+      {
+        "sid": 3,
+        "target": 140,
+        "carry": 130.1527399131948,
+        "sideLanding": 17.966419085015968,
+        "carryDiff": -9.847260086805205,
+        "proxHole": 34.576133324782106,
+        "baseline": 2.91,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.09899999999999975
+      },
+      {
+        "sid": 4,
+        "target": 126,
+        "carry": 133.34126262575637,
+        "sideLanding": 31.13793962026442,
+        "carryDiff": 7.341262625756386,
+        "proxHole": 38.139461404930465,
+        "baseline": 2.865,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.17399999999999993
+      },
+      {
+        "sid": 5,
+        "target": 115,
+        "carry": 115.57077805084576,
+        "sideLanding": 3.7030561989012,
+        "carryDiff": 0.570778050845762,
+        "proxHole": 4.079793311206609,
+        "baseline": 2.84,
+        "expectedPutts": 1.147,
+        "strokesGained": 0.6929999999999998
+      }
+    ]
+  },
+  {
+    "time": 1664818583,
+    "strokesGained": -0.4459999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 106,
+        "carry": 113.02557226248481,
+        "sideLanding": 1.2863741486490858,
+        "carryDiff": 7.025572262484818,
+        "proxHole": 21.115935901325262,
+        "baseline": 2.813,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.07799999999999985
+      },
+      {
+        "sid": 2,
+        "target": 107,
+        "carry": 113.9413035841599,
+        "sideLanding": 14.511695306946844,
+        "carryDiff": 6.941303584159897,
+        "proxHole": 25.381579141355694,
+        "baseline": 2.813,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.12099999999999977
+      },
+      {
+        "sid": 3,
+        "target": 126,
+        "carry": 125.57453292781011,
+        "sideLanding": 18.596454679100678,
+        "carryDiff": -0.425467072189889,
+        "proxHole": 18.64020726004692,
+        "baseline": 2.865,
+        "expectedPutts": 1.848,
+        "strokesGained": 0.017000000000000126
+      },
+      {
+        "sid": 4,
+        "target": 123,
+        "carry": 123.09648586349468,
+        "sideLanding": 33.63448450403711,
+        "carryDiff": 0.09648586349467436,
+        "proxHole": 33.63573001361798,
+        "baseline": 2.85,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.1509999999999998
+      },
+      {
+        "sid": 5,
+        "target": 134,
+        "carry": 126.17311493532624,
+        "sideLanding": 21.610807181198528,
+        "carryDiff": -7.826885064673759,
+        "proxHole": 31.91188110035916,
+        "baseline": 2.88,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.11300000000000021
+      }
+    ]
+  },
+  {
+    "time": 1714021402,
+    "strokesGained": 0.3660000000000003,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 112,
+        "carry": 118.68102538846746,
+        "sideLanding": 21.702790753369424,
+        "carryDiff": 6.681025388467457,
+        "proxHole": 29.54210602947356,
+        "baseline": 2.825,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.1449999999999998
+      },
+      {
+        "sid": 2,
+        "target": 150,
+        "carry": 147.21480580627036,
+        "sideLanding": 4.748731421054273,
+        "carryDiff": -2.785194193729639,
+        "proxHole": 9.610734122863652,
+        "baseline": 2.95,
+        "expectedPutts": 1.575,
+        "strokesGained": 0.3750000000000002
+      },
+      {
+        "sid": 3,
+        "target": 136,
+        "carry": 131.54670977860968,
+        "sideLanding": 27.425529342645177,
+        "carryDiff": -4.453290221390322,
+        "proxHole": 30.506487898276124,
+        "baseline": 2.895,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 4,
+        "target": 114,
+        "carry": 117.38204774685357,
+        "sideLanding": 4.516586762767104,
+        "carryDiff": 3.38204774685358,
+        "proxHole": 11.106024430172095,
+        "baseline": 2.825,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.15600000000000014
+      },
+      {
+        "sid": 5,
+        "target": 104,
+        "carry": 104.00654956521001,
+        "sideLanding": 13.613319855308168,
+        "carryDiff": 0.006549565210002939,
+        "proxHole": 13.613334035208553,
+        "baseline": 2.8,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.06299999999999972
+      }
+    ]
+  },
+  {
+    "time": 1715951033,
+    "strokesGained": -0.31800000000000006,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 104,
+        "carry": 106.85808591801168,
+        "sideLanding": 29.901091740632822,
+        "carryDiff": 2.858085918011678,
+        "proxHole": 31.1061598934097,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      },
+      {
+        "sid": 2,
+        "target": 101,
+        "carry": 106.06626600688197,
+        "sideLanding": 15.376653421097757,
+        "carryDiff": 5.066266006881975,
+        "proxHole": 21.620474826075117,
+        "baseline": 2.8,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.09100000000000019
+      },
+      {
+        "sid": 3,
+        "target": 123,
+        "carry": 126.6489528900743,
+        "sideLanding": 18.530469464955733,
+        "carryDiff": 3.648952890074302,
+        "proxHole": 21.522360775191256,
+        "baseline": 2.85,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.040999999999999925
+      },
+      {
+        "sid": 4,
+        "target": 129,
+        "carry": 124.83440756646392,
+        "sideLanding": 16.286625207121403,
+        "carryDiff": -4.165592433536078,
+        "proxHole": 20.528604519992086,
+        "baseline": 2.865,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.012999999999999678
+      },
+      {
+        "sid": 5,
+        "target": 124,
+        "carry": 121.6031883442446,
+        "sideLanding": 16.078930100808858,
+        "carryDiff": -2.3968116557554042,
+        "proxHole": 17.613470646217962,
+        "baseline": 2.85,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.020000000000000018
+      }
+    ]
+  },
+  {
+    "time": 1647035444,
+    "strokesGained": 0.14900000000000047,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 114,
+        "carry": 114.76575240462299,
+        "sideLanding": 5.385582715679799,
+        "carryDiff": 0.7657524046229938,
+        "proxHole": 5.855074029771278,
+        "baseline": 2.825,
+        "expectedPutts": 1.256,
+        "strokesGained": 0.5690000000000002
+      },
+      {
+        "sid": 2,
+        "target": 125,
+        "carry": 123.79859746366813,
+        "sideLanding": 27.550612026581412,
+        "carryDiff": -1.2014025363318765,
+        "proxHole": 27.78536549207072,
+        "baseline": 2.865,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.08799999999999986
+      },
+      {
+        "sid": 3,
+        "target": 102,
+        "carry": 110.17735664245039,
+        "sideLanding": 13.894608055900106,
+        "carryDiff": 8.177356642450391,
+        "proxHole": 28.19366219467652,
+        "baseline": 2.8,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.16100000000000025
+      },
+      {
+        "sid": 4,
+        "target": 135,
+        "carry": 141.52103029653188,
+        "sideLanding": 6.479047645355726,
+        "carryDiff": 6.52103029653188,
+        "proxHole": 20.60807083512111,
+        "baseline": 2.895,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.017000000000000126
+      },
+      {
+        "sid": 5,
+        "target": 105,
+        "carry": 103.13517706842762,
+        "sideLanding": 32.682574601663354,
+        "carryDiff": -1.8648229315723803,
+        "proxHole": 33.15793666210783,
+        "baseline": 2.813,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.18799999999999972
+      }
+    ]
+  },
+  {
+    "time": 1726479277,
+    "strokesGained": -0.1649999999999998,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 122,
+        "carry": 118.94981486769574,
+        "sideLanding": 4.572027476083605,
+        "carryDiff": -3.0501851323042706,
+        "proxHole": 10.229178819144456,
+        "baseline": 2.85,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.2240000000000002
+      },
+      {
+        "sid": 2,
+        "target": 133,
+        "carry": 140.0785801028963,
+        "sideLanding": 17.98755229141997,
+        "carryDiff": 7.0785801028962965,
+        "proxHole": 27.829996476727086,
+        "baseline": 2.88,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.07300000000000018
+      },
+      {
+        "sid": 3,
+        "target": 112,
+        "carry": 120.19280876175999,
+        "sideLanding": 20.843133822643196,
+        "carryDiff": 8.192808761759991,
+        "proxHole": 32.22631325810562,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 4,
+        "target": 120,
+        "carry": 114.35534377524328,
+        "sideLanding": 16.442870410091242,
+        "carryDiff": -5.644656224756719,
+        "proxHole": 23.603543852231535,
+        "baseline": 2.85,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.06399999999999983
+      },
+      {
+        "sid": 5,
+        "target": 117,
+        "carry": 113.90278812446917,
+        "sideLanding": 22.89526420131535,
+        "carryDiff": -3.0972118755308298,
+        "proxHole": 24.708857024666177,
+        "baseline": 2.84,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.08400000000000007
+      }
+    ]
+  },
+  {
+    "time": 1639829251,
+    "strokesGained": 0.28700000000000037,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 105,
+        "carry": 105.49131081635855,
+        "sideLanding": 31.038771189901446,
+        "carryDiff": 0.49131081635855267,
+        "proxHole": 31.073747663316926,
+        "baseline": 2.813,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.17999999999999994
+      },
+      {
+        "sid": 2,
+        "target": 132,
+        "carry": 134.0628192297563,
+        "sideLanding": 0.40842436383533187,
+        "carryDiff": 2.0628192297562755,
+        "proxHole": 6.201920592271781,
+        "baseline": 2.88,
+        "expectedPutts": 1.357,
+        "strokesGained": 0.5229999999999999
+      },
+      {
+        "sid": 3,
+        "target": 144,
+        "carry": 145.67952785782805,
+        "sideLanding": 10.12795009020127,
+        "carryDiff": 1.6795278578280541,
+        "proxHole": 11.312059823771813,
+        "baseline": 2.91,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.2410000000000001
+      },
+      {
+        "sid": 4,
+        "target": 106,
+        "carry": 103.36451324018925,
+        "sideLanding": 28.83368611134698,
+        "carryDiff": -2.635486759810746,
+        "proxHole": 29.898052928542413,
+        "baseline": 2.813,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.1569999999999998
+      },
+      {
+        "sid": 5,
+        "target": 105,
+        "carry": 100.37561022321398,
+        "sideLanding": 23.16931800449418,
+        "carryDiff": -4.624389776786022,
+        "proxHole": 27.005224014293344,
+        "baseline": 2.813,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.1399999999999999
+      }
+    ]
+  },
+  {
+    "time": 1752277991,
+    "strokesGained": -0.36799999999999944,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 108,
+        "carry": 112.42071645773748,
+        "sideLanding": 29.568589329236566,
+        "carryDiff": 4.4207164577374805,
+        "proxHole": 32.40657465574604,
+        "baseline": 2.813,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.17999999999999994
+      },
+      {
+        "sid": 2,
+        "target": 131,
+        "carry": 128.454607094364,
+        "sideLanding": 21.751443561239395,
+        "carryDiff": -2.5453929056359836,
+        "proxHole": 23.052907026974726,
+        "baseline": 2.88,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.03400000000000003
+      },
+      {
+        "sid": 3,
+        "target": 123,
+        "carry": 114.91442002538594,
+        "sideLanding": 4.466652969050694,
+        "carryDiff": -8.085579974614065,
+        "proxHole": 24.664557982636733,
+        "baseline": 2.85,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.07399999999999984
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 102.93666788209137,
+        "sideLanding": 10.6551399298661,
+        "carryDiff": -8.063332117908633,
+        "proxHole": 26.43270569802303,
+        "baseline": 2.825,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.11899999999999977
+      },
+      {
+        "sid": 5,
+        "target": 147,
+        "carry": 139.86839264659207,
+        "sideLanding": 1.9725844849435359,
+        "carryDiff": -7.131607353407934,
+        "proxHole": 21.485564934133777,
+        "baseline": 2.93,
+        "expectedPutts": 1.891,
+        "strokesGained": 0.039000000000000146
+      }
+    ]
+  },
+  {
+    "time": 1620907444,
+    "strokesGained": 0.14700000000000046,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 133,
+        "carry": 130.36196873724836,
+        "sideLanding": 20.3516000182383,
+        "carryDiff": -2.6380312627516433,
+        "proxHole": 21.8362199977847,
+        "baseline": 2.88,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.01100000000000012
+      },
+      {
+        "sid": 2,
+        "target": 113,
+        "carry": 113.17976179308815,
+        "sideLanding": 17.731746064454807,
+        "carryDiff": 0.17976179308815432,
+        "proxHole": 17.73994496086718,
+        "baseline": 2.825,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.004999999999999893
+      },
+      {
+        "sid": 3,
+        "target": 123,
+        "carry": 120.20110619870817,
+        "sideLanding": 25.337697794704933,
+        "carryDiff": -2.7988938012918325,
+        "proxHole": 26.692755349232566,
+        "baseline": 2.85,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.09399999999999986
+      },
+      {
+        "sid": 4,
+        "target": 140,
+        "carry": 139.37126037693673,
+        "sideLanding": 20.671379187862804,
+        "carryDiff": -0.628739623063268,
+        "proxHole": 20.75725750553033,
+        "baseline": 2.91,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.03200000000000025
+      },
+      {
+        "sid": 5,
+        "target": 148,
+        "carry": 152.16483132866267,
+        "sideLanding": 2.473069631232512,
+        "carryDiff": 4.164831328662666,
+        "proxHole": 12.73689339544046,
+        "baseline": 2.93,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.2250000000000001
+      }
+    ]
+  },
+  {
+    "time": 1702324490,
+    "strokesGained": 0.26,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 122,
+        "carry": 124.66922987571503,
+        "sideLanding": 27.013558716994694,
+        "carryDiff": 2.669229875715029,
+        "proxHole": 28.175440506249537,
+        "baseline": 2.85,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.11099999999999999
+      },
+      {
+        "sid": 2,
+        "target": 135,
+        "carry": 137.21951021307643,
+        "sideLanding": 5.359532092230045,
+        "carryDiff": 2.219510213076429,
+        "proxHole": 8.547550205830847,
+        "baseline": 2.895,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.3800000000000001
+      },
+      {
+        "sid": 3,
+        "target": 137,
+        "carry": 145.49540029334696,
+        "sideLanding": 10.777324054046627,
+        "carryDiff": 8.495400293346972,
+        "proxHole": 27.671233240745348,
+        "baseline": 2.895,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.05800000000000005
+      },
+      {
+        "sid": 4,
+        "target": 116,
+        "carry": 121.31208944629552,
+        "sideLanding": 5.012660392023171,
+        "carryDiff": 5.312089446295518,
+        "proxHole": 16.706029234224268,
+        "baseline": 2.84,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.028999999999999915
+      },
+      {
+        "sid": 5,
+        "target": 120,
+        "carry": 116.71446344283828,
+        "sideLanding": 14.3104377471285,
+        "carryDiff": -3.2855365571617217,
+        "proxHole": 17.376460592722992,
+        "baseline": 2.85,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.020000000000000018
+      }
+    ]
+  },
+  {
+    "time": 1774808356,
+    "strokesGained": 0.22999999999999998,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 116,
+        "carry": 116.79146555022052,
+        "sideLanding": 10.874176420444282,
+        "carryDiff": 0.7914655502205221,
+        "proxHole": 11.130385091164603,
+        "baseline": 2.84,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.17099999999999982
+      },
+      {
+        "sid": 2,
+        "target": 123,
+        "carry": 124.64490754648735,
+        "sideLanding": 5.614033613805608,
+        "carryDiff": 1.6449075464873513,
+        "proxHole": 7.474547541179907,
+        "baseline": 2.85,
+        "expectedPutts": 1.443,
+        "strokesGained": 0.40700000000000003
+      },
+      {
+        "sid": 3,
+        "target": 118,
+        "carry": 121.16621235282226,
+        "sideLanding": 26.436109744121534,
+        "carryDiff": 3.1662123528222565,
+        "proxHole": 28.090781483819843,
+        "baseline": 2.84,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.12100000000000022
+      },
+      {
+        "sid": 4,
+        "target": 143,
+        "carry": 135.43142767408798,
+        "sideLanding": 26.261141366060667,
+        "carryDiff": -7.5685723259120135,
+        "proxHole": 34.71594920668702,
+        "baseline": 2.91,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.09899999999999975
+      },
+      {
+        "sid": 5,
+        "target": 128,
+        "carry": 124.03584119388213,
+        "sideLanding": 28.79274848807936,
+        "carryDiff": -3.964158806117859,
+        "proxHole": 31.152100424512184,
+        "baseline": 2.865,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.1279999999999999
+      }
+    ]
+  },
+  {
+    "time": 1610380413,
+    "strokesGained": 0.6580000000000008,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 147,
+        "carry": 141.42234215688057,
+        "sideLanding": 22.23671526370596,
+        "carryDiff": -5.577657843119422,
+        "proxHole": 27.829191667264393,
+        "baseline": 2.93,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.02299999999999991
+      },
+      {
+        "sid": 2,
+        "target": 113,
+        "carry": 113.86366786732184,
+        "sideLanding": 34.940032727926614,
+        "carryDiff": 0.8636678673218352,
+        "proxHole": 35.03596989800598,
+        "baseline": 2.825,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.19099999999999984
+      },
+      {
+        "sid": 3,
+        "target": 105,
+        "carry": 105.55389758355216,
+        "sideLanding": 1.4789510251414,
+        "carryDiff": 0.553897583552164,
+        "proxHole": 2.2245266760259668,
+        "baseline": 2.813,
+        "expectedPutts": 1.009,
+        "strokesGained": 0.8040000000000003
+      },
+      {
+        "sid": 4,
+        "target": 142,
+        "carry": 147.7913735804349,
+        "sideLanding": 24.04859173699406,
+        "carryDiff": 5.791373580434895,
+        "proxHole": 29.668077727855113,
+        "baseline": 2.91,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.05999999999999983
+      },
+      {
+        "sid": 5,
+        "target": 129,
+        "carry": 126.7379100091074,
+        "sideLanding": 11.689717721793622,
+        "carryDiff": -2.2620899908926013,
+        "proxHole": 13.516765905988173,
+        "baseline": 2.865,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.1280000000000001
+      }
+    ]
+  },
+  {
+    "time": 1735945516,
+    "strokesGained": -0.06399999999999917,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 147,
+        "carry": 144.44288087938185,
+        "sideLanding": 23.099837453120333,
+        "carryDiff": -2.5571191206181654,
+        "proxHole": 24.34034129041456,
+        "baseline": 2.93,
+        "expectedPutts": 1.924,
+        "strokesGained": 0.006000000000000227
+      },
+      {
+        "sid": 2,
+        "target": 150,
+        "carry": 157.74264402116611,
+        "sideLanding": 26.27917986868444,
+        "carryDiff": 7.742644021166104,
+        "proxHole": 35.07323940723415,
+        "baseline": 2.95,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.06599999999999984
+      },
+      {
+        "sid": 3,
+        "target": 108,
+        "carry": 102.1334302627714,
+        "sideLanding": 6.963701186620416,
+        "carryDiff": -5.866569737228597,
+        "proxHole": 18.927305633724952,
+        "baseline": 2.813,
+        "expectedPutts": 1.848,
+        "strokesGained": -0.03499999999999992
+      },
+      {
+        "sid": 4,
+        "target": 110,
+        "carry": 116.30361458775904,
+        "sideLanding": 26.049609843185035,
+        "carryDiff": 6.303614587759039,
+        "proxHole": 32.19009451401533,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 5,
+        "target": 110,
+        "carry": 106.68292467283194,
+        "sideLanding": 4.4521037308468445,
+        "carryDiff": -3.3170753271680535,
+        "proxHole": 10.901748766376146,
+        "baseline": 2.825,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.1990000000000003
+      }
+    ]
+  },
+  {
+    "time": 1770424012,
+    "strokesGained": 0.798,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 138,
+        "carry": 135.08590387407227,
+        "sideLanding": 3.054398664954528,
+        "carryDiff": -2.914096125927726,
+        "proxHole": 9.260505239175604,
+        "baseline": 2.895,
+        "expectedPutts": 1.575,
+        "strokesGained": 0.32000000000000006
+      },
+      {
+        "sid": 2,
+        "target": 138,
+        "carry": 136.78400120326478,
+        "sideLanding": 5.624823543798097,
+        "carryDiff": -1.2159987967352315,
+        "proxHole": 6.704216401774271,
+        "baseline": 2.895,
+        "expectedPutts": 1.357,
+        "strokesGained": 0.538
+      },
+      {
+        "sid": 3,
+        "target": 148,
+        "carry": 139.65508117857564,
+        "sideLanding": 3.4045935440413526,
+        "carryDiff": -8.344918821424363,
+        "proxHole": 25.26519915665798,
+        "baseline": 2.93,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0039999999999997815
+      },
+      {
+        "sid": 4,
+        "target": 104,
+        "carry": 106.46424699884425,
+        "sideLanding": 20.341857351802453,
+        "carryDiff": 2.464246998844244,
+        "proxHole": 21.643562090443783,
+        "baseline": 2.8,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.09100000000000019
+      },
+      {
+        "sid": 5,
+        "target": 103,
+        "carry": 102.10941838104446,
+        "sideLanding": 14.727741870169023,
+        "carryDiff": -0.890581618955542,
+        "proxHole": 14.968119493594479,
+        "baseline": 2.8,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.03499999999999992
+      }
+    ]
+  },
+  {
+    "time": 1640094450,
+    "strokesGained": 0.025000000000000133,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 102,
+        "carry": 107.64802093262162,
+        "sideLanding": 16.823813967158618,
+        "carryDiff": 5.648020932621613,
+        "proxHole": 23.877646041843164,
+        "baseline": 2.8,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.1140000000000001
+      },
+      {
+        "sid": 2,
+        "target": 147,
+        "carry": 137.03308278663133,
+        "sideLanding": 11.155253237897819,
+        "carryDiff": -9.966917213368676,
+        "proxHole": 31.913862559159668,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      },
+      {
+        "sid": 3,
+        "target": 149,
+        "carry": 153.51328395630682,
+        "sideLanding": 1.6302460696268384,
+        "carryDiff": 4.513283956306818,
+        "proxHole": 13.63764242381514,
+        "baseline": 2.93,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.19300000000000006
+      },
+      {
+        "sid": 4,
+        "target": 115,
+        "carry": 111.50320571658214,
+        "sideLanding": 10.108255384926979,
+        "carryDiff": -3.4967942834178505,
+        "proxHole": 14.567942863417576,
+        "baseline": 2.84,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.07499999999999996
+      },
+      {
+        "sid": 5,
+        "target": 110,
+        "carry": 108.97352412232301,
+        "sideLanding": 21.395852383002563,
+        "carryDiff": -1.0264758776769867,
+        "proxHole": 21.61632192909587,
+        "baseline": 2.825,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.06599999999999984
+      }
+    ]
+  },
+  {
+    "time": 1607020976,
+    "strokesGained": 0.6090000000000007,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 140,
+        "carry": 148.63935054551894,
+        "sideLanding": 9.671275666547233,
+        "carryDiff": 8.639350545518923,
+        "proxHole": 27.66367606905437,
+        "baseline": 2.91,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.04299999999999993
+      },
+      {
+        "sid": 2,
+        "target": 111,
+        "carry": 106.2619523206113,
+        "sideLanding": 7.920641047961033,
+        "carryDiff": -4.7380476793886945,
+        "proxHole": 16.27201330260305,
+        "baseline": 2.825,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.014000000000000234
+      },
+      {
+        "sid": 3,
+        "target": 129,
+        "carry": 133.02256430429148,
+        "sideLanding": 11.827103129395432,
+        "carryDiff": 4.022564304291475,
+        "proxHole": 16.89702875279541,
+        "baseline": 2.865,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.05400000000000027
+      },
+      {
+        "sid": 4,
+        "target": 127,
+        "carry": 126.31692120409429,
+        "sideLanding": 4.011675765721333,
+        "carryDiff": -0.6830787959057076,
+        "proxHole": 4.504765501335199,
+        "baseline": 2.865,
+        "expectedPutts": 1.147,
+        "strokesGained": 0.7180000000000002
+      },
+      {
+        "sid": 5,
+        "target": 104,
+        "carry": 98.61800663736886,
+        "sideLanding": 19.758844973662676,
+        "carryDiff": -5.381993362631132,
+        "proxHole": 25.5167519032475,
+        "baseline": 2.8,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.13400000000000012
+      }
+    ]
+  },
+  {
+    "time": 1605000054,
+    "strokesGained": -0.7670000000000001,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 137,
+        "carry": 138.74943481657053,
+        "sideLanding": 19.748887509929244,
+        "carryDiff": 1.7494348165705276,
+        "proxHole": 20.434364621311367,
+        "baseline": 2.895,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.017000000000000126
+      },
+      {
+        "sid": 2,
+        "target": 109,
+        "carry": 118.62351026631536,
+        "sideLanding": 33.21605579658346,
+        "carryDiff": 9.623510266315364,
+        "proxHole": 44.0092480200996,
+        "baseline": 2.813,
+        "expectedPutts": 2.086,
+        "strokesGained": -0.2729999999999997
+      },
+      {
+        "sid": 3,
+        "target": 100,
+        "carry": 107.48202849181928,
+        "sideLanding": 33.74154674181088,
+        "carryDiff": 7.482028491819278,
+        "proxHole": 40.525531825028125,
+        "baseline": 2.8,
+        "expectedPutts": 2.055,
+        "strokesGained": -0.25500000000000034
+      },
+      {
+        "sid": 4,
+        "target": 101,
+        "carry": 107.2093270139321,
+        "sideLanding": 23.719611338704627,
+        "carryDiff": 6.2093270139321035,
+        "proxHole": 30.159934345961826,
+        "baseline": 2.8,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.17800000000000016
+      },
+      {
+        "sid": 5,
+        "target": 101,
+        "carry": 94.56590925531509,
+        "sideLanding": 6.951466938171965,
+        "carryDiff": -6.434090744684906,
+        "proxHole": 20.515862301888696,
+        "baseline": 2.8,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.07800000000000007
+      }
+    ]
+  },
+  {
+    "time": 1726220783,
+    "strokesGained": -0.005999999999999561,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 109,
+        "carry": 111.57893354104482,
+        "sideLanding": 8.558315118085744,
+        "carryDiff": 2.5789335410448206,
+        "proxHole": 11.5370204794214,
+        "baseline": 2.813,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.14400000000000013
+      },
+      {
+        "sid": 2,
+        "target": 150,
+        "carry": 140.98429154193653,
+        "sideLanding": 19.69021878902367,
+        "carryDiff": -9.015708458063479,
+        "proxHole": 33.45521942786801,
+        "baseline": 2.95,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.05099999999999971
+      },
+      {
+        "sid": 3,
+        "target": 126,
+        "carry": 121.93112348324954,
+        "sideLanding": 33.02476429250201,
+        "carryDiff": -4.068876516750457,
+        "proxHole": 35.20847712628858,
+        "baseline": 2.865,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.1509999999999998
+      },
+      {
+        "sid": 4,
+        "target": 115,
+        "carry": 108.3290806796261,
+        "sideLanding": 23.64778710116911,
+        "carryDiff": -6.6709193203739,
+        "proxHole": 30.979482177606844,
+        "baseline": 2.84,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.13800000000000012
+      },
+      {
+        "sid": 5,
+        "target": 135,
+        "carry": 130.88801157847112,
+        "sideLanding": 3.0378098909082047,
+        "carryDiff": -4.111988421528869,
+        "proxHole": 12.704500302742609,
+        "baseline": 2.895,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.18999999999999995
+      }
+    ]
+  },
+  {
+    "time": 1692432857,
+    "strokesGained": -0.44299999999999984,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 136,
+        "carry": 141.98879139094706,
+        "sideLanding": 33.93323775679334,
+        "carryDiff": 5.9887913909470605,
+        "proxHole": 38.39603137796405,
+        "baseline": 2.895,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.14400000000000013
+      },
+      {
+        "sid": 2,
+        "target": 150,
+        "carry": 140.05449337172033,
+        "sideLanding": 4.933933174452429,
+        "carryDiff": -9.94550662827968,
+        "proxHole": 30.24171978258442,
+        "baseline": 2.95,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.027999999999999803
+      },
+      {
+        "sid": 3,
+        "target": 109,
+        "carry": 102.27450215796708,
+        "sideLanding": 32.80713213370142,
+        "carryDiff": -6.7254978420329214,
+        "proxHole": 38.51491671867991,
+        "baseline": 2.813,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.22599999999999998
+      },
+      {
+        "sid": 4,
+        "target": 144,
+        "carry": 138.14228826599694,
+        "sideLanding": 33.761870890029435,
+        "carryDiff": -5.857711734003066,
+        "proxHole": 38.061516086765536,
+        "baseline": 2.91,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.129
+      },
+      {
+        "sid": 5,
+        "target": 139,
+        "carry": 136.44410033718054,
+        "sideLanding": 14.738643156395646,
+        "carryDiff": -2.5558996628194546,
+        "proxHole": 16.613886055621474,
+        "baseline": 2.895,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.08400000000000007
+      }
+    ]
+  },
+  {
+    "time": 1721598038,
+    "strokesGained": -0.053999999999999604,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 112,
+        "carry": 110.51060576028706,
+        "sideLanding": 9.8122247828047,
+        "carryDiff": -1.4893942397129418,
+        "proxHole": 10.78167018601003,
+        "baseline": 2.825,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.1990000000000003
+      },
+      {
+        "sid": 2,
+        "target": 116,
+        "carry": 112.45117499735093,
+        "sideLanding": 34.6973816823725,
+        "carryDiff": -3.5488250026490604,
+        "proxHole": 36.2940177674928,
+        "baseline": 2.84,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.18400000000000016
+      },
+      {
+        "sid": 3,
+        "target": 110,
+        "carry": 106.6077570247006,
+        "sideLanding": 6.823427752622016,
+        "carryDiff": -3.392242975299393,
+        "proxHole": 12.252549854069764,
+        "baseline": 2.825,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.1200000000000001
+      },
+      {
+        "sid": 4,
+        "target": 139,
+        "carry": 147.57738259759077,
+        "sideLanding": 20.87267577760625,
+        "carryDiff": 8.577382597590784,
+        "proxHole": 33.133246507792585,
+        "baseline": 2.895,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.10599999999999987
+      },
+      {
+        "sid": 5,
+        "target": 141,
+        "carry": 135.32647370729404,
+        "sideLanding": 26.509288462875986,
+        "carryDiff": -5.67352629270597,
+        "proxHole": 31.503055092390696,
+        "baseline": 2.91,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.08299999999999996
+      }
+    ]
+  },
+  {
+    "time": 1662080146,
+    "strokesGained": -0.2739999999999998,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 106,
+        "carry": 115.19363951703157,
+        "sideLanding": 26.9104254281456,
+        "carryDiff": 9.193639517031567,
+        "proxHole": 38.53411559703823,
+        "baseline": 2.813,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.22599999999999998
+      },
+      {
+        "sid": 2,
+        "target": 128,
+        "carry": 120.38147934037208,
+        "sideLanding": 33.62381619698177,
+        "carryDiff": -7.618520659627923,
+        "proxHole": 40.65633688638231,
+        "baseline": 2.865,
+        "expectedPutts": 2.055,
+        "strokesGained": -0.18999999999999995
+      },
+      {
+        "sid": 3,
+        "target": 108,
+        "carry": 102.05226389472784,
+        "sideLanding": 3.08086713828057,
+        "carryDiff": -5.947736105272159,
+        "proxHole": 18.107231299272655,
+        "baseline": 2.813,
+        "expectedPutts": 1.848,
+        "strokesGained": -0.03499999999999992
+      },
+      {
+        "sid": 4,
+        "target": 132,
+        "carry": 131.5102515128652,
+        "sideLanding": 12.25036043622456,
+        "carryDiff": -0.4897484871347917,
+        "proxHole": 12.338152740312195,
+        "baseline": 2.88,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.17499999999999982
+      },
+      {
+        "sid": 5,
+        "target": 128,
+        "carry": 129.76227647758662,
+        "sideLanding": 18.271210665920645,
+        "carryDiff": 1.7622764775866369,
+        "proxHole": 19.020717774299392,
+        "baseline": 2.865,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.002000000000000224
+      }
+    ]
+  },
+  {
+    "time": 1647166441,
+    "strokesGained": -0.2909999999999997,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 136,
+        "carry": 130.99334191034163,
+        "sideLanding": 26.587377884755757,
+        "carryDiff": -5.006658089658362,
+        "proxHole": 30.53667123030068,
+        "baseline": 2.895,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 2,
+        "target": 111,
+        "carry": 113.80368172983509,
+        "sideLanding": 24.227492715765926,
+        "carryDiff": 2.8036817298350876,
+        "proxHole": 25.64599548608692,
+        "baseline": 2.825,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.10899999999999976
+      },
+      {
+        "sid": 3,
+        "target": 137,
+        "carry": 144.5130762863022,
+        "sideLanding": 1.249997923576955,
+        "carryDiff": 7.513076286302219,
+        "proxHole": 22.5738639218703,
+        "baseline": 2.895,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.008000000000000007
+      },
+      {
+        "sid": 4,
+        "target": 139,
+        "carry": 145.8871887371095,
+        "sideLanding": 9.4808424693167,
+        "carryDiff": 6.887188737109518,
+        "proxHole": 22.73294288544959,
+        "baseline": 2.895,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.008000000000000007
+      },
+      {
+        "sid": 5,
+        "target": 143,
+        "carry": 152.3148831309922,
+        "sideLanding": 14.628182512856974,
+        "carryDiff": 9.314883130992207,
+        "proxHole": 31.54183180041773,
+        "baseline": 2.91,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.08299999999999996
+      }
+    ]
+  },
+  {
+    "time": 1768149469,
+    "strokesGained": -0.4600000000000002,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 132,
+        "carry": 139.74504108956913,
+        "sideLanding": 24.20199149967931,
+        "carryDiff": 7.745041089569124,
+        "proxHole": 33.550072218440555,
+        "baseline": 2.88,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.121
+      },
+      {
+        "sid": 2,
+        "target": 132,
+        "carry": 128.6504363661792,
+        "sideLanding": 29.09913157748472,
+        "carryDiff": -3.349563633820787,
+        "proxHole": 30.78531545066415,
+        "baseline": 2.88,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.09800000000000009
+      },
+      {
+        "sid": 3,
+        "target": 119,
+        "carry": 111.51441680163911,
+        "sideLanding": 18.484680582397885,
+        "carryDiff": -7.485583198360888,
+        "proxHole": 29.08589036989452,
+        "baseline": 2.84,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.13000000000000012
+      },
+      {
+        "sid": 4,
+        "target": 125,
+        "carry": 118.6966354836847,
+        "sideLanding": 3.072729475300955,
+        "carryDiff": -6.303364516315295,
+        "proxHole": 19.158113280233728,
+        "baseline": 2.865,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.002000000000000224
+      },
+      {
+        "sid": 5,
+        "target": 133,
+        "carry": 124.45080170515456,
+        "sideLanding": 19.542405163861492,
+        "carryDiff": -8.54919829484544,
+        "proxHole": 32.24445259187716,
+        "baseline": 2.88,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.11300000000000021
+      }
+    ]
+  },
+  {
+    "time": 1628695606,
+    "strokesGained": -0.040000000000000036,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 122,
+        "carry": 122.01566389596297,
+        "sideLanding": 11.274678894055125,
+        "carryDiff": 0.0156638959629678,
+        "proxHole": 11.274776821861385,
+        "baseline": 2.85,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.18100000000000005
+      },
+      {
+        "sid": 2,
+        "target": 101,
+        "carry": 97.91362894120996,
+        "sideLanding": 30.31133972552949,
+        "carryDiff": -3.086371058790032,
+        "proxHole": 31.69398196455113,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      },
+      {
+        "sid": 3,
+        "target": 147,
+        "carry": 139.95216121768047,
+        "sideLanding": 0.9556705862876547,
+        "carryDiff": -7.047838782319539,
+        "proxHole": 21.165103112992426,
+        "baseline": 2.93,
+        "expectedPutts": 1.891,
+        "strokesGained": 0.039000000000000146
+      },
+      {
+        "sid": 4,
+        "target": 147,
+        "carry": 155.88526995768547,
+        "sideLanding": 6.904932702355887,
+        "carryDiff": 8.885269957685452,
+        "proxHole": 27.535618671324464,
+        "baseline": 2.93,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.02299999999999991
+      },
+      {
+        "sid": 5,
+        "target": 133,
+        "carry": 130.99879343045663,
+        "sideLanding": 23.478041544243144,
+        "carryDiff": -2.001206569543381,
+        "proxHole": 24.233486838650755,
+        "baseline": 2.88,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.04400000000000004
+      }
+    ]
+  },
+  {
+    "time": 1659574403,
+    "strokesGained": 0.07299999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 114,
+        "carry": 119.50474087643155,
+        "sideLanding": 22.001110971852935,
+        "carryDiff": 5.504740876431551,
+        "proxHole": 27.509424440465768,
+        "baseline": 2.825,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.1279999999999999
+      },
+      {
+        "sid": 2,
+        "target": 111,
+        "carry": 118.72448512835437,
+        "sideLanding": 22.178816255139484,
+        "carryDiff": 7.724485128354374,
+        "proxHole": 32.076610247386654,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 3,
+        "target": 102,
+        "carry": 106.45520339057369,
+        "sideLanding": 10.667333282839596,
+        "carryDiff": 4.45520339057369,
+        "proxHole": 17.100629655939315,
+        "baseline": 2.8,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.03000000000000025
+      },
+      {
+        "sid": 4,
+        "target": 117,
+        "carry": 116.55637863890455,
+        "sideLanding": 25.550089987237694,
+        "carryDiff": -0.44362136109544714,
+        "proxHole": 25.58472781884,
+        "baseline": 2.84,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.09400000000000008
+      },
+      {
+        "sid": 5,
+        "target": 123,
+        "carry": 121.87498061027823,
+        "sideLanding": 5.687714687523581,
+        "carryDiff": -1.1250193897217677,
+        "proxHole": 6.613706677191008,
+        "baseline": 2.85,
+        "expectedPutts": 1.357,
+        "strokesGained": 0.4930000000000001
+      }
+    ]
+  },
+  {
+    "time": 1618412274,
+    "strokesGained": 0.016000000000000014,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 138,
+        "carry": 144.96995084940727,
+        "sideLanding": 7.275465163620016,
+        "carryDiff": 6.9699508494072795,
+        "proxHole": 22.139429236893797,
+        "baseline": 2.895,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.008000000000000007
+      },
+      {
+        "sid": 2,
+        "target": 134,
+        "carry": 138.37638611073646,
+        "sideLanding": 7.3190457721011395,
+        "carryDiff": 4.376386110736465,
+        "proxHole": 15.031408101915634,
+        "baseline": 2.88,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.08999999999999986
+      },
+      {
+        "sid": 3,
+        "target": 125,
+        "carry": 121.00626482095903,
+        "sideLanding": 10.324431924500077,
+        "carryDiff": -3.9937351790409625,
+        "proxHole": 15.815915423598488,
+        "baseline": 2.865,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.07500000000000018
+      },
+      {
+        "sid": 4,
+        "target": 143,
+        "carry": 139.5664634593202,
+        "sideLanding": 29.76992224408338,
+        "carryDiff": -3.433536540679789,
+        "proxHole": 31.501600419731382,
+        "baseline": 2.91,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 5,
+        "target": 138,
+        "carry": 131.73524561745606,
+        "sideLanding": 20.54313110199383,
+        "carryDiff": -6.264754382543938,
+        "proxHole": 27.843213944085864,
+        "baseline": 2.895,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.05800000000000005
+      }
+    ]
+  },
+  {
+    "time": 1602018739,
+    "strokesGained": -0.41899999999999893,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 128,
+        "carry": 122.0946101911306,
+        "sideLanding": 10.176383912663313,
+        "carryDiff": -5.9053898088693995,
+        "proxHole": 20.430894466229315,
+        "baseline": 2.865,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.012999999999999678
+      },
+      {
+        "sid": 2,
+        "target": 113,
+        "carry": 105.28898446278083,
+        "sideLanding": 10.130606160484184,
+        "carryDiff": -7.711015537219168,
+        "proxHole": 25.25404970922404,
+        "baseline": 2.825,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.10899999999999976
+      },
+      {
+        "sid": 3,
+        "target": 129,
+        "carry": 133.31814052762343,
+        "sideLanding": 27.521548806634478,
+        "carryDiff": 4.318140527623433,
+        "proxHole": 30.417966520835996,
+        "baseline": 2.865,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.11299999999999977
+      },
+      {
+        "sid": 4,
+        "target": 114,
+        "carry": 123.51850380790033,
+        "sideLanding": 5.490706633646173,
+        "carryDiff": 9.51850380790033,
+        "proxHole": 29.07860196099331,
+        "baseline": 2.825,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.1449999999999998
+      },
+      {
+        "sid": 5,
+        "target": 138,
+        "carry": 142.7457620342744,
+        "sideLanding": 21.16812809265779,
+        "carryDiff": 4.745762034274399,
+        "proxHole": 25.51058530337574,
+        "baseline": 2.895,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.038999999999999924
+      }
+    ]
+  },
+  {
+    "time": 1755940704,
+    "strokesGained": -0.6459999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 146,
+        "carry": 136.11874975941402,
+        "sideLanding": 20.6903170356793,
+        "carryDiff": -9.881250240585972,
+        "proxHole": 36.15025831015104,
+        "baseline": 2.93,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.09399999999999986
+      },
+      {
+        "sid": 2,
+        "target": 121,
+        "carry": 119.82055718103668,
+        "sideLanding": 34.30823910897299,
+        "carryDiff": -1.1794428189633201,
+        "proxHole": 34.490216569736134,
+        "baseline": 2.85,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.1589999999999998
+      },
+      {
+        "sid": 3,
+        "target": 123,
+        "carry": 120.48947561639352,
+        "sideLanding": 26.147778944983838,
+        "carryDiff": -2.510524383606483,
+        "proxHole": 27.210860660440062,
+        "baseline": 2.85,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.10299999999999998
+      },
+      {
+        "sid": 4,
+        "target": 134,
+        "carry": 140.80107014617943,
+        "sideLanding": 15.058768641835242,
+        "carryDiff": 6.801070146179413,
+        "proxHole": 25.358578611736032,
+        "baseline": 2.88,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.05400000000000005
+      },
+      {
+        "sid": 5,
+        "target": 120,
+        "carry": 110.39302660927072,
+        "sideLanding": 33.521818485969725,
+        "carryDiff": -9.606973390729275,
+        "proxHole": 44.208118645537546,
+        "baseline": 2.85,
+        "expectedPutts": 2.086,
+        "strokesGained": -0.23599999999999977
+      }
+    ]
+  },
+  {
+    "time": 1796389332,
+    "strokesGained": -0.5179999999999996,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 111,
+        "carry": 110.98367235212045,
+        "sideLanding": 33.79234038343139,
+        "carryDiff": -0.016327647879553098,
+        "proxHole": 33.79237588448695,
+        "baseline": 2.825,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.1759999999999997
+      },
+      {
+        "sid": 2,
+        "target": 115,
+        "carry": 105.9103706784235,
+        "sideLanding": 2.4313130951518236,
+        "carryDiff": -9.089629321576497,
+        "proxHole": 27.37706219081269,
+        "baseline": 2.84,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.11300000000000021
+      },
+      {
+        "sid": 3,
+        "target": 127,
+        "carry": 120.92336611104912,
+        "sideLanding": 12.267663410211277,
+        "carryDiff": -6.076633888950886,
+        "proxHole": 21.973276504184668,
+        "baseline": 2.865,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.0259999999999998
+      },
+      {
+        "sid": 4,
+        "target": 102,
+        "carry": 109.55438655406476,
+        "sideLanding": 7.143688204975878,
+        "carryDiff": 7.55438655406477,
+        "proxHole": 23.762388075360246,
+        "baseline": 2.8,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.1140000000000001
+      },
+      {
+        "sid": 5,
+        "target": 110,
+        "carry": 106.04442070256027,
+        "sideLanding": 20.345810375460363,
+        "carryDiff": -3.9555792974397193,
+        "proxHole": 23.553587158630293,
+        "baseline": 2.825,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.08899999999999975
+      }
+    ]
+  },
+  {
+    "time": 1708495421,
+    "strokesGained": -0.08400000000000052,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 133,
+        "carry": 130.51363749418923,
+        "sideLanding": 10.308874927204496,
+        "carryDiff": -2.4863625058107726,
+        "proxHole": 12.724420963543297,
+        "baseline": 2.88,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.17499999999999982
+      },
+      {
+        "sid": 2,
+        "target": 135,
+        "carry": 138.87503408126105,
+        "sideLanding": 28.309033271243912,
+        "carryDiff": 3.875034081261063,
+        "proxHole": 30.603012383273768,
+        "baseline": 2.895,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 3,
+        "target": 130,
+        "carry": 132.31692860654738,
+        "sideLanding": 29.505546239363255,
+        "carryDiff": 2.3169286065473766,
+        "proxHole": 30.31320970127943,
+        "baseline": 2.88,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.09800000000000009
+      },
+      {
+        "sid": 4,
+        "target": 101,
+        "carry": 107.64262208888235,
+        "sideLanding": 24.90071525456801,
+        "carryDiff": 6.6426220888823515,
+        "proxHole": 31.893031748807537,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      },
+      {
+        "sid": 5,
+        "target": 130,
+        "carry": 126.11393273464658,
+        "sideLanding": 7.953981137472833,
+        "carryDiff": -3.8860672653534127,
+        "proxHole": 14.11309622488757,
+        "baseline": 2.88,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.11499999999999999
+      }
+    ]
+  },
+  {
+    "time": 1661242016,
+    "strokesGained": -0.11199999999999966,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 130,
+        "carry": 122.9522772305965,
+        "sideLanding": 0.05651442567480458,
+        "carryDiff": -7.047722769403501,
+        "proxHole": 21.143243837917264,
+        "baseline": 2.88,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.01100000000000012
+      },
+      {
+        "sid": 2,
+        "target": 147,
+        "carry": 141.84259873154744,
+        "sideLanding": 29.30690877135895,
+        "carryDiff": -5.157401268452548,
+        "proxHole": 33.140368017378435,
+        "baseline": 2.93,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.07099999999999973
+      },
+      {
+        "sid": 3,
+        "target": 103,
+        "carry": 109.2148593969664,
+        "sideLanding": 29.291390110367942,
+        "carryDiff": 6.2148593969664,
+        "proxHole": 34.72183506835886,
+        "baseline": 2.8,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.20900000000000007
+      },
+      {
+        "sid": 4,
+        "target": 150,
+        "carry": 147.94247229005916,
+        "sideLanding": 20.581214607206697,
+        "carryDiff": -2.0575277099408495,
+        "proxHole": 21.48690711113324,
+        "baseline": 2.95,
+        "expectedPutts": 1.891,
+        "strokesGained": 0.05900000000000016
+      },
+      {
+        "sid": 5,
+        "target": 111,
+        "carry": 106.83337300694551,
+        "sideLanding": 2.594322066299185,
+        "carryDiff": -4.166626993054492,
+        "proxHole": 12.766265369204092,
+        "baseline": 2.825,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.1200000000000001
+      }
+    ]
+  },
+  {
+    "time": 1781499974,
+    "strokesGained": 0.41500000000000026,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 142,
+        "carry": 141.64166788988905,
+        "sideLanding": 21.4814435459349,
+        "carryDiff": -0.3583321101109611,
+        "proxHole": 21.508324758739754,
+        "baseline": 2.91,
+        "expectedPutts": 1.891,
+        "strokesGained": 0.019000000000000128
+      },
+      {
+        "sid": 2,
+        "target": 116,
+        "carry": 117.08001395272149,
+        "sideLanding": 30.458173359505953,
+        "carryDiff": 1.0800139527214938,
+        "proxHole": 30.630021149851924,
+        "baseline": 2.84,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.13800000000000012
+      },
+      {
+        "sid": 3,
+        "target": 131,
+        "carry": 124.9534575240701,
+        "sideLanding": 23.105907210134433,
+        "carryDiff": -6.046542475929899,
+        "proxHole": 29.375653715659887,
+        "baseline": 2.88,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.09000000000000008
+      },
+      {
+        "sid": 4,
+        "target": 127,
+        "carry": 126.21338542850583,
+        "sideLanding": 4.022978471812407,
+        "carryDiff": -0.7866145714941748,
+        "proxHole": 4.664034534761591,
+        "baseline": 2.865,
+        "expectedPutts": 1.147,
+        "strokesGained": 0.7180000000000002
+      },
+      {
+        "sid": 5,
+        "target": 120,
+        "carry": 124.08974015332397,
+        "sideLanding": 23.874698585979687,
+        "carryDiff": 4.089740153323977,
+        "proxHole": 26.842783076029473,
+        "baseline": 2.85,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.09399999999999986
+      }
+    ]
+  },
+  {
+    "time": 1768685354,
+    "strokesGained": -0.2869999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 137,
+        "carry": 136.93796062725863,
+        "sideLanding": 26.89007156336195,
+        "carryDiff": -0.06203937274135818,
+        "proxHole": 26.890715658692653,
+        "baseline": 2.895,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.04899999999999993
+      },
+      {
+        "sid": 2,
+        "target": 144,
+        "carry": 149.33792869522603,
+        "sideLanding": 7.423080149542764,
+        "carryDiff": 5.337928695226019,
+        "proxHole": 17.65059386265493,
+        "baseline": 2.91,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.08000000000000007
+      },
+      {
+        "sid": 3,
+        "target": 105,
+        "carry": 97.37657859407499,
+        "sideLanding": 10.648685741403877,
+        "carryDiff": -7.623421405925017,
+        "proxHole": 25.22783172232644,
+        "baseline": 2.813,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.12099999999999977
+      },
+      {
+        "sid": 4,
+        "target": 142,
+        "carry": 134.49035673399283,
+        "sideLanding": 22.878682510705204,
+        "carryDiff": -7.509643266007182,
+        "proxHole": 32.10898303076308,
+        "baseline": 2.91,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 5,
+        "target": 135,
+        "carry": 126.66811849354401,
+        "sideLanding": 24.44288586527676,
+        "carryDiff": -8.331881506455987,
+        "proxHole": 34.960505064451745,
+        "baseline": 2.895,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.11399999999999988
+      }
+    ]
+  },
+  {
+    "time": 1755109930,
+    "strokesGained": 0.15000000000000058,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 130,
+        "carry": 124.6942148773215,
+        "sideLanding": 29.804314506429186,
+        "carryDiff": -5.305785122678497,
+        "proxHole": 33.78845017325408,
+        "baseline": 2.88,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.121
+      },
+      {
+        "sid": 2,
+        "target": 128,
+        "carry": 125.34122259392636,
+        "sideLanding": 24.106207709670432,
+        "carryDiff": -2.658777406073634,
+        "proxHole": 25.39155619093093,
+        "baseline": 2.865,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.06899999999999973
+      },
+      {
+        "sid": 3,
+        "target": 124,
+        "carry": 125.88978247943787,
+        "sideLanding": 18.883942271973368,
+        "carryDiff": 1.8897824794378693,
+        "proxHole": 19.71661167917895,
+        "baseline": 2.85,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.0129999999999999
+      },
+      {
+        "sid": 4,
+        "target": 133,
+        "carry": 134.53301309081615,
+        "sideLanding": 7.829066990085714,
+        "carryDiff": 1.5330130908161443,
+        "proxHole": 9.07994780628021,
+        "baseline": 2.88,
+        "expectedPutts": 1.575,
+        "strokesGained": 0.30499999999999994
+      },
+      {
+        "sid": 5,
+        "target": 109,
+        "carry": 107.43201291787821,
+        "sideLanding": 13.609074686757582,
+        "carryDiff": -1.5679870821217925,
+        "proxHole": 14.399102931677838,
+        "baseline": 2.813,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.048000000000000265
+      }
+    ]
+  },
+  {
+    "time": 1600950233,
+    "strokesGained": 0.6150000000000002,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 107,
+        "carry": 102.04489259561538,
+        "sideLanding": 27.57263607194161,
+        "carryDiff": -4.9551074043846155,
+        "proxHole": 31.324560084007896,
+        "baseline": 2.813,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.17999999999999994
+      },
+      {
+        "sid": 2,
+        "target": 144,
+        "carry": 138.7943784111209,
+        "sideLanding": 24.864742890606685,
+        "carryDiff": -5.205621588879108,
+        "proxHole": 29.36225304971357,
+        "baseline": 2.91,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.05999999999999983
+      },
+      {
+        "sid": 3,
+        "target": 128,
+        "carry": 128.80179875068958,
+        "sideLanding": 4.314333335969966,
+        "carryDiff": 0.8017987506895725,
+        "proxHole": 4.939575210818028,
+        "baseline": 2.865,
+        "expectedPutts": 1.147,
+        "strokesGained": 0.7180000000000002
+      },
+      {
+        "sid": 4,
+        "target": 134,
+        "carry": 132.30150657544712,
+        "sideLanding": 14.122291052711532,
+        "carryDiff": -1.6984934245528844,
+        "proxHole": 15.013428116081306,
+        "baseline": 2.88,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.08999999999999986
+      },
+      {
+        "sid": 5,
+        "target": 136,
+        "carry": 130.09759182724596,
+        "sideLanding": 6.432229777702167,
+        "carryDiff": -5.90240817275403,
+        "proxHole": 18.839304128690653,
+        "baseline": 2.895,
+        "expectedPutts": 1.848,
+        "strokesGained": 0.04699999999999993
+      }
+    ]
+  },
+  {
+    "time": 1692429050,
+    "strokesGained": 0.5600000000000009,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 149,
+        "carry": 152.13736493736766,
+        "sideLanding": 32.2772244096156,
+        "carryDiff": 3.1373649373676606,
+        "proxHole": 33.62152204081042,
+        "baseline": 2.93,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.07099999999999973
+      },
+      {
+        "sid": 2,
+        "target": 140,
+        "carry": 131.47950159490685,
+        "sideLanding": 0.23299445057819945,
+        "carryDiff": -8.52049840509316,
+        "proxHole": 25.562557071911957,
+        "baseline": 2.91,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0239999999999998
+      },
+      {
+        "sid": 3,
+        "target": 142,
+        "carry": 138.0844326439244,
+        "sideLanding": 5.316740879067501,
+        "carryDiff": -3.9155673560755977,
+        "proxHole": 12.893903328892732,
+        "baseline": 2.91,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.20500000000000007
+      },
+      {
+        "sid": 4,
+        "target": 128,
+        "carry": 130.5905803007798,
+        "sideLanding": 3.5567776674413745,
+        "carryDiff": 2.5905803007798056,
+        "proxHole": 8.546965779076526,
+        "baseline": 2.865,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.3500000000000003
+      },
+      {
+        "sid": 5,
+        "target": 148,
+        "carry": 144.6103102028077,
+        "sideLanding": 13.750864980705678,
+        "carryDiff": -3.3896897971922924,
+        "proxHole": 17.10252203648057,
+        "baseline": 2.93,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.10000000000000009
+      }
+    ]
+  },
+  {
+    "time": 1782653583,
+    "strokesGained": -0.056999999999999273,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 146,
+        "carry": 141.29933653289805,
+        "sideLanding": 13.750545824660371,
+        "carryDiff": -4.700663467101935,
+        "proxHole": 19.696285024202048,
+        "baseline": 2.93,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.06700000000000017
+      },
+      {
+        "sid": 2,
+        "target": 137,
+        "carry": 144.1130117872725,
+        "sideLanding": 21.712194185057143,
+        "carryDiff": 7.113011787272502,
+        "proxHole": 30.442959884060667,
+        "baseline": 2.895,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 3,
+        "target": 135,
+        "carry": 133.57890080038672,
+        "sideLanding": 14.733526759105214,
+        "carryDiff": -1.4210991996132805,
+        "proxHole": 15.33794370760119,
+        "baseline": 2.895,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.10499999999999998
+      },
+      {
+        "sid": 4,
+        "target": 109,
+        "carry": 106.16576885528285,
+        "sideLanding": 14.240618819554482,
+        "carryDiff": -2.8342311447171564,
+        "proxHole": 16.58586808096012,
+        "baseline": 2.813,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.002000000000000224
+      },
+      {
+        "sid": 5,
+        "target": 145,
+        "carry": 154.98350982928952,
+        "sideLanding": 31.622744371409485,
+        "carryDiff": 9.983509829289513,
+        "proxHole": 43.554932880021674,
+        "baseline": 2.93,
+        "expectedPutts": 2.078,
+        "strokesGained": -0.1479999999999997
+      }
+    ]
+  },
+  {
+    "time": 1653717694,
+    "strokesGained": -0.3329999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 133,
+        "carry": 142.41481447561497,
+        "sideLanding": 20.369417592177047,
+        "carryDiff": 9.414814475614971,
+        "proxHole": 34.82329331836285,
+        "baseline": 2.88,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.129
+      },
+      {
+        "sid": 2,
+        "target": 108,
+        "carry": 108.99084902821441,
+        "sideLanding": 30.83725642794497,
+        "carryDiff": 0.9908490282144111,
+        "proxHole": 30.980193998315347,
+        "baseline": 2.813,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.1649999999999998
+      },
+      {
+        "sid": 3,
+        "target": 147,
+        "carry": 150.2935191212952,
+        "sideLanding": 34.942838861969534,
+        "carryDiff": 3.2935191212951853,
+        "proxHole": 36.312909571591774,
+        "baseline": 2.93,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.09399999999999986
+      },
+      {
+        "sid": 4,
+        "target": 103,
+        "carry": 100.65218158179674,
+        "sideLanding": 7.425430776872611,
+        "carryDiff": -2.347818418203258,
+        "proxHole": 10.234612066210278,
+        "baseline": 2.8,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.17399999999999993
+      },
+      {
+        "sid": 5,
+        "target": 113,
+        "carry": 110.83702572964972,
+        "sideLanding": 25.59243430900964,
+        "carryDiff": -2.162974270350282,
+        "proxHole": 26.402250152378105,
+        "baseline": 2.825,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.11899999999999977
+      }
+    ]
+  },
+  {
+    "time": 1777891869,
+    "strokesGained": -0.2650000000000001,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 132,
+        "carry": 122.00890337682266,
+        "sideLanding": 19.708040822012144,
+        "carryDiff": -9.991096623177345,
+        "proxHole": 35.87206404216363,
+        "baseline": 2.88,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.13600000000000012
+      },
+      {
+        "sid": 2,
+        "target": 115,
+        "carry": 113.36849564110868,
+        "sideLanding": 19.03952334565848,
+        "carryDiff": -1.6315043588913163,
+        "proxHole": 19.658578470672964,
+        "baseline": 2.84,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.02300000000000013
+      },
+      {
+        "sid": 3,
+        "target": 137,
+        "carry": 144.38200360824496,
+        "sideLanding": 15.00403149428455,
+        "carryDiff": 7.382003608244954,
+        "proxHole": 26.75007956120423,
+        "baseline": 2.895,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.04899999999999993
+      },
+      {
+        "sid": 4,
+        "target": 132,
+        "carry": 129.7278556009443,
+        "sideLanding": 21.950100265005158,
+        "carryDiff": -2.272144399055687,
+        "proxHole": 22.984139382957558,
+        "baseline": 2.88,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.02300000000000013
+      },
+      {
+        "sid": 5,
+        "target": 143,
+        "carry": 141.98950721825594,
+        "sideLanding": 26.14976001421229,
+        "carryDiff": -1.01049278174405,
+        "proxHole": 26.32488954883776,
+        "baseline": 2.91,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.03399999999999981
+      }
+    ]
+  },
+  {
+    "time": 1716903855,
+    "strokesGained": 0.3819999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 146,
+        "carry": 147.7367633407698,
+        "sideLanding": 32.10362168165751,
+        "carryDiff": 1.7367633407698193,
+        "proxHole": 32.52367825439748,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      },
+      {
+        "sid": 2,
+        "target": 119,
+        "carry": 110.12812208046388,
+        "sideLanding": 8.155597909153002,
+        "carryDiff": -8.87187791953612,
+        "proxHole": 27.837128760490977,
+        "baseline": 2.84,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.11300000000000021
+      },
+      {
+        "sid": 3,
+        "target": 120,
+        "carry": 112.76242824020669,
+        "sideLanding": 8.756715566731918,
+        "carryDiff": -7.237571759793311,
+        "proxHole": 23.41200701178914,
+        "baseline": 2.85,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.06399999999999983
+      },
+      {
+        "sid": 4,
+        "target": 146,
+        "carry": 144.37411201733875,
+        "sideLanding": 5.72994657226031,
+        "carryDiff": -1.6258879826612649,
+        "proxHole": 7.524884936689633,
+        "baseline": 2.93,
+        "expectedPutts": 1.443,
+        "strokesGained": 0.4870000000000001
+      },
+      {
+        "sid": 5,
+        "target": 116,
+        "carry": 113.89839777798808,
+        "sideLanding": 10.96489543473424,
+        "carryDiff": -2.1016022220119135,
+        "proxHole": 12.648301031788597,
+        "baseline": 2.84,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.1349999999999998
+      }
+    ]
+  },
+  {
+    "time": 1757055764,
+    "strokesGained": -0.3390000000000002,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 117,
+        "carry": 109.80551634607042,
+        "sideLanding": 31.30662674223319,
+        "carryDiff": -7.194483653929575,
+        "proxHole": 38.0256523073234,
+        "baseline": 2.84,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.1990000000000003
+      },
+      {
+        "sid": 2,
+        "target": 120,
+        "carry": 115.35791291732599,
+        "sideLanding": 1.8413956350696292,
+        "carryDiff": -4.642087082674015,
+        "proxHole": 14.047472734731114,
+        "baseline": 2.85,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.08500000000000019
+      },
+      {
+        "sid": 3,
+        "target": 117,
+        "carry": 112.94568931870333,
+        "sideLanding": 14.99778069812551,
+        "carryDiff": -4.054310681296672,
+        "proxHole": 19.3098508998219,
+        "baseline": 2.84,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.02300000000000013
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 117.43060990913621,
+        "sideLanding": 11.208744466866602,
+        "carryDiff": 6.430609909136209,
+        "proxHole": 22.31167064015691,
+        "baseline": 2.825,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.07799999999999985
+      },
+      {
+        "sid": 5,
+        "target": 102,
+        "carry": 99.94006165443778,
+        "sideLanding": 23.528904796450867,
+        "carryDiff": -2.0599383455622178,
+        "proxHole": 24.3269290048725,
+        "baseline": 2.8,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.12400000000000011
+      }
+    ]
+  },
+  {
+    "time": 1606869104,
+    "strokesGained": -0.17500000000000004,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 129,
+        "carry": 122.31175991828033,
+        "sideLanding": 19.919590521787832,
+        "carryDiff": -6.688240081719668,
+        "proxHole": 28.27336352597959,
+        "baseline": 2.865,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.09599999999999986
+      },
+      {
+        "sid": 2,
+        "target": 134,
+        "carry": 132.11572092245189,
+        "sideLanding": 18.68572302287435,
+        "carryDiff": -1.8842790775481095,
+        "proxHole": 19.522059667625918,
+        "baseline": 2.88,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.016999999999999904
+      },
+      {
+        "sid": 3,
+        "target": 101,
+        "carry": 97.8831630392162,
+        "sideLanding": 28.353746073867097,
+        "carryDiff": -3.116836960783804,
+        "proxHole": 29.855769462238047,
+        "baseline": 2.8,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.17000000000000015
+      },
+      {
+        "sid": 4,
+        "target": 120,
+        "carry": 124.51767701391204,
+        "sideLanding": 0.053164565436908395,
+        "carryDiff": 4.517677013912033,
+        "proxHole": 13.553135315833028,
+        "baseline": 2.85,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.11299999999999999
+      },
+      {
+        "sid": 5,
+        "target": 135,
+        "carry": 128.95376988688136,
+        "sideLanding": 18.395689290011703,
+        "carryDiff": -6.046230113118646,
+        "proxHole": 25.834346743854308,
+        "baseline": 2.895,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.038999999999999924
+      }
+    ]
+  },
+  {
+    "time": 1602115113,
+    "strokesGained": -0.21599999999999997,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 133,
+        "carry": 139.33599507771163,
+        "sideLanding": 19.00077574861757,
+        "carryDiff": 6.335995077711626,
+        "proxHole": 26.876253118177154,
+        "baseline": 2.88,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.06400000000000006
+      },
+      {
+        "sid": 2,
+        "target": 149,
+        "carry": 141.43854847278365,
+        "sideLanding": 10.322216518510889,
+        "carryDiff": -7.561451527216338,
+        "proxHole": 24.92244162679491,
+        "baseline": 2.93,
+        "expectedPutts": 1.924,
+        "strokesGained": 0.006000000000000227
+      },
+      {
+        "sid": 3,
+        "target": 139,
+        "carry": 145.90067469618333,
+        "sideLanding": 16.587676104884316,
+        "carryDiff": 6.900674696183323,
+        "proxHole": 26.527811819361453,
+        "baseline": 2.895,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.04899999999999993
+      },
+      {
+        "sid": 4,
+        "target": 119,
+        "carry": 113.91918813003291,
+        "sideLanding": 22.99288300769972,
+        "carryDiff": -5.080811869967096,
+        "proxHole": 27.586310234022843,
+        "baseline": 2.84,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.11300000000000021
+      },
+      {
+        "sid": 5,
+        "target": 135,
+        "carry": 139.76968043966284,
+        "sideLanding": 15.896985402215922,
+        "carryDiff": 4.769680439662828,
+        "proxHole": 21.388380217931086,
+        "baseline": 2.895,
+        "expectedPutts": 1.891,
+        "strokesGained": 0.0040000000000000036
+      }
+    ]
+  },
+  {
+    "time": 1690971841,
+    "strokesGained": 1.0420000000000005,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 141,
+        "carry": 131.63920741805438,
+        "sideLanding": 6.502447872510234,
+        "carryDiff": -9.36079258194561,
+        "proxHole": 28.825366748657064,
+        "baseline": 2.91,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.050999999999999934
+      },
+      {
+        "sid": 2,
+        "target": 137,
+        "carry": 136.502206692249,
+        "sideLanding": 5.605232315380412,
+        "carryDiff": -0.4977933077509995,
+        "proxHole": 5.800759683400096,
+        "baseline": 2.895,
+        "expectedPutts": 1.256,
+        "strokesGained": 0.639
+      },
+      {
+        "sid": 3,
+        "target": 148,
+        "carry": 150.15045348217322,
+        "sideLanding": 2.008900765784709,
+        "carryDiff": 2.150453482173223,
+        "proxHole": 6.756902685231514,
+        "baseline": 2.93,
+        "expectedPutts": 1.357,
+        "strokesGained": 0.5730000000000002
+      },
+      {
+        "sid": 4,
+        "target": 125,
+        "carry": 117.91158241918355,
+        "sideLanding": 19.418177875807704,
+        "carryDiff": -7.088417580816455,
+        "proxHole": 28.797163162658194,
+        "baseline": 2.865,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.09599999999999986
+      },
+      {
+        "sid": 5,
+        "target": 148,
+        "carry": 150.3160328285206,
+        "sideLanding": 26.166548202644055,
+        "carryDiff": 2.3160328285206084,
+        "proxHole": 27.0733137500078,
+        "baseline": 2.93,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.02299999999999991
+      }
+    ]
+  },
+  {
+    "time": 1624645565,
+    "strokesGained": -0.2729999999999997,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 132,
+        "carry": 135.4529939431053,
+        "sideLanding": 18.19870996551879,
+        "carryDiff": 3.4529939431053016,
+        "proxHole": 20.940428576062384,
+        "baseline": 2.88,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.0020000000000000018
+      },
+      {
+        "sid": 2,
+        "target": 108,
+        "carry": 103.79617361555124,
+        "sideLanding": 17.961691238287123,
+        "carryDiff": -4.2038263844487584,
+        "proxHole": 21.947021633352627,
+        "baseline": 2.813,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.07799999999999985
+      },
+      {
+        "sid": 3,
+        "target": 133,
+        "carry": 132.0469913460629,
+        "sideLanding": 24.278094109799902,
+        "carryDiff": -0.9530086539370952,
+        "proxHole": 24.445856153029528,
+        "baseline": 2.88,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.04400000000000004
+      },
+      {
+        "sid": 4,
+        "target": 129,
+        "carry": 127.25368497768986,
+        "sideLanding": 25.08509007901043,
+        "carryDiff": -1.746315022310137,
+        "proxHole": 25.626320252552492,
+        "baseline": 2.865,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.06899999999999973
+      },
+      {
+        "sid": 5,
+        "target": 116,
+        "carry": 124.16218496352442,
+        "sideLanding": 2.589790385833089,
+        "carryDiff": 8.162184963524425,
+        "proxHole": 24.623127028296214,
+        "baseline": 2.84,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.08400000000000007
+      }
+    ]
+  },
+  {
+    "time": 1647510212,
+    "strokesGained": 0.08500000000000041,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 110,
+        "carry": 116.7507737371136,
+        "sideLanding": 0.5205715788555404,
+        "carryDiff": 6.750773737113601,
+        "proxHole": 20.25901056853559,
+        "baseline": 2.825,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.052999999999999714
+      },
+      {
+        "sid": 2,
+        "target": 140,
+        "carry": 132.59373075638362,
+        "sideLanding": 16.957451829552753,
+        "carryDiff": -7.406269243616379,
+        "proxHole": 27.950502491583997,
+        "baseline": 2.91,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.04299999999999993
+      },
+      {
+        "sid": 3,
+        "target": 134,
+        "carry": 138.04241786057105,
+        "sideLanding": 11.67439429334009,
+        "carryDiff": 4.042417860571055,
+        "proxHole": 16.833352653335176,
+        "baseline": 2.88,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.06899999999999995
+      },
+      {
+        "sid": 4,
+        "target": 119,
+        "carry": 122.7390787524468,
+        "sideLanding": 3.8336320955524403,
+        "carryDiff": 3.7390787524467957,
+        "proxHole": 11.854244990594786,
+        "baseline": 2.84,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.17099999999999982
+      },
+      {
+        "sid": 5,
+        "target": 126,
+        "carry": 118.01342784732958,
+        "sideLanding": 2.0384600813381946,
+        "carryDiff": -7.986572152670412,
+        "proxHole": 24.046274810279943,
+        "baseline": 2.865,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.05899999999999972
+      }
+    ]
+  },
+  {
+    "time": 1742292474,
+    "strokesGained": -0.5829999999999997,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 104,
+        "carry": 100.79530811327056,
+        "sideLanding": 34.97163823787379,
+        "carryDiff": -3.2046918867294387,
+        "proxHole": 36.26907679884534,
+        "baseline": 2.8,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.2240000000000002
+      },
+      {
+        "sid": 2,
+        "target": 113,
+        "carry": 113.61496552379829,
+        "sideLanding": 22.20796741488343,
+        "carryDiff": 0.6149655237982916,
+        "proxHole": 22.28446678876721,
+        "baseline": 2.825,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.07799999999999985
+      },
+      {
+        "sid": 3,
+        "target": 141,
+        "carry": 132.36183509745007,
+        "sideLanding": 28.48237154946803,
+        "carryDiff": -8.638164902549942,
+        "proxHole": 38.507226919563514,
+        "baseline": 2.91,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.129
+      },
+      {
+        "sid": 4,
+        "target": 148,
+        "carry": 157.2608332865697,
+        "sideLanding": 25.424335218560127,
+        "carryDiff": 9.260833286569689,
+        "proxHole": 37.65984758015427,
+        "baseline": 2.93,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.10199999999999987
+      },
+      {
+        "sid": 5,
+        "target": 105,
+        "carry": 108.95246064003916,
+        "sideLanding": 15.799681209408854,
+        "carryDiff": 3.952460640039156,
+        "proxHole": 19.754175060439145,
+        "baseline": 2.813,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.04999999999999982
+      }
+    ]
+  },
+  {
+    "time": 1675601051,
+    "strokesGained": -0.33000000000000007,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 101,
+        "carry": 93.75204224998176,
+        "sideLanding": 16.955767683386604,
+        "carryDiff": -7.247957750018248,
+        "proxHole": 27.573430719579015,
+        "baseline": 2.8,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.15300000000000025
+      },
+      {
+        "sid": 2,
+        "target": 148,
+        "carry": 157.8097432018451,
+        "sideLanding": 26.431140025127444,
+        "carryDiff": 9.809743201845098,
+        "proxHole": 39.556095841263314,
+        "baseline": 2.93,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.11699999999999999
+      },
+      {
+        "sid": 3,
+        "target": 127,
+        "carry": 130.7762064695239,
+        "sideLanding": 7.199873544723895,
+        "carryDiff": 3.7762064695239204,
+        "proxHole": 13.42295782472268,
+        "baseline": 2.865,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.1280000000000001
+      },
+      {
+        "sid": 4,
+        "target": 136,
+        "carry": 144.8584166495267,
+        "sideLanding": 17.71392934333316,
+        "carryDiff": 8.8584166495267,
+        "proxHole": 31.93786471588397,
+        "baseline": 2.895,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.09800000000000009
+      },
+      {
+        "sid": 5,
+        "target": 109,
+        "carry": 101.52753280538062,
+        "sideLanding": 4.473230511937266,
+        "carryDiff": -7.472467194619384,
+        "proxHole": 22.859345681468934,
+        "baseline": 2.813,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.08999999999999986
+      }
+    ]
+  },
+  {
+    "time": 1686361061,
+    "strokesGained": -0.6889999999999998,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 101,
+        "carry": 91.41498646841212,
+        "sideLanding": 10.24103498288114,
+        "carryDiff": -9.58501353158788,
+        "proxHole": 30.52427160682299,
+        "baseline": 2.8,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.17800000000000016
+      },
+      {
+        "sid": 2,
+        "target": 138,
+        "carry": 128.2073695534279,
+        "sideLanding": 34.241106959881705,
+        "carryDiff": -9.792630446572094,
+        "proxHole": 45.11666992815667,
+        "baseline": 2.895,
+        "expectedPutts": 2.094,
+        "strokesGained": -0.19899999999999984
+      },
+      {
+        "sid": 3,
+        "target": 124,
+        "carry": 124.83360327667197,
+        "sideLanding": 29.691160373031867,
+        "carryDiff": 0.833603276671969,
+        "proxHole": 29.79629262346244,
+        "baseline": 2.85,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.11999999999999988
+      },
+      {
+        "sid": 4,
+        "target": 124,
+        "carry": 115.45014864968884,
+        "sideLanding": 16.695090913380167,
+        "carryDiff": -8.549851350311164,
+        "proxHole": 30.604340927681935,
+        "baseline": 2.85,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.1279999999999999
+      },
+      {
+        "sid": 5,
+        "target": 130,
+        "carry": 125.58898356255158,
+        "sideLanding": 23.494732224674827,
+        "carryDiff": -4.411016437448428,
+        "proxHole": 26.965089215727357,
+        "baseline": 2.88,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.06400000000000006
+      }
+    ]
+  },
+  {
+    "time": 1711894248,
+    "strokesGained": -0.5349999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 103,
+        "carry": 108.05715621307067,
+        "sideLanding": 16.934698708063014,
+        "carryDiff": 5.057156213070677,
+        "proxHole": 22.736698990914782,
+        "baseline": 2.8,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.1030000000000002
+      },
+      {
+        "sid": 2,
+        "target": 120,
+        "carry": 127.7221133587442,
+        "sideLanding": 12.059031284812798,
+        "carryDiff": 7.7221133587441955,
+        "proxHole": 26.11703559088883,
+        "baseline": 2.85,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.09399999999999986
+      },
+      {
+        "sid": 3,
+        "target": 122,
+        "carry": 125.54634315675867,
+        "sideLanding": 18.839469641802616,
+        "carryDiff": 3.5463431567586685,
+        "proxHole": 21.635955362631986,
+        "baseline": 2.85,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.040999999999999925
+      },
+      {
+        "sid": 4,
+        "target": 104,
+        "carry": 95.76863804057125,
+        "sideLanding": 8.769393582290583,
+        "carryDiff": -8.23136195942875,
+        "proxHole": 26.20496405579095,
+        "baseline": 2.8,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.14400000000000013
+      },
+      {
+        "sid": 5,
+        "target": 112,
+        "carry": 113.52800367100109,
+        "sideLanding": 29.65133069081685,
+        "carryDiff": 1.5280036710010911,
+        "proxHole": 30.003575931937053,
+        "baseline": 2.825,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.1529999999999998
+      }
+    ]
+  },
+  {
+    "time": 1746335297,
+    "strokesGained": 0.028000000000000247,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 119,
+        "carry": 127.84696585970612,
+        "sideLanding": 5.3690773553905915,
+        "carryDiff": 8.84696585970612,
+        "proxHole": 27.078519825747843,
+        "baseline": 2.84,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.11300000000000021
+      },
+      {
+        "sid": 2,
+        "target": 144,
+        "carry": 138.34161790552358,
+        "sideLanding": 5.01413821670463,
+        "carryDiff": -5.658382094476419,
+        "proxHole": 17.70020263725927,
+        "baseline": 2.91,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.08000000000000007
+      },
+      {
+        "sid": 3,
+        "target": 109,
+        "carry": 108.1362354557411,
+        "sideLanding": 15.085186416616748,
+        "carryDiff": -0.8637645442589026,
+        "proxHole": 15.306131187055323,
+        "baseline": 2.813,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.02300000000000013
+      },
+      {
+        "sid": 4,
+        "target": 147,
+        "carry": 142.87158252763237,
+        "sideLanding": 15.092144199960178,
+        "carryDiff": -4.128417472367627,
+        "proxHole": 19.523506190941838,
+        "baseline": 2.93,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.06700000000000017
+      },
+      {
+        "sid": 5,
+        "target": 136,
+        "carry": 137.23328092181933,
+        "sideLanding": 24.517291832417,
+        "carryDiff": 1.2332809218193237,
+        "proxHole": 24.794887281151595,
+        "baseline": 2.895,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.028999999999999915
+      }
+    ]
+  },
+  {
+    "time": 1602252705,
+    "strokesGained": -0.3559999999999992,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 136,
+        "carry": 128.2608488336361,
+        "sideLanding": 29.922751408955452,
+        "carryDiff": -7.739151166363916,
+        "proxHole": 37.87375342984417,
+        "baseline": 2.895,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.137
+      },
+      {
+        "sid": 2,
+        "target": 106,
+        "carry": 108.85351101827031,
+        "sideLanding": 19.38716924671222,
+        "carryDiff": 2.853511018270309,
+        "proxHole": 21.19304266930953,
+        "baseline": 2.813,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.07799999999999985
+      },
+      {
+        "sid": 3,
+        "target": 145,
+        "carry": 151.85558441928453,
+        "sideLanding": 15.594326390477066,
+        "carryDiff": 6.855584419284519,
+        "proxHole": 25.810353642330423,
+        "baseline": 2.93,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0039999999999997815
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 115.6535637445223,
+        "sideLanding": 19.427008607072043,
+        "carryDiff": 4.653563744522302,
+        "proxHole": 23.92299235334583,
+        "baseline": 2.825,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.08899999999999975
+      },
+      {
+        "sid": 5,
+        "target": 149,
+        "carry": 149.79224413615816,
+        "sideLanding": 30.432906538538198,
+        "carryDiff": 0.7922441361581676,
+        "proxHole": 30.525573824662068,
+        "baseline": 2.93,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.04799999999999982
+      }
+    ]
+  },
+  {
+    "time": 1678020436,
+    "strokesGained": -0.04399999999999893,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 150,
+        "carry": 147.70325718356855,
+        "sideLanding": 23.67568600296926,
+        "carryDiff": -2.2967428164314345,
+        "proxHole": 24.65792683488738,
+        "baseline": 2.95,
+        "expectedPutts": 1.924,
+        "strokesGained": 0.026000000000000245
+      },
+      {
+        "sid": 2,
+        "target": 127,
+        "carry": 123.23242625245048,
+        "sideLanding": 28.582108252961127,
+        "carryDiff": -3.767573747549524,
+        "proxHole": 30.73578402567613,
+        "baseline": 2.865,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.11299999999999977
+      },
+      {
+        "sid": 3,
+        "target": 113,
+        "carry": 122.87772299901468,
+        "sideLanding": 3.7386625581522543,
+        "carryDiff": 9.877722999014672,
+        "proxHole": 29.868081668080062,
+        "baseline": 2.825,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.1449999999999998
+      },
+      {
+        "sid": 4,
+        "target": 126,
+        "carry": 125.79497582173555,
+        "sideLanding": 13.97759672683581,
+        "carryDiff": -0.2050241782644484,
+        "proxHole": 13.991123060037326,
+        "baseline": 2.865,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.1280000000000001
+      },
+      {
+        "sid": 5,
+        "target": 110,
+        "carry": 105.57943009267997,
+        "sideLanding": 5.301623910604891,
+        "carryDiff": -4.420569907320033,
+        "proxHole": 14.282162330649673,
+        "baseline": 2.825,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.060000000000000275
+      }
+    ]
+  },
+  {
+    "time": 1713963030,
+    "strokesGained": -0.38899999999999957,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 147,
+        "carry": 152.7287542986079,
+        "sideLanding": 3.4616998237376033,
+        "carryDiff": 5.728754298607896,
+        "proxHole": 17.531428863444958,
+        "baseline": 2.93,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.10000000000000009
+      },
+      {
+        "sid": 2,
+        "target": 114,
+        "carry": 109.58424388493275,
+        "sideLanding": 34.261793004302035,
+        "carryDiff": -4.41575611506726,
+        "proxHole": 36.73364368640041,
+        "baseline": 2.825,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.19899999999999984
+      },
+      {
+        "sid": 3,
+        "target": 126,
+        "carry": 122.71341376374797,
+        "sideLanding": 22.515925373552477,
+        "carryDiff": -3.286586236252038,
+        "proxHole": 24.580108568154785,
+        "baseline": 2.865,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.05899999999999972
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 117.37201794646379,
+        "sideLanding": 5.752913299954436,
+        "carryDiff": 6.372017946463789,
+        "proxHole": 19.962953835224436,
+        "baseline": 2.825,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.03799999999999981
+      },
+      {
+        "sid": 5,
+        "target": 103,
+        "carry": 96.85199151316496,
+        "sideLanding": 25.080041577173343,
+        "carryDiff": -6.148008486835039,
+        "proxHole": 31.13182552791443,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      }
+    ]
+  },
+  {
+    "time": 1763330056,
+    "strokesGained": -0.1039999999999992,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 121,
+        "carry": 124.78594913003559,
+        "sideLanding": 6.4173808216655015,
+        "carryDiff": 3.7859491300355863,
+        "proxHole": 13.045438817733771,
+        "baseline": 2.85,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.11299999999999999
+      },
+      {
+        "sid": 2,
+        "target": 108,
+        "carry": 115.81801405278514,
+        "sideLanding": 24.303414806593608,
+        "carryDiff": 7.818014052785138,
+        "proxHole": 33.77496209956817,
+        "baseline": 2.813,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.18799999999999972
+      },
+      {
+        "sid": 3,
+        "target": 106,
+        "carry": 111.1000419127311,
+        "sideLanding": 1.1815428641148702,
+        "carryDiff": 5.100041912731104,
+        "proxHole": 15.345679885370547,
+        "baseline": 2.813,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.02300000000000013
+      },
+      {
+        "sid": 4,
+        "target": 144,
+        "carry": 141.09097500663475,
+        "sideLanding": 23.40106211093523,
+        "carryDiff": -2.9090249933652412,
+        "proxHole": 24.97541882788077,
+        "baseline": 2.91,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.01399999999999979
+      },
+      {
+        "sid": 5,
+        "target": 111,
+        "carry": 107.02656716650574,
+        "sideLanding": 15.319002626189691,
+        "carryDiff": -3.973432833494261,
+        "proxHole": 19.410444554461364,
+        "baseline": 2.825,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.03799999999999981
+      }
+    ]
+  },
+  {
+    "time": 1796962384,
+    "strokesGained": 0.24800000000000044,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 138,
+        "carry": 132.80137791561572,
+        "sideLanding": 27.986990415622948,
+        "carryDiff": -5.198622084384281,
+        "proxHole": 32.03908045981349,
+        "baseline": 2.895,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.09800000000000009
+      },
+      {
+        "sid": 2,
+        "target": 107,
+        "carry": 112.73227674029607,
+        "sideLanding": 22.217430189637508,
+        "carryDiff": 5.732276740296072,
+        "proxHole": 28.09528739624264,
+        "baseline": 2.813,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.1479999999999999
+      },
+      {
+        "sid": 3,
+        "target": 145,
+        "carry": 146.08721674398984,
+        "sideLanding": 24.974755398996823,
+        "carryDiff": 1.087216743989842,
+        "proxHole": 25.18683722652425,
+        "baseline": 2.93,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0039999999999997815
+      },
+      {
+        "sid": 4,
+        "target": 114,
+        "carry": 105.34368024961414,
+        "sideLanding": 17.67614050868682,
+        "carryDiff": -8.656319750385856,
+        "proxHole": 31.413894821736474,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 5,
+        "target": 107,
+        "carry": 108.23026484123163,
+        "sideLanding": 2.5973703783169526,
+        "carryDiff": 1.2302648412316302,
+        "proxHole": 4.513124981461797,
+        "baseline": 2.813,
+        "expectedPutts": 1.147,
+        "strokesGained": 0.6660000000000001
+      }
+    ]
+  },
+  {
+    "time": 1601169703,
+    "strokesGained": -0.7900000000000003,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 105,
+        "carry": 114.14120387815068,
+        "sideLanding": 15.902280539059532,
+        "carryDiff": 9.141203878150673,
+        "proxHole": 31.700741338653323,
+        "baseline": 2.813,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.17999999999999994
+      },
+      {
+        "sid": 2,
+        "target": 116,
+        "carry": 112.32437540331375,
+        "sideLanding": 34.81647912795846,
+        "carryDiff": -3.675624596686249,
+        "proxHole": 36.520941450754684,
+        "baseline": 2.84,
+        "expectedPutts": 2.024,
+        "strokesGained": -0.18400000000000016
+      },
+      {
+        "sid": 3,
+        "target": 101,
+        "carry": 109.20601071037996,
+        "sideLanding": 29.972106192222768,
+        "carryDiff": 8.206010710379953,
+        "proxHole": 38.78626890547366,
+        "baseline": 2.8,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.23900000000000032
+      },
+      {
+        "sid": 4,
+        "target": 134,
+        "carry": 124.13067698190194,
+        "sideLanding": 33.629885809955475,
+        "carryDiff": -9.869323018098061,
+        "proxHole": 44.80626129360367,
+        "baseline": 2.88,
+        "expectedPutts": 2.086,
+        "strokesGained": -0.20599999999999996
+      },
+      {
+        "sid": 5,
+        "target": 141,
+        "carry": 133.89978858766037,
+        "sideLanding": 2.6115141693677324,
+        "carryDiff": -7.100211412339636,
+        "proxHole": 21.460126401213728,
+        "baseline": 2.91,
+        "expectedPutts": 1.891,
+        "strokesGained": 0.019000000000000128
+      }
+    ]
+  },
+  {
+    "time": 1600687184,
+    "strokesGained": -0.47499999999999987,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 134,
+        "carry": 143.6640474176629,
+        "sideLanding": 17.52193000726595,
+        "carryDiff": 9.664047417662918,
+        "proxHole": 33.8756895663699,
+        "baseline": 2.88,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.121
+      },
+      {
+        "sid": 2,
+        "target": 145,
+        "carry": 148.59622828471439,
+        "sideLanding": 31.283213748012162,
+        "carryDiff": 3.5962282847143747,
+        "proxHole": 33.09131582886716,
+        "baseline": 2.93,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.07099999999999973
+      },
+      {
+        "sid": 3,
+        "target": 104,
+        "carry": 96.02479327193763,
+        "sideLanding": 8.902207657560504,
+        "carryDiff": -7.975206728062374,
+        "proxHole": 25.528113960422363,
+        "baseline": 2.8,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.13400000000000012
+      },
+      {
+        "sid": 4,
+        "target": 102,
+        "carry": 99.25790683022755,
+        "sideLanding": 10.771554986625425,
+        "carryDiff": -2.742093169772451,
+        "proxHole": 13.55352616094091,
+        "baseline": 2.8,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.06299999999999972
+      },
+      {
+        "sid": 5,
+        "target": 122,
+        "carry": 129.51000540038578,
+        "sideLanding": 34.98874919052232,
+        "carryDiff": 7.510005400385783,
+        "proxHole": 41.61507178825586,
+        "baseline": 2.85,
+        "expectedPutts": 2.062,
+        "strokesGained": -0.21199999999999974
+      }
+    ]
+  },
+  {
+    "time": 1701460819,
+    "strokesGained": 0.3400000000000003,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 116,
+        "carry": 119.15423910249163,
+        "sideLanding": 11.031508045340539,
+        "carryDiff": 3.154239102491637,
+        "proxHole": 14.534001121356715,
+        "baseline": 2.84,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.07499999999999996
+      },
+      {
+        "sid": 2,
+        "target": 135,
+        "carry": 139.5796354139655,
+        "sideLanding": 13.189077076198966,
+        "carryDiff": 4.579635413965491,
+        "proxHole": 19.044928428469845,
+        "baseline": 2.895,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.03200000000000003
+      },
+      {
+        "sid": 3,
+        "target": 137,
+        "carry": 139.58766460174337,
+        "sideLanding": 7.252419596306693,
+        "carryDiff": 2.5876646017433593,
+        "proxHole": 10.623636986500147,
+        "baseline": 2.895,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.26900000000000013
+      },
+      {
+        "sid": 4,
+        "target": 139,
+        "carry": 140.82667691608833,
+        "sideLanding": 21.62620417306765,
+        "carryDiff": 1.826676916088342,
+        "proxHole": 22.309716357164625,
+        "baseline": 2.895,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.008000000000000007
+      },
+      {
+        "sid": 5,
+        "target": 123,
+        "carry": 129.85278894385252,
+        "sideLanding": 3.8693790701380166,
+        "carryDiff": 6.8527889438525165,
+        "proxHole": 20.919334147369693,
+        "baseline": 2.85,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.027999999999999803
+      }
+    ]
+  },
+  {
+    "time": 1785078632,
+    "strokesGained": 0.372000000000001,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 150,
+        "carry": 157.4518417025782,
+        "sideLanding": 19.91642056721257,
+        "carryDiff": 7.451841702578218,
+        "proxHole": 29.94049617245249,
+        "baseline": 2.95,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.019999999999999796
+      },
+      {
+        "sid": 2,
+        "target": 148,
+        "carry": 148.99576521816536,
+        "sideLanding": 8.630861139857995,
+        "carryDiff": 0.9957652181653529,
+        "proxHole": 9.133219549692315,
+        "baseline": 2.93,
+        "expectedPutts": 1.575,
+        "strokesGained": 0.3550000000000002
+      },
+      {
+        "sid": 3,
+        "target": 107,
+        "carry": 97.05738545411735,
+        "sideLanding": 31.432690316970593,
+        "carryDiff": -9.942614545882645,
+        "proxHole": 43.332600621639955,
+        "baseline": 2.813,
+        "expectedPutts": 2.078,
+        "strokesGained": -0.2649999999999997
+      },
+      {
+        "sid": 4,
+        "target": 140,
+        "carry": 143.47812847639577,
+        "sideLanding": 28.999464072278073,
+        "carryDiff": 3.478128476395778,
+        "proxHole": 30.819560603035594,
+        "baseline": 2.91,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.06799999999999984
+      },
+      {
+        "sid": 5,
+        "target": 105,
+        "carry": 102.607646621958,
+        "sideLanding": 1.1722905234042242,
+        "carryDiff": -2.392353378042003,
+        "proxHole": 7.272170050275516,
+        "baseline": 2.813,
+        "expectedPutts": 1.443,
+        "strokesGained": 0.3700000000000001
+      }
+    ]
+  },
+  {
+    "time": 1628027455,
+    "strokesGained": 0.36400000000000055,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 107,
+        "carry": 107.21219729795654,
+        "sideLanding": 17.31542088447139,
+        "carryDiff": 0.21219729795653386,
+        "proxHole": 17.32711890781986,
+        "baseline": 2.813,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.016999999999999904
+      },
+      {
+        "sid": 2,
+        "target": 120,
+        "carry": 115.08964695895946,
+        "sideLanding": 34.97922914043106,
+        "carryDiff": -4.910353041040539,
+        "proxHole": 37.95458568009518,
+        "baseline": 2.85,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.18199999999999994
+      },
+      {
+        "sid": 3,
+        "target": 141,
+        "carry": 134.4537425574401,
+        "sideLanding": 6.978614914795573,
+        "carryDiff": -6.546257442559879,
+        "proxHole": 20.841843600493764,
+        "baseline": 2.91,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.03200000000000025
+      },
+      {
+        "sid": 4,
+        "target": 129,
+        "carry": 122.88559732144071,
+        "sideLanding": 10.010002667853275,
+        "carryDiff": -6.11440267855929,
+        "proxHole": 20.89673262619271,
+        "baseline": 2.865,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.012999999999999678
+      },
+      {
+        "sid": 5,
+        "target": 100,
+        "carry": 99.90670741432834,
+        "sideLanding": 5.0170644441912495,
+        "carryDiff": -0.09329258567166043,
+        "proxHole": 5.024864893312037,
+        "baseline": 2.8,
+        "expectedPutts": 1.256,
+        "strokesGained": 0.5439999999999998
+      }
+    ]
+  },
+  {
+    "time": 1783646305,
+    "strokesGained": -0.5170000000000003,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 127,
+        "carry": 133.79296825966188,
+        "sideLanding": 9.930508227513968,
+        "carryDiff": 6.792968259661873,
+        "proxHole": 22.669687991846857,
+        "baseline": 2.865,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.03799999999999981
+      },
+      {
+        "sid": 2,
+        "target": 116,
+        "carry": 124.71875612568175,
+        "sideLanding": 27.695581198935567,
+        "carryDiff": 8.718756125681747,
+        "proxHole": 38.094561204440325,
+        "baseline": 2.84,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.1990000000000003
+      },
+      {
+        "sid": 3,
+        "target": 134,
+        "carry": 141.7322163592914,
+        "sideLanding": 12.629432987596646,
+        "carryDiff": 7.732216359291403,
+        "proxHole": 26.411874337695853,
+        "baseline": 2.88,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.06400000000000006
+      },
+      {
+        "sid": 4,
+        "target": 145,
+        "carry": 154.25715058077276,
+        "sideLanding": 0.5622677432501288,
+        "carryDiff": 9.257150580772773,
+        "proxHole": 27.777143065675684,
+        "baseline": 2.93,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.02299999999999991
+      },
+      {
+        "sid": 5,
+        "target": 104,
+        "carry": 107.95252438937972,
+        "sideLanding": 29.15395022467629,
+        "carryDiff": 3.9525243893797235,
+        "proxHole": 31.47308143701021,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      }
+    ]
+  },
+  {
+    "time": 1745693318,
+    "strokesGained": 0.5710000000000006,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 113,
+        "carry": 112.47910594011319,
+        "sideLanding": 25.81658787961402,
+        "carryDiff": -0.5208940598868068,
+        "proxHole": 25.863839338745933,
+        "baseline": 2.825,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.10899999999999976
+      },
+      {
+        "sid": 2,
+        "target": 129,
+        "carry": 127.589402302651,
+        "sideLanding": 8.335160347562583,
+        "carryDiff": -1.4105976973489973,
+        "proxHole": 9.347885899682144,
+        "baseline": 2.865,
+        "expectedPutts": 1.575,
+        "strokesGained": 0.29000000000000026
+      },
+      {
+        "sid": 3,
+        "target": 116,
+        "carry": 117.3381120342074,
+        "sideLanding": 7.771136094455838,
+        "carryDiff": 1.338112034207402,
+        "proxHole": 8.746739423543518,
+        "baseline": 2.84,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.32499999999999996
+      },
+      {
+        "sid": 4,
+        "target": 145,
+        "carry": 138.22539307005448,
+        "sideLanding": 25.72446740731971,
+        "carryDiff": -6.774606929945531,
+        "proxHole": 32.78423271768989,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      },
+      {
+        "sid": 5,
+        "target": 129,
+        "carry": 130.55937288911437,
+        "sideLanding": 12.511021608924327,
+        "carryDiff": 1.5593728891143606,
+        "proxHole": 13.357037694216308,
+        "baseline": 2.865,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.1280000000000001
+      }
+    ]
+  },
+  {
+    "time": 1749194637,
+    "strokesGained": -0.20299999999999963,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 115,
+        "carry": 121.2267168376622,
+        "sideLanding": 11.693158925647305,
+        "carryDiff": 6.226716837662188,
+        "proxHole": 22.038103113659247,
+        "baseline": 2.84,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.06300000000000017
+      },
+      {
+        "sid": 2,
+        "target": 126,
+        "carry": 118.64267066900837,
+        "sideLanding": 33.29646540697581,
+        "carryDiff": -7.357329330991639,
+        "proxHole": 39.947806730282025,
+        "baseline": 2.865,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.18199999999999994
+      },
+      {
+        "sid": 3,
+        "target": 105,
+        "carry": 113.74840647388416,
+        "sideLanding": 3.18286407873744,
+        "carryDiff": 8.748406473884167,
+        "proxHole": 26.437514373223568,
+        "baseline": 2.813,
+        "expectedPutts": 1.944,
+        "strokesGained": -0.13099999999999978
+      },
+      {
+        "sid": 4,
+        "target": 135,
+        "carry": 128.41686059424975,
+        "sideLanding": 3.4034359027409873,
+        "carryDiff": -6.5831394057502335,
+        "proxHole": 20.040531326887024,
+        "baseline": 2.895,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.017000000000000126
+      },
+      {
+        "sid": 5,
+        "target": 113,
+        "carry": 109.61283929717933,
+        "sideLanding": 4.577282898818717,
+        "carryDiff": -3.387160702820669,
+        "proxHole": 11.144830073913722,
+        "baseline": 2.825,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.15600000000000014
+      }
+    ]
+  },
+  {
+    "time": 1751448017,
+    "strokesGained": -0.05799999999999961,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 107,
+        "carry": 115.13141793893472,
+        "sideLanding": 0.5647076112189497,
+        "carryDiff": 8.131417938934717,
+        "proxHole": 24.400789207827533,
+        "baseline": 2.813,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.11099999999999977
+      },
+      {
+        "sid": 2,
+        "target": 139,
+        "carry": 140.81659659077383,
+        "sideLanding": 29.780743896941352,
+        "carryDiff": 1.8165965907738375,
+        "proxHole": 30.275285557987885,
+        "baseline": 2.895,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.08299999999999996
+      },
+      {
+        "sid": 3,
+        "target": 132,
+        "carry": 141.89447971652064,
+        "sideLanding": 0.15259030275167895,
+        "carryDiff": 9.894479716520625,
+        "proxHole": 29.683831348837643,
+        "baseline": 2.88,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.09000000000000008
+      },
+      {
+        "sid": 4,
+        "target": 121,
+        "carry": 113.30310293413933,
+        "sideLanding": 30.589187844380035,
+        "carryDiff": -7.696897065860671,
+        "proxHole": 38.32594986377844,
+        "baseline": 2.85,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.18900000000000006
+      },
+      {
+        "sid": 5,
+        "target": 148,
+        "carry": 149.56429802715874,
+        "sideLanding": 7.672812224216222,
+        "carryDiff": 1.564298027158749,
+        "proxHole": 8.994181579667861,
+        "baseline": 2.93,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.41500000000000026
+      }
+    ]
+  },
+  {
+    "time": 1696960875,
+    "strokesGained": -0.004999999999999671,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 134,
+        "carry": 135.2944157945598,
+        "sideLanding": 5.714617031791299,
+        "carryDiff": 1.2944157945597965,
+        "proxHole": 6.909157550880717,
+        "baseline": 2.88,
+        "expectedPutts": 1.357,
+        "strokesGained": 0.5229999999999999
+      },
+      {
+        "sid": 2,
+        "target": 109,
+        "carry": 106.97794012122472,
+        "sideLanding": 27.564117891229074,
+        "carryDiff": -2.0220598787752753,
+        "proxHole": 28.223733461428324,
+        "baseline": 2.813,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.1479999999999999
+      },
+      {
+        "sid": 3,
+        "target": 123,
+        "carry": 114.93442601048493,
+        "sideLanding": 9.42563041291025,
+        "carryDiff": -8.065573989515071,
+        "proxHole": 25.967746585020755,
+        "baseline": 2.85,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.08399999999999985
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 103.44302455723492,
+        "sideLanding": 8.116273354779421,
+        "carryDiff": -7.556975442765075,
+        "proxHole": 24.079966647661536,
+        "baseline": 2.825,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.09899999999999975
+      },
+      {
+        "sid": 5,
+        "target": 124,
+        "carry": 133.01490371672722,
+        "sideLanding": 28.607061875735592,
+        "carryDiff": 9.014903716727208,
+        "proxHole": 39.36725022603081,
+        "baseline": 2.85,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.19700000000000006
+      }
+    ]
+  },
+  {
+    "time": 1751188364,
+    "strokesGained": -0.1889999999999994,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 149,
+        "carry": 158.87714447832556,
+        "sideLanding": 3.277095957550787,
+        "carryDiff": 9.877144478325551,
+        "proxHole": 29.812098304655578,
+        "baseline": 2.93,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.039999999999999813
+      },
+      {
+        "sid": 2,
+        "target": 132,
+        "carry": 124.84820628086564,
+        "sideLanding": 4.448704191576433,
+        "carryDiff": -7.151793719134359,
+        "proxHole": 21.91173999466032,
+        "baseline": 2.88,
+        "expectedPutts": 1.891,
+        "strokesGained": -0.01100000000000012
+      },
+      {
+        "sid": 3,
+        "target": 125,
+        "carry": 134.83971275184388,
+        "sideLanding": 23.425491541041215,
+        "carryDiff": 9.83971275184389,
+        "proxHole": 37.684654400545945,
+        "baseline": 2.865,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.16699999999999982
+      },
+      {
+        "sid": 4,
+        "target": 147,
+        "carry": 141.7247698998486,
+        "sideLanding": 23.430974787531806,
+        "carryDiff": -5.275230100151401,
+        "proxHole": 28.274777682235477,
+        "baseline": 2.93,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.030999999999999917
+      },
+      {
+        "sid": 5,
+        "target": 113,
+        "carry": 108.43104209059835,
+        "sideLanding": 5.828098181860282,
+        "carryDiff": -4.568957909401645,
+        "proxHole": 14.894465946060562,
+        "baseline": 2.825,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.060000000000000275
+      }
+    ]
+  },
+  {
+    "time": 1728314075,
+    "strokesGained": 0.7730000000000006,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 127,
+        "carry": 125.17557829603493,
+        "sideLanding": 10.514666212060071,
+        "carryDiff": -1.8244217039650685,
+        "proxHole": 11.853895416112247,
+        "baseline": 2.865,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.19600000000000017
+      },
+      {
+        "sid": 2,
+        "target": 134,
+        "carry": 132.91533371911336,
+        "sideLanding": 33.922846421041896,
+        "carryDiff": -1.0846662808866387,
+        "proxHole": 34.07855656822377,
+        "baseline": 2.88,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.129
+      },
+      {
+        "sid": 3,
+        "target": 142,
+        "carry": 140.6586205281228,
+        "sideLanding": 24.523875083479652,
+        "carryDiff": -1.341379471877202,
+        "proxHole": 24.85184377663509,
+        "baseline": 2.91,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.01399999999999979
+      },
+      {
+        "sid": 4,
+        "target": 133,
+        "carry": 134.4353106494024,
+        "sideLanding": 2.446237267558575,
+        "carryDiff": 1.4353106494024068,
+        "proxHole": 4.952284999046811,
+        "baseline": 2.88,
+        "expectedPutts": 1.147,
+        "strokesGained": 0.7329999999999999
+      },
+      {
+        "sid": 5,
+        "target": 129,
+        "carry": 135.575436305442,
+        "sideLanding": 5.134621826989225,
+        "carryDiff": 6.575436305441997,
+        "proxHole": 20.383611180762756,
+        "baseline": 2.865,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.012999999999999678
+      }
+    ]
+  },
+  {
+    "time": 1607693719,
+    "strokesGained": -0.33000000000000007,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 144,
+        "carry": 151.5141664294739,
+        "sideLanding": 31.153528970762096,
+        "carryDiff": 7.514166429473896,
+        "proxHole": 38.45395482262658,
+        "baseline": 2.91,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.129
+      },
+      {
+        "sid": 2,
+        "target": 146,
+        "carry": 155.91780548619812,
+        "sideLanding": 25.31895813382249,
+        "carryDiff": 9.917805486198123,
+        "proxHole": 39.0680871292774,
+        "baseline": 2.93,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.11699999999999999
+      },
+      {
+        "sid": 3,
+        "target": 117,
+        "carry": 108.98529712576158,
+        "sideLanding": 30.448079867014584,
+        "carryDiff": -8.014702874238427,
+        "proxHole": 38.796968013609394,
+        "baseline": 2.84,
+        "expectedPutts": 2.039,
+        "strokesGained": -0.1990000000000003
+      },
+      {
+        "sid": 4,
+        "target": 105,
+        "carry": 102.16080255851328,
+        "sideLanding": 23.36373302294995,
+        "carryDiff": -2.8391974414867116,
+        "proxHole": 24.867919088122036,
+        "baseline": 2.813,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.11099999999999977
+      },
+      {
+        "sid": 5,
+        "target": 139,
+        "carry": 136.99809398556735,
+        "sideLanding": 9.54542747678127,
+        "carryDiff": -2.0019060144326435,
+        "proxHole": 11.277581076192057,
+        "baseline": 2.895,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.22599999999999998
+      }
+    ]
+  },
+  {
+    "time": 1666092456,
+    "strokesGained": 0.01200000000000001,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 103,
+        "carry": 101.43665539740184,
+        "sideLanding": 13.829337500111574,
+        "carryDiff": -1.5633446025981677,
+        "proxHole": 14.602978901931197,
+        "baseline": 2.8,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.03499999999999992
+      },
+      {
+        "sid": 2,
+        "target": 101,
+        "carry": 102.70956761474723,
+        "sideLanding": 11.722886752158335,
+        "carryDiff": 1.709567614747229,
+        "proxHole": 12.795689378398578,
+        "baseline": 2.8,
+        "expectedPutts": 1.705,
+        "strokesGained": 0.09499999999999975
+      },
+      {
+        "sid": 3,
+        "target": 130,
+        "carry": 130.8174706424681,
+        "sideLanding": 27.48485317263312,
+        "carryDiff": 0.8174706424680984,
+        "proxHole": 27.594047875998108,
+        "baseline": 2.88,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.07300000000000018
+      },
+      {
+        "sid": 4,
+        "target": 143,
+        "carry": 149.57037558195972,
+        "sideLanding": 28.9113148715077,
+        "carryDiff": 6.570375581959727,
+        "proxHole": 34.991322427018616,
+        "baseline": 2.91,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.09899999999999975
+      },
+      {
+        "sid": 5,
+        "target": 128,
+        "carry": 128.99013172770165,
+        "sideLanding": 16.049525388067398,
+        "carryDiff": 0.9901317277016481,
+        "proxHole": 16.322086653551164,
+        "baseline": 2.865,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.05400000000000027
+      }
+    ]
+  },
+  {
+    "time": 1729305064,
+    "strokesGained": -0.5899999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 107,
+        "carry": 101.4247258050178,
+        "sideLanding": 30.46739459956632,
+        "carryDiff": -5.575274194982207,
+        "proxHole": 34.7565141351775,
+        "baseline": 2.813,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.19599999999999973
+      },
+      {
+        "sid": 2,
+        "target": 134,
+        "carry": 141.96935780092858,
+        "sideLanding": 22.564786219512367,
+        "carryDiff": 7.96935780092857,
+        "proxHole": 32.87499887399671,
+        "baseline": 2.88,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.11300000000000021
+      },
+      {
+        "sid": 3,
+        "target": 122,
+        "carry": 112.89672489473686,
+        "sideLanding": 17.309416353551192,
+        "carryDiff": -9.103275105263133,
+        "proxHole": 32.333302542108456,
+        "baseline": 2.85,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.14300000000000002
+      },
+      {
+        "sid": 4,
+        "target": 139,
+        "carry": 147.77511869963587,
+        "sideLanding": 12.867234073394773,
+        "carryDiff": 8.775118699635868,
+        "proxHole": 29.30170790984415,
+        "baseline": 2.895,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.07499999999999996
+      },
+      {
+        "sid": 5,
+        "target": 147,
+        "carry": 155.21960432685225,
+        "sideLanding": 20.694839257799746,
+        "carryDiff": 8.21960432685226,
+        "proxHole": 32.19213303768865,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      }
+    ]
+  },
+  {
+    "time": 1698739088,
+    "strokesGained": -0.3989999999999998,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 141,
+        "carry": 143.18376198927422,
+        "sideLanding": 12.728211704510485,
+        "carryDiff": 2.1837619892742133,
+        "proxHole": 14.315261821811976,
+        "baseline": 2.91,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.14500000000000024
+      },
+      {
+        "sid": 2,
+        "target": 110,
+        "carry": 109.0200307378467,
+        "sideLanding": 26.87732069415741,
+        "carryDiff": -0.9799692621533111,
+        "proxHole": 27.037629805318918,
+        "baseline": 2.825,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.1279999999999999
+      },
+      {
+        "sid": 3,
+        "target": 146,
+        "carry": 150.9293056887694,
+        "sideLanding": 26.75875973240673,
+        "carryDiff": 4.9293056887693965,
+        "proxHole": 30.57308806085314,
+        "baseline": 2.93,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.04799999999999982
+      },
+      {
+        "sid": 4,
+        "target": 102,
+        "carry": 111.07851844666905,
+        "sideLanding": 22.48927137144431,
+        "carryDiff": 9.078518446669047,
+        "proxHole": 35.32057193049196,
+        "baseline": 2.8,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.2160000000000002
+      },
+      {
+        "sid": 5,
+        "target": 139,
+        "carry": 147.22504654396224,
+        "sideLanding": 30.954782203873275,
+        "carryDiff": 8.225046543962229,
+        "proxHole": 39.58612202707326,
+        "baseline": 2.895,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.15200000000000014
+      }
+    ]
+  },
+  {
+    "time": 1689506751,
+    "strokesGained": 0.09000000000000075,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 123,
+        "carry": 116.814001055373,
+        "sideLanding": 11.900146775960438,
+        "carryDiff": -6.185998944627,
+        "proxHole": 22.045696627136525,
+        "baseline": 2.85,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.052999999999999936
+      },
+      {
+        "sid": 2,
+        "target": 141,
+        "carry": 141.66912004773664,
+        "sideLanding": 8.515154603064515,
+        "carryDiff": 0.6691200477366444,
+        "proxHole": 8.748562891048941,
+        "baseline": 2.91,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.39500000000000024
+      },
+      {
+        "sid": 3,
+        "target": 120,
+        "carry": 129.47974363840794,
+        "sideLanding": 11.634211300191536,
+        "carryDiff": 9.479743638407939,
+        "proxHole": 30.726938142726272,
+        "baseline": 2.85,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.1279999999999999
+      },
+      {
+        "sid": 4,
+        "target": 129,
+        "carry": 123.17840018863546,
+        "sideLanding": 14.680854933449874,
+        "carryDiff": -5.821599811364533,
+        "proxHole": 22.815493000374016,
+        "baseline": 2.865,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.03799999999999981
+      },
+      {
+        "sid": 5,
+        "target": 145,
+        "carry": 137.15166750062932,
+        "sideLanding": 26.54874300895295,
+        "carryDiff": -7.848332499370676,
+        "proxHole": 35.485245702144006,
+        "baseline": 2.93,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.08599999999999985
+      }
+    ]
+  },
+  {
+    "time": 1664415032,
+    "strokesGained": -0.3119999999999994,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 144,
+        "carry": 146.28507262903733,
+        "sideLanding": 24.676345272403037,
+        "carryDiff": 2.2850726290373338,
+        "proxHole": 25.61085762489472,
+        "baseline": 2.91,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0239999999999998
+      },
+      {
+        "sid": 2,
+        "target": 140,
+        "carry": 147.16841374343173,
+        "sideLanding": 30.74998487469048,
+        "carryDiff": 7.168413743431724,
+        "proxHole": 37.52381870448263,
+        "baseline": 2.91,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.12199999999999989
+      },
+      {
+        "sid": 3,
+        "target": 131,
+        "carry": 130.4647691710442,
+        "sideLanding": 29.17584513441995,
+        "carryDiff": -0.5352308289557932,
+        "proxHole": 29.219996366701327,
+        "baseline": 2.88,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.09000000000000008
+      },
+      {
+        "sid": 4,
+        "target": 105,
+        "carry": 110.03087124405917,
+        "sideLanding": 3.3745566413741326,
+        "carryDiff": 5.030871244059165,
+        "proxHole": 15.465271474971106,
+        "baseline": 2.813,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.02300000000000013
+      },
+      {
+        "sid": 5,
+        "target": 111,
+        "carry": 106.64510830679971,
+        "sideLanding": 21.02544896418255,
+        "carryDiff": -4.354891693200289,
+        "proxHole": 24.753893412572275,
+        "baseline": 2.825,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.09899999999999975
+      }
+    ]
+  },
+  {
+    "time": 1685604792,
+    "strokesGained": 0.17999999999999994,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 102,
+        "carry": 107.45942739676201,
+        "sideLanding": 33.71319554692556,
+        "carryDiff": 5.4594273967620115,
+        "proxHole": 37.48103095553646,
+        "baseline": 2.8,
+        "expectedPutts": 2.032,
+        "strokesGained": -0.2320000000000002
+      },
+      {
+        "sid": 2,
+        "target": 119,
+        "carry": 117.7026623995553,
+        "sideLanding": 28.690186104239157,
+        "carryDiff": -1.2973376004447061,
+        "proxHole": 28.952971217849583,
+        "baseline": 2.84,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.12100000000000022
+      },
+      {
+        "sid": 3,
+        "target": 126,
+        "carry": 127.10366775917026,
+        "sideLanding": 0.7619709266637864,
+        "carryDiff": 1.1036677591702642,
+        "proxHole": 3.3975494693628936,
+        "baseline": 2.865,
+        "expectedPutts": 1.053,
+        "strokesGained": 0.8120000000000003
+      },
+      {
+        "sid": 4,
+        "target": 114,
+        "carry": 112.5791061249959,
+        "sideLanding": 30.97653111545503,
+        "carryDiff": -1.4208938750040971,
+        "proxHole": 31.26844950717849,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 5,
+        "target": 121,
+        "carry": 117.18388045814486,
+        "sideLanding": 25.747902538326002,
+        "carryDiff": -3.8161195418551452,
+        "proxHole": 28.178349851307708,
+        "baseline": 2.85,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.11099999999999999
+      }
+    ]
+  },
+  {
+    "time": 1707306138,
+    "strokesGained": -0.16399999999999948,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 136,
+        "carry": 136.50336384387452,
+        "sideLanding": 24.970401669884275,
+        "carryDiff": 0.5033638438745296,
+        "proxHole": 25.01602158596048,
+        "baseline": 2.895,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.038999999999999924
+      },
+      {
+        "sid": 2,
+        "target": 142,
+        "carry": 142.34560344376885,
+        "sideLanding": 22.30529280135828,
+        "carryDiff": 0.34560344376885155,
+        "proxHole": 22.32937667328467,
+        "baseline": 2.91,
+        "expectedPutts": 1.903,
+        "strokesGained": 0.007000000000000117
+      },
+      {
+        "sid": 3,
+        "target": 145,
+        "carry": 135.70483811660327,
+        "sideLanding": 16.76367316144397,
+        "carryDiff": -9.295161883396721,
+        "proxHole": 32.536457210499705,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      },
+      {
+        "sid": 4,
+        "target": 150,
+        "carry": 158.25327782616287,
+        "sideLanding": 9.689894415637694,
+        "carryDiff": 8.253277826162865,
+        "proxHole": 26.588407392483877,
+        "baseline": 2.95,
+        "expectedPutts": 1.944,
+        "strokesGained": 0.006000000000000227
+      },
+      {
+        "sid": 5,
+        "target": 136,
+        "carry": 142.73366002821288,
+        "sideLanding": 21.871188794308594,
+        "carryDiff": 6.733660028212892,
+        "proxHole": 29.77294905877243,
+        "baseline": 2.895,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.07499999999999996
+      }
+    ]
+  },
+  {
+    "time": 1703050793,
+    "strokesGained": -0.41799999999999926,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 111,
+        "carry": 102.13991930532836,
+        "sideLanding": 31.68438627340968,
+        "carryDiff": -8.860080694671645,
+        "proxHole": 41.35709857772267,
+        "baseline": 2.825,
+        "expectedPutts": 2.062,
+        "strokesGained": -0.23699999999999966
+      },
+      {
+        "sid": 2,
+        "target": 113,
+        "carry": 110.84020490562344,
+        "sideLanding": 29.574700759409627,
+        "carryDiff": -2.15979509437656,
+        "proxHole": 30.276151648712915,
+        "baseline": 2.825,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.1529999999999998
+      },
+      {
+        "sid": 3,
+        "target": 123,
+        "carry": 117.35266070099861,
+        "sideLanding": 3.668464020386795,
+        "carryDiff": -5.647339299001384,
+        "proxHole": 17.334635810748416,
+        "baseline": 2.85,
+        "expectedPutts": 1.83,
+        "strokesGained": 0.020000000000000018
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 115.68644162724019,
+        "sideLanding": 9.940360552714264,
+        "carryDiff": 4.686441627240178,
+        "proxHole": 17.218460559751673,
+        "baseline": 2.825,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.004999999999999893
+      },
+      {
+        "sid": 5,
+        "target": 150,
+        "carry": 152.98090476800823,
+        "sideLanding": 31.696346428244766,
+        "carryDiff": 2.980904768008232,
+        "proxHole": 32.933729154511376,
+        "baseline": 2.95,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.04299999999999993
+      }
+    ]
+  },
+  {
+    "time": 1798487265,
+    "strokesGained": -0.3979999999999997,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 118,
+        "carry": 113.38543425539022,
+        "sideLanding": 27.89446838294569,
+        "carryDiff": -4.6145657446097825,
+        "proxHole": 31.140798311364644,
+        "baseline": 2.84,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.15300000000000025
+      },
+      {
+        "sid": 2,
+        "target": 150,
+        "carry": 151.51602163679038,
+        "sideLanding": 33.22344650833922,
+        "carryDiff": 1.516021636790395,
+        "proxHole": 33.53330124400858,
+        "baseline": 2.95,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.05099999999999971
+      },
+      {
+        "sid": 3,
+        "target": 117,
+        "carry": 109.00597409676662,
+        "sideLanding": 8.384562412587718,
+        "carryDiff": -7.994025903233373,
+        "proxHole": 25.405529676129056,
+        "baseline": 2.84,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.09400000000000008
+      },
+      {
+        "sid": 4,
+        "target": 105,
+        "carry": 103.99604305546073,
+        "sideLanding": 13.38676753692393,
+        "carryDiff": -1.003956944539265,
+        "proxHole": 13.721403390544204,
+        "baseline": 2.813,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.07600000000000007
+      },
+      {
+        "sid": 5,
+        "target": 113,
+        "carry": 107.18063788259968,
+        "sideLanding": 28.900633212510318,
+        "carryDiff": -5.819362117400313,
+        "proxHole": 33.76435071439934,
+        "baseline": 2.825,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.1759999999999997
+      }
+    ]
+  },
+  {
+    "time": 1677808772,
+    "strokesGained": -0.07099999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 121,
+        "carry": 116.1674773033508,
+        "sideLanding": 24.28280818142093,
+        "carryDiff": -4.83252269664921,
+        "proxHole": 28.28134108733797,
+        "baseline": 2.85,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.11099999999999999
+      },
+      {
+        "sid": 2,
+        "target": 131,
+        "carry": 136.59340072483542,
+        "sideLanding": 16.877115188299477,
+        "carryDiff": 5.593400724835432,
+        "proxHole": 23.799416003264337,
+        "baseline": 2.88,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.03400000000000003
+      },
+      {
+        "sid": 3,
+        "target": 118,
+        "carry": 116.36462117408635,
+        "sideLanding": 6.571885711824756,
+        "carryDiff": -1.635378825913648,
+        "proxHole": 8.201210700104387,
+        "baseline": 2.84,
+        "expectedPutts": 1.515,
+        "strokesGained": 0.32499999999999996
+      },
+      {
+        "sid": 4,
+        "target": 117,
+        "carry": 116.26909532448228,
+        "sideLanding": 33.65846614847041,
+        "carryDiff": -0.7309046755177224,
+        "proxHole": 33.72981378943518,
+        "baseline": 2.84,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.16100000000000003
+      },
+      {
+        "sid": 5,
+        "target": 106,
+        "carry": 101.82006393777819,
+        "sideLanding": 18.10687315732487,
+        "carryDiff": -4.17993606222181,
+        "proxHole": 22.02511395870208,
+        "baseline": 2.813,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.08999999999999986
+      }
+    ]
+  },
+  {
+    "time": 1600892840,
+    "strokesGained": -0.3619999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 136,
+        "carry": 142.2853465808871,
+        "sideLanding": 34.29073274628915,
+        "carryDiff": 6.285346580887122,
+        "proxHole": 39.133164797320596,
+        "baseline": 2.895,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.15200000000000014
+      },
+      {
+        "sid": 2,
+        "target": 133,
+        "carry": 126.03627720437042,
+        "sideLanding": 11.446749246115584,
+        "carryDiff": -6.963722795629583,
+        "proxHole": 23.821607520752824,
+        "baseline": 2.88,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.03400000000000003
+      },
+      {
+        "sid": 3,
+        "target": 100,
+        "carry": 93.37363015765943,
+        "sideLanding": 1.463058514647868,
+        "carryDiff": -6.626369842340565,
+        "proxHole": 19.932875753503513,
+        "baseline": 2.8,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.06300000000000017
+      },
+      {
+        "sid": 4,
+        "target": 140,
+        "carry": 142.2794318523426,
+        "sideLanding": 28.44196136661512,
+        "carryDiff": 2.279431852342613,
+        "proxHole": 29.25247771566186,
+        "baseline": 2.91,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.05999999999999983
+      },
+      {
+        "sid": 5,
+        "target": 113,
+        "carry": 115.34121423227354,
+        "sideLanding": 18.749389682071833,
+        "carryDiff": 2.3412142322735434,
+        "proxHole": 20.02176740906715,
+        "baseline": 2.825,
+        "expectedPutts": 1.878,
+        "strokesGained": -0.052999999999999714
+      }
+    ]
+  },
+  {
+    "time": 1742135784,
+    "strokesGained": -0.47299999999999986,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 119,
+        "carry": 111.46528723920974,
+        "sideLanding": 26.68670298546597,
+        "carryDiff": -7.534712760790261,
+        "proxHole": 34.973235248158254,
+        "baseline": 2.84,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.16900000000000004
+      },
+      {
+        "sid": 2,
+        "target": 126,
+        "carry": 119.76688638273635,
+        "sideLanding": 5.5094500394949995,
+        "carryDiff": -6.233113617263653,
+        "proxHole": 19.49408597572991,
+        "baseline": 2.865,
+        "expectedPutts": 1.863,
+        "strokesGained": 0.002000000000000224
+      },
+      {
+        "sid": 3,
+        "target": 104,
+        "carry": 112.73201317277878,
+        "sideLanding": 29.501878805884118,
+        "carryDiff": 8.732013172778782,
+        "proxHole": 39.453686006801874,
+        "baseline": 2.8,
+        "expectedPutts": 2.047,
+        "strokesGained": -0.24700000000000033
+      },
+      {
+        "sid": 4,
+        "target": 108,
+        "carry": 101.32946412368425,
+        "sideLanding": 16.063476350187766,
+        "carryDiff": -6.670535876315757,
+        "proxHole": 25.661249235919563,
+        "baseline": 2.813,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.12099999999999977
+      },
+      {
+        "sid": 5,
+        "target": 144,
+        "carry": 149.79384945745,
+        "sideLanding": 5.449616650026805,
+        "carryDiff": 5.793849457450007,
+        "proxHole": 18.215832274496623,
+        "baseline": 2.91,
+        "expectedPutts": 1.848,
+        "strokesGained": 0.062000000000000055
+      }
+    ]
+  },
+  {
+    "time": 1639260806,
+    "strokesGained": 0.2320000000000002,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 142,
+        "carry": 134.63190770927923,
+        "sideLanding": 21.483286685827423,
+        "carryDiff": -7.368092290720753,
+        "proxHole": 30.82418957355825,
+        "baseline": 2.91,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.06799999999999984
+      },
+      {
+        "sid": 2,
+        "target": 144,
+        "carry": 141.67554069306803,
+        "sideLanding": 13.430582442094897,
+        "carryDiff": -2.324459306931974,
+        "proxHole": 15.133028261394076,
+        "baseline": 2.91,
+        "expectedPutts": 1.79,
+        "strokesGained": 0.1200000000000001
+      },
+      {
+        "sid": 3,
+        "target": 149,
+        "carry": 139.6905335624416,
+        "sideLanding": 16.167599324540195,
+        "carryDiff": -9.309466437558402,
+        "proxHole": 32.27052457099372,
+        "baseline": 2.93,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.06299999999999994
+      },
+      {
+        "sid": 4,
+        "target": 102,
+        "carry": 104.62242469837162,
+        "sideLanding": 6.932325671583335,
+        "carryDiff": 2.6224246983716153,
+        "proxHole": 10.48575895701205,
+        "baseline": 2.8,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.17399999999999993
+      },
+      {
+        "sid": 5,
+        "target": 133,
+        "carry": 138.27450821833403,
+        "sideLanding": 4.348575430233185,
+        "carryDiff": 5.274508218334024,
+        "proxHole": 16.41018100996714,
+        "baseline": 2.88,
+        "expectedPutts": 1.811,
+        "strokesGained": 0.06899999999999995
+      }
+    ]
+  },
+  {
+    "time": 1757955082,
+    "strokesGained": -0.56,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 100,
+        "carry": 96.62831750268782,
+        "sideLanding": 26.25508103199233,
+        "carryDiff": -3.371682497312179,
+        "proxHole": 28.136159399616268,
+        "baseline": 2.8,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.16100000000000025
+      },
+      {
+        "sid": 2,
+        "target": 104,
+        "carry": 95.45530159303809,
+        "sideLanding": 16.94391478771103,
+        "carryDiff": -8.544698406961908,
+        "proxHole": 30.72788775895032,
+        "baseline": 2.8,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.17800000000000016
+      },
+      {
+        "sid": 3,
+        "target": 127,
+        "carry": 128.83072785629503,
+        "sideLanding": 24.082088482869036,
+        "carryDiff": 1.8307278562950415,
+        "proxHole": 24.70042643459957,
+        "baseline": 2.865,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.05899999999999972
+      },
+      {
+        "sid": 4,
+        "target": 100,
+        "carry": 92.74389277174897,
+        "sideLanding": 8.056279170387139,
+        "carryDiff": -7.2561072282510235,
+        "proxHole": 23.21127878946148,
+        "baseline": 2.8,
+        "expectedPutts": 1.914,
+        "strokesGained": -0.1140000000000001
+      },
+      {
+        "sid": 5,
+        "target": 146,
+        "carry": 147.47586912216892,
+        "sideLanding": 30.448237507551237,
+        "carryDiff": 1.4758691221689286,
+        "proxHole": 30.76847208276997,
+        "baseline": 2.93,
+        "expectedPutts": 1.978,
+        "strokesGained": -0.04799999999999982
+      }
+    ]
+  },
+  {
+    "time": 1764821990,
+    "strokesGained": 0.05400000000000027,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 149,
+        "carry": 144.34971828599157,
+        "sideLanding": 11.789179061572705,
+        "carryDiff": -4.650281714008417,
+        "proxHole": 18.2650163734554,
+        "baseline": 2.93,
+        "expectedPutts": 1.848,
+        "strokesGained": 0.08200000000000007
+      },
+      {
+        "sid": 2,
+        "target": 102,
+        "carry": 109.81189956280309,
+        "sideLanding": 7.1315943024569295,
+        "carryDiff": 7.811899562803095,
+        "proxHole": 24.496767344054703,
+        "baseline": 2.8,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.12400000000000011
+      },
+      {
+        "sid": 3,
+        "target": 114,
+        "carry": 121.25178232225838,
+        "sideLanding": 22.430324274724263,
+        "carryDiff": 7.2517823222583715,
+        "proxHole": 31.24763300978261,
+        "baseline": 2.825,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.16799999999999993
+      },
+      {
+        "sid": 4,
+        "target": 137,
+        "carry": 133.86975415087178,
+        "sideLanding": 3.4735529765630515,
+        "carryDiff": -3.130245849128217,
+        "proxHole": 10.012568200259608,
+        "baseline": 2.895,
+        "expectedPutts": 1.626,
+        "strokesGained": 0.26900000000000013
+      },
+      {
+        "sid": 5,
+        "target": 111,
+        "carry": 106.55267773315134,
+        "sideLanding": 10.589195302619592,
+        "carryDiff": -4.447322266848655,
+        "proxHole": 17.03347102806388,
+        "baseline": 2.825,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.004999999999999893
+      }
+    ]
+  },
+  {
+    "time": 1653505225,
+    "strokesGained": -0.139,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 113,
+        "carry": 116.14767806211759,
+        "sideLanding": 16.55060518945018,
+        "carryDiff": 3.147678062117592,
+        "proxHole": 19.05501054268096,
+        "baseline": 2.825,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.03799999999999981
+      },
+      {
+        "sid": 2,
+        "target": 104,
+        "carry": 100.40541493129143,
+        "sideLanding": 9.80448244364241,
+        "carryDiff": -3.5945850687085716,
+        "proxHole": 14.574541239206663,
+        "baseline": 2.8,
+        "expectedPutts": 1.765,
+        "strokesGained": 0.03499999999999992
+      },
+      {
+        "sid": 3,
+        "target": 127,
+        "carry": 119.55266173286003,
+        "sideLanding": 4.4502782229059115,
+        "carryDiff": -7.447338267139971,
+        "proxHole": 22.780926268440822,
+        "baseline": 2.865,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.03799999999999981
+      },
+      {
+        "sid": 4,
+        "target": 118,
+        "carry": 118.23784064567789,
+        "sideLanding": 13.270165621741954,
+        "carryDiff": 0.23784064567788832,
+        "proxHole": 13.289334414600692,
+        "baseline": 2.84,
+        "expectedPutts": 1.737,
+        "strokesGained": 0.10299999999999976
+      },
+      {
+        "sid": 5,
+        "target": 103,
+        "carry": 97.12184990447756,
+        "sideLanding": 28.964419735411884,
+        "carryDiff": -5.878150095522445,
+        "proxHole": 33.91034425538219,
+        "baseline": 2.8,
+        "expectedPutts": 2.001,
+        "strokesGained": -0.20100000000000007
+      }
+    ]
+  },
+  {
+    "time": 1661576510,
+    "strokesGained": 0.4179999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 112,
+        "carry": 115.75967724233846,
+        "sideLanding": 3.2245311090657514,
+        "carryDiff": 3.759677242338448,
+        "proxHole": 11.730906084883278,
+        "baseline": 2.825,
+        "expectedPutts": 1.669,
+        "strokesGained": 0.15600000000000014
+      },
+      {
+        "sid": 2,
+        "target": 135,
+        "carry": 128.5319164624721,
+        "sideLanding": 24.824529856107528,
+        "carryDiff": -6.468083537527898,
+        "proxHole": 31.508446874016638,
+        "baseline": 2.895,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.09800000000000009
+      },
+      {
+        "sid": 3,
+        "target": 135,
+        "carry": 134.658500759945,
+        "sideLanding": 4.906414363221515,
+        "carryDiff": -0.3414992400549881,
+        "proxHole": 5.012234779242648,
+        "baseline": 2.895,
+        "expectedPutts": 1.256,
+        "strokesGained": 0.639
+      },
+      {
+        "sid": 4,
+        "target": 132,
+        "carry": 122.16944408886147,
+        "sideLanding": 33.24710799046317,
+        "carryDiff": -9.830555911138534,
+        "proxHole": 44.44241954965669,
+        "baseline": 2.88,
+        "expectedPutts": 2.086,
+        "strokesGained": -0.20599999999999996
+      },
+      {
+        "sid": 5,
+        "target": 130,
+        "carry": 129.34396050428262,
+        "sideLanding": 27.602704918481813,
+        "carryDiff": -0.6560394957173656,
+        "proxHole": 27.67278101666419,
+        "baseline": 2.88,
+        "expectedPutts": 1.953,
+        "strokesGained": -0.07300000000000018
+      }
+    ]
+  },
+  {
+    "time": 1674086545,
+    "strokesGained": -0.30699999999999994,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 100,
+        "carry": 95.15775819267688,
+        "sideLanding": 13.410196907803332,
+        "carryDiff": -4.84224180732312,
+        "proxHole": 19.77015762687159,
+        "baseline": 2.8,
+        "expectedPutts": 1.863,
+        "strokesGained": -0.06300000000000017
+      },
+      {
+        "sid": 2,
+        "target": 107,
+        "carry": 104.06538118366652,
+        "sideLanding": 15.075824038493007,
+        "carryDiff": -2.93461881633349,
+        "proxHole": 17.45818887554522,
+        "baseline": 2.813,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.016999999999999904
+      },
+      {
+        "sid": 3,
+        "target": 147,
+        "carry": 138.896354760227,
+        "sideLanding": 0.7682504360480763,
+        "carryDiff": -8.103645239772998,
+        "proxHole": 24.32307144012343,
+        "baseline": 2.93,
+        "expectedPutts": 1.924,
+        "strokesGained": 0.006000000000000227
+      },
+      {
+        "sid": 4,
+        "target": 101,
+        "carry": 91.10071061039392,
+        "sideLanding": 9.456315216646283,
+        "carryDiff": -9.899289389606087,
+        "proxHole": 31.167054260052954,
+        "baseline": 2.8,
+        "expectedPutts": 1.993,
+        "strokesGained": -0.19300000000000028
+      },
+      {
+        "sid": 5,
+        "target": 147,
+        "carry": 137.77347531469536,
+        "sideLanding": 8.676431060231684,
+        "carryDiff": -9.22652468530465,
+        "proxHole": 29.007572732991257,
+        "baseline": 2.93,
+        "expectedPutts": 1.97,
+        "strokesGained": -0.039999999999999813
+      }
+    ]
+  },
+  {
+    "time": 1656860446,
+    "strokesGained": -0.486999999999999,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 127,
+        "carry": 119.38729957654284,
+        "sideLanding": 8.950251991165388,
+        "carryDiff": -7.612700423457159,
+        "proxHole": 24.52928617675417,
+        "baseline": 2.865,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.05899999999999972
+      },
+      {
+        "sid": 2,
+        "target": 140,
+        "carry": 145.3933199140943,
+        "sideLanding": 19.450056002725876,
+        "carryDiff": 5.393319914094285,
+        "proxHole": 25.300114145415762,
+        "baseline": 2.91,
+        "expectedPutts": 1.934,
+        "strokesGained": -0.0239999999999998
+      },
+      {
+        "sid": 3,
+        "target": 108,
+        "carry": 115.56076056859712,
+        "sideLanding": 26.3209470854141,
+        "carryDiff": 7.560760568597111,
+        "proxHole": 34.745908519623505,
+        "baseline": 2.813,
+        "expectedPutts": 2.009,
+        "strokesGained": -0.19599999999999973
+      },
+      {
+        "sid": 4,
+        "target": 111,
+        "carry": 114.15836618403837,
+        "sideLanding": 33.78423586912028,
+        "carryDiff": 3.158366184038366,
+        "proxHole": 35.08777687219079,
+        "baseline": 2.825,
+        "expectedPutts": 2.016,
+        "strokesGained": -0.19099999999999984
+      },
+      {
+        "sid": 5,
+        "target": 107,
+        "carry": 105.4835123599737,
+        "sideLanding": 17.252047560696933,
+        "carryDiff": -1.5164876400262912,
+        "proxHole": 17.841826080805788,
+        "baseline": 2.813,
+        "expectedPutts": 1.83,
+        "strokesGained": -0.016999999999999904
+      }
+    ]
+  },
+  {
+    "time": 1691584228,
+    "strokesGained": -0.3429999999999995,
+    "shots": [
+      {
+        "sid": 1,
+        "target": 127,
+        "carry": 134.97568963188445,
+        "sideLanding": 32.288641910651954,
+        "carryDiff": 7.97568963188446,
+        "proxHole": 40.18782181671026,
+        "baseline": 2.865,
+        "expectedPutts": 2.055,
+        "strokesGained": -0.18999999999999995
+      },
+      {
+        "sid": 2,
+        "target": 106,
+        "carry": 113.02566562448828,
+        "sideLanding": 12.550812008759722,
+        "carryDiff": 7.025665624488276,
+        "proxHole": 24.530851580882256,
+        "baseline": 2.813,
+        "expectedPutts": 1.924,
+        "strokesGained": -0.11099999999999977
+      },
+      {
+        "sid": 3,
+        "target": 135,
+        "carry": 143.87646720166006,
+        "sideLanding": 11.3552229882727,
+        "carryDiff": 8.876467201660063,
+        "proxHole": 28.949371650395424,
+        "baseline": 2.895,
+        "expectedPutts": 1.961,
+        "strokesGained": -0.06600000000000006
+      },
+      {
+        "sid": 4,
+        "target": 135,
+        "carry": 141.3209103752735,
+        "sideLanding": 12.263725134895878,
+        "carryDiff": 6.320910375273499,
+        "proxHole": 22.582828120818668,
+        "baseline": 2.895,
+        "expectedPutts": 1.903,
+        "strokesGained": -0.008000000000000007
+      },
+      {
+        "sid": 5,
+        "target": 140,
+        "carry": 133.43142540958308,
+        "sideLanding": 3.623681963464547,
+        "carryDiff": -6.568574590416921,
+        "proxHole": 20.036132868424872,
+        "baseline": 2.91,
+        "expectedPutts": 1.878,
+        "strokesGained": 0.03200000000000025
+      }
+    ]
+  }
+]
