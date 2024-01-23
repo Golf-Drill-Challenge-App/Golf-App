@@ -15,7 +15,7 @@ export default function Stat() {
     const drillDataSorted = drillData.sort((a, b) => a.time - b.time)
     const data = drillDataSorted.map(value => value["strokesGained"])
 
-    const [scrollPosition, setScrollPosition] = useState(0)
+    const [_, setScrollPosition] = useState(0)
     const [movingAvgRange, setMovingAvgRange] = useState(5)
     const [movingAvgRangeValues, setMovingAvgRangeValues] = useState([
         {label: "3", value: 3},
@@ -29,7 +29,6 @@ export default function Stat() {
     const fill = 'rgb(134, 65, 244)'
     const [selected, setSelected] = useState(0)
     const scrollViewRef = useRef();
-    const scrollViewShotRef = useRef();
 
     const dateString = formatDate(drillDataSorted[selected]["time"])
 
@@ -99,7 +98,9 @@ export default function Stat() {
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{
+            flex: 1, //very important
+        }}>
             <Text>Open up App.js to start working on your app!asef</Text>
             <View style={{zIndex: 3}}>
                 <Text>Moving Avg.</Text>
@@ -207,19 +208,12 @@ export default function Stat() {
                 <Text>SG: {numTrunc(data[selected])}</Text>
             </View>
 
-            <ScrollView ref={scrollViewShotRef}
-                        onContentSizeChange={() => scrollViewShotRef.current.scrollTo({y: scrollViewShotRef.current.scrollY})}>
+            <ScrollView>
                 {drillDataSorted[selected]["shots"].map(
                     (shot) =>
-                        <ShotAccordion key={shot["sid"]} shot={shot}/>
+                        <ShotAccordion key={shot["sid"]} shot={shot} total={drillDataSorted[selected]["shots"].length}/>
                 )}
             </ScrollView>
-            {/*<Text>Moving Avg Range: {movingAvgRange}</Text>*/}
-            {/*<Text>Scroll Position: {scrollPosition}</Text>*/}
-            {/*<Text>Last Clicked: {selected}</Text>*/}
-            {/*<Text>Slice: {JSON.stringify(processedData[selected]["slice"])}</Text>*/}
-            {/*<Text>Reduce: {processedData[selected]["reduce"]}</Text>*/}
-            {/*<Text>Moving Average: {processedData[selected]["movingAvg"]}</Text>*/}
             <StatusBar style="auto"/>
         </SafeAreaView>
     );
