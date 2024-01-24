@@ -3,6 +3,9 @@ import * as Font from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useState, useCallback } from "react";
 import { Provider } from "../context/Auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,16 +54,18 @@ export default function RootLayout() {
 
   return (
     <>
-      <Provider onLayout={onLayoutRootView}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(auth)" />
-        </Stack>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider onLayout={onLayoutRootView}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(auth)" />
+          </Stack>
+        </Provider>
+      </QueryClientProvider>
     </>
   );
 }
