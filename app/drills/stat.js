@@ -101,7 +101,7 @@ export default function Stat() {
         <SafeAreaView style={{
             flex: 1, //very important
         }}>
-            <Text>Open up App.js to start working on your app!asef</Text>
+            <Text>Open up App.js to start working on your app!</Text>
             <View style={{zIndex: 3}}>
                 <Text>Moving Avg.</Text>
                 <DropDownPicker
