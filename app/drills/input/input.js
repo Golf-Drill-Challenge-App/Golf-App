@@ -10,8 +10,46 @@ import { DrillData } from "./data/testData";
 export default function Input() {
   const [inputValues, setInputValues] = useState(
     Array.from({ length: DrillData.attempts.length }, () => ({}))
-  );
-  const [attemptIndex, setAttemptIndex] = useState(0);
+  ); //a useState hook to track the inputs on each shot
+  const [attemptIndex, setAttemptIndex] = useState(0); //a useState hook to track what shot attempt index
+
+  const [currentAttempt, setCurrentAttempt] = useState(0);
+
+  const buttonDisplayHandler = () => {
+    if (attemptIndex == currentAttempt) {
+      return (
+        <Button
+          style={styles.button}
+          mode="contained-tonal"
+          onPress={() => {
+            console.log("Pressed Next Shot");
+            setAttemptIndex(attemptIndex + 1);
+            setCurrentAttempt(currentAttempt + 1);
+          }}
+        >
+          Next Shot
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          style={styles.disabledButton}
+          dark={true}
+          mode="contained-tonal"
+          onPress={() => {
+            console.log("Pressed Back to Latest");
+            setAttemptIndex(currentAttempt);
+          }}
+        >
+          Back to Latest
+        </Button>
+      );
+    }
+  };
+
+  const handleShotNavigation = () => {
+    //check if current attempt is equal to attemptIndex
+  };
 
   const handleInputChange = (id, newText) => {
     setInputValues((prevValues) => {
@@ -51,7 +89,7 @@ export default function Input() {
           </Text>
         </View>
 
-        <View style={styles.container}>
+        <View style={styles.container} marginBottom={100}>
           {/* Instruction */}
           {DrillData.attempts[attemptIndex].target.map((item, id) => (
             <DrillTarget
@@ -80,27 +118,14 @@ export default function Input() {
         {/* Navigation */}
 
         <View style={styles.container}>
-          <Button
-            style={styles.button}
-            mode="contained-tonal"
-            onPress={() => {
-              console.log("Pressed Next Shot");
-              //this loop is a test to see if inputs are maintained in state
-              for (let i = 0; i < DrillData.attempts.length; i++) {
-                console.log("InputValue[", i, "]: ", inputValues[i]);
-              }
-              console.log(inputValues);
-            }}
-          >
-            Next Shot
-          </Button>
+          {buttonDisplayHandler()}
 
           <Text onPress={() => console.log("Pressed View All Shots")}>
             View all shots
           </Text>
         </View>
 
-        {/* Test Buttons for navigation between shots */}
+        {/* Test Buttons for navigation between shots and state status */}
 
         <View style={styles.container}>
           <Button
@@ -121,6 +146,20 @@ export default function Input() {
           >
             Decrease Shot index
           </Button>
+
+          <Button
+            style={styles.button}
+            mode="contained-tonal"
+            onPress={() => {
+              //this loop is a test to see if inputs are maintained in state
+              for (let i = 0; i < DrillData.attempts.length; i++) {
+                console.log("InputValue[", i, "]: ", inputValues[i]);
+              }
+              console.log(inputValues);
+            }}
+          >
+            Log Input State Status
+          </Button>
         </View>
       </SafeAreaView>
     </PaperProvider>
@@ -134,6 +173,11 @@ const styles = StyleSheet.create({
   button: {
     width: 200,
     backgroundColor: "#F24E1E",
+    marginBottom: 20,
+  },
+  disabledButton: {
+    width: 200,
+    backgroundColor: "#A0A0A0",
     marginBottom: 20,
   },
   title: {
