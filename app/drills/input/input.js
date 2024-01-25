@@ -38,7 +38,7 @@ export default function Input() {
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Back to Latest");
-            setShotIndex(currentAttempt);
+            setShotIndex(currentShot);
           }}
         >
           Back to Latest
