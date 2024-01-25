@@ -11,20 +11,20 @@ export default function Input() {
   const [inputValues, setInputValues] = useState(
     Array.from({ length: DrillData.attempts.length }, () => ({}))
   ); //a useState hook to track the inputs on each shot
-  const [attemptIndex, setAttemptIndex] = useState(0); //a useState hook to track what shot attempt index
+  const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
-  const [currentAttempt, setCurrentAttempt] = useState(0);
+  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
   const buttonDisplayHandler = () => {
-    if (attemptIndex == currentAttempt) {
+    if (shotIndex == currentShot) {
       return (
         <Button
           style={styles.button}
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Next Shot");
-            setAttemptIndex(attemptIndex + 1);
-            setCurrentAttempt(currentAttempt + 1);
+            setShotIndex(shotIndex + 1);
+            setCurrentShot(currentShot + 1);
           }}
         >
           Next Shot
@@ -38,7 +38,7 @@ export default function Input() {
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Back to Latest");
-            setAttemptIndex(currentAttempt);
+            setShotIndex(currentAttempt);
           }}
         >
           Back to Latest
@@ -47,15 +47,11 @@ export default function Input() {
     }
   };
 
-  const handleShotNavigation = () => {
-    //check if current attempt is equal to attemptIndex
-  };
-
   const handleInputChange = (id, newText) => {
     setInputValues((prevValues) => {
       const updatedValues = [...prevValues];
-      updatedValues[attemptIndex] = {
-        ...updatedValues[attemptIndex],
+      updatedValues[shotIndex] = {
+        ...updatedValues[shotIndex],
         [id]: newText,
       };
       return updatedValues;
@@ -84,14 +80,14 @@ export default function Input() {
         {/* Shot Number / Total shots */}
         <View>
           <Text style={styles.title}>
-            Shot {DrillData.attempts[attemptIndex].shotNum}{" "}
+            Shot {DrillData.attempts[shotIndex].shotNum}{" "}
             <Text>/{DrillData.attempts.length}</Text>
           </Text>
         </View>
 
         <View style={styles.container} marginBottom={100}>
           {/* Instruction */}
-          {DrillData.attempts[attemptIndex].target.map((item, id) => (
+          {DrillData.attempts[shotIndex].target.map((item, id) => (
             <DrillTarget
               key={id}
               description={item.description}
@@ -101,13 +97,13 @@ export default function Input() {
           ))}
 
           {/* Inputs */}
-          {DrillData.attempts[attemptIndex].inputs.map((item, id) => (
+          {DrillData.attempts[shotIndex].inputs.map((item, id) => (
             <DrillInput
               key={id}
               icon={item.icon}
               prompt={item.prompt}
               distanceMeasure={item.distanceMeasure}
-              inputValue={inputValues[attemptIndex]?.[item.id] || ""}
+              inputValue={inputValues[shotIndex]?.[item.id] || ""}
               onInputChange={(newText) => {
                 handleInputChange(item.id, newText);
               }}
@@ -132,7 +128,7 @@ export default function Input() {
             style={styles.button}
             mode="contained-tonal"
             onPress={() => {
-              setAttemptIndex(attemptIndex + 1);
+              setShotIndex(shotIndex + 1);
             }}
           >
             Increase Shot index
@@ -141,7 +137,7 @@ export default function Input() {
             style={styles.button}
             mode="contained-tonal"
             onPress={() => {
-              setAttemptIndex(attemptIndex - 1);
+              setShotIndex(shotIndex - 1);
             }}
           >
             Decrease Shot index
