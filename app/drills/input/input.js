@@ -15,7 +15,27 @@ export default function Input() {
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
+  //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
+    //Logic to display "Submit Drill"
+    if (
+      currentShot == DrillData.attempts.length - 1 &&
+      shotIndex == DrillData.attempts.length - 1
+    ) {
+      return (
+        <Button
+          style={styles.button}
+          mode="contained-tonal"
+          onPress={() => {
+            console.log("Pressed Submit Drill");
+          }}
+        >
+          Submit Drill
+        </Button>
+      );
+    }
+
+    //Logic to dislay "Next Shot"
     if (shotIndex == currentShot) {
       return (
         <Button
@@ -87,14 +107,17 @@ export default function Input() {
 
         <View style={styles.container} marginBottom={100}>
           {/* Instruction */}
-          {DrillData.attempts[shotIndex].target.map((item, id) => (
-            <DrillTarget
-              key={id}
-              description={item.description}
-              distanceMeasure={item.distanceMeasure}
-              value={item.value}
-            />
-          ))}
+
+          <View style={styles.horizontalContainer}>
+            {DrillData.attempts[shotIndex].target.map((item, id) => (
+              <DrillTarget
+                key={id}
+                description={item.description}
+                distanceMeasure={item.distanceMeasure}
+                value={item.value}
+              />
+            ))}
+          </View>
 
           {/* Inputs */}
           {DrillData.attempts[shotIndex].inputs.map((item, id) => (
@@ -186,5 +209,6 @@ const styles = StyleSheet.create({
   horizontalContainer: {
     flexDirection: "row",
     alignItems: "center",
+    marginVertical: 10,
   },
 });
