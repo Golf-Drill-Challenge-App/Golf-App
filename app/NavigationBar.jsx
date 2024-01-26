@@ -8,11 +8,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CommonActions } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import PlanScreenMain from './components/plan/PlanScreen';
+import PlanScreenMain from './components/PlanScreen';
 import { styles } from './styles/style';
-import ProfileScreen from './components/profile/ProfileScreen';
-import DrillScreen from './components/drill/DrillScreen';
-import TeamScreen from './components/team/TeamScreen';
+import ProfileScreen from './components/ProfileScreen';
+import { DrillScreen } from './components/DrillScreen';
+import TeamScreen from './components/TeamScreen';
 
 const Tab = createBottomTabNavigator();
 
