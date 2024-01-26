@@ -86,101 +86,99 @@ export default function Input() {
 
   return (
     <PaperProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Appbar.Header style={{}}>
-          <Appbar.BackAction onPress={goBack} color={"#F24E1E"} />
-          <Appbar.Content title="20 Shot Challenge" titleStyle={styles.title} />
-          <Appbar.Action
-            icon="information-outline"
-            onPress={() => {}}
-            color={"#F24E1E"}
-          />
-        </Appbar.Header>
+      <Appbar.Header style={{}} statusBarHeight={0}>
+        <Appbar.BackAction onPress={goBack} color={"#F24E1E"} />
+        <Appbar.Content title="20 Shot Challenge" titleStyle={styles.title} />
+        <Appbar.Action
+          icon="information-outline"
+          onPress={() => { }}
+          color={"#F24E1E"}
+        />
+      </Appbar.Header>
 
-        {/* Shot Number / Total shots */}
-        <View>
-          <Text style={styles.title}>
-            Shot {DrillData.attempts[shotIndex].shotNum}{" "}
-            <Text>/{DrillData.attempts.length}</Text>
-          </Text>
-        </View>
+      {/* Shot Number / Total shots */}
+      <View>
+        <Text style={styles.title}>
+          Shot {DrillData.attempts[shotIndex].shotNum}{" "}
+          <Text>/{DrillData.attempts.length}</Text>
+        </Text>
+      </View>
 
-        <View style={styles.container} marginBottom={100}>
-          {/* Instruction */}
+      <View style={styles.container} marginBottom={100}>
+        {/* Instruction */}
 
-          <View style={styles.horizontalContainer}>
-            {DrillData.attempts[shotIndex].target.map((item, id) => (
-              <DrillTarget
-                key={id}
-                description={item.description}
-                distanceMeasure={item.distanceMeasure}
-                value={item.value}
-              />
-            ))}
-          </View>
-
-          {/* Inputs */}
-          {DrillData.attempts[shotIndex].inputs.map((item, id) => (
-            <DrillInput
+        <View style={styles.horizontalContainer}>
+          {DrillData.attempts[shotIndex].target.map((item, id) => (
+            <DrillTarget
               key={id}
-              icon={item.icon}
-              prompt={item.prompt}
+              description={item.description}
               distanceMeasure={item.distanceMeasure}
-              inputValue={inputValues[shotIndex]?.[item.id] || ""}
-              onInputChange={(newText) => {
-                handleInputChange(item.id, newText);
-              }}
+              value={item.value}
             />
           ))}
         </View>
 
-        {/* Navigation */}
+        {/* Inputs */}
+        {DrillData.attempts[shotIndex].inputs.map((item, id) => (
+          <DrillInput
+            key={id}
+            icon={item.icon}
+            prompt={item.prompt}
+            distanceMeasure={item.distanceMeasure}
+            inputValue={inputValues[shotIndex] ?.[item.id] || ""}
+            onInputChange={(newText) => {
+              handleInputChange(item.id, newText);
+            }}
+          />
+        ))}
+      </View>
 
-        <View style={styles.container}>
-          {buttonDisplayHandler()}
+      {/* Navigation */}
 
-          <Text onPress={() => console.log("Pressed View All Shots")}>
-            View all shots
+      <View style={styles.container}>
+        {buttonDisplayHandler()}
+
+        <Text onPress={() => console.log("Pressed View All Shots")}>
+          View all shots
           </Text>
-        </View>
+      </View>
 
-        {/* Test Buttons for navigation between shots and state status */}
+      {/* Test Buttons for navigation between shots and state status */}
 
-        <View style={styles.container}>
-          <Button
-            style={styles.button}
-            mode="contained-tonal"
-            onPress={() => {
-              setShotIndex(shotIndex + 1);
-            }}
-          >
-            Increase Shot index
+      <View style={styles.container}>
+        <Button
+          style={styles.button}
+          mode="contained-tonal"
+          onPress={() => {
+            setShotIndex(shotIndex + 1);
+          }}
+        >
+          Increase Shot index
           </Button>
-          <Button
-            style={styles.button}
-            mode="contained-tonal"
-            onPress={() => {
-              setShotIndex(shotIndex - 1);
-            }}
-          >
-            Decrease Shot index
+        <Button
+          style={styles.button}
+          mode="contained-tonal"
+          onPress={() => {
+            setShotIndex(shotIndex - 1);
+          }}
+        >
+          Decrease Shot index
           </Button>
 
-          <Button
-            style={styles.button}
-            mode="contained-tonal"
-            onPress={() => {
-              //this loop is a test to see if inputs are maintained in state
-              for (let i = 0; i < DrillData.attempts.length; i++) {
-                console.log("InputValue[", i, "]: ", inputValues[i]);
-              }
-              console.log(inputValues);
-            }}
-          >
-            Log Input State Status
+        <Button
+          style={styles.button}
+          mode="contained-tonal"
+          onPress={() => {
+            //this loop is a test to see if inputs are maintained in state
+            for (let i = 0; i < DrillData.attempts.length; i++) {
+              console.log("InputValue[", i, "]: ", inputValues[i]);
+            }
+            console.log(inputValues);
+          }}
+        >
+          Log Input State Status
           </Button>
-        </View>
-      </SafeAreaView>
+      </View>
     </PaperProvider>
   );
 }
