@@ -15,9 +15,8 @@ export default function DrillTarget({ description, distanceMeasure, value }) {
 const styles = StyleSheet.create({
   item: {
     marginBottom: 20,
-  },
-  horizontalContainer: {
-    flexDirection: "row",
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
 });

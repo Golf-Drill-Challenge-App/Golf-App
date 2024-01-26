@@ -32,6 +32,11 @@ export const DrillData = {
           distanceMeasure: "yd",
           value: 69, //this will need to be randomly generated
         },
+        {
+          description: "Target Distance",
+          distanceMeasure: "yd",
+          value: 150, //this will need to be randomly generated
+        },
       ],
       inputs: [
         {
