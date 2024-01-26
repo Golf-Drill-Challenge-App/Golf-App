@@ -23,8 +23,8 @@ export default function Index() {
 
     return (
         <PaperProvider>
-            <SafeAreaView style={{ flex: 1 }}>
-                <Appbar.Header style={{  }}>
+            {/*<SafeAreaView style={{ flex: 1 }}>*/}
+                <Appbar.Header style={{  }} statusBarHeight={0}>
                     <Appbar.BackAction onPress={() => {  }} color={"#F24E1E"} />
                     <Appbar.Content title="20 Shot Challenge" />
                 </Appbar.Header>
@@ -53,7 +53,7 @@ export default function Index() {
 
                 {tabComponent()}
 
-            </SafeAreaView>
+            {/*</SafeAreaView>*/}
         </PaperProvider>
     );
 }
