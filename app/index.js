@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from "react-native";
+import { View, StatusBar } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperProvider, Text, SegmentedButtons, Appbar } from 'react-native-paper';
 
@@ -23,37 +23,35 @@ export default function Index() {
 
     return (
         <PaperProvider>
-            {/*<SafeAreaView style={{ flex: 1 }}>*/}
-                <Appbar.Header style={{  }} statusBarHeight={0}>
-                    <Appbar.BackAction onPress={() => {  }} color={"#F24E1E"} />
-                    <Appbar.Content title="20 Shot Challenge" />
-                </Appbar.Header>
+            <Appbar.Header statusBarHeight={0}>
+                <Appbar.BackAction onPress={() => { }} color={"#F24E1E"} />
+                <Appbar.Content title="20 Shot Challenge" />
+            </Appbar.Header>
 
-                {/* Tab system */}
+            {/* Tab system */}
 
-                <SegmentedButtons
-                    value={value}
-                    onValueChange={setValue}
-                    buttons={[
-                        {
-                            value: "description",
-                            label: "Description",
-                        },
-                        {
-                            value: "leaderboard",
-                            label: "Leaderboard",
-                        },
-                        {
-                            value: "stats",
-                            label: "Stats",
-                        },
-                    ]}
+            <SegmentedButtons
+                value={value}
+                onValueChange={setValue}
+                buttons={[
+                    {
+                        value: "description",
+                        label: "Description",
+                    },
+                    {
+                        value: "leaderboard",
+                        label: "Leaderboard",
+                    },
+                    {
+                        value: "stats",
+                        label: "Stats",
+                    },
+                ]}
 
-                />
+            />
 
-                {tabComponent()}
+            {tabComponent()}
 
-            {/*</SafeAreaView>*/}
         </PaperProvider>
     );
 }
