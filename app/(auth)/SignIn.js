@@ -1,7 +1,6 @@
 import { StyleSheet, Pressable, Text, View, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAuth } from "../../context/Auth";
-import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";

@@ -4,6 +4,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useState, useCallback } from "react";
 import { Provider } from "../context/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PaperProvider, MD3LightTheme } from "react-native-paper";
 
 const queryClient = new QueryClient();
 
@@ -56,14 +57,16 @@ export default function RootLayout() {
     <>
       <QueryClientProvider client={queryClient}>
         <Provider onLayout={onLayoutRootView}>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="(auth)" />
-          </Stack>
+          <PaperProvider theme={MD3LightTheme}>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(auth)" />
+            </Stack>
+          </PaperProvider>
         </Provider>
       </QueryClientProvider>
     </>
