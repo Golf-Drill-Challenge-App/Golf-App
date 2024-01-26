@@ -98,9 +98,7 @@ export default function Stat() {
     };
 
     return (
-        <SafeAreaView style={{
-            flex: 1, //very important
-        }}>
+        <>
             <Text>Open up App.js to start working on your app!asef</Text>
             <View style={{zIndex: 3}}>
                 <Text>Moving Avg.</Text>
@@ -215,6 +213,6 @@ export default function Stat() {
                 )}
             </ScrollView>
             <StatusBar style="auto"/>
-        </SafeAreaView>
+        </>
     );
 }
