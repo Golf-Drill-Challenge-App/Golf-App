@@ -23,14 +23,37 @@ export default function Index() {
 
     return (
         <PaperProvider>
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>Open up App.js to start working on your app!</Text>
-                <Link href={{
-                    pathname: "/drill/1234/statistics"
-                }}>
-                    Go to Stats at /drill/1234/statistics
-                </Link>
-            </SafeAreaView>
+            {/*<SafeAreaView style={{ flex: 1 }}>*/}
+                <Appbar.Header style={{  }} statusBarHeight={0}>
+                    <Appbar.BackAction onPress={() => {  }} color={"#F24E1E"} />
+                    <Appbar.Content title="20 Shot Challenge" />
+                </Appbar.Header>
+
+                {/* Tab system */}
+
+                <SegmentedButtons
+                    value={value}
+                    onValueChange={setValue}
+                    buttons={[
+                        {
+                            value: "description",
+                            label: "Description",
+                        },
+                        {
+                            value: "leaderboard",
+                            label: "Leaderboard",
+                        },
+                        {
+                            value: "stats",
+                            label: "Stats",
+                        },
+                    ]}
+
+                />
+
+                {tabComponent()}
+
+            {/*</SafeAreaView>*/}
         </PaperProvider>
     );
 }
