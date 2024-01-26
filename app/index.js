@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperProvider, Text } from 'react-native-paper';
 import {Link} from "expo-router";
 
+//This is the root file
 export default function Index() {
     return (
         <PaperProvider>
