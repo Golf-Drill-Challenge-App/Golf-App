@@ -12,6 +12,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Description from "../description";
 
 export default function Input() {
   const [inputValues, setInputValues] = useState(
@@ -94,7 +95,7 @@ export default function Input() {
   //Bottom Sheet stuff
   const bottomSheetModalRef = useRef(null);
 
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+  const snapPoints = useMemo(() => ["50%", "90%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -103,6 +104,12 @@ export default function Input() {
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
   }, []);
+
+  //test for navigation on sheet
+
+  const testIndexs = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  ];
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -226,7 +233,21 @@ export default function Input() {
               onChange={handleSheetChanges}
             >
               <BottomSheetScrollView>
-                <Text>Hello World</Text>
+                <View>
+                  {testIndexs.map((item, id) => (
+                    <Button
+                      key={id}
+                      style={styles.button}
+                      mode="contained-tonal"
+                      onPress={() => {
+                        setShotIndex(id);
+                        bottomSheetModalRef.current.close();
+                      }}
+                    >
+                      Navigate to shot {item + 1}
+                    </Button>
+                  ))}
+                </View>
               </BottomSheetScrollView>
             </BottomSheetModal>
           </View>
