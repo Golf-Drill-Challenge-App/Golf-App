@@ -1,7 +1,7 @@
 import React from 'react';
 import {List, Text} from "react-native-paper";
 import {View} from "react-native";
-import {numTrunc} from "../../../Utility";
+import {numTrunc} from "~/Utility";
 
 function ShotAccordion(props) {
     return (
