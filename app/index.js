@@ -31,6 +31,16 @@ export default function Index() {
                 }}>
                     Go to Drills
                 </Link>
+                <Link href={{
+                    pathname: "/drill/1234/statistics2"
+                }}>
+                    Go to Stats at /drill/1234/statistics2
+                </Link>
+                <Link href={{
+                pathname: "/drill/1234/submission/"
+            }}>
+                Go to Result at /drill/1234/submission/
+            </Link>
             </SafeAreaView>
         </PaperProvider>
     );

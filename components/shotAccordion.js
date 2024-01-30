@@ -20,7 +20,7 @@ function ShotAccordion(props) {
             style={{
                 backgroundColor: "#fff",
                 borderWidth: 1,
-                borderStyle: 'solid'
+                borderStyle: 'solid',
             }}>
             <View style={{
                 flexDirection: "row",
