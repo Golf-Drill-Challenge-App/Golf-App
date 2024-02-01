@@ -13,6 +13,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "../description";
+import NavigationRectange from "./components/navigationRectange";
 
 export default function Input() {
   const [inputValues, setInputValues] = useState(
@@ -233,19 +234,18 @@ export default function Input() {
               onChange={handleSheetChanges}
             >
               <BottomSheetScrollView>
-                <View>
-                  {testIndexs.map((item, id) => (
-                    <Button
-                      key={id}
-                      style={styles.button}
-                      mode="contained-tonal"
+                <View style={styles.bottomSheetContentContainer}>
+                  {DrillData.attempts.map((item, id) => (
+                    <NavigationRectange
+                      id={id}
                       onPress={() => {
+                        console.log("Clicked on ", id);
                         setShotIndex(id);
-                        bottomSheetModalRef.current.close();
                       }}
-                    >
-                      Navigate to shot {item + 1}
-                    </Button>
+                      inputs={item.inputs}
+                      inputValues={inputValues[id]}
+                      shotIndex={id}
+                    />
                   ))}
                 </View>
               </BottomSheetScrollView>
@@ -282,5 +282,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 10,
+  },
+  bottomSheetContentContainer: {
+    flex: 1,
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    paddingVertical: 20,
   },
 });
