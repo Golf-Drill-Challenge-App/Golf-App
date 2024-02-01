@@ -2,25 +2,30 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text, Icon } from "react-native-paper";
 
-export default function NavigationRectange(inputs, inputValues, shotIndex) {
+export default function NavigationRectange({
+  inputs,
+  target,
+  inputValues,
+  shotIndex,
+}) {
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
-        <Text>Shot 1/20</Text>
-        <Text>Target: 100yd</Text>
+        <Text>Shot {shotIndex}/20</Text>
+        <Text>
+          {target[0].description}: {target[0].value}
+          {target[0].distanceMeasure}
+        </Text>
       </View>
       <View style={styles.rowContainer}>
-        <View>
-          {/* <Icon source={icon} /> */}
-          <Text>-13.8 ft</Text>
-        </View>
-        <View>
-          {/* <Icon source={icon} /> */}
-          <Text>10 yd</Text>
-        </View>
-        <View>
-          <Text>SG 3</Text>
-        </View>
+        {inputs.map((item, index, id) => (
+          <View style={styles.horizontalContainer} id={id}>
+            <Icon source={item.icon} />
+            <Text>
+              {inputValues[item.id]} {item.distanceMeasure}
+            </Text>
+          </View>
+        ))}
       </View>
     </View>
   );
@@ -42,5 +47,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
+  },
+  horizontalContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
