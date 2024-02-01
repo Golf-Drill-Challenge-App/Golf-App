@@ -94,16 +94,28 @@ export default function Input() {
   };
 
   //Bottom Sheet stuff
-  const bottomSheetModalRef = useRef(null);
+  const navigationBottomSheetModalRef = useRef(null);
 
   const snapPoints = useMemo(() => ["50%", "90%"], []);
 
   // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+  const handlePresentNavigationModalPress = useCallback(() => {
+    navigationBottomSheetModalRef.current?.present();
   }, []);
-  const handleSheetChanges = useCallback((index) => {
+  const handleNavigationSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
+  }, []);
+
+  //Description Bottom Sheet Stuff
+
+  const descriptionBottomSheetModalRef = useRef(null);
+
+  // callbacks
+  const handlePresentDesciptionModalPress = useCallback(() => {
+    descriptionBottomSheetModalRef.current?.present();
+  }, []);
+  const handleDesciptionSheetChanges = useCallback((index) => {
+    console.log("handleDesciptionSheetChanges", index);
   }, []);
 
   //test for navigation on sheet
@@ -218,20 +230,30 @@ export default function Input() {
                   style={styles.button}
                   mode="contained-tonal"
                   onPress={() => {
-                    console.log("pressed Open Bottom Sheet");
-                    handlePresentModalPress();
+                    console.log("pressed Open Nav Bottom Sheet");
+                    handlePresentNavigationModalPress();
                   }}
                 >
-                  Open Bottom Sheet
+                  Open Nav Bottom Sheet
+                </Button>
+                <Button
+                  style={styles.button}
+                  mode="contained-tonal"
+                  onPress={() => {
+                    console.log("pressed Open Description Bottom Sheet");
+                    handlePresentDesciptionModalPress();
+                  }}
+                >
+                  Open Description Bottom Sheet
                 </Button>
               </View>
             </KeyboardAwareScrollView>
-            {/* Bottom Sheet */}
+            {/*Navigation Bottom Sheet */}
             <BottomSheetModal
-              ref={bottomSheetModalRef}
+              ref={navigationBottomSheetModalRef}
               index={1}
               snapPoints={snapPoints}
-              onChange={handleSheetChanges}
+              onChange={handleNavigationSheetChanges}
             >
               <BottomSheetScrollView>
                 <View style={styles.bottomSheetContentContainer}>
@@ -264,6 +286,18 @@ export default function Input() {
                     </Pressable>
                   ))}
                 </View>
+              </BottomSheetScrollView>
+            </BottomSheetModal>
+
+            {/* Description Bottom Sheet */}
+            <BottomSheetModal
+              ref={descriptionBottomSheetModalRef}
+              index={1}
+              snapPoints={snapPoints}
+              onChange={handleDesciptionSheetChanges}
+            >
+              <BottomSheetScrollView>
+                <Description />
               </BottomSheetScrollView>
             </BottomSheetModal>
           </View>
