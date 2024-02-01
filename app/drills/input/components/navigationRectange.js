@@ -18,7 +18,7 @@ export default function NavigationRectange({
         </Text>
       </View>
       <View style={styles.rowContainer}>
-        {inputs.map((item, index, id) => (
+        {inputs.map((item, id) => (
           <View style={styles.horizontalContainer} id={id}>
             <Icon source={item.icon} />
             <Text>
