@@ -226,6 +226,7 @@ export default function Input() {
                 <View style={styles.bottomSheetContentContainer}>
                   {DrillData.attempts.map((item, id) => (
                     <Pressable
+                      id={id}
                       onPress={() => {
                         console.log("Clicked on ", id);
                         console.log(item);
