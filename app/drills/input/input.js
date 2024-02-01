@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef } from "react";
-import { View, Image, StyleSheet, ScrollView } from "react-native";
+import { View, Image, StyleSheet, ScrollView, Pressable } from "react-native";
 import { PaperProvider, Appbar, Text, Button } from "react-native-paper";
 import { Link, useNavigation } from "expo-router";
 import DrillInput from "./components/drillInput";
@@ -236,16 +236,32 @@ export default function Input() {
               <BottomSheetScrollView>
                 <View style={styles.bottomSheetContentContainer}>
                   {DrillData.attempts.map((item, id) => (
-                    <NavigationRectange
-                      id={id}
+                    <Pressable
                       onPress={() => {
                         console.log("Clicked on ", id);
+                        console.log(item);
+                        console.log(inputValues[id]);
+                        console.log(item.target);
+                        console.log(item.inputs);
                         setShotIndex(id);
+                        bottomSheetModalRef.current.close();
                       }}
-                      inputs={item.inputs}
-                      inputValues={inputValues[id]}
-                      shotIndex={id}
-                    />
+                      width={"100%"}
+                      alignItems={"center"}
+                    >
+                      <NavigationRectange
+                        id={id}
+                        onPress={() => {
+                          console.log("Clicked on ", id);
+                          setShotIndex(id);
+                        }}
+                        inputs={item.inputs}
+                        target={item.target}
+                        inputValues={inputValues[id]}
+                        shotIndex={item.shotNum}
+                        numShots={DrillData.attempts.length}
+                      />
+                    </Pressable>
                   ))}
                 </View>
               </BottomSheetScrollView>
