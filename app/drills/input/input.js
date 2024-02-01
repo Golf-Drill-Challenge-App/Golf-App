@@ -137,7 +137,9 @@ export default function Input() {
               />
               <Appbar.Action
                 icon="information-outline"
-                onPress={() => {}}
+                onPress={() => {
+                  handlePresentDesciptionModalPress();
+                }}
                 color={"#F24E1E"}
               />
             </Appbar.Header>
@@ -185,33 +187,19 @@ export default function Input() {
               <View style={styles.container}>
                 {buttonDisplayHandler()}
 
-                <Text onPress={() => console.log("Pressed View All Shots")}>
+                <Text
+                  onPress={() => {
+                    console.log("Pressed View All Shots");
+                    handlePresentNavigationModalPress();
+                  }}
+                >
                   View all shots
                 </Text>
               </View>
 
               {/* Test Buttons for navigation between shots and state status */}
 
-              <View style={styles.container}>
-                <Button
-                  style={styles.button}
-                  mode="contained-tonal"
-                  onPress={() => {
-                    setShotIndex(shotIndex + 1);
-                  }}
-                >
-                  Increase Shot index
-                </Button>
-                <Button
-                  style={styles.button}
-                  mode="contained-tonal"
-                  onPress={() => {
-                    setShotIndex(shotIndex - 1);
-                  }}
-                >
-                  Decrease Shot index
-                </Button>
-
+              <View style={styles.container} marginTop={20}>
                 <Button
                   style={styles.button}
                   mode="contained-tonal"
@@ -224,27 +212,6 @@ export default function Input() {
                   }}
                 >
                   Log Input State Status
-                </Button>
-
-                <Button
-                  style={styles.button}
-                  mode="contained-tonal"
-                  onPress={() => {
-                    console.log("pressed Open Nav Bottom Sheet");
-                    handlePresentNavigationModalPress();
-                  }}
-                >
-                  Open Nav Bottom Sheet
-                </Button>
-                <Button
-                  style={styles.button}
-                  mode="contained-tonal"
-                  onPress={() => {
-                    console.log("pressed Open Description Bottom Sheet");
-                    handlePresentDesciptionModalPress();
-                  }}
-                >
-                  Open Description Bottom Sheet
                 </Button>
               </View>
             </KeyboardAwareScrollView>
@@ -266,7 +233,7 @@ export default function Input() {
                         console.log(item.target);
                         console.log(item.inputs);
                         setShotIndex(id);
-                        bottomSheetModalRef.current.close();
+                        navigationBottomSheetModalRef.current.close();
                       }}
                       width={"100%"}
                       alignItems={"center"}
