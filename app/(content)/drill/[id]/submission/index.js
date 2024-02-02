@@ -8,11 +8,10 @@ export default function Index() {
     const data = drillData[0]
     return (
         <PaperProvider>
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Submission</Text>
+            {/* <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>  */}
+                {/* <Text>Submission</Text> */}
                 <Result submission={data}/>
-
-            </SafeAreaView>
+            {/* </SafeAreaView> */}
         </PaperProvider>
     );
 }
