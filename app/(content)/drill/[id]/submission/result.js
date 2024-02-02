@@ -62,8 +62,8 @@ function Result(props) {
                 </View>
 
                 <View style={styles.chartSection}>
-                    <Text style={styles.sectionTitle}>Shot Tendency</Text>
-                    <View style={styles.chartContainer}>
+                    <Text style={{ ...styles.sectionTitle, marginBottom: 10 }}>Shot Tendency</Text>
+                    <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
                         <ScatterChart
                             style={styles.chart}
                             backgroundColor='#ffffff'
@@ -150,13 +150,10 @@ const styles = StyleSheet.create({
 
     chartSection: {
         marginBottom: 30,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     chartContainer: {
-        marginRight: 310,
-        alignItems: 'center',
-        position: 'relative',
-        width: '100%',
+        
     },
     chart: {
         backgroundColor: '#ffffff',
