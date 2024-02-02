@@ -9,6 +9,7 @@ import {
 import { Appbar, Button } from 'react-native-paper';
 import ScatterChart from 'react-native-scatter-chart';
 import ShotAccordion from '~/components/shotAccordion';
+import { numTrunc } from '~/Utility.js';
 
 function Result(props) {
     const dots = props.submission.shots.map((value, index) => (
@@ -31,12 +32,12 @@ function Result(props) {
                     <Text style={styles.dataTitle}>Strokes Gained</Text>
                     <View style={styles.dataRow}>
                         <Text style={styles.dataLabel}>Total</Text>
-                        <Text style={styles.dataValue}>{props.submission['strokesGained']}</Text>
+                        <Text style={styles.dataValue}>{numTrunc(props.submission['strokesGained'])}</Text>
                     </View>
                     <View style={styles.dataRow}>
                         <Text style={styles.dataLabel}>Average</Text>
                         <Text style={styles.dataValue}>
-                            {props.submission['strokesGainedAverage']}
+                            {numTrunc(props.submission['strokesGainedAverage'])}
                         </Text>
                     </View>
                 </View>
@@ -45,17 +46,17 @@ function Result(props) {
                     <Text style={styles.dataTitle}>Average Differences</Text>
                     <View style={styles.dataRow}>
                         <Text style={styles.dataValue}>
-                            {props.submission['carryDiffAverage']}
+                            {numTrunc(props.submission['carryDiffAverage'])}
                         </Text>
                     </View>
                     <View style={styles.dataRow}>
                         <Text style={styles.dataValue}>
-                            {props.submission['sideLandingAverage']}
+                            {numTrunc(props.submission['sideLandingAverage'])}
                         </Text>
                     </View>
                     <View style={styles.dataRow}>
                         <Text style={styles.dataValue}>
-                            {props.submission['proxHoleAverage']}
+                            {numTrunc(props.submission['proxHoleAverage'])}
                         </Text>
                     </View>
                 </View>
@@ -88,7 +89,7 @@ function Result(props) {
                     <ShotAccordion
                         key={shot['sid']}
                         shot={shot}
-                        total={props.submission['shots'].length}
+                        total={numTrunc(props.submission['shots'].length)}
                     />
                 ))}
             </ScrollView>
