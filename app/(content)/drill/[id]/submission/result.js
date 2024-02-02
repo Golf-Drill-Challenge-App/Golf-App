@@ -62,7 +62,7 @@ function Result(props) {
                 </View>
 
                 <View style={styles.chartSection}>
-                    <Text style={{ ...styles.sectionTitle, marginBottom: 10 }}>Shot Tendency</Text>
+                    <Text style={{ ...styles.sectionTitle, marginBottom: 15 }}>Shot Tendency</Text>
                     <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
                         <ScatterChart
                             style={styles.chart}
@@ -85,13 +85,17 @@ function Result(props) {
                     </View>
                 </View>
 
-                {props.submission['shots'].map((shot) => (
-                    <ShotAccordion
+                <ScrollView>
+                    {props.submission['shots'].map(
+                        (shot) =>
+                        <ShotAccordion
                         key={shot['sid']}
                         shot={shot}
                         total={numTrunc(props.submission['shots'].length)}
                     />
-                ))}
+                    )}
+                </ScrollView>
+
             </ScrollView>
             <Button style={styles.restartButton} mode="contained" buttonColor="#F24E1E" textColor="white">Restart Drill</Button>
         </>
@@ -103,7 +107,6 @@ export default Result;
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        alignItems: 'center',
     },
     header: {
         flexDirection: 'row',
