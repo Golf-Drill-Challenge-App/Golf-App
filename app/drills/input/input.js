@@ -100,7 +100,7 @@ export default function Input() {
 
   // callbacks
   const handlePresentNavigationModalPress = useCallback(() => {
-    navigationBottomSheetModalRef.current ?.present();
+    navigationBottomSheetModalRef.current?.present();
   }, []);
   const handleNavigationSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
@@ -112,17 +112,11 @@ export default function Input() {
 
   // callbacks
   const handlePresentDesciptionModalPress = useCallback(() => {
-    descriptionBottomSheetModalRef.current ?.present();
+    descriptionBottomSheetModalRef.current?.present();
   }, []);
   const handleDesciptionSheetChanges = useCallback((index) => {
     console.log("handleDesciptionSheetChanges", index);
   }, []);
-
-  //test for navigation on sheet
-
-  const testIndexs = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-  ];
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -174,7 +168,7 @@ export default function Input() {
                     icon={item.icon}
                     prompt={item.prompt}
                     distanceMeasure={item.distanceMeasure}
-                    inputValue={inputValues[shotIndex] ?.[item.id] || ""}
+                    inputValue={inputValues[shotIndex]?.[item.id] || ""}
                     onInputChange={(newText) => {
                       handleInputChange(item.id, newText);
                     }}
