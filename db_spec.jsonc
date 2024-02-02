@@ -37,10 +37,8 @@
           "role": "owner", //creator and only person who can delete a team. Value can be "owner", "coach", or "student"
           "pfp": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw2RRsjaQh-Xim5xBxZtZOH5&ust=1705254265605000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODT36j12oMDFQAAAAAdAAAAABAD",
           "history": {
-            "732489": [
-              //which drill
-              {
-                //one submission
+            "732489": [ //which drill
+              { //one submission
                 "time": 1705166892, //unix time stamp
                 "strokesGained": 3, //and other stats
                 "shots": [
@@ -56,8 +54,7 @@
                   }
                 ]
               },
-              {
-                //2nd submission
+              { //2nd submission
                 "time": 1705166999, //unix time stamp
                 "strokesGained": 3, //and other stats
                 "shots": [

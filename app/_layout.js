@@ -2,7 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as Font from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useState, useCallback } from "react";
-import { Provider } from "../context/Auth";
+//import { Provider } from "../context/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PaperProvider, MD3LightTheme } from "react-native-paper";
 
@@ -56,18 +56,18 @@ export default function RootLayout() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Provider onLayout={onLayoutRootView}>
+        {/*<Provider onLayout={onLayoutRootView}>*/}
           <PaperProvider theme={MD3LightTheme}>
             <Stack
               screenOptions={{
                 headerShown: false,
               }}
             >
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="index" />
+              {/*<Stack.Screen name="(auth)" />*/}
             </Stack>
           </PaperProvider>
-        </Provider>
+        {/*</Provider>*/}
       </QueryClientProvider>
     </>
   );
