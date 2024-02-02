@@ -9,9 +9,9 @@ export default function Index() {
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text>Open up App.js to start working on your app!</Text>
                 <Link href={{
-                    pathname: "/drill/1234/statistics"
+                    pathname: "/profile"
                 }}>
-                    Go to Stats at /drill/1234/statistics
+                    Go to Profile at /profile
                 </Link>
             </SafeAreaView>
         </PaperProvider>

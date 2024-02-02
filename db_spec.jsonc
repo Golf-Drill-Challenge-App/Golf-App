@@ -1,6 +1,6 @@
 {
-  "users": [
-    {
+  "users": {
+    "1":{
       "uid": "1", //all ids must be a string
       "email": "john.doe@gmail.com",
       "teams": [ //just in case there's a billion teams and lookup is slow
@@ -14,7 +14,7 @@
         }
       ]
     },
-    {
+    "2":{
       "uid": "2",
       "email": "doe.john@gmail.com",
       "teams": [
@@ -24,32 +24,45 @@
         }
       ]
     }
-  ],
+  },
   "teams": [
     {
       "tid": "1",
       "name": "Team 1",
-      "users": [
-        {
-          "uid": "1", //correspond with users list above
+      "users":{
+        "1": { //uid, correspond with users list above
+          "uid": "1", //just in case this whole object needs to be passed as a prop. Can remove if memory constrained
           "name": "John Doe", //putting name here allows different names for different teams
           "role": "owner", //creator and only person who can delete a team. Value can be "owner", "coach", or "student"
-          "pfp": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw2RRsjaQh-Xim5xBxZtZOH5&ust=1705254265605000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODT36j12oMDFQAAAAAdAAAAABAD",
+          "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          "email": "john.doe@gmail.com",
           "history": {
             "732489": [ //which drill
               { //one submission
-                "time": 1705166892, //unix time stamp
-                "strokesGained": 3, //and other stats
+                "time": 1609023321, //unix time stamp, differentiator for multiple submissions
+                "strokesGained": -0.018999999999999018, //and other stats
                 "shots": [
                   {
-                    "sid": 1, //shot id, just count up
-                    "distance": 45,
-                    "sideLanding": 3
+                    "sid": 1, //count up
+                    "target": 122,
+                    "carry": 127.62146793901402,
+                    "sideLanding": 33.20102955116408,
+                    "carryDiff": 5.621467939014018,
+                    "proxHole": 37.238642286763536,
+                    "baseline": 2.85,
+                    "expectedPutts": 2.032,
+                    "strokesGained": -0.18199999999999994
                   },
                   {
                     "sid": 2,
-                    "distance": 45,
-                    "sideLanding": 3
+                    "target": 114,
+                    "carry": 111.15626354611541,
+                    "sideLanding": 15.93869780601396,
+                    "carryDiff": -2.8437364538845866,
+                    "proxHole": 18.07826376961579,
+                    "baseline": 2.825,
+                    "expectedPutts": 1.848,
+                    "strokesGained": -0.02299999999999991
                   }
                 ]
               },
@@ -58,24 +71,40 @@
                 "strokesGained": 3, //and other stats
                 "shots": [
                   {
-                    "sid": 1,
-                    "distance": 45,
-                    "sideLanding": 3
+                    "sid": 1, //count up
+                    "target": 122,
+                    "carry": 127.62146793901402,
+                    "sideLanding": 33.20102955116408,
+                    "carryDiff": 5.621467939014018,
+                    "proxHole": 37.238642286763536,
+                    "baseline": 2.85,
+                    "expectedPutts": 2.032,
+                    "strokesGained": -0.18199999999999994
                   },
                   {
                     "sid": 2,
-                    "distance": 45,
-                    "sideLanding": 3
+                    "target": 114,
+                    "carry": 111.15626354611541,
+                    "sideLanding": 15.93869780601396,
+                    "carryDiff": -2.8437364538845866,
+                    "proxHole": 18.07826376961579,
+                    "baseline": 2.825,
+                    "expectedPutts": 1.848,
+                    "strokesGained": -0.02299999999999991
                   }
                 ]
               }
             ]
           }
         },
-        {
-          "uid": "2"
+        "2": {
+          "uid": "2", //correspond with users list above
+          "name": "Doe John", //putting name here allows different names for different teams
+          "role": "student", //Value can be "owner", "coach", or "student"
+          "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+          "history": {}
         }
-      ],
+      },
       "drills": [
         {
           "did": "732489", //drill id
