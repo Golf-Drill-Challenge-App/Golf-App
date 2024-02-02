@@ -1,6 +1,13 @@
 import React, { useState, useCallback, useMemo, useRef } from "react";
 import { View, Image, StyleSheet, ScrollView, Pressable } from "react-native";
-import { PaperProvider, Appbar, Text, Button } from "react-native-paper";
+import {
+  PaperProvider,
+  Appbar,
+  Text,
+  Button,
+  Modal,
+  Portal,
+} from "react-native-paper";
 import { Link, useNavigation } from "expo-router";
 import DrillInput from "./components/drillInput";
 import DrillTarget from "./components/drillTarget";
@@ -93,7 +100,7 @@ export default function Input() {
     navigation.goBack();
   };
 
-  //Bottom Sheet stuff
+  /***** Navigation Bottom Sheet stuff *****/
   const navigationBottomSheetModalRef = useRef(null);
 
   const snapPoints = useMemo(() => ["50%", "90%"], []);
@@ -106,7 +113,7 @@ export default function Input() {
     console.log("handleSheetChanges", index);
   }, []);
 
-  //Description Bottom Sheet Stuff
+  /***** Description Bottom Sheet Stuff *****/
 
   const descriptionBottomSheetModalRef = useRef(null);
 
@@ -117,6 +124,13 @@ export default function Input() {
   const handleDesciptionSheetChanges = useCallback((index) => {
     console.log("handleDesciptionSheetChanges", index);
   }, []);
+
+  /***** Leave drill Modal Stuff *****/
+
+  const [visibleLeaveDrill, setVisibleLeaveDrill] = React.useState(false);
+
+  const showLeaveDrillModal = () => setVisibleLeaveDrill(true);
+  const hideLeaveDrillModal = () => setVisibleLeaveDrill(false);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -207,6 +221,16 @@ export default function Input() {
                 >
                   Log Input State Status
                 </Button>
+
+                <Button
+                  style={styles.button}
+                  mode="contained-tonal"
+                  onPress={() => {
+                    showLeaveDrillModal();
+                  }}
+                >
+                  Open Leave Drill Modal
+                </Button>
               </View>
             </KeyboardAwareScrollView>
             {/*Navigation Bottom Sheet */}
@@ -262,6 +286,17 @@ export default function Input() {
               </BottomSheetScrollView>
             </BottomSheetModal>
           </View>
+
+          {/* Leave Drill Modal */}
+          <Portal width={"80%"}>
+            <Modal
+              visible={visibleLeaveDrill}
+              onDismiss={hideLeaveDrillModal}
+              contentContainerStyle={styles.modalContainerStyle}
+            >
+              <Text>Example Modal. Click outside this area to dismiss.</Text>
+            </Modal>
+          </Portal>
         </BottomSheetModalProvider>
       </PaperProvider>
     </GestureHandlerRootView>
@@ -300,5 +335,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     paddingVertical: 20,
+  },
+  modalContainerStyle: {
+    backgroundColor: "white",
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
