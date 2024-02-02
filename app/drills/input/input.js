@@ -136,103 +136,102 @@ export default function Input() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
         <BottomSheetModalProvider>
+          <Appbar.Header style={{}} statusBarHeight={0}>
+            <Appbar.BackAction onPress={goBack} color={"#F24E1E"} />
+            <Appbar.Content
+              title="20 Shot Challenge"
+              titleStyle={styles.title}
+            />
+            <Appbar.Action
+              icon="information-outline"
+              onPress={() => {
+                handlePresentDesciptionModalPress();
+              }}
+              color={"#F24E1E"}
+            />
+          </Appbar.Header>
+
+          {/* Shot Number / Total shots */}
           <View>
-            <Appbar.Header style={{}} statusBarHeight={0}>
-              <Appbar.BackAction onPress={goBack} color={"#F24E1E"} />
-              <Appbar.Content
-                title="20 Shot Challenge"
-                titleStyle={styles.title}
-              />
-              <Appbar.Action
-                icon="information-outline"
-                onPress={() => {
-                  handlePresentDesciptionModalPress();
-                }}
-                color={"#F24E1E"}
-              />
-            </Appbar.Header>
+            <Text style={styles.title}>
+              Shot {DrillData.attempts[shotIndex].shotNum}{" "}
+              <Text>/{DrillData.attempts.length}</Text>
+            </Text>
+          </View>
+          <KeyboardAwareScrollView>
+            <View style={styles.container} marginBottom={100}>
+              {/* Instruction */}
 
-            {/* Shot Number / Total shots */}
-            <View>
-              <Text style={styles.title}>
-                Shot {DrillData.attempts[shotIndex].shotNum}{" "}
-                <Text>/{DrillData.attempts.length}</Text>
-              </Text>
-            </View>
-            <KeyboardAwareScrollView>
-              <View style={styles.container} marginBottom={100}>
-                {/* Instruction */}
-
-                <View style={styles.horizontalContainer}>
-                  {DrillData.attempts[shotIndex].target.map((item, id) => (
-                    <DrillTarget
-                      key={id}
-                      description={item.description}
-                      distanceMeasure={item.distanceMeasure}
-                      value={item.value}
-                    />
-                  ))}
-                </View>
-
-                {/* Inputs */}
-
-                {DrillData.attempts[shotIndex].inputs.map((item, id) => (
-                  <DrillInput
+              <View style={styles.horizontalContainer}>
+                {DrillData.attempts[shotIndex].target.map((item, id) => (
+                  <DrillTarget
                     key={id}
-                    icon={item.icon}
-                    prompt={item.prompt}
+                    description={item.description}
                     distanceMeasure={item.distanceMeasure}
-                    inputValue={inputValues[shotIndex]?.[item.id] || ""}
-                    onInputChange={(newText) => {
-                      handleInputChange(item.id, newText);
-                    }}
+                    value={item.value}
                   />
                 ))}
               </View>
 
-              {/* Navigation */}
+              {/* Inputs */}
 
-              <View style={styles.container}>
-                {buttonDisplayHandler()}
-
-                <Text
-                  onPress={() => {
-                    console.log("Pressed View All Shots");
-                    handlePresentNavigationModalPress();
+              {DrillData.attempts[shotIndex].inputs.map((item, id) => (
+                <DrillInput
+                  key={id}
+                  icon={item.icon}
+                  prompt={item.prompt}
+                  distanceMeasure={item.distanceMeasure}
+                  inputValue={inputValues[shotIndex]?.[item.id] || ""}
+                  onInputChange={(newText) => {
+                    handleInputChange(item.id, newText);
                   }}
-                >
-                  View all shots
-                </Text>
-              </View>
+                />
+              ))}
+            </View>
 
-              {/* Test Buttons for navigation between shots and state status */}
+            {/* Navigation */}
 
-              <View style={styles.container} marginTop={20}>
-                <Button
-                  style={styles.button}
-                  mode="contained-tonal"
-                  onPress={() => {
-                    //this loop is a test to see if inputs are maintained in state
-                    for (let i = 0; i < DrillData.attempts.length; i++) {
-                      console.log("InputValue[", i, "]: ", inputValues[i]);
-                    }
-                    console.log(inputValues);
-                  }}
-                >
-                  Log Input State Status
-                </Button>
+            <View style={styles.container}>
+              {buttonDisplayHandler()}
 
-                <Button
-                  style={styles.button}
-                  mode="contained-tonal"
-                  onPress={() => {
-                    showLeaveDrillModal();
-                  }}
-                >
-                  Open Leave Drill Modal
-                </Button>
-              </View>
-            </KeyboardAwareScrollView>
+              <Text
+                onPress={() => {
+                  console.log("Pressed View All Shots");
+                  handlePresentNavigationModalPress();
+                }}
+              >
+                View all shots
+              </Text>
+            </View>
+
+            {/* Test Buttons for navigation between shots and state status */}
+
+            <View style={styles.container} marginTop={20}>
+              <Button
+                style={styles.button}
+                mode="contained-tonal"
+                onPress={() => {
+                  //this loop is a test to see if inputs are maintained in state
+                  for (let i = 0; i < DrillData.attempts.length; i++) {
+                    console.log("InputValue[", i, "]: ", inputValues[i]);
+                  }
+                  console.log(inputValues);
+                }}
+              >
+                Log Input State Status
+              </Button>
+
+              <Button
+                style={styles.button}
+                mode="contained-tonal"
+                onPress={() => {
+                  showLeaveDrillModal();
+                }}
+              >
+                Open Leave Drill Modal
+              </Button>
+            </View>
+
             {/*Navigation Bottom Sheet */}
             <BottomSheetModal
               ref={navigationBottomSheetModalRef}
@@ -285,18 +284,18 @@ export default function Input() {
                 <Description />
               </BottomSheetScrollView>
             </BottomSheetModal>
-          </View>
 
-          {/* Leave Drill Modal */}
-          <Portal width={"80%"}>
-            <Modal
-              visible={visibleLeaveDrill}
-              onDismiss={hideLeaveDrillModal}
-              contentContainerStyle={styles.modalContainerStyle}
-            >
-              <Text>Example Modal. Click outside this area to dismiss.</Text>
-            </Modal>
-          </Portal>
+            {/* Leave Drill Modal */}
+            <Portal width={"80%"}>
+              <Modal
+                visible={visibleLeaveDrill}
+                onDismiss={hideLeaveDrillModal}
+                contentContainerStyle={styles.modalContainerStyle}
+              >
+                <Text>Example Modal. Click outside this area to dismiss.</Text>
+              </Modal>
+            </Portal>
+          </KeyboardAwareScrollView>
         </BottomSheetModalProvider>
       </PaperProvider>
     </GestureHandlerRootView>
