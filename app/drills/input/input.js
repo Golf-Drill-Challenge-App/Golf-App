@@ -107,7 +107,7 @@ export default function Input() {
 
   // callbacks
   const handlePresentNavigationModalPress = useCallback(() => {
-    navigationBottomSheetModalRef.current?.present();
+    navigationBottomSheetModalRef.current ?.present();
   }, []);
   const handleNavigationSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
@@ -119,7 +119,7 @@ export default function Input() {
 
   // callbacks
   const handlePresentDesciptionModalPress = useCallback(() => {
-    descriptionBottomSheetModalRef.current?.present();
+    descriptionBottomSheetModalRef.current ?.present();
   }, []);
   const handleDesciptionSheetChanges = useCallback((index) => {
     console.log("handleDesciptionSheetChanges", index);
@@ -184,7 +184,7 @@ export default function Input() {
                   icon={item.icon}
                   prompt={item.prompt}
                   distanceMeasure={item.distanceMeasure}
-                  inputValue={inputValues[shotIndex]?.[item.id] || ""}
+                  inputValue={inputValues[shotIndex] ?.[item.id] || ""}
                   onInputChange={(newText) => {
                     handleInputChange(item.id, newText);
                   }}
@@ -250,6 +250,7 @@ export default function Input() {
                       alignItems={"center"}
                     >
                       <NavigationRectange
+                        key={id}
                         onPress={() => {
                           console.log("Clicked on ", id);
                           setShotIndex(id);
