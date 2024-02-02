@@ -137,7 +137,10 @@ export default function Input() {
       <PaperProvider>
         <BottomSheetModalProvider>
           <Appbar.Header style={{}} statusBarHeight={0}>
-            <Appbar.BackAction onPress={goBack} color={"#F24E1E"} />
+            <Appbar.BackAction
+              onPress={showLeaveDrillDialog}
+              color={"#F24E1E"}
+            />
             <Appbar.Content
               title="20 Shot Challenge"
               titleStyle={styles.title}
@@ -220,16 +223,6 @@ export default function Input() {
               >
                 Log Input State Status
               </Button>
-
-              <Button
-                style={styles.button}
-                mode="contained-tonal"
-                onPress={() => {
-                  showLeaveDrillDialog();
-                }}
-              >
-                Open Leave Drill Dialog
-              </Button>
             </View>
 
             {/*Navigation Bottom Sheet */}
@@ -293,10 +286,24 @@ export default function Input() {
               >
                 <Dialog.Title>Alert</Dialog.Title>
                 <Dialog.Content>
-                  <Text variant="bodyMedium">This is simple dialog</Text>
+                  <Text variant="bodyMedium">All inputs will be lost.</Text>
                 </Dialog.Content>
                 <Dialog.Actions>
-                  <Button onPress={hideLeaveDrillDialog}>Done</Button>
+                  <Button
+                    onPress={() => {
+                      hideLeaveDrillDialog();
+                      goBack();
+                    }}
+                  >
+                    Leave Drill
+                  </Button>
+                  <Button
+                    onPress={() => {
+                      hideLeaveDrillDialog();
+                    }}
+                  >
+                    Cancel
+                  </Button>
                 </Dialog.Actions>
               </Dialog>
             </Portal>
