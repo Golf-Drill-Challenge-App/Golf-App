@@ -5,7 +5,7 @@ import {
   Appbar,
   Text,
   Button,
-  Modal,
+  Dialog,
   Portal,
 } from "react-native-paper";
 import { Link, useNavigation } from "expo-router";
@@ -125,12 +125,12 @@ export default function Input() {
     console.log("handleDesciptionSheetChanges", index);
   }, []);
 
-  /***** Leave drill Modal Stuff *****/
+  /***** Leave drill Dialog Stuff *****/
 
   const [visibleLeaveDrill, setVisibleLeaveDrill] = React.useState(false);
 
-  const showLeaveDrillModal = () => setVisibleLeaveDrill(true);
-  const hideLeaveDrillModal = () => setVisibleLeaveDrill(false);
+  const showLeaveDrillDialog = () => setVisibleLeaveDrill(true);
+  const hideLeaveDrillDialog = () => setVisibleLeaveDrill(false);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -225,10 +225,10 @@ export default function Input() {
                 style={styles.button}
                 mode="contained-tonal"
                 onPress={() => {
-                  showLeaveDrillModal();
+                  showLeaveDrillDialog();
                 }}
               >
-                Open Leave Drill Modal
+                Open Leave Drill Dialog
               </Button>
             </View>
 
@@ -286,14 +286,19 @@ export default function Input() {
             </BottomSheetModal>
 
             {/* Leave Drill Modal */}
-            <Portal width={"80%"}>
-              <Modal
+            <Portal>
+              <Dialog
                 visible={visibleLeaveDrill}
-                onDismiss={hideLeaveDrillModal}
-                contentContainerStyle={styles.modalContainerStyle}
+                onDismiss={hideLeaveDrillDialog}
               >
-                <Text>Example Modal. Click outside this area to dismiss.</Text>
-              </Modal>
+                <Dialog.Title>Alert</Dialog.Title>
+                <Dialog.Content>
+                  <Text variant="bodyMedium">This is simple dialog</Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                  <Button onPress={hideLeaveDrillDialog}>Done</Button>
+                </Dialog.Actions>
+              </Dialog>
             </Portal>
           </KeyboardAwareScrollView>
         </BottomSheetModalProvider>
