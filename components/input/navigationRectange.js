@@ -19,7 +19,7 @@ export default function NavigationRectange({
       </View>
       <View style={styles.rowContainer}>
         {inputs.map((item, id) => (
-          <View style={styles.horizontalContainer} id={id}>
+          <View style={styles.horizontalContainer} key={id}>
             <Icon source={item.icon} />
             <Text>
               {inputValues[item.id]} {item.distanceMeasure}
