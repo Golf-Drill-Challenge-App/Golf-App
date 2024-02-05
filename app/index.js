@@ -31,6 +31,13 @@ export default function Index() {
         >
           Go to Stats
         </Link>
+        <Link
+          href={{
+            pathname: "/drills/description",
+          }}
+        >
+          Go to Description
+        </Link>
       </SafeAreaView>
     </PaperProvider>
   );
