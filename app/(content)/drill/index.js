@@ -8,7 +8,7 @@ import drillsData from '~/drills.json'
 
 //This is for the list of drills
 export default function Index() {
-    const drills = drillsData.drills;
+    const drills = drillsData.teams[0].drills;
 
     return (
         <PaperProvider>

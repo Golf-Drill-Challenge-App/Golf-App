@@ -14,15 +14,37 @@ export default function Index() {
     const { id } = useLocalSearchParams();
 
     const findDrillById = (drillId) => {
-        return drillsData.drills.find((drill) => drill.did === drillId);
+        return drillsData.teams[0].drills.find((drill) => drill.did === drillId);
     };
 
+    const findDrillSubmissionsById = (drillId) => {
+        const drillSubmissions = [];
+        drillsData.teams[0].users.forEach(user => {
+            user.history.forEach(drill => {
+                if (Object.keys(drill).includes(drillId)) {
+                    drill[drillId].forEach(attempt => {
+                        if (attempt) {
+                            drillSubmissions.push({
+                                userId: user.uid,
+                                time: attempt.time,
+                                shots: attempt.shots
+                            });
+                        }
+                    })
+                }
+            })
+        });
+
+        return drillSubmissions;
+    }
+
     const drillData = findDrillById(id);
+    const drillLeaderboardAttempts = findDrillSubmissionsById(id);
 
     const tabComponent = () => {
         switch (value) {
             case 'leaderboard':
-                return <Leaderboard />
+                return <Leaderboard leaderboardData={drillLeaderboardAttempts} drillId={id} />
             case 'description':
                 return <Description descData={drillData} drillId={id} />
             case 'stats':
