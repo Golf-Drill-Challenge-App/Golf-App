@@ -78,7 +78,7 @@ function Index() {
           </Portal>
         </View>
 
-        <Text>{users.length} members</Text>
+        <Text>{Object.keys(users).length} members</Text>
       </View>
       <Searchbar
         placeholder="Search"
