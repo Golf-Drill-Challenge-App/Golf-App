@@ -199,22 +199,6 @@ export default function Input() {
               ))}
             </View>
 
-            {/* Navigation */}
-
-            <View style={styles.navigationContainer}>
-              {buttonDisplayHandler()}
-
-              <Text
-                style={{ color: "#F3572A" }}
-                onPress={() => {
-                  console.log("Pressed View All Shots");
-                  handlePresentNavigationModalPress();
-                }}
-              >
-                View all shots
-              </Text>
-            </View>
-
             {/* Test Buttons for navigation between shots and state status */}
 
             <View style={styles.container}>
@@ -316,6 +300,22 @@ export default function Input() {
               </Dialog>
             </Portal>
           </KeyboardAwareScrollView>
+
+          {/* Navigation */}
+
+          <View style={styles.navigationContainer}>
+            {buttonDisplayHandler()}
+
+            <Text
+                style={{ color: "#F3572A" }}
+                onPress={() => {
+                  console.log("Pressed View All Shots");
+                  handlePresentNavigationModalPress();
+                }}
+            >
+              View all shots
+            </Text>
+          </View>
         </BottomSheetModalProvider>
       </PaperProvider>
     </GestureHandlerRootView>
@@ -333,11 +333,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   navigationContainer: {
-    position: "relative",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    top: "45%",
+    // position: "absolute",
+    // left: 0,
+    // right: 0,
+    // bottom: 0,
     alignItems: "center",
     height: "contain",
     justifyContent: "center",
