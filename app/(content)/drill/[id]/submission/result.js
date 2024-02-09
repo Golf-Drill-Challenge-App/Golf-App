@@ -9,7 +9,7 @@ import {
 import { Appbar, Button } from 'react-native-paper';
 import ScatterChart from 'react-native-scatter-chart';
 import ShotAccordion from '~/components/shotAccordion';
-import { numTrunc } from '~/Utility.js';
+import { numTrunc } from '~/Utility';
 
 function Result(props) {
     const dots = props.submission.shots.map((value, index) => (
