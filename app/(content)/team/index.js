@@ -97,7 +97,7 @@ function Index() {
                   <Avatar.Image
                     size={24}
                     source={{
-                      uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+                      uri: user.pfp
                     }}
                   />
                 )}
