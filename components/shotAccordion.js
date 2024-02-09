@@ -17,6 +17,7 @@ function DataField(field, value){
                 <View style={{
                     flexDirection: "row",
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                 }}>
                     <Text>
                         Carry
