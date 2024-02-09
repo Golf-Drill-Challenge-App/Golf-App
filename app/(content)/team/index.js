@@ -15,7 +15,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 
 function Index() {
-  const team = teamData["teams"][0];
+  const team = teamData["teams"]["1"];
   const users = team["users"];
   //console.log(users);
   const [visible, setVisible] = React.useState(false);
@@ -24,7 +24,7 @@ function Index() {
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
-  const foundUsers = users.filter((user) =>
+  const foundUsers = Object.values(users).filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -97,7 +97,7 @@ function Index() {
                   <Avatar.Image
                     size={24}
                     source={{
-                      uri: user.pfp
+                      uri: user.pfp,
                     }}
                   />
                 )}
