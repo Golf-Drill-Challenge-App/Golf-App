@@ -41,6 +41,7 @@ export default function Input() {
       return (
         <Button
           style={styles.button}
+          labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Submit Drill");
@@ -56,6 +57,7 @@ export default function Input() {
       return (
         <Button
           style={styles.button}
+          labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Next Shot");
@@ -70,7 +72,7 @@ export default function Input() {
       return (
         <Button
           style={styles.disabledButton}
-          dark={true}
+          labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Back to Latest");
@@ -155,15 +157,19 @@ export default function Input() {
             />
           </Appbar.Header>
 
-          {/* Shot Number / Total shots */}
-          <View>
-            <Text style={styles.title}>
-              Shot {DrillData.attempts[shotIndex].shotNum}{" "}
-              <Text>/{DrillData.attempts.length}</Text>
-            </Text>
-          </View>
+          {/* <View> */}
           <KeyboardAwareScrollView>
-            <View style={styles.container} marginBottom={100}>
+            {/* Shot Number / Total shots */}
+            <View style={styles.shotNumContainer}>
+              <Text style={styles.shotNumber}>
+                Shot {DrillData.attempts[shotIndex].shotNum}
+                <Text style={styles.shotTotal}>
+                  /{DrillData.attempts.length}
+                </Text>
+              </Text>
+            </View>
+
+            <View style={styles.container}>
               {/* Instruction */}
 
               <View style={styles.horizontalContainer}>
@@ -195,10 +201,11 @@ export default function Input() {
 
             {/* Navigation */}
 
-            <View style={styles.container}>
+            <View style={styles.navigationContainer}>
               {buttonDisplayHandler()}
 
               <Text
+                style={{ color: "#F3572A" }}
                 onPress={() => {
                   console.log("Pressed View All Shots");
                   handlePresentNavigationModalPress();
@@ -210,9 +217,8 @@ export default function Input() {
 
             {/* Test Buttons for navigation between shots and state status */}
 
-            <View style={styles.container} marginTop={20}>
+            <View style={styles.container}>
               <Button
-                style={styles.button}
                 mode="contained-tonal"
                 onPress={() => {
                   //this loop is a test to see if inputs are maintained in state
@@ -280,7 +286,7 @@ export default function Input() {
               </BottomSheetScrollView>
             </BottomSheetModal>
 
-            {/* Leave Drill Modal */}
+            {/* Leave Drill Dialog */}
             <Portal>
               <Dialog
                 visible={visibleLeaveDrill}
@@ -319,20 +325,59 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "space-between",
+  },
+  shotNumContainer: {
+    flex: 1,
+    alignItems: "flex-start",
+    marginBottom: 15,
+  },
+  navigationContainer: {
+    position: "relative",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: "45%",
+    alignItems: "center",
+    height: "contain",
+    justifyContent: "center",
   },
   button: {
-    width: 200,
+    width: "95%",
+    height: 52,
     backgroundColor: "#F24E1E",
     marginBottom: 20,
+    justifyContent: "center",
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   disabledButton: {
-    width: 200,
+    width: "95%",
+    height: 52,
     backgroundColor: "#A0A0A0",
     marginBottom: 20,
+    justifyContent: "center",
+  },
+  disabledButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  shotNumber: {
+    fontSize: 32,
+    fontWeight: "bold",
+  },
+  shotTotal: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#A0A0A0",
   },
   item: {
     marginBottom: 20,
