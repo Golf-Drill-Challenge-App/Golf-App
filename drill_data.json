@@ -21472,6 +21472,16 @@
         "distance",
         "sideLanding"
       ],
+      "outputs": [
+        "target",
+        "carry",
+        "sideLanding",
+        "proxHole",
+        "baseline",
+        "expectedPutts"
+      ],
+      "mainOutputAttempt": "strokesGained",
+      "mainOutputShot": "strokesGained",
       "reps": 20
     },
     "43768": {
@@ -21491,6 +21501,12 @@
       "inputs": [
         "sideLanding"
       ],
+      "outputs": [
+        "target",
+        "sideLanding"
+      ],
+      "mainOutputAttempt": "sideLandingAverage",
+      "mainOutputShot": "sideLanding",
       "reps": 20
     }
   }
