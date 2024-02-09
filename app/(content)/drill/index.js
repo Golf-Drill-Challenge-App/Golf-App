@@ -1,36 +1,62 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { PaperProvider, Text } from 'react-native-paper';
-import { List } from 'react-native-paper';
-import { Link } from 'expo-router';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Appbar, PaperProvider, Text, List } from 'react-native-paper';
+import { Link, useNavigation } from 'expo-router';
 
-import drillsData from '~/drills.json'
+import drillsData from '~/drills.json';
 
-//This is for the list of drills
 export default function Index() {
     const drills = drillsData.drills;
+    const navigation = useNavigation();
 
     return (
         <PaperProvider>
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Drill Index</Text>
+            <Appbar.Header statusBarHeight={0}>
+                <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
+                <Appbar.Content title="Drills" />
+            </Appbar.Header>
+
+            <ScrollView contentContainerStyle={styles.scrollView}>
                 <List.Section>
-                    <List.Subheader>Drills</List.Subheader>
                     {drills.map((drill) => (
                         <Link
                             key={drill.did}
                             href={{
-                                pathname: `/drill/${drill.did}`, 
+                                pathname: `/drill/${drill.did}`,
                                 params: { id: drill.did },
                             }}
                             style={{ paddingVertical: 8 }}
                         >
-                            <List.Item title={drill.drillType} description={drill.description} />
+                            <List.Item
+                                title={drill.drillType}
+                                description={drill.description}
+                                titleStyle={styles.title}
+                                descriptionStyle={styles.description}
+                                left={() => <List.Icon icon="file-document-outline" /*TODO: pick a better icon*/ />}
+                                style={styles.item}
+                            />
                         </Link>
                     ))}
                 </List.Section>
-
-            </SafeAreaView>
+            </ScrollView>
         </PaperProvider>
     );
 }
+
+const styles = StyleSheet.create({
+    scrollView: {
+        paddingHorizontal: 16,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    description: {
+        fontSize: 14,
+        color: '#555',
+    },
+    item: {
+        borderBottomWidth: 1,       // Add bottom border
+        borderBottomColor: '#ccc',  // Grey color
+    },
+});

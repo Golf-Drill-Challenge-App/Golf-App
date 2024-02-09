@@ -35,6 +35,42 @@
       "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
       "inputs": [ "distance", "sideLanding" ],
       "reps": 20
+    },
+    {
+      "did": "732485", 
+      "drillType": "20 Shot Challenge4",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
+    },
+    {
+      "did": "732486", 
+      "drillType": "20 Shot Challenge5",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
+    },
+    {
+      "did": "732487", 
+      "drillType": "20 Shot Challenge6",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
+    },
+    {
+      "did": "732488", 
+      "drillType": "20 Shot Challenge7",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
     }
   ]
 }
