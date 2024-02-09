@@ -59,7 +59,7 @@ export default function Stat() {
     }, [data, movingAvgRange, barWidth])
 
     const transparentData = data.map((value, index) => ({
-        value: value,
+        value: value > 0 ? Math.max(...data) : Math.min(...data),
         svg: {
             fill: 'transparent',
             onPress: () => {

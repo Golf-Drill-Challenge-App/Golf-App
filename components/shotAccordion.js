@@ -18,7 +18,7 @@ function DataField(field, value){
                     flexDirection: "row",
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                }}>
+                }} key={field}>
                     <Text>
                         Carry
                     </Text>
@@ -67,7 +67,7 @@ function DataField(field, value){
                 <View style={{
                     flexDirection: "row",
                     justifyContent: 'space-between',
-                }}>
+                }} key={field}>
                     <Text>
                         {title[field]}
                     </Text>
@@ -81,7 +81,7 @@ function DataField(field, value){
                 <View style={{
                     flexDirection: "row",
                     justifyContent: 'space-between',
-                }}>
+                }} key={field}>
                     <Text>
                         {title[field]}
                     </Text>
@@ -95,7 +95,7 @@ function DataField(field, value){
                 <View style={{
                     flexDirection: "row",
                     justifyContent: 'space-between',
-                }}>
+                }} key={field}>
                     <Text>
                         {field in title ? title[field] : field}
                     </Text>
