@@ -1,8 +1,35 @@
 {
   "drills": [
     {
-      "did": "732489", 
+      "did": "732481", 
       "drillType": "20 Shot Challenge",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
+    },
+    {
+      "did": "732482", 
+      "drillType": "20 Shot Challenge1",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
+    },
+    {
+      "did": "732483", 
+      "drillType": "20 Shot Challenge2",
+      "spec": "50ft - 150ft", 
+      "shotType": "arg",
+      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 20
+    },
+    {
+      "did": "732484", 
+      "drillType": "20 Shot Challenge3",
       "spec": "50ft - 150ft", 
       "shotType": "arg",
       "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",

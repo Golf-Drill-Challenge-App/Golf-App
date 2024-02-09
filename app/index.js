@@ -4,9 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperProvider, Text } from 'react-native-paper';
 import { Link } from "expo-router";
 
-import Leaderboard from './drills/leaderboard'
-import Description from './drills/description'
-import Stat from './drills/stat'
+import Leaderboard from './(content)/drill/[id]/leaderboard.js'
+import Description from './(content)/drill/[id]/description.js'
+import Stat from './(content)/drill/[id]/statistics.js'
 
 export default function Index() {
     const [value, setValue] = React.useState("description");
@@ -25,16 +25,16 @@ export default function Index() {
     return (
         <PaperProvider>
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Open up App.js to start working on your app!</Text>
+                <Text style={{ alignItems: 'center' }}>Use the links below to test different screen prototypes:{"\n\n"}</Text>
                 <Link href={{
                     pathname: "/drill"
                 }}>
-                    Go to Drills
+                    Go to Drills List
                 </Link>
                 <Link href={{
-                    pathname: "/drill/1234/statistics2"
+                    pathname: "/drill/1234/statistics"
                 }}>
-                    Go to Stats at /drill/1234/statistics2
+                    Go to Stats at /drill/1234/statistics
                 </Link>
                 <Link href={{
                 pathname: "/drill/1234/submission/"

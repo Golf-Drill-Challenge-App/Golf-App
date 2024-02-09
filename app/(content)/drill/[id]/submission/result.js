@@ -19,11 +19,6 @@ function Result(props) {
 
     return (
         <>
-            <Appbar.Header statusBarHeight={0}>
-                <Appbar.BackAction onPress={() => { }} color={"#F24E1E"} />
-                <Appbar.Content title="20 Shot Challenge" />
-            </Appbar.Header>
-
             <ScrollView contentContainerStyle={styles.container}>
 
                 <Text style={styles.sectionTitle}>Results</Text>
