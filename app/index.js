@@ -4,9 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperProvider, Text } from 'react-native-paper';
 import { Link } from "expo-router";
 
-import Leaderboard from './drills/leaderboard'
-import Description from './drills/description'
-import Stat from './drills/stat'
+// import Leaderboard from './drills/leaderboard'
+// import Description from './drills/description'
+// import Stat from './drills/stat'
 
 export default function Index() {
     const [value, setValue] = React.useState("description");
@@ -30,6 +30,11 @@ export default function Index() {
                     pathname: "/drill"
                 }}>
                     Go to Drills
+                </Link>
+                <Link href={{
+                    pathname: "/team"
+                }}>
+                    Go to Team
                 </Link>
             </SafeAreaView>
         </PaperProvider>

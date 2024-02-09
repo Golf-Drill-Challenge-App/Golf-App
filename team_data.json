@@ -1,0 +1,273 @@
+{
+  "teams": [
+    {
+      "tid": "1",
+      "name": "Team 1",
+      "users": [
+        {
+          "uid": "1",
+          "name": "John Doe",
+          "role": "owner",
+          "pfp": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+          "history": {
+            "732483": [
+              {
+                "time": 1705166891,
+                "strokesGained": 4,
+                "shots": [
+                  {
+                    "sid": 1,
+                    "distance": 35,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 2,
+                    "distance": 65,
+                    "sideLanding": 4
+                  }
+                ]
+              },
+              {
+                "time": 1705166993,
+                "strokesGained": 4,
+                "shots": [
+                  {
+                    "sid": 1,
+                    "distance": 95,
+                    "sideLanding": 3
+                  },
+                  {
+                    "sid": 2,
+                    "distance": 55,
+                    "sideLanding": 3
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+            "uid": "2",
+            "name": "McLovin",
+            "role": "coach",
+            "pfp": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+            "history": {
+              "732480": [
+                {
+                  "time": 1705166892,
+                  "strokesGained": 1,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 35,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 65,
+                      "sideLanding": 3
+                    }
+                  ]
+                },
+                {
+                  "time": 1705166993,
+                  "strokesGained": 3,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 45,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 45,
+                      "sideLanding": 3
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "uid": "3",
+            "name": "John Hancock",
+            "role": "player",
+            "pfp": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+            "history": {
+              "732487": [
+                {
+                  "time": 1705166898,
+                  "strokesGained": 7,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 25,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 46,
+                      "sideLanding": 4
+                    }
+                  ]
+                },
+                {
+                  "time": 1705166994,
+                  "strokesGained": 3,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 45,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 45,
+                      "sideLanding": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "uid": "4",
+            "name": "Golf God",
+            "role": "player",
+            "pfp": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+            "history": {
+              "732489": [
+                {
+                  "time": 1705166896,
+                  "strokesGained": 2,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 25,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 55,
+                      "sideLanding": 3
+                    }
+                  ]
+                },
+                {
+                  "time": 1705166999,
+                  "strokesGained": 3,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 35,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 15,
+                      "sideLanding": 3
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "uid": "5",
+            "name": "Tiger Woods",
+            "role": "player",
+            "pfp": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+            "history": {
+              "732489": [
+                {
+                  "time": 1705166834,
+                  "strokesGained": 3,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 25,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 15,
+                      "sideLanding": 3
+                    }
+                  ]
+                },
+                {
+                  "time": 1705166999,
+                  "strokesGained": 3,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 75,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 35,
+                      "sideLanding": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "uid": "6",
+            "name": "Larry Jones",
+            "role": "player",
+            "pfp": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/240px-Default_pfp.svg.png",
+            "history": {
+              "732489": [
+                {
+                  "time": 1705166842,
+                  "strokesGained": 2,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 55,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 35,
+                      "sideLanding": 3
+                    }
+                  ]
+                },
+                {
+                  "time": 1705166999,
+                  "strokesGained": 3,
+                  "shots": [
+                    {
+                      "sid": 1,
+                      "distance": 15,
+                      "sideLanding": 3
+                    },
+                    {
+                      "sid": 2,
+                      "distance": 55,
+                      "sideLanding": 3
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+      ],
+      "drills": [
+        {
+          "did": "732489",
+          "drillType": "20 Shot Challenge",
+          "spec": "50ft - 150ft",
+          "shotType": "arg",
+          "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+          "inputs": ["distance", "sideLanding"],
+          "reps": 20
+        }
+      ]
+    }
+  ]
+}
