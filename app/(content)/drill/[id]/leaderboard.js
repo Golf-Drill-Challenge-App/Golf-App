@@ -1,9 +1,16 @@
 import React from 'react'
-import { View } from 'react-native'
-import { List, Text, Icon, Avatar } from 'react-native-paper'
+import { View, SafeAreaView  } from 'react-native'
+import { List, Text, Icon, Avatar} from 'react-native-paper'
+import { Link } from 'expo-router'
 
 export default function Leaderboard() {
     return (
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Link href={{
+                    pathname: "/"
+                }}>
+                    Go back to Index
+                </Link>
         <List.Section>
             <List.Item
                 title="Frank Nguyen"
@@ -26,5 +33,6 @@ export default function Leaderboard() {
                 )}
             />
         </List.Section >
+        </SafeAreaView>
     )
 }
