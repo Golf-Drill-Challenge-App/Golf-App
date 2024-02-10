@@ -6,7 +6,7 @@ import {
     useWindowDimensions,
     View,
 } from 'react-native';
-import { Appbar, Button } from 'react-native-paper';
+import { Icon, Button } from 'react-native-paper';
 import ScatterChart from 'react-native-scatter-chart';
 import ShotAccordion from '~/components/shotAccordion';
 import { numTrunc } from '~/Utility';
@@ -20,17 +20,16 @@ function Result(props) {
     return (
         <>
             <ScrollView contentContainerStyle={styles.container}>
-
-                <Text style={styles.sectionTitle}>Results</Text>
+                <Text style={styles.sectionTitle}>Drill Results</Text>
 
                 <View style={styles.dataSection}>
                     <Text style={styles.dataTitle}>Strokes Gained</Text>
                     <View style={styles.dataRow}>
-                        <Text style={styles.dataLabel}>Total</Text>
+                        <Text style={styles.dataLabel}>Total:  </Text>
                         <Text style={styles.dataValue}>{numTrunc(props.submission['strokesGained'])}</Text>
                     </View>
                     <View style={styles.dataRow}>
-                        <Text style={styles.dataLabel}>Average</Text>
+                        <Text style={styles.dataLabel}>Average:  </Text>
                         <Text style={styles.dataValue}>
                             {numTrunc(props.submission['strokesGainedAverage'])}
                         </Text>
@@ -40,16 +39,19 @@ function Result(props) {
                 <View style={styles.dataSection}>
                     <Text style={styles.dataTitle}>Average Differences</Text>
                     <View style={styles.dataRow}>
+                        <Icon source={"arrow-up-down"} />
                         <Text style={styles.dataValue}>
                             {numTrunc(props.submission['carryDiffAverage'])}
                         </Text>
                     </View>
                     <View style={styles.dataRow}>
+                        <Icon source={"arrow-left-right"} />
                         <Text style={styles.dataValue}>
                             {numTrunc(props.submission['sideLandingAverage'])}
                         </Text>
                     </View>
                     <View style={styles.dataRow}>
+                        <Icon source={"flag"} />
                         <Text style={styles.dataValue}>
                             {numTrunc(props.submission['proxHoleAverage'])}
                         </Text>
@@ -57,7 +59,7 @@ function Result(props) {
                 </View>
 
                 <View style={styles.chartSection}>
-                    <Text style={{ ...styles.sectionTitle, marginBottom: 15 }}>Shot Tendency</Text>
+                    <Text style={styles.sectionTitle}>Shot Tendency</Text>
                     <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
                         <ScatterChart
                             style={styles.chart}
@@ -116,14 +118,19 @@ const styles = StyleSheet.create({
         fontSize: 26,
         fontWeight: 'bold',
         marginBottom: 10,
+        alignSelf: 'center', 
+        marginBottom: 15
     },
     dataSection: {
+        alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 20,
         padding: 15,
-        backgroundColor: '#f5f5f5', // Adjust as needed
-        borderRadius: 10, // Or any desired value
+        backgroundColor: '#f5f5f5', 
+        borderRadius: 10, 
+        width: '60%', 
+        alignSelf: 'center', 
     },
-
     dataTitle: {
         fontSize: 16,
         fontWeight: 'bold',
