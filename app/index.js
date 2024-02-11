@@ -26,16 +26,8 @@ export default function Index() {
         <PaperProvider>
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text>Open up App.js to start working on your app!</Text>
-                <Link href={{
-                    pathname: "/drill"
-                }}>
-                    Go to /drill
-                </Link>
-                <Link href={{
-                    pathname: "/drill/fdsfds/leaderboard"
-                }}>
-                    Go to /drill/[id]/leaderboard
-                </Link>
+                <Text>----</Text>
+                <Text>Hide Tabbar</Text>
                 <Link href={{
                     pathname: "/drill/fdsfds/submission"
                 }}>
@@ -45,6 +37,18 @@ export default function Index() {
                     pathname: "/drill/fdsfds/users/sdfd"
                 }}>
                     Go to /drill/[id]/users/[user]
+                </Link>
+                <Text>----</Text>
+                <Text>Show Tabbar</Text>
+                <Link href={{
+                    pathname: "/drill"
+                }}>
+                    Go to /drill
+                </Link>
+                <Link href={{
+                    pathname: "/drill/fdsfds/leaderboard"
+                }}>
+                    Go to /drill/[id]/leaderboard
                 </Link>
                 <Link href={{
                     pathname: "/team"
