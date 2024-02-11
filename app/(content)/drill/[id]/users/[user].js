@@ -8,7 +8,7 @@ import { Link } from "expo-router";
 
 export default function Index() {
   const uid = useLocalSearchParams()["user"];
-  console.log(uid);
+  // console.log(uid);
   return (
     <PaperProvider>
       <SafeAreaView
