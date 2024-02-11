@@ -37,6 +37,16 @@ export default function Index() {
                     Go to /drill/[id]/leaderboard
                 </Link>
                 <Link href={{
+                    pathname: "/drill/fdsfds/submission"
+                }}>
+                    Go to /drill/[id]/submission
+                </Link>
+                <Link href={{
+                    pathname: "/drill/fdsfds/users/sdfd"
+                }}>
+                    Go to /drill/[id]/users/[user]
+                </Link>
+                <Link href={{
                     pathname: "/team"
                 }}>
                     Go to /team

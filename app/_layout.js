@@ -3,19 +3,82 @@ import { useSegments } from "expo-router";
 
 export default function AppLayout() {
   const segment = useSegments();
-  console.log(segment)
+  console.log(segment);
   return (
     <Tabs initialRouteName="(content)" screenOptions={{ headerShown: false }}>
       <Tabs.Screen
-        name="(content)/drill"
+        name="(content)/drill/index"
         options={{
           // Ensure the tab always links to the same href.
-          href: "/drill/",
+          href: "/drill",
+          title: "Drill",
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="(content)/drill/[id]/index"
+        options={{
+          // Ensure the tab always links to the same href.
+          href: null,
+          title: "Drill",
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="(content)/drill/[id]/description"
+        options={{
+          // Ensure the tab always links to the same href.
+          href: null,
+          title: "Drill",
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="(content)/drill/[id]/leaderboard"
+        options={{
+          // Ensure the tab always links to the same href.
+          href: null,
+          title: "Drill",
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="(content)/drill/[id]/statistics"
+        options={{
+          // Ensure the tab always links to the same href.
+          href: null,
+          title: "Drill",
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="(content)/drill/[id]/submission"
+        options={{
+          // Ensure the tab always links to the same href.
+          href: null,
           title: "Drill",
           headerShown: false,
           tabBarStyle: {
-            display: ((segment[2] === "[id]" && segment[3] === "submission") || (segment[2] === "[id]" && segment[3] === "users" && segment[4] === "[user].js")) ? "none" : "flex",
-          }
+            display: "none",
+          },
+        }}
+      />
+
+      <Tabs.Screen
+        name="(content)/drill/[id]/users"
+        options={{
+          // Ensure the tab always links to the same href.
+          href: null,
+          title: "Drill",
+          headerShown: false,
+          tabBarStyle: {
+            display: "none",
+          },
         }}
       />
 
