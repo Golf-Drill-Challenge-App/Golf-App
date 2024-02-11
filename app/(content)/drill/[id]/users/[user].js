@@ -1,4 +1,6 @@
 //i think users users should be their own path. This is used for leaderboard
+
+// "Leaderboard Drill Results" on the Figma, I think
 import { useLocalSearchParams } from "expo-router";
 
 import React from "react";
@@ -21,6 +23,7 @@ export default function Index() {
         >
           Go back to Index
         </Link>
+        <Text>"Leaderboard Drill Results" on the Figma, I think</Text>
         <Text>user id: {uid}</Text>
       </SafeAreaView>
     </PaperProvider>
