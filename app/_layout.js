@@ -14,7 +14,7 @@ export default function AppLayout() {
           title: "Drill",
           headerShown: false,
           tabBarStyle: {
-            display: segment[2] === "[id]" ? "none" : "flex",
+            display: ((segment[2] === "[id]" && segment[3] === "submission") || (segment[2] === "[id]" && segment[3] === "users" && segment[4] === "[user].js")) ? "none" : "flex",
           }
         }}
       />
@@ -26,12 +26,6 @@ export default function AppLayout() {
           href: "/team/",
           title: "Team",
           headerShown: false,
-          tabBarStyle: {
-            display:
-              segment[2] === "users"
-                ? "none"
-                : "flex", // not sure about this one
-          },
         }}
       />
 
@@ -42,9 +36,6 @@ export default function AppLayout() {
           href: "/profile/",
           title: "Profile",
           headerShown: false,
-          tabBarStyle: {
-            display: segment[2] === "[id]" ? "none" : "flex",
-          },
         }}
       />
       <Tabs.Screen
