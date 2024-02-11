@@ -3,7 +3,10 @@ import { useSegments } from "expo-router";
 
 export default function AppLayout() {
   const segment = useSegments();
-  console.log(segment);
+  console.log(segment); // although no longer using useSegments to define which tabbars are shown,
+  // it is still useful for debugging because the "name" field in the Tabs.screen matches the segments pretty closely.
+  // Since _layout works like breadth-first search, the outermost directories with a _layout determines how far nested
+  // the segments are.
   return (
     <Tabs initialRouteName="(content)" screenOptions={{ headerShown: false }}>
       <Tabs.Screen
