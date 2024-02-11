@@ -8,6 +8,15 @@
       "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
       "inputs": [ "distance", "sideLanding" ],
       "reps": 20
+    },
+    {
+      "did": "332489", 
+      "drillType": "30 Shot Challenge",
+      "spec": "30ft - 130ft", 
+      "shotType": "arg",
+      "description": "Description V2. Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+      "inputs": [ "distance", "sideLanding" ],
+      "reps": 10
     }
   ]
 }
