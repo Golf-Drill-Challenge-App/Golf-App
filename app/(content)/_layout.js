@@ -1,55 +1,31 @@
 import { Tabs } from "expo-router/tabs";
-import { useSegments } from "expo-router";
 
 export default function AppLayout() {
-  // comment out below for debug
-  // const segment = useSegments();
-  // console.log(segment); // although no longer using useSegments to define which tabbars are shown,
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
+    <Tabs
+      screenOptions={({ route, navigation }) => {
+        // reference: https://stackoverflow.com/a/77251731
+        const state = navigation.getState();
+        const isDrillSubmission =
+          state.routes[state.index].state?.index == 2 &&
+          state.routes[state.index].params?.screen.includes("[id]/submission"); //  if the current state's route has a state, and its not the index of that route, then we've detected nested navigation
+        //console.log(state.routes[state.index].state?.index)
+        //console.log(state.routes[state.index].params?.screen)
+
+        return {
+          tabBarStyle: {
+            display: isDrillSubmission ? "none" : undefined, // hide for all nested navigation screens
+          },
+        };
+      }}
+    >
       <Tabs.Screen
-        name="drill/index"
+        name="drill"
         // show tab and tabbar
         options={{
           href: "/drill",
           title: "Drills",
           headerShown: false,
-        }}
-      />
-
-      <Tabs.Screen
-        name="drill/[id]/(segments)"
-        // hide tab, show tabbar
-        options={{
-          href: null,
-          title: "Drill ID index",
-          headerShown: false,
-        }}
-      />
-
-      <Tabs.Screen
-        name="drill/[id]/submission" // applies to all files in drill submission directory
-        // hide tab and tabbar
-        options={{
-          href: null,
-          title: "Drill submission directory",
-          headerShown: false,
-          tabBarStyle: {
-            display: "none",
-          },
-        }}
-      />
-
-      <Tabs.Screen
-        name="drill/[id]/users" // this page comes up when you click on a specific user on a leaderboard
-        // hide tab and tabbar
-        options={{
-          href: null,
-          title: "Drill leaderboard user info",
-          headerShown: false,
-          tabBarStyle: {
-            display: "none",
-          },
         }}
       />
 
