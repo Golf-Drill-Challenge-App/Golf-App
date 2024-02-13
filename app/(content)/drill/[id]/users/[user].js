@@ -18,10 +18,10 @@ export default function Index() {
       >
         <Link
           href={{
-            pathname: "/",
+            pathname: "/drill",
           }}
         >
-          Go back to Index
+          Go back to Drill Index
         </Link>
         <Text>"Leaderboard Drill Results" on the Figma, I think</Text>
         <Text>user id: {uid}</Text>

@@ -13,11 +13,6 @@ export default function Index() {
     return (
         <PaperProvider>
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Link href={{
-                    pathname: "/"
-                }}>
-                    Go back to Index
-                </Link>
                 <Text>Drill Index</Text>
                 <List.Section>
                     <List.Subheader>Drills</List.Subheader>

@@ -32,7 +32,7 @@ export default function Index() {
 
     return (
         <PaperProvider>
-            <Appbar.Header statusBarHeight={20}>
+            <Appbar.Header statusBarHeight={30}>
                 <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
                 <Appbar.Content title={drillData.drillType} />
             </Appbar.Header>

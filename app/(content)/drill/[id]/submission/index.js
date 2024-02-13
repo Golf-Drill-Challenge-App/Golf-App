@@ -9,14 +9,14 @@ export default function Index() {
       <SafeAreaView
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
+        <Text>Submission</Text>
         <Link
           href={{
-            pathname: "/",
+            pathname: "/drill",
           }}
         >
-          Go back to Index
+          Go back to Drill Index
         </Link>
-        <Text>Submission</Text>
       </SafeAreaView>
     </PaperProvider>
   );
