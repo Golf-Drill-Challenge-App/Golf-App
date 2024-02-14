@@ -6,15 +6,12 @@ import { calculateAverageProxToHole, takeBestScore } from '~/Utility'
 import drillsData from '~/drills.json'
 
 export default function Leaderboard({ leaderboardData, drillId }) {
-    const averageProxToHole = calculateAverageProxToHole(leaderboardData);
-    const bestScores = takeBestScore(averageProxToHole);
+    const bestScores = takeBestScore(leaderboardData);
     const orderedLeaderboard = bestScores.sort((a, b) => a.score - b.score)
 
     const getUserInfo = (userId) => {
-        return drillsData.teams[0].users.find((user) => user.uid === userId);
+        return drillsData.teams["1"].users[userId];
     }
-
-
 
     return (
         <List.Section>

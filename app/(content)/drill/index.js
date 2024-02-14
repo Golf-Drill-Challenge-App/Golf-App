@@ -6,7 +6,7 @@ import { Link, useNavigation } from 'expo-router';
 import drillsData from '~/drills.json';
 
 export default function Index() {
-    const drills = drillsData.drills;
+    const drills = drillsData.teams["1"].drills;
     const navigation = useNavigation();
 
     return (
@@ -18,7 +18,7 @@ export default function Index() {
 
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <List.Section>
-                    {drills.map((drill) => (
+                    {Object.values(drills).map((drill) => (
                         <Link
                             key={drill.did}
                             href={{

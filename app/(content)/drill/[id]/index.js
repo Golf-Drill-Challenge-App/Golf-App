@@ -12,34 +12,58 @@ export default function Index() {
     const [value, setValue] = React.useState("description");
     const navigation = useNavigation();
     const { id } = useLocalSearchParams();
+    const drillData = drillsData.teams["1"].drills[id] ? drillsData.teams["1"].drills[id] : null;
 
-    const findDrillById = (drillId) => {
-        return drillsData.teams[0].drills.find((drill) => drill.did === drillId);
-    };
-
-    const findDrillSubmissionsById = (drillId) => {
-        const drillSubmissions = [];
-        drillsData.teams[0].users.forEach(user => {
-            user.history.forEach(drill => {
-                if (Object.keys(drill).includes(drillId)) {
-                    drill[drillId].forEach(attempt => {
-                        if (attempt) {
-                            drillSubmissions.push({
-                                userId: user.uid,
-                                time: attempt.time,
-                                shots: attempt.shots
+    const findDrillAttempts = () => {
+        const drillAttempts = [];
+        const team = drillsData.teams["1"];
+        Object.values(team.users).forEach(user => {
+            Object.values(user.history).forEach(drill => {
+                if (Object.keys(user.history).includes(id)) {
+                    drill.forEach(attempt => {
+                        if (drillAttempts.length === 0) {
+                            drillAttempts.push({
+                                attempts: [
+                                    attempt.averageProximity,
+                                ],
+                                totalSubmissions: 1,
+                                userId: user.uid
                             });
+                        }
+                        else {
+                            var userIdx = -1;
+                            for (let i = 0; i < drillAttempts.length; i++) {
+                                if (drillAttempts[i].userId === user.uid) {
+                                    userIdx = i;
+                                    break;
+                                }
+                            }
+
+                            if (userIdx >= 0) {
+                                drillAttempts[userIdx].attempts.push(attempt.averageProximity);
+                                drillAttempts[userIdx].totalSubmissions++;
+                            }
+                            else {
+                                drillAttempts.push({
+                                    attempts: [
+                                        attempt.averageProximity,
+                                    ],
+                                    totalSubmissions: 1,
+                                    userId: user.uid
+                                });
+                            }
                         }
                     })
                 }
             })
         });
 
-        return drillSubmissions;
+        return drillAttempts;
     }
+    
+    const drillLeaderboardAttempts = findDrillAttempts();
 
-    const drillData = findDrillById(id);
-    const drillLeaderboardAttempts = findDrillSubmissionsById(id);
+    console.log("Attempts: ", drillLeaderboardAttempts)
 
     const tabComponent = () => {
         switch (value) {
