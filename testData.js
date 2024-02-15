@@ -1,5 +1,5 @@
-export const DrillData = {
-  attempts: [
+export const AttemptData = {
+  shots: [
     {
       shotNum: 1,
       target: [

@@ -13,7 +13,7 @@ import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectange from "~/components/input/navigationRectange";
 
-import { DrillData } from "~/testData";
+import { AttemptData } from "~/testData";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   BottomSheetModal,
@@ -25,7 +25,7 @@ import Description from "./modals/description";
 
 export default function Input() {
   const [inputValues, setInputValues] = useState(
-    Array.from({ length: DrillData.attempts.length }, () => ({}))
+    Array.from({ length: AttemptData.shots.length }, () => ({}))
   ); //a useState hook to track the inputs on each shot
   const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
@@ -35,8 +35,8 @@ export default function Input() {
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
     if (
-      currentShot == DrillData.attempts.length - 1 &&
-      shotIndex == DrillData.attempts.length - 1
+      currentShot == AttemptData.shots.length - 1 &&
+      shotIndex == AttemptData.shots.length - 1
     ) {
       return (
         <Button
@@ -162,9 +162,9 @@ export default function Input() {
             {/* Shot Number / Total shots */}
             <View style={styles.shotNumContainer}>
               <Text style={styles.shotNumber}>
-                Shot {DrillData.attempts[shotIndex].shotNum}
+                Shot {AttemptData.shots[shotIndex].shotNum}
                 <Text style={styles.shotTotal}>
-                  /{DrillData.attempts.length}
+                  /{AttemptData.shots.length}
                 </Text>
               </Text>
             </View>
@@ -173,7 +173,7 @@ export default function Input() {
               {/* Instruction */}
 
               <View style={styles.horizontalContainer}>
-                {DrillData.attempts[shotIndex].target.map((item, id) => (
+                {AttemptData.shots[shotIndex].target.map((item, id) => (
                   <DrillTarget
                     key={id}
                     description={item.description}
@@ -185,7 +185,7 @@ export default function Input() {
 
               {/* Inputs */}
 
-              {DrillData.attempts[shotIndex].inputs.map((item, id) => (
+              {AttemptData.shots[shotIndex].inputs.map((item, id) => (
                 <DrillInput
                   key={id}
                   icon={item.icon}
@@ -206,7 +206,7 @@ export default function Input() {
                 mode="contained-tonal"
                 onPress={() => {
                   //this loop is a test to see if inputs are maintained in state
-                  for (let i = 0; i < DrillData.attempts.length; i++) {
+                  for (let i = 0; i < AttemptData.shots.length; i++) {
                     console.log("InputValue[", i, "]: ", inputValues[i]);
                   }
                   console.log(inputValues);
@@ -225,7 +225,7 @@ export default function Input() {
             >
               <BottomSheetScrollView>
                 <View style={styles.bottomSheetContentContainer}>
-                  {DrillData.attempts.map((item, id) => (
+                  {AttemptData.shots.map((item, id) => (
                     <Pressable
                       key={id}
                       onPress={() => {
@@ -250,7 +250,7 @@ export default function Input() {
                         target={item.target}
                         inputValues={inputValues[id]}
                         shotIndex={item.shotNum}
-                        numShots={DrillData.attempts.length}
+                        numShots={AttemptData.shots.length}
                       />
                     </Pressable>
                   ))}
