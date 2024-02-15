@@ -13,15 +13,15 @@ export default function Index() {
                     Go to Drills List
                 </Link>
                 <Link href={{
-                    pathname: "/drill/1234/statistics"
+                    pathname: "/drill/732489/statistics"
                 }}>
-                    Go to Stats at /drill/1234/statistics
+                    Go to Stats at /drill/732489/statistics
                 </Link>
                 <Link href={{
-                pathname: "/drill/1234/submission/"
-            }}>
-                Go to Result at /drill/1234/submission/
-            </Link>
+                    pathname: "/drill/732489/submission/"
+                }}>
+                    Go to Result at /drill/732489/submission/
+                </Link>
             </SafeAreaView>
         </PaperProvider>
     );

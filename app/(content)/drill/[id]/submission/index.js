@@ -1,12 +1,17 @@
 import React from 'react';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useLocalSearchParams } from 'expo-router';
 import { Appbar, PaperProvider, Text } from 'react-native-paper';
 import Result from "./result";
-import drillData from "~/drill_data.json"
+//import drillsData from "~/drills.json"
+
+import drills from '~/drill_data.json'
 
 export default function Index(props) {
     const navigation = useNavigation();
-    const data = drillData[0]
+    const { id } = useLocalSearchParams();
+    //const drillData = drillsData.teams["1"].users["1"].history[id][0];
+
+    const drill = drills[0];
     
     return (
         <PaperProvider>
@@ -15,7 +20,7 @@ export default function Index(props) {
                 <Appbar.Content title={ /*props.drill*/ "20 Shot Challenge" } />
             </Appbar.Header>
 
-            <Result submission={data} />
+            <Result submission={drill} />
             
         </PaperProvider>
     );
