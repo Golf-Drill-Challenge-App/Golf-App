@@ -22,6 +22,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
+import { createOutputData } from "~/Utility.js";
 
 export default function Input({ inputValues, setInputValues }) {
   //Helper varibles
@@ -45,6 +46,7 @@ export default function Input({ inputValues, setInputValues }) {
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Submit Drill");
+            createOutputData(inputValues, AttemptData);
           }}
         >
           Submit Drill
