@@ -23,10 +23,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
 
-export default function Input() {
-  const [inputValues, setInputValues] = useState(
-    Array.from({ length: AttemptData.shots.length }, () => ({}))
-  ); //a useState hook to track the inputs on each shot
+export default function Input({ inputValues, setInputValues }) {
   const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
