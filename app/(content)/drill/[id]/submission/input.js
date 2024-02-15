@@ -21,7 +21,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Description from "../description";
+import Description from "./modals/description";
 
 export default function Input() {
   const [inputValues, setInputValues] = useState(

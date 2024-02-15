@@ -17,7 +17,7 @@ export default function Description() {
         eu ullamco ea irure eiusmod minim dolore ea duis.
       </Text>
       <Image
-        source={require("../../assets/drill-description-image.jpg")}
+        source={require("~/assets/drill-description-image.jpg")}
         style={{ width: "100%", maxHeight: 200, marginTop: 50 }}
       />
     </View>
