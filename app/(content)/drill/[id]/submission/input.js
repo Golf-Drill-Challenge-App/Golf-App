@@ -7,6 +7,7 @@ import {
   Button,
   Dialog,
   Portal,
+  Banner,
 } from "react-native-paper";
 import { Link, useNavigation } from "expo-router";
 import DrillInput from "~/components/input/drillInput";
@@ -102,10 +103,12 @@ export default function Input({ inputValues, setInputValues }) {
   const handleNextShotButtonClick = () => {
     //Check if all inputs have been filled in
     if (Object.keys(inputValues[shotIndex]).length === numInputs) {
+      setEmptyInputBannerVisable(false);
       setShotIndex(shotIndex + 1);
       setCurrentShot(currentShot + 1);
     } else {
       console.log("Not all input fields entered!");
+      setEmptyInputBannerVisable(true);
     }
   };
 
@@ -147,6 +150,10 @@ export default function Input({ inputValues, setInputValues }) {
   const showLeaveDrillDialog = () => setVisibleLeaveDrill(true);
   const hideLeaveDrillDialog = () => setVisibleLeaveDrill(false);
 
+  /***** Empty Input Banner Stuff *****/
+
+  const [emptyInputBannerVisable, setEmptyInputBannerVisable] = useState(false);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
@@ -168,6 +175,19 @@ export default function Input({ inputValues, setInputValues }) {
               color={"#F24E1E"}
             />
           </Appbar.Header>
+          {/* Empty Input Banner */}
+
+          <Banner
+            visible={emptyInputBannerVisable}
+            actions={[
+              {
+                label: "Dismiss",
+                onPress: () => setEmptyInputBannerVisable(false),
+              },
+            ]}
+          >
+            Error! All input fields must be filled!
+          </Banner>
 
           <KeyboardAwareScrollView>
             {/* Shot Number / Total shots */}
