@@ -1,36 +1,20 @@
-import React from 'react';
-import { View, StatusBar } from "react-native";
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperProvider, Text } from 'react-native-paper';
-import { Link } from "expo-router";
-
-import Leaderboard from './drills/leaderboard'
-import Description from './drills/description'
-import Stat from './drills/stat'
-
+import { Link, Redirect } from "expo-router";
+import { Stack } from "expo-router";
+//This is the root file
 export default function Index() {
-    const [value, setValue] = React.useState("description");
-
-    const tabComponent = () => {
-        switch (value) {
-            case 'leaderboard':
-                return <Leaderboard />
-            case 'description':
-                return <Description />
-            case 'stats':
-                return <Stat />
-        }
-    }
-
+    const [signedIn, setSignedin] = useState(true)
     return (
         <PaperProvider>
             <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
+                {signedIn ? <Redirect href={'/content'} /> : <Text>Open up App.js to start working on your app!</Text>}
+
                 <Text>Open up App.js to start working on your app!</Text>
-                <Link href={{
-                    pathname: "/drill"
-                }}>
-                    Go to Drills
-                </Link>
+                <Link href={"/content"}>go to content</Link>
+                <Link href={"/drill/1234"}>/drill/1234 slug</Link>
             </SafeAreaView>
         </PaperProvider>
     );
