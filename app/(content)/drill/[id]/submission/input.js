@@ -24,6 +24,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
 
 export default function Input({ inputValues, setInputValues }) {
+  //Helper varibles
+  const numInputs = AttemptData.shots[0].inputs.length;
+
   const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
@@ -58,8 +61,7 @@ export default function Input({ inputValues, setInputValues }) {
           mode="contained-tonal"
           onPress={() => {
             console.log("Pressed Next Shot");
-            setShotIndex(shotIndex + 1);
-            setCurrentShot(currentShot + 1);
+            handleNextShotButtonClick();
           }}
         >
           Next Shot
@@ -92,6 +94,17 @@ export default function Input({ inputValues, setInputValues }) {
       };
       return updatedValues;
     });
+  };
+
+  //Function to handle "Next shot" button click
+  const handleNextShotButtonClick = () => {
+    //Check if all inputs have been filled in
+    if (Object.keys(inputValues[shotIndex]).length === numInputs) {
+      setShotIndex(shotIndex + 1);
+      setCurrentShot(currentShot + 1);
+    } else {
+      console.log("Not all input fields entered!");
+    }
   };
 
   const navigation = useNavigation();
@@ -154,7 +167,6 @@ export default function Input({ inputValues, setInputValues }) {
             />
           </Appbar.Header>
 
-          {/* <View> */}
           <KeyboardAwareScrollView>
             {/* Shot Number / Total shots */}
             <View style={styles.shotNumContainer}>
@@ -226,11 +238,6 @@ export default function Input({ inputValues, setInputValues }) {
                     <Pressable
                       key={id}
                       onPress={() => {
-                        console.log("Clicked on ", id);
-                        console.log(item);
-                        console.log(inputValues[id]);
-                        console.log(item.target);
-                        console.log(item.inputs);
                         setShotIndex(id);
                         navigationBottomSheetModalRef.current.close();
                       }}
@@ -330,10 +337,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   navigationContainer: {
-    // position: "absolute",
-    // left: 0,
-    // right: 0,
-    // bottom: 0,
     alignItems: "center",
     height: "contain",
     justifyContent: "center",
