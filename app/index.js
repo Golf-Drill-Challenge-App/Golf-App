@@ -33,10 +33,10 @@ export default function Index() {
         </Link>
         <Link
           href={{
-            pathname: "/drills/description",
+            pathname: "/drill/732489/",
           }}
         >
-          Go to Description
+          Go to /drill/732489/
         </Link>
       </SafeAreaView>
     </PaperProvider>
