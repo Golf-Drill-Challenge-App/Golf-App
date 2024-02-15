@@ -1,16 +1,14 @@
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { PaperProvider, Text } from 'react-native-paper';
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { PaperProvider, Text } from "react-native-paper";
+import Input from "./input";
 
 export default function Index() {
-    //Franks thoughts: State should be shared here between
-    
-    return (
-        <PaperProvider>
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Submission</Text>
+  //Franks thoughts: State should be shared here between
 
-            </SafeAreaView>
-        </PaperProvider>
-    );
+  return (
+    <PaperProvider>
+      <Input />
+    </PaperProvider>
+  );
 }
