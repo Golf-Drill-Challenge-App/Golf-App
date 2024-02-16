@@ -11,6 +11,7 @@ function Index(props) {
     return (
         <ScrollView>
             <ProfileCard user={user} />
+            <Link push href="content/profile/statistics">go to statistics</Link>
 
             <Text>Drill History</Text>
             {attemptedDrills.map((drillId) => {
