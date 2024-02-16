@@ -1,12 +1,10 @@
-import { StyleSheet, View } from "react-native";
-import { Icon, Text } from "react-native-paper";
-
-import { getIconByKey } from "~/Utility"
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { Text, Icon } from "react-native-paper";
 
 export default function NavigationRectange({
   inputs,
   target,
-  targetValue,
   inputValues,
   shotIndex,
 }) {
@@ -15,14 +13,14 @@ export default function NavigationRectange({
       <View style={styles.rowContainer}>
         <Text>Shot {shotIndex}/20</Text>
         <Text>
-          Target: {targetValue}
-          {target.distanceMeasure}
+          {target[0].description}: {target[0].value}
+          {target[0].distanceMeasure}
         </Text>
       </View>
       <View style={styles.rowContainer}>
         {inputs.map((item, id) => (
           <View style={styles.horizontalContainer} key={id}>
-            <Icon source={getIconByKey(item.id)} />
+            <Icon source={item.icon} />
             <Text>
               {inputValues[item.id]} {item.distanceMeasure}
             </Text>
