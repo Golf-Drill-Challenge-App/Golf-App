@@ -5,6 +5,7 @@ module.exports = function (api) {
     plugins: [
       require.resolve("expo-router/babel"),
       'react-native-paper/babel',
+      "react-native-reanimated/plugin",
 [
       'babel-plugin-root-import',
       {
