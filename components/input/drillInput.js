@@ -1,5 +1,6 @@
-import { StyleSheet, View } from "react-native";
-import { Icon, Text, TextInput } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import React from "react";
+import { Text, Icon, TextInput } from "react-native-paper";
 
 export default function DrillInput({
   icon,
@@ -7,17 +8,7 @@ export default function DrillInput({
   distanceMeasure,
   inputValue,
   onInputChange,
-  currentShot,
-  shotIndex,
 }) {
-  const checkEditable = () => {
-    if (currentShot == shotIndex) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   return (
     <View style={styles.item}>
       <Text style={styles.description}>
@@ -32,7 +23,7 @@ export default function DrillInput({
           value={inputValue}
           keyboardType="numeric"
           returnKeyType="done"
-          editable={checkEditable()}
+          editable={true}
           onChangeText={onInputChange}
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
