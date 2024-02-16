@@ -9,7 +9,7 @@ import * as shape from 'd3-shape';
 import {clampNumber, formatDate, numTrunc} from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import drillData from "~/team_data.json"
+import drillData from "~/drill_data.json"
 import ShotAccordion from "~/components/shotAccordion";
 
 export default function BarChartScreen(props) {
