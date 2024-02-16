@@ -124,7 +124,7 @@ function ShotAccordion(props) {
             style={{
                 backgroundColor: "#fff",
                 borderWidth: 1,
-                borderStyle: 'solid'
+                borderStyle: 'solid',
             }}>
 
             {props.drill["outputs"].map((field) => {
