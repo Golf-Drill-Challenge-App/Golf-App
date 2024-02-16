@@ -50,8 +50,17 @@ function Index() {
   }, []);
   return (
     <PaperProvider>
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView
+        // flex: without this the scrollview automatically scrolls back up when finger no longer held down
+        style={{ flex: 1 }}
+        // edges: to remove bottom padding above tabbar. Maybe move this (and PaperProvider) into app/_layout.js?
+        edges={["right", "top", "left"]}
+      >
+        <TouchableWithoutFeedback
+          // dismiss keyboard after tapping outside of search bar input
+          onPress={Keyboard.dismiss}
+          accessible={false}
+        >
           <GestureHandlerRootView style={{ flex: 1 }}>
             <Appbar.Header
               statusBarHeight={0}
@@ -154,6 +163,7 @@ function Index() {
 
               <KeyboardAwareScrollView
                 style={{ marginTop: 20, marginLeft: 20 }}
+                // allows opening links from search results without closing keyboard first
                 keyboardShouldPersistTaps="handled"
               >
                 <List.Section>
