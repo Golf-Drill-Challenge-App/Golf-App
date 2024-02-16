@@ -7,6 +7,8 @@ import * as scale from 'd3-scale';
 import * as shape from 'd3-shape';
 import {clampNumber, formatDate, numTrunc} from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Appbar } from 'react-native-paper';
+import { Link, useNavigation } from 'expo-router';
 
 import drillData from "~/drill_data.json"
 import ShotAccordion from "~/components/shotAccordion";
@@ -14,6 +16,7 @@ import ShotAccordion from "~/components/shotAccordion";
 export default function Stat() {
     const drillDataSorted = drillData.sort((a, b) => a.time - b.time)
     const data = drillDataSorted.map(value => value["strokesGained"])
+    const navigation = useNavigation();
 
     const [_, setScrollPosition] = useState(0)
     const [movingAvgRange, setMovingAvgRange] = useState(5)
@@ -99,7 +102,11 @@ export default function Stat() {
 
     return (
         <>
-            <Text>Open up App.js to start working on your app!asef</Text>
+            <Appbar.Header statusBarHeight={0}>
+                <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
+                <Appbar.Content title="Statistics" />
+            </Appbar.Header>
+
             <View style={{zIndex: 3}}>
                 <Text>Moving Avg.</Text>
                 <DropDownPicker

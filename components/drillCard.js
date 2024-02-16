@@ -4,7 +4,7 @@ import {Link, router} from "expo-router";
 
 function DrillCard(props) {
     return (
-        <Link href={"/profile/drills/" + props.drill["did"]} asChild>
+        <Link href={props.hrefString} asChild>
             <TouchableOpacity>
                 <View style={{
                     flexDirection: "row",
@@ -40,7 +40,7 @@ function DrillCard(props) {
                             return retVal
                         }).join(' ') + " x" + props.drill["reps"]}</Text>
                     </View>
-                    <Text>></Text>
+                    <Text></Text>
                 </View>
             </TouchableOpacity>
         </Link>
