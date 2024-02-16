@@ -1,28 +1,28 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { PaperProvider, Text } from 'react-native-paper';
-import { Link, useFocusEffect, useNavigation } from 'expo-router';
-import { Button } from 'react-native-paper';
-//This is for the list of drills
-export default function Index() {
-    navigation = useNavigation()
+import drillData from "~/drill_data.json"
+import ProfileCard from "~/components/profileCard";
+import {ScrollView, Text} from "react-native";
+import DrillCard from "~/components/drillCard";
 
-    /*useFocusEffect(() => {
-        navigation.getParent()?.setOptions({
-            tabBarStyle: { display: 'flex' },
-        });
-    })*/
-
+function Index(props) {
+    const user = drillData["users"]["1"];
+    const drills = drillData["drills"];
+    const attemptedDrills = Object.keys(drills).filter((drillId) => drillId in user["history"]);
     return (
-        <PaperProvider>
-            <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Button
-                    title="Go to Settings"
-                    onPress={() => navigation.navigate('test')}
-                >go to test main stack</Button>
-                <Text>Profile Index</Text>
-                <Link push href="content/profile/statistics">go to statistics</Link>
-            </SafeAreaView>
-        </PaperProvider>
+        <ScrollView>
+            <ProfileCard user={user} />
+            <Link push href="content/profile/statistics">go to statistics</Link>
+
+            <Text>Drill History</Text>
+            {attemptedDrills.map((drillId) => {
+
+                return (
+                    <DrillCard drill={drills[drillId]}             hrefString={"/team/users/" + "1" + "/drills/" + drillId}
+                               key={drillId}/>
+                );
+            })}
+        </ScrollView>
     );
 }
+
+export default Index;
