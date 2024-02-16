@@ -1,5 +1,5 @@
 import React from "react";
-import drillData from "~/team_data.json";
+import drillData from "~/drill_data.json";
 import ProfileCard from "~/components/profileCard";
 import { ScrollView, Text } from "react-native";
 import DrillCard from "~/components/drillCard";
@@ -31,7 +31,7 @@ function Index(props) {
         return (
           <DrillCard
             drill={drills[drillId]}
-            hrefString={"/team/users/" + userData.uid + "/drills/" + drillId}
+            hrefString={"/content/team/users/" + userData.uid + "/drills/" + drillId}
             key={drillId}
           />
         );

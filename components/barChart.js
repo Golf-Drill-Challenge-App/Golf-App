@@ -99,6 +99,8 @@ export default function BarChartScreen(props) {
 
     return (
         <>
+            <Text>Open up App.js to start working on your app!asef</Text>
+            <Button title={"Back"} onPress={() => router.back()}/>
             <View style={{zIndex: 3}}>
                 <Text>Moving Avg.</Text>
                 <DropDownPicker
