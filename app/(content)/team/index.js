@@ -13,6 +13,7 @@ import {
   Searchbar,
 } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
+import { Link, router } from "expo-router";
 
 function Index() {
   const team = teamData["teams"]["1"];
@@ -36,6 +37,14 @@ function Index() {
   const containerStyle = { backgroundColor: "white", padding: 20 };
   return (
     <PaperProvider>
+      <Link
+        href={{
+          pathname: "/",
+        }}
+        style={{ marginBottom: 10 }}
+      >
+        Go back to Index
+      </Link>
       <Text style={{ fontSize: 30, marginTop: 10, marginLeft: 10 }}>Team</Text>
       <View style={{ alignItems: "center" }}>
         <Image
@@ -107,6 +116,7 @@ function Index() {
                     <Icon source="chevron-right" />
                   </View>
                 )}
+                onPress={() => router.push(`/team/users/${user.uid}`)}
               />
             );
           })}

@@ -11,5 +11,5 @@ export function formatDate(unixTimestamp) {
 }
 
 export function numTrunc(value){
-    return parseFloat(value.toFixed(3))
+    return value === undefined ? "aaaaaaa" : parseFloat(value.toFixed(3))
 }
