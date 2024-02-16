@@ -9,12 +9,10 @@ import * as shape from 'd3-shape';
 import {clampNumber, formatDate, numTrunc} from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
 
-// import drillData from "~/drill_data.json"
-import teamData from "~/team_data.json"
+import drillData from "~/team_data.json"
 import ShotAccordion from "~/components/shotAccordion";
 
 export default function BarChartScreen(props) {
-    const drillData = teamData["teams"]["1"];
     const slug = useLocalSearchParams()["id"];
     const drillDataSorted = props.drillData.sort((a, b) => a.time - b.time)
     const data = drillDataSorted.map(value => value[props.mainOutputAttempt])

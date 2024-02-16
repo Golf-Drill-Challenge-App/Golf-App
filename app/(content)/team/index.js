@@ -22,9 +22,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 function Index() {
-  const team = teamData["teams"]["1"];
-  const users = team["users"];
-  //console.log(users);
+  const users = teamData["users"];
   const [visible, setVisible] = React.useState(false);
 
   const [searchQuery, setSearchQuery] = React.useState("");

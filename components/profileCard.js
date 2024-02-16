@@ -6,7 +6,7 @@ function ProfileCard(props) {
         <>
             <Image source={{uri: props.user["pfp"]}} style={{width: 100, height: 100}} />
             <Text>{props.user["name"]}</Text>
-            <Button title={"View Stats"}/>
+            <Text style = {{textAlign: "center"}}>View Stats</Text>
         </>
     );
 }
