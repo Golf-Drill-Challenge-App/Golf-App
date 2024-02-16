@@ -22,6 +22,11 @@ export default function Index() {
                 }}>
                     Go to Result at /drill/732489/submission/
                 </Link>
+                <Link href={{
+                    pathname: "/profile"
+                }}>
+                    Go to Profile at /profile
+                </Link>
             </SafeAreaView>
         </PaperProvider>
     );
