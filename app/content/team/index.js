@@ -1,10 +1,8 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import teamData from "~/team_data.json";
-import { ScrollView, Image, View, StyleSheet, Pressable } from "react-native";
+import { ScrollView, Image, View, Pressable } from "react-native";
 import {
   Text,
-  Modal,
-  Portal,
   Button,
   PaperProvider,
   List,
@@ -17,16 +15,15 @@ import { Feather } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import {
   BottomSheetModal,
-  BottomSheetModalProvider
+  BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useNavigation } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function Index() {
   const navigation = useNavigation();
   const users = teamData["users"];
-  const [visible, setVisible] = React.useState(false);
 
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -35,13 +32,6 @@ function Index() {
   const foundUsers = Object.values(users).filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // console.log(foundUsers)
-  // console.log(searchQuery)
-
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: "white", padding: 20 };
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -61,7 +51,12 @@ function Index() {
       <PaperProvider>
         <SafeAreaView>
           <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-            <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
+            <Appbar.BackAction
+              onPress={() => {
+                navigation.goBack();
+              }}
+              color={"#F24E1E"}
+            />
             <Appbar.Content title={"Team"} />
           </Appbar.Header>
           <BottomSheetModalProvider>
@@ -102,29 +97,37 @@ function Index() {
                   snapPoints={snapPoints}
                   onChange={handleSheetChanges}
                 >
-                  <View style={styles.contentContainer}>
-                    <Text>Team Settings. Click below to dismiss.</Text>
+                  <View>
                     <Pressable
                       onPress={() => {
                         bottomSheetModalRef.current.close();
                       }}
-                    //width={"100%"}
-                    //alignItems={"center"}
+                      //width={"100%"}
+                      //alignItems={"center"}
                     >
-                      <Text>Cancel 🎉</Text>
+                      <Text
+                        style={{
+                          textAlign: "left",
+                          marginLeft: 5,
+                          fontSize: 15,
+                          color: "red",
+                        }}
+                      >
+                        Cancel
+                      </Text>
                     </Pressable>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 20,
+                        marginTop: 20,
+                      }}
+                    >
+                      Team Settings
+                    </Text>
                   </View>
                 </BottomSheetModal>
               </View>
-              <Portal>
-                <Modal
-                  visible={visible}
-                  onDismiss={hideModal}
-                  contentContainerStyle={containerStyle}
-                >
-                  <Text>Team Settings. Click outside this area to dismiss.</Text>
-                </Modal>
-              </Portal>
             </View>
 
             <Text style={{ textAlign: "center" }}>
@@ -160,7 +163,9 @@ function Index() {
                           <Icon source="chevron-right" />
                         </View>
                       )}
-                      onPress={() => router.push(`/team/users/${user.uid}`)}
+                      onPress={() =>
+                        router.push(`content/team/users/${user.uid}`)
+                      }
                     />
                   );
                 })}
@@ -172,18 +177,5 @@ function Index() {
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: "center",
-    backgroundColor: "grey",
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
-});
 
 export default Index;

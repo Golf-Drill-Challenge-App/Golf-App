@@ -31,7 +31,7 @@ function Index(props) {
         return (
           <DrillCard
             drill={drills[drillId]}
-            hrefString={"/team/users/" + userData.uid + "/drills/" + drillId}
+            hrefString={"/content/team/users/" + userData.uid + "/drills/" + drillId}
             key={drillId}
           />
         );
