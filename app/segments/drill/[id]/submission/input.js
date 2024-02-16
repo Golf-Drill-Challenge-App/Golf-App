@@ -47,7 +47,7 @@ export default function Input({ inputValues, setInputValues }) {
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
-          onPress={() => router.replace(`/content/drill/${id}/submission/result`)}
+          onPress={() => router.replace(`/segments/drill/${id}/submission/result`)}
         >
           Submit Drill
         </Button>

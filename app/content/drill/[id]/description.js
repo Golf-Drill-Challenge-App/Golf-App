@@ -9,7 +9,7 @@ export default function Description({ descData, drillId }) {
             <Text variant="bodySmall">{descData.description}</Text>
             <Image source={require('~/assets/drill-description-image.jpg')} style={{ width: "100%", maxHeight: 200, marginTop: 50 }} />
             <Link href={{
-                pathname: `/content/drill/${drillId}/submission`
+                pathname: `/segments/drill/${drillId}/submission`
             }} asChild >
                 <Button style={{ margin: 10 }} mode="contained" buttonColor="#F24E1E" textColor="white">Start Drill</Button>
             </Link>
