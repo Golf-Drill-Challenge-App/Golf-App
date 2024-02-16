@@ -10,9 +10,9 @@ function Index(props) {
   const userData = drillData["users"][user_id];
   const drills = drillData["drills"];
   console.log(userData);
-  const attemptedDrills = Object.keys(drills).filter(
+  const attemptedDrills = userData["history"] ? Object.keys(drills).filter(
     (drillId) => drillId in userData["history"]
-  );
+  ): [];
   // console.log(attemptedDrills);
   return (
     <ScrollView>

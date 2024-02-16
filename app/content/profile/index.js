@@ -8,9 +8,9 @@ import { Link } from "expo-router";
 function Index(props) {
   const user = drillData["users"]["1"];
   const drills = drillData["drills"];
-  const attemptedDrills = Object.keys(drills).filter(
+  const attemptedDrills = user["history"] ? Object.keys(drills).filter(
     (drillId) => drillId in user["history"]
-  );
+  ): [];
   return (
     <ScrollView>
       <ProfileCard user={user} />
