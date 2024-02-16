@@ -7,6 +7,7 @@ import Description from './description'
 import Stat from './statistics'
 
 import drillsData from '~/drills.json'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Index() {
     const [value, setValue] = React.useState("description");
@@ -60,7 +61,7 @@ export default function Index() {
 
         return drillAttempts;
     }
-    
+
     const drillLeaderboardAttempts = findDrillAttempts();
 
     console.log("Attempts: ", drillLeaderboardAttempts)
@@ -78,35 +79,36 @@ export default function Index() {
 
     return (
         <PaperProvider>
-            <Appbar.Header statusBarHeight={0}>
-                <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
-                <Appbar.Content title={drillData.drillType} />
-            </Appbar.Header>
+            <SafeAreaView>
+                <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+                    <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
+                    <Appbar.Content title={drillData.drillType} />
+                </Appbar.Header>
 
-            {/* Tab system */}
+                {/* Tab system */}
 
-            <SegmentedButtons
-                value={value}
-                onValueChange={setValue}
-                buttons={[
-                    {
-                        value: "description",
-                        label: "Description",
-                    },
-                    {
-                        value: "leaderboard",
-                        label: "Leaderboard",
-                    },
-                    {
-                        value: "stats",
-                        label: "Stats",
-                    },
-                ]}
+                <SegmentedButtons
+                    value={value}
+                    onValueChange={setValue}
+                    buttons={[
+                        {
+                            value: "description",
+                            label: "Description",
+                        },
+                        {
+                            value: "leaderboard",
+                            label: "Leaderboard",
+                        },
+                        {
+                            value: "stats",
+                            label: "Stats",
+                        },
+                    ]}
 
-            />
+                />
 
-            {tabComponent()}
-
+                {tabComponent()}
+            </SafeAreaView>
         </PaperProvider>
     );
 }

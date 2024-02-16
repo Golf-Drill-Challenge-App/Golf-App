@@ -3,6 +3,7 @@ import drillData from "~/drill_data.json"
 import ProfileCard from "~/components/profileCard";
 import {ScrollView, Text} from "react-native";
 import DrillCard from "~/components/drillCard";
+import { Link } from "expo-router"
 
 function Index(props) {
     const user = drillData["users"]["1"];
@@ -17,8 +18,7 @@ function Index(props) {
             {attemptedDrills.map((drillId) => {
 
                 return (
-                    <DrillCard drill={drills[drillId]}             hrefString={"/team/users/" + "1" + "/drills/" + drillId}
-                               key={drillId}/>
+                    <DrillCard drill={drills[drillId]} hrefString={"/team/users/" + "1" + "/drills/" + drillId} key={drillId}/>
                 );
             })}
         </ScrollView>
