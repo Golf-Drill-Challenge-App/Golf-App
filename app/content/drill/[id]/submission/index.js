@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { PaperProvider, Text } from "react-native-paper";
 import Input from "./input";
 import { AttemptData } from "~/testData";
