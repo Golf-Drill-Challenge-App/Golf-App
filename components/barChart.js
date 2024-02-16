@@ -1,5 +1,6 @@
+import {router, useLocalSearchParams} from "expo-router";
 import {StatusBar} from 'expo-status-bar';
-import {ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {Button, ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {BarChart, Grid, YAxis} from "react-native-svg-charts";
 import {Path} from "react-native-svg";
 import React, {useMemo, useRef, useState} from "react";
@@ -7,16 +8,14 @@ import * as scale from 'd3-scale';
 import * as shape from 'd3-shape';
 import {clampNumber, formatDate, numTrunc} from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
-import { Appbar } from 'react-native-paper';
-import { Link, useNavigation } from 'expo-router';
 
 import drillData from "~/drill_data.json"
 import ShotAccordion from "~/components/shotAccordion";
 
-export default function Stat() {
-    const drillDataSorted = drillData.sort((a, b) => a.time - b.time)
-    const data = drillDataSorted.map(value => value["strokesGained"])
-    const navigation = useNavigation();
+export default function BarChartScreen(props) {
+    const slug = useLocalSearchParams()["id"];
+    const drillDataSorted = props.drillData.sort((a, b) => a.time - b.time)
+    const data = drillDataSorted.map(value => value[props.mainOutputAttempt])
 
     const [_, setScrollPosition] = useState(0)
     const [movingAvgRange, setMovingAvgRange] = useState(5)
@@ -60,7 +59,7 @@ export default function Stat() {
     }, [data, movingAvgRange, barWidth])
 
     const transparentData = data.map((value, index) => ({
-        value:  value > 0 ? Math.max(...data) : Math.min(...data),
+        value: value > 0 ? Math.max(...data) : Math.min(...data),
         svg: {
             fill: 'transparent',
             onPress: () => {
@@ -73,8 +72,6 @@ export default function Stat() {
     const movingAvgData = data.map(
         (value, index) => (
             (index + 1) >= movingAvgRange ? data.slice(index - movingAvgRange + 1, index + 1).reduce((a, b) => a + b, 0) / movingAvgRange : 0))
-
-    // console.log(processedData)
 
     // Calculate scales
     const scaleY = scale.scaleLinear()
@@ -102,11 +99,8 @@ export default function Stat() {
 
     return (
         <>
-            <Appbar.Header statusBarHeight={0}>
-                <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
-                <Appbar.Content title="Statistics" />
-            </Appbar.Header>
-
+            <Text>Open up App.js to start working on your app!asef</Text>
+            <Button title={"Back"} onPress={() => router.back()}/>
             <View style={{zIndex: 3}}>
                 <Text>Moving Avg.</Text>
                 <DropDownPicker
@@ -216,7 +210,7 @@ export default function Stat() {
             <ScrollView>
                 {drillDataSorted[selected]["shots"].map(
                     (shot) =>
-                        <ShotAccordion key={shot["sid"]} shot={shot} total={drillDataSorted[selected]["shots"].length}/>
+                        <ShotAccordion key={shot["sid"]} shot={shot} drill={drillData["drills"][slug]} total={drillDataSorted[selected]["shots"].length}/>
                 )}
             </ScrollView>
             <StatusBar style="auto"/>

@@ -25,17 +25,26 @@ def generate_submission(submission_id):
 
     # Strokes gained - random number between 1 and 10
     strokes_gained_total = 0
+    carry_diff_total = 0
+    side_landing_total = 0
+    prox_hole_total = 0
 
     # Generating 5 shots with random data
     shots = []
-    for shot_id in range(1, random.randint(2, 20)):
+    num_shots = random.randint(2, 20)
+    for shot_id in range(1, num_shots):
         target = random.randint(100, 150)
         carry_diff = random.uniform(-10, 10) #difference
-        side_landing = random.uniform(0, 35)
+        side_landing = random.uniform(-35, 35) #negative is left, for shot tendency chart
         prox_hole = math.sqrt((carry_diff * 3)**2 + side_landing**2) #proximity to hole, x3 for yard to feet conversion
         expected_putts = lookup_round_down(prox_hole, putt_keys, putt_values)
         baseline = lookup_round_down(target, sg_keys, sg_values)
         strokes_gained = baseline - expected_putts - 1
+
+        carry_diff_total += carry_diff
+        side_landing_total += side_landing
+        prox_hole_total += prox_hole
+
         shot = {
             "sid": shot_id,
             "target": target,
@@ -54,6 +63,10 @@ def generate_submission(submission_id):
     submission = {
         "time": time_stamp,
         "strokesGained": strokes_gained_total,
+        "strokesGainedAverage": strokes_gained_total / num_shots,
+        "carryDiffAverage": carry_diff_total / num_shots,
+        "sideLandingAverage": side_landing_total / num_shots,
+        "proxHoleAverage": prox_hole_total / num_shots,
         "shots": shots
     }
 
