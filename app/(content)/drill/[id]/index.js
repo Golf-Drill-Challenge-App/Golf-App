@@ -12,17 +12,63 @@ export default function Index() {
     const [value, setValue] = React.useState("description");
     const navigation = useNavigation();
     const { id } = useLocalSearchParams();
+    const drillData = drillsData.teams["1"].drills[id] ? drillsData.teams["1"].drills[id] : null;
 
-    const findDrillById = (drillId) => {
-        return drillsData.drills.find((drill) => drill.did === drillId);
-    };
+    const findDrillAttempts = () => {
+        const drillAttempts = [];
+        const team = drillsData.teams["1"];
+        Object.values(team.users).forEach(user => {
+            Object.values(user.history).forEach(drill => {
+                if (Object.keys(user.history).includes(id)) {
+                    drill.forEach(attempt => {
+                        if (drillAttempts.length === 0) {
+                            drillAttempts.push({
+                                attempts: [
+                                    attempt.averageProximity,
+                                ],
+                                totalSubmissions: 1,
+                                userId: user.uid
+                            });
+                        }
+                        else {
+                            var userIdx = -1;
+                            for (let i = 0; i < drillAttempts.length; i++) {
+                                if (drillAttempts[i].userId === user.uid) {
+                                    userIdx = i;
+                                    break;
+                                }
+                            }
 
-    const drillData = findDrillById(id);
+                            if (userIdx >= 0) {
+                                drillAttempts[userIdx].attempts.push(attempt.averageProximity);
+                                drillAttempts[userIdx].totalSubmissions++;
+                            }
+                            else {
+                                drillAttempts.push({
+                                    attempts: [
+                                        attempt.averageProximity,
+                                    ],
+                                    totalSubmissions: 1,
+                                    userId: user.uid
+                                });
+                            }
+                        }
+                    })
+                }
+            })
+        });
+
+        return drillAttempts;
+    }
+    
+    const drillLeaderboardAttempts = findDrillAttempts();
+
+    console.log("Attempts: ", drillLeaderboardAttempts)
 
     const tabComponent = () => {
         switch (value) {
             case 'leaderboard':
-                return <Leaderboard />
+                return <Leaderboard leaderboardData={drillLeaderboardAttempts} drillId={id} />
             case 'description':
                 return <Description descData={drillData} drillId={id} />
             case 'stats':
