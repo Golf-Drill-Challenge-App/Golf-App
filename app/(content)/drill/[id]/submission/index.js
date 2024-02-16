@@ -1,27 +1,20 @@
-import React from 'react';
-import { useNavigation, useLocalSearchParams } from 'expo-router';
-import { Appbar, PaperProvider, Text } from 'react-native-paper';
-import Result from "./result";
-//import drillsData from "~/drills.json"
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { PaperProvider, Text } from "react-native-paper";
+import Input from "./input";
+import { AttemptData } from "~/testData";
 
-import drills from '~/drill_data.json'
+export default function Index() {
+  //Franks thoughts: State should be shared here between
 
-export default function Index(props) {
-    const navigation = useNavigation();
-    const { id } = useLocalSearchParams();
-    //const drillData = drillsData.teams["1"].users["1"].history[id][0];
+  //a useState hook to track the inputs on each shot
+  const [inputValues, setInputValues] = useState(
+    Array.from({ length: AttemptData.shots.length }, () => ({}))
+  );
 
-    const drill = drills[0];
-    
-    return (
-        <PaperProvider>
-            <Appbar.Header statusBarHeight={0}>
-                <Appbar.BackAction onPress={() => { navigation.goBack() }} color={"#F24E1E"} />
-                <Appbar.Content title={ /*props.drill*/ "20 Shot Challenge" } />
-            </Appbar.Header>
-
-            <Result submission={drill} />
-            
-        </PaperProvider>
-    );
+  return (
+    <PaperProvider>
+      <Input inputValues={inputValues} setInputValues={setInputValues} />
+    </PaperProvider>
+  );
 }
