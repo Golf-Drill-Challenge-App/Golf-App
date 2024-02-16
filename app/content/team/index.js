@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from "react";
-import teamData from "~/team_data.json";
+import teamData from "~/drill_data.json";
 import { ScrollView, Image, View, Pressable } from "react-native";
 import {
   Text,
