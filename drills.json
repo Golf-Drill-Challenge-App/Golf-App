@@ -1,13 +1,559 @@
 {
-  "drills": [
-    {
-      "did": "732489", 
-      "drillType": "20 Shot Challenge",
-      "spec": "50ft - 150ft", 
-      "shotType": "arg",
-      "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
-      "inputs": [ "distance", "sideLanding" ],
-      "reps": 20
+  "teams": {
+    "1": {
+      "tid": "1",
+      "name": "Team 1",
+      "users": {
+        "1": {
+          "uid": "1",
+          "name": "Frank Reed",
+          "role": "owner",
+          "pfp": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw2RRsjaQh-Xim5xBxZtZOH5&ust=1705254265605000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODT36j12oMDFQAAAAAdAAAAABAD",
+          "history": {
+            "732489": [
+              {
+                "time": 1705166892,
+                "averageProximity": 25.3,
+                "strokesGained": 3,
+                "shots": [
+                  {
+                    "sid": 1,
+                    "target": 112,
+                    "distance": 109,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 2,
+                    "target": 136,
+                    "distance": 145,
+                    "sideLanding": 10
+                  },
+                  {
+                    "sid": 3,
+                    "target": 102,
+                    "distance": 90,
+                    "sideLanding": 2
+                  },
+                  {
+                    "sid": 4,
+                    "target": 144,
+                    "distance": 145,
+                    "sideLanding": 7
+                  },
+                  {
+                    "sid": 5,
+                    "target": 150,
+                    "distance": 145,
+                    "sideLanding": 13
+                  },
+                  {
+                    "sid": 6,
+                    "target": 120,
+                    "distance": 110,
+                    "sideLanding": 16
+                  },
+                  {
+                    "sid": 7,
+                    "target": 133,
+                    "distance": 134,
+                    "sideLanding": 2
+                  },
+                  {
+                    "sid": 8,
+                    "target": 148,
+                    "distance": 145,
+                    "sideLanding": 6
+                  },
+                  {
+                    "sid": 9,
+                    "target": 118,
+                    "distance": 135,
+                    "sideLanding": 2
+                  },
+                  {
+                    "sid": 10,
+                    "target": 106,
+                    "distance": 116,
+                    "sideLanding": 4
+                  },
+                  {
+                    "sid": 11,
+                    "target": 122,
+                    "distance": 110,
+                    "sideLanding": 30
+                  },
+                  {
+                    "sid": 12,
+                    "target": 100,
+                    "distance": 95,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 13,
+                    "target": 101,
+                    "distance": 112,
+                    "sideLanding": 13
+                  },
+                  {
+                    "sid": 14,
+                    "target": 125,
+                    "distance": 114,
+                    "sideLanding": 11
+                  },
+                  {
+                    "sid": 15,
+                    "target": 141,
+                    "distance": 145,
+                    "sideLanding": 20
+                  },
+                  {
+                    "sid": 16,
+                    "target": 129,
+                    "distance": 140,
+                    "sideLanding": 14
+                  },
+                  {
+                    "sid": 17,
+                    "target": 119,
+                    "distance": 127,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 18,
+                    "target": 123,
+                    "distance": 111,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 19,
+                    "target": 108,
+                    "distance": 111,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 20,
+                    "target": 133,
+                    "distance": 122,
+                    "sideLanding": 15
+                  }
+                ]
+              },
+              {
+                "time": 1705167112,
+                "averageProximity": 33.8,
+                "strokesGained": 3,
+                "shots": [
+                  {
+                    "sid": 1,
+                    "target": 134,
+                    "distance": 129,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 2,
+                    "target": 135,
+                    "distance": 115,
+                    "sideLanding": 13
+                  },
+                  {
+                    "sid": 3,
+                    "target": 86,
+                    "distance": 88,
+                    "sideLanding": 18
+                  },
+                  {
+                    "sid": 4,
+                    "target": 121,
+                    "distance": 126,
+                    "sideLanding": 4
+                  },
+                  {
+                    "sid": 5,
+                    "target": 122,
+                    "distance": 139,
+                    "sideLanding": 18
+                  },
+                  {
+                    "sid": 6,
+                    "target": 99,
+                    "distance": 106,
+                    "sideLanding": 10
+                  },
+                  {
+                    "sid": 7,
+                    "target": 146,
+                    "distance": 144,
+                    "sideLanding": 14
+                  },
+                  {
+                    "sid": 8,
+                    "target": 137,
+                    "distance": 156,
+                    "sideLanding": 12
+                  },
+                  {
+                    "sid": 9,
+                    "target": 114,
+                    "distance": 118,
+                    "sideLanding": 17
+                  },
+                  {
+                    "sid": 10,
+                    "target": 94,
+                    "distance": 113,
+                    "sideLanding": 12
+                  },
+                  {
+                    "sid": 11,
+                    "target": 118,
+                    "distance": 123,
+                    "sideLanding": 16
+                  },
+                  {
+                    "sid": 12,
+                    "target": 98,
+                    "distance": 106,
+                    "sideLanding": 18
+                  },
+                  {
+                    "sid": 13,
+                    "target": 117,
+                    "distance": 125,
+                    "sideLanding": 19
+                  },
+                  {
+                    "sid": 14,
+                    "target": 127,
+                    "distance": 142,
+                    "sideLanding": 4
+                  },
+                  {
+                    "sid": 15,
+                    "target": 141,
+                    "distance": 133,
+                    "sideLanding": 16
+                  },
+                  {
+                    "sid": 16,
+                    "target": 150,
+                    "distance": 136,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 17,
+                    "target": 133,
+                    "distance": 114,
+                    "sideLanding": 18
+                  },
+                  {
+                    "sid": 18,
+                    "target": 141,
+                    "distance": 143,
+                    "sideLanding": 15
+                  },
+                  {
+                    "sid": 19,
+                    "target": 94,
+                    "distance": 106,
+                    "sideLanding": 4
+                  },
+                  {
+                    "sid": 20,
+                    "target": 149,
+                    "distance": 143,
+                    "sideLanding": 9
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "2": {
+          "uid": "2",
+          "name": "Colby Hannan",
+          "role": "owner",
+          "pfp": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw2RRsjaQh-Xim5xBxZtZOH5&ust=1705254265605000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODT36j12oMDFQAAAAAdAAAAABAD",
+          "history": {
+            "732489": [
+              {
+                "time": 1705167420,
+                "averageProximity": 39.5,
+                "strokesGained": 3,
+                "shots": [
+                  {
+                    "sid": 1,
+                    "target": 139,
+                    "distance": 134,
+                    "sideLanding": 7
+                  },
+                  {
+                    "sid": 2,
+                    "target": 146,
+                    "distance": 128,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 3,
+                    "target": 112,
+                    "distance": 125,
+                    "sideLanding": 6
+                  },
+                  {
+                    "sid": 4,
+                    "target": 122,
+                    "distance": 105,
+                    "sideLanding": 10
+                  },
+                  {
+                    "sid": 5,
+                    "target": 146,
+                    "distance": 133,
+                    "sideLanding": 8
+                  },
+                  {
+                    "sid": 6,
+                    "target": 101,
+                    "distance": 117,
+                    "sideLanding": 7
+                  },
+                  {
+                    "sid": 7,
+                    "target": 135,
+                    "distance": 130,
+                    "sideLanding": 12
+                  },
+                  {
+                    "sid": 8,
+                    "target": 143,
+                    "distance": 137,
+                    "sideLanding": 6
+                  },
+                  {
+                    "sid": 9,
+                    "target": 118,
+                    "distance": 133,
+                    "sideLanding": 8
+                  },
+                  {
+                    "sid": 10,
+                    "target": 100,
+                    "distance": 121,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 11,
+                    "target": 141,
+                    "distance": 138,
+                    "sideLanding": 10
+                  },
+                  {
+                    "sid": 12,
+                    "target": 112,
+                    "distance": 101,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 13,
+                    "target": 114,
+                    "distance": 130,
+                    "sideLanding": 15
+                  },
+                  {
+                    "sid": 14,
+                    "target": 132,
+                    "distance": 118,
+                    "sideLanding": 7
+                  },
+                  {
+                    "sid": 15,
+                    "target": 131,
+                    "distance": 115,
+                    "sideLanding": 18
+                  },
+                  {
+                    "sid": 16,
+                    "target": 128,
+                    "distance": 146,
+                    "sideLanding": 2
+                  },
+                  {
+                    "sid": 17,
+                    "target": 130,
+                    "distance": 128,
+                    "sideLanding": 12
+                  },
+                  {
+                    "sid": 18,
+                    "target": 118,
+                    "distance": 134,
+                    "sideLanding": 18
+                  },
+                  {
+                    "sid": 19,
+                    "target": 126,
+                    "distance": 111,
+                    "sideLanding": 13
+                  },
+                  {
+                    "sid": 20,
+                    "target": 149,
+                    "distance": 139,
+                    "sideLanding": 19
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "3": {
+          "uid": "3",
+          "name": "Jake Gehrke",
+          "role": "owner",
+          "pfp": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw2RRsjaQh-Xim5xBxZtZOH5&ust=1705254265605000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCODT36j12oMDFQAAAAAdAAAAABAD",
+          "history": {
+            "732489": [
+              {
+                "time": 1705166892,
+                "averageProximity": 48.6,
+                "strokesGained": 3,
+                "shots": [
+                  {
+                    "sid": 1,
+                    "target": 116,
+                    "distance": 128,
+                    "sideLanding": 15
+                  },
+                  {
+                    "sid": 2,
+                    "target": 132,
+                    "distance": 117,
+                    "sideLanding": 12
+                  },
+                  {
+                    "sid": 3,
+                    "target": 126,
+                    "distance": 107,
+                    "sideLanding": 16
+                  },
+                  {
+                    "sid": 4,
+                    "target": 113,
+                    "distance": 125,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 5,
+                    "target": 119,
+                    "distance": 130,
+                    "sideLanding": 19
+                  },
+                  {
+                    "sid": 6,
+                    "target": 106,
+                    "distance": 126,
+                    "sideLanding": 9
+                  },
+                  {
+                    "sid": 7,
+                    "target": 132,
+                    "distance": 114,
+                    "sideLanding": 3
+                  },
+                  {
+                    "sid": 8,
+                    "target": 141,
+                    "distance": 130,
+                    "sideLanding": 11
+                  },
+                  {
+                    "sid": 9,
+                    "target": 124,
+                    "distance": 144,
+                    "sideLanding": 14
+                  },
+                  {
+                    "sid": 10,
+                    "target": 144,
+                    "distance": 127,
+                    "sideLanding": 19
+                  },
+                  {
+                    "sid": 11,
+                    "target": 147,
+                    "distance": 138,
+                    "sideLanding": 10
+                  },
+                  {
+                    "sid": 12,
+                    "target": 135,
+                    "distance": 148,
+                    "sideLanding": 1
+                  },
+                  {
+                    "sid": 13,
+                    "target": 122,
+                    "distance": 140,
+                    "sideLanding": 17
+                  },
+                  {
+                    "sid": 14,
+                    "target": 100,
+                    "distance": 118,
+                    "sideLanding": 3
+                  },
+                  {
+                    "sid": 15,
+                    "target": 104,
+                    "distance": 121,
+                    "sideLanding": 11
+                  },
+                  {
+                    "sid": 16,
+                    "target": 130,
+                    "distance": 147,
+                    "sideLanding": 5
+                  },
+                  {
+                    "sid": 17,
+                    "target": 142,
+                    "distance": 125,
+                    "sideLanding": 16
+                  },
+                  {
+                    "sid": 18,
+                    "target": 118,
+                    "distance": 133,
+                    "sideLanding": 8
+                  },
+                  {
+                    "sid": 19,
+                    "target": 147,
+                    "distance": 127,
+                    "sideLanding": 12
+                  },
+                  {
+                    "sid": 20,
+                    "target": 109,
+                    "distance": 124,
+                    "sideLanding": 2
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "drills": {
+        "732489": {
+          "did": "732489",
+          "drillType": "20 Shot Challenge",
+          "spec": "100 - 150 yards",
+          "shotType": "arg",
+          "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+          "inputs": [ "distance", "sideLanding" ],
+          "reps": 20
+        }
+      }
     }
-  ]
+  }
 }
