@@ -9,8 +9,8 @@ export default function Stat() {
     return (
         <>
             <BarChartScreen
-                drillData={drillData["users"]["1"]["history"][slug]}
-                mainOutputAttempt={drillData["drills"][slug]["mainOutputAttempt"]} />
+                drillData={drillData["teams"]["1"]["users"]["1"]["history"][slug]}
+                mainOutputAttempt={drillData["teams"]["1"]["drills"][slug]["mainOutputAttempt"]} />
         </>
     )
 }

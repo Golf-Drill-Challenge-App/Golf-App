@@ -210,7 +210,7 @@ export default function BarChartScreen(props) {
             <ScrollView>
                 {drillDataSorted[selected]["shots"].map(
                     (shot) =>
-                        <ShotAccordion key={shot["sid"]} shot={shot} drill={drillData["drills"][slug]} total={drillDataSorted[selected]["shots"].length}/>
+                        <ShotAccordion key={shot["sid"]} shot={shot} drill={drillData["teams"]["1"]["drills"][slug]} total={drillDataSorted[selected]["shots"].length}/>
                 )}
             </ScrollView>
             <StatusBar style="auto"/>
