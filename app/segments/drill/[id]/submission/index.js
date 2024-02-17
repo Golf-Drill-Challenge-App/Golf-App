@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PaperProvider, Text } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import Input from "./input";
 import { AttemptData } from "~/testData";
 
@@ -8,7 +8,7 @@ export default function Index() {
 
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
-    Array.from({ length: AttemptData.shots.length }, () => ({}))
+    Array.from({ length: AttemptData.shots.length }, () => ({})),
   );
 
   return (
