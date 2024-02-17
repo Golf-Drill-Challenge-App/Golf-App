@@ -1,6 +1,6 @@
 import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { PaperProvider, SegmentedButtons, Appbar } from "react-native-paper";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 
 import Leaderboard from "./leaderboard";
 import Description from "./description";

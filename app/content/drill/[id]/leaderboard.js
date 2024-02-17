@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Avatar, Icon, List, Text } from "react-native-paper";
+import { List, Text, Icon, Avatar } from "react-native-paper";
 
 import { takeBestScore } from "~/Utility";
 import drillsData from "~/drill_data.json";
