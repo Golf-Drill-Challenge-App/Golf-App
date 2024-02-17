@@ -255,7 +255,7 @@ export default function BarChartScreen(props) {
           <ShotAccordion
             key={shot["sid"]}
             shot={shot}
-            drill={drillData["teams"]["1"]["drills"][slug]}
+            drill={drillData["drills"][slug]}
             total={drillDataSorted[selected]["shots"].length}
           />
         ))}
