@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PaperProvider, SegmentedButtons, Appbar } from "react-native-paper";
 import { useNavigation, useLocalSearchParams } from "expo-router";
 
@@ -6,16 +6,31 @@ import Leaderboard from "./leaderboard";
 import Description from "./description";
 import Stat from "./statistics";
 
-import drillsData from "~/drill_data.json";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "~/firebaseConfig";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
-  const drillData = drillsData.teams["1"].drills[id]
-    ? drillsData.teams["1"].drills[id]
-    : null;
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const drillsRef = doc(db, "teams", "1", "drills", id);
+  const [drill, setDrill] = React.useState([]); // [{}
+
+  useEffect(() => {
+    setDrill([]);
+    getDoc(drillsRef).then((querySnapshot) => {
+      setDrill(querySnapshot.data());
+      setRefreshing(false);
+    });
+  }, [refreshing]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
 
   const findDrillAttempts = () => {
     const drillAttempts = [];
