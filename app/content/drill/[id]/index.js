@@ -8,7 +8,14 @@ import Stat from "./statistics";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
 export default function Index() {
@@ -17,15 +24,26 @@ export default function Index() {
   const { id } = useLocalSearchParams();
 
   const [refreshing, setRefreshing] = React.useState(false);
-  const drillsRef = doc(db, "teams", "1", "drills", id);
-  const [drill, setDrill] = React.useState([]); // [{}
+  const drillsRef = doc(db, "teams", "1", "attempts");
+  const [drillData, setDrill] = React.useState([]); // [{}
 
   useEffect(() => {
     setDrill([]);
-    getDoc(drillsRef).then((querySnapshot) => {
-      setDrill(querySnapshot.data());
-      setRefreshing(false);
-    });
+    getDocs(
+      query(
+        collection(db, "teams", "1", "attempts"),
+        where("status", "==", "active"),
+      ),
+    )
+      .then((querySnapshot) => {
+        let newDrill = {};
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+        });
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
@@ -33,44 +51,7 @@ export default function Index() {
   }, []);
 
   const findDrillAttempts = () => {
-    const drillAttempts = [];
-    const team = drillsData.teams["1"];
-
-    Object.values(team.users).forEach((user) => {
-      if (!user.history) return; // idk if "no drills attempted" or something should be shown on leaderboard
-      Object.values(user.history).forEach((drill) => {
-        if (Object.keys(user.history).includes(id)) {
-          drill.forEach((attempt) => {
-            if (drillAttempts.length === 0) {
-              drillAttempts.push({
-                attempts: [attempt.averageProximity],
-                totalSubmissions: 1,
-                userId: user.uid,
-              });
-            } else {
-              var userIdx = -1;
-              for (let i = 0; i < drillAttempts.length; i++) {
-                if (drillAttempts[i].userId === user.uid) {
-                  userIdx = i;
-                  break;
-                }
-              }
-
-              if (userIdx >= 0) {
-                drillAttempts[userIdx].attempts.push(attempt.averageProximity);
-                drillAttempts[userIdx].totalSubmissions++;
-              } else {
-                drillAttempts.push({
-                  attempts: [attempt.averageProximity],
-                  totalSubmissions: 1,
-                  userId: user.uid,
-                });
-              }
-            }
-          });
-        }
-      });
-    });
+    let drillAttempts = [];
 
     return drillAttempts;
   };

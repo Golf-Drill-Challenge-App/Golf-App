@@ -16,10 +16,11 @@ export default function Index() {
 
   useEffect(() => {
     getDocs(drillsRef).then((querySnapshot) => {
-      setDrills([]);
+      let newDrills = [];
       querySnapshot.forEach((doc) => {
-        setDrills((prevDrills) => [...prevDrills, doc.data()]);
+        newDrills.push(doc.data());
       });
+      setDrills(newDrills);
       setRefreshing(false);
     });
   }, [refreshing]);
