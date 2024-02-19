@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PaperProvider, SegmentedButtons, Appbar } from "react-native-paper";
 import { useNavigation, useLocalSearchParams } from "expo-router";
 
@@ -15,6 +15,7 @@ import {
   getDocs,
   query,
   where,
+  getDocFromCache,
 } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
@@ -23,52 +24,20 @@ export default function Index() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
 
-  const [refreshing, setRefreshing] = React.useState(false);
-  const drillsRef = doc(db, "teams", "1", "attempts");
-  const [drillData, setDrill] = React.useState([]); // [{}
+  const drillsRef = doc(db, "teams", "1", "drills", id);
+
+  const [drillData, setDrillData] = useState({});
 
   useEffect(() => {
-    setDrill([]);
-    getDocs(
-      query(
-        collection(db, "teams", "1", "attempts"),
-        where("status", "==", "active"),
-      ),
-    )
-      .then((querySnapshot) => {
-        let newDrill = {};
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
-        });
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-  }, [refreshing]);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
+    getDoc(drillsRef).then((document) => {
+      setDrillData(document.data());
+    });
   }, []);
-
-  const findDrillAttempts = () => {
-    let drillAttempts = [];
-
-    return drillAttempts;
-  };
-
-  const drillLeaderboardAttempts = findDrillAttempts();
-
-  console.log("Attempts: ", drillLeaderboardAttempts);
 
   const tabComponent = () => {
     switch (value) {
       case "leaderboard":
-        return (
-          <Leaderboard
-            leaderboardData={drillLeaderboardAttempts}
-            drillId={id}
-          />
-        );
+        return <Leaderboard drillId={id} />;
       case "description":
         return <Description descData={drillData} drillId={id} />;
       case "stats":

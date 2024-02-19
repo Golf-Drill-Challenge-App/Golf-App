@@ -117,7 +117,7 @@ def generate_submission_line(submission_id):
     return submission
 
 # Generate 100 submissions
-submissions = [generate_submission_line(i) for i in range(100)]
+submissions = [generate_submission(i) for i in range(100)]
 
 # Print the submissions without indentation or new lines
 print(submissions)
