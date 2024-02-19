@@ -37,81 +37,77 @@
           "name": "John Doe", // putting name here allows different names for different teams
           "role": "owner", // creator and only person who can delete a team. Value can be "owner", "coach", or "student"
           "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-          "email": "john.doe@gmail.com",
-          "history": {
-            "732489": [
-              // which drill
-              {
-                // one submission
-                "time": 1609023321, // unix time stamp, differentiator for multiple submissions
-                "strokesGained": -0.018999999999999018, // and other stats
-                "strokesGainedAverage": 0.060272727272727374,
-                "carryDiffAverage": -0.6708848559484548,
-                "sideLandingAverage": -0.8664528551014709,
-                "proxHoleAverage": 17.34356240061842,
-                "shots": [
-                  {
-                    "sid": 1, // count up
-                    "target": 122,
-                    "carry": 127.62146793901402,
-                    "sideLanding": 33.20102955116408,
-                    "carryDiff": 5.621467939014018,
-                    "proxHole": 37.238642286763536,
-                    "baseline": 2.85,
-                    "expectedPutts": 2.032,
-                    "strokesGained": -0.18199999999999994,
-                  },
-                  {
-                    "sid": 2,
-                    "target": 114,
-                    "carry": 111.15626354611541,
-                    "sideLanding": 15.93869780601396,
-                    "carryDiff": -2.8437364538845866,
-                    "proxHole": 18.07826376961579,
-                    "baseline": 2.825,
-                    "expectedPutts": 1.848,
-                    "strokesGained": -0.02299999999999991,
-                  },
-                ],
-              },
-              {
-                // 2nd submission
-                "time": 1705166999, // unix time stamp
-                "strokesGained": 3, // and other stats
-                "shots": [
-                  {
-                    "sid": 1, // count up
-                    "target": 122,
-                    "carry": 127.62146793901402,
-                    "sideLanding": 33.20102955116408,
-                    "carryDiff": 5.621467939014018,
-                    "proxHole": 37.238642286763536,
-                    "baseline": 2.85,
-                    "expectedPutts": 2.032,
-                    "strokesGained": -0.18199999999999994,
-                  },
-                  {
-                    "sid": 2,
-                    "target": 114,
-                    "carry": 111.15626354611541,
-                    "sideLanding": 15.93869780601396,
-                    "carryDiff": -2.8437364538845866,
-                    "proxHole": 18.07826376961579,
-                    "baseline": 2.825,
-                    "expectedPutts": 1.848,
-                    "strokesGained": -0.02299999999999991,
-                  },
-                ],
-              },
-            ],
-          },
         },
         "2": {
           "uid": "2", // correspond with users list above
           "name": "Doe John", // putting name here allows different names for different teams
           "role": "student", // Value can be "owner", "coach", or "student"
           "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-          "history": {},
+        },
+      },
+      "attempts": {
+        "1237486": {
+          //random id for each attempt. attempts will be found by querying
+          // one submission
+          "time": 1609023321, // unix time stamp, differentiator for multiple submissions
+          "strokesGained": -0.018999999999999018, // and other stats
+          "strokesGainedAverage": 0.060272727272727374,
+          "carryDiffAverage": -0.6708848559484548,
+          "sideLandingAverage": -0.8664528551014709,
+          "proxHoleAverage": 17.34356240061842,
+          "shots": [
+            {
+              "sid": 1, // count up
+              "target": 122,
+              "carry": 127.62146793901402,
+              "sideLanding": 33.20102955116408,
+              "carryDiff": 5.621467939014018,
+              "proxHole": 37.238642286763536,
+              "baseline": 2.85,
+              "expectedPutts": 2.032,
+              "strokesGained": -0.18199999999999994,
+            },
+            {
+              "sid": 2,
+              "target": 114,
+              "carry": 111.15626354611541,
+              "sideLanding": 15.93869780601396,
+              "carryDiff": -2.8437364538845866,
+              "proxHole": 18.07826376961579,
+              "baseline": 2.825,
+              "expectedPutts": 1.848,
+              "strokesGained": -0.02299999999999991,
+            },
+          ],
+        },
+        "567432": {
+          // 2nd submission
+          "time": 1705166999, // unix time stamp
+          "strokesGained": 3, // and other stats
+          "shots": [
+            {
+              "sid": 1, // count up
+              "target": 122,
+              "carry": 127.62146793901402,
+              "sideLanding": 33.20102955116408,
+              "carryDiff": 5.621467939014018,
+              "proxHole": 37.238642286763536,
+              "baseline": 2.85,
+              "expectedPutts": 2.032,
+              "strokesGained": -0.18199999999999994,
+            },
+            {
+              "sid": 2,
+              "target": 114,
+              "carry": 111.15626354611541,
+              "sideLanding": 15.93869780601396,
+              "carryDiff": -2.8437364538845866,
+              "proxHole": 18.07826376961579,
+              "baseline": 2.825,
+              "expectedPutts": 1.848,
+              "strokesGained": -0.02299999999999991,
+            },
+          ],
         },
       },
       "drills": [
