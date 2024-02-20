@@ -37,9 +37,9 @@ export default function Index() {
   const tabComponent = () => {
     switch (value) {
       case "leaderboard":
-        return <Leaderboard drillId={id} />;
+        return <Leaderboard />;
       case "description":
-        return <Description descData={drillData} drillId={id} />;
+        return <Description descData={drillData} />;
       case "stats":
         return <Stat />;
     }

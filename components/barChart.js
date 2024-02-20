@@ -19,10 +19,15 @@ import DropDownPicker from "react-native-dropdown-picker";
 import drillData from "~/drill_data.json";
 import ShotAccordion from "~/components/shotAccordion";
 
-export default function BarChartScreen(props) {
-  const slug = useLocalSearchParams()["id"];
-  const drillDataSorted = props.drillData.sort((a, b) => a.time - b.time);
-  const data = drillDataSorted.map((value) => value[props.mainOutputAttempt]);
+export default function BarChartScreen({ drillData, drillInfo }) {
+  if (drillData.length === 0) {
+    return <Text>Loading...</Text>;
+  }
+  console.log("drillData", drillData);
+  const drillDataSorted = drillData.sort((a, b) => a.time - b.time);
+  const data = drillDataSorted.map(
+    (value) => value[drillInfo["mainOutputAttempt"]],
+  );
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -255,7 +260,7 @@ export default function BarChartScreen(props) {
           <ShotAccordion
             key={shot["sid"]}
             shot={shot}
-            drill={drillData["teams"]["1"]["drills"][slug]}
+            drill={drillInfo}
             total={drillDataSorted[selected]["shots"].length}
           />
         ))}

@@ -12,8 +12,10 @@ import {
 } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 import { numTrunc } from "~/Utility";
+import { useLocalSearchParams } from "expo-router";
 
-export default function Leaderboard({ leaderboardData, drillId }) {
+export default function Leaderboard() {
+  const drillId = useLocalSearchParams()["id"];
   const [userInfo, setUserInfo] = useState({});
 
   const [drillLeaderboardAttempts, setDrillLeaderboardAttempts] = useState([]);
