@@ -8,9 +8,9 @@ import { Link } from "expo-router";
 function Index(props) {
   const user = drillData["users"]["1"];
   const drills = drillData["drills"];
-  const attemptedDrills = Object.keys(drills).filter(
-    (drillId) => drillId in user["history"]
-  );
+  const attemptedDrills = user["history"]
+    ? Object.keys(drills).filter((drillId) => drillId in user["history"])
+    : [];
   return (
     <ScrollView>
       <ProfileCard user={user} />
@@ -19,15 +19,19 @@ function Index(props) {
       </Link>
 
       <Text>Drill History</Text>
-      {attemptedDrills.map((drillId) => {
-        return (
-          <DrillCard
-            drill={drills[drillId]}
-            hrefString={"content/profile/drills/" + drillId}
-            key={drillId}
-          />
-        );
-      })}
+      {user["history"] ? (
+        attemptedDrills.map((drillId) => {
+          return (
+            <DrillCard
+              drill={drills[drillId]}
+              hrefString={"content/profile/drills/" + drillId}
+              key={drillId}
+            />
+          );
+        })
+      ) : (
+        <Text>No drills attempted yet</Text>
+      )}
     </ScrollView>
   );
 }

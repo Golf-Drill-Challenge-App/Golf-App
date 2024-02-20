@@ -10,9 +10,9 @@ function Index(props) {
   const userData = drillData["users"][user_id];
   const drills = drillData["drills"];
   console.log(userData);
-  const attemptedDrills = Object.keys(drills).filter(
-    (drillId) => drillId in userData["history"]
-  );
+  const attemptedDrills = userData["history"]
+    ? Object.keys(drills).filter((drillId) => drillId in userData["history"])
+    : [];
   // console.log(attemptedDrills);
   return (
     <ScrollView>
@@ -27,15 +27,21 @@ function Index(props) {
       <ProfileCard user={userData} />
 
       <Text>Drill History</Text>
-      {attemptedDrills.map((drillId) => {
-        return (
-          <DrillCard
-            drill={drills[drillId]}
-            hrefString={"/content/team/users/" + userData.uid + "/drills/" + drillId}
-            key={drillId}
-          />
-        );
-      })}
+      {userData["history"] ? (
+        attemptedDrills.map((drillId) => {
+          return (
+            <DrillCard
+              drill={drills[drillId]}
+              hrefString={
+                "/content/team/users/" + userData.uid + "/drills/" + drillId
+              }
+              key={drillId}
+            />
+          );
+        })
+      ) : (
+        <Text>No drills attempted yet</Text>
+      )}
     </ScrollView>
   );
 }
