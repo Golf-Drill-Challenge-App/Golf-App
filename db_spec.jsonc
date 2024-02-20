@@ -25,8 +25,8 @@
       ]
     }
   },
-  "teams": [
-    {
+  "teams": {
+    "1":{
       "tid": "1",
       "name": "Team 1",
       "users": {
@@ -41,6 +41,10 @@
               { // one submission
                 "time": 1609023321, // unix time stamp, differentiator for multiple submissions
                 "strokesGained": -0.018999999999999018, // and other stats
+                "strokesGainedAverage": 0.060272727272727374,
+                "carryDiffAverage": -0.6708848559484548,
+                "sideLandingAverage": -0.8664528551014709,
+                "proxHoleAverage": 17.34356240061842,
                 "shots": [
                   {
                     "sid": 1, // count up
@@ -124,11 +128,20 @@
           ],
           "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
           "inputs": ["distance", "sideLanding"],
+          "outputs": [
+            "target",
+            "carry",
+            "sideLanding",
+            "proxHole",
+            "baseline",
+            "expectedPutts",
+            "strokesGained"
+          ], //all data that will be stored in a shot
           "mainOutputAttempt": "sideLandingAverage", // stat to be used for the barChart in statistics. This is the main data for attempt level data
           "mainOutputShot": "sideLanding", // stat to be used for the big number in shotAccordion. This is the main data for shot level data
           "reps": 20
         }
       ]
     }
-  ]
+  }
 }
