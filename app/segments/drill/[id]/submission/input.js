@@ -47,7 +47,9 @@ export default function Input({ inputValues, setInputValues }) {
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
-          onPress={() => router.replace(`/content/drill/${id}/submission/result`)}
+          onPress={() =>
+            router.replace(`/segments/drill/${id}/submission/result`)
+          }
         >
           Submit Drill
         </Button>
@@ -158,7 +160,10 @@ export default function Input({ inputValues, setInputValues }) {
       <PaperProvider>
         <SafeAreaView>
           <BottomSheetModalProvider>
-            <Appbar.Header style={{ backgroundColor: "FFF" }} statusBarHeight={0}>
+            <Appbar.Header
+              style={{ backgroundColor: "FFF" }}
+              statusBarHeight={0}
+            >
               <Appbar.BackAction
                 onPress={showLeaveDrillDialog}
                 color={"#F24E1E"}
@@ -342,7 +347,6 @@ export default function Input({ inputValues, setInputValues }) {
                 View all shots
               </Text>
             </View>
-            
           </BottomSheetModalProvider>
         </SafeAreaView>
       </PaperProvider>

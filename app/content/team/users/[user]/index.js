@@ -7,8 +7,8 @@ import { Link, useLocalSearchParams } from "expo-router";
 
 function Index(props) {
   const { user: user_id } = useLocalSearchParams();
-  const userData = drillData["users"][user_id];
-  const drills = drillData["drills"];
+  const userData = drillData["teams"]["1"]["users"][user_id];
+  const drills = drillData["teams"]["1"]["drills"];
   console.log(userData);
   const attemptedDrills = userData["history"]
     ? Object.keys(drills).filter((drillId) => drillId in userData["history"])
