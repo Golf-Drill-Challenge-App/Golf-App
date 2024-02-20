@@ -1,26 +1,30 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import drillData from "~/drill_data.json";
-import { Image, View, Pressable } from "react-native";
 import {
-  Text,
-  Button,
-  List,
+  Image,
+  Keyboard,
+  Pressable,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import {
   Appbar,
-  Icon,
   Avatar,
-  Searchbar,
+  Button,
+  Icon,
+  List,
   PaperProvider,
+  Searchbar,
+  Text,
 } from "react-native-paper";
 import { Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useNavigation } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 function Index() {
@@ -32,7 +36,7 @@ function Index() {
   const onChangeSearch = (query) => setSearchQuery(query);
 
   const foundUsers = Object.values(users).filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // ref
