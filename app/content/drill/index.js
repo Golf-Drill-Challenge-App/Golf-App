@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { Appbar, PaperProvider, Text, List } from "react-native-paper";
+import { Appbar, List, PaperProvider } from "react-native-paper";
 import { Link, useNavigation } from "expo-router";
 
 import drillsData from "~/drill_data.json";
