@@ -6,6 +6,7 @@ import BarChartScreen from "~/components/barChart";
 
 export default function Stat() {
   const slug = useLocalSearchParams()["id"];
+  console.log("slug", slug);
   return (
     <>
       <BarChartScreen
