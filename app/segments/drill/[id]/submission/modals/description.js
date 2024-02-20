@@ -1,5 +1,6 @@
-import { Image, View } from "react-native";
-import { Text } from "react-native-paper";
+import { View, Image } from "react-native";
+import { Text, Button } from "react-native-paper";
+import { Link } from "expo-router";
 
 export default function Description() {
   return (
