@@ -1,6 +1,6 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Text, Icon } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Icon, Text } from "react-native-paper";
 
 export default function NavigationRectange({
   inputs,

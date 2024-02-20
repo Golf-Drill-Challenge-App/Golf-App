@@ -1,15 +1,15 @@
-import React, { useState, useCallback, useMemo, useRef } from "react";
-import { View, Image, StyleSheet, ScrollView, Pressable } from "react-native";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import {
-  PaperProvider,
   Appbar,
-  Text,
+  Banner,
   Button,
   Dialog,
+  PaperProvider,
   Portal,
-  Banner,
+  Text,
 } from "react-native-paper";
-import { router, useNavigation, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectange from "~/components/input/navigationRectange";
