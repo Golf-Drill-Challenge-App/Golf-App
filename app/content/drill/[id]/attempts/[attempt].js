@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,16 +10,56 @@ import { Button, Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
 import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";
-import drillData from "~/drill_data.json";
+import { useLocalSearchParams } from "expo-router";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "~/firebaseConfig";
 
-function Result(props) {
-  const submission =
-    drillData["teams"]["1"]["users"]["1"]["history"]["SpvYyY94HaulVH2zmVyM"][0];
-  const dots = submission["shots"].map((value, index) => [
-    value["sideLanding"],
-    value["carryDiff"],
-  ]);
+function Result() {
+  const drillId = useLocalSearchParams()["id"];
+  const attemptId = useLocalSearchParams()["attempt"];
+  const [drillInfo, setDrillInfo] = useState({ outputs: [] });
+  const [attempt, setAttempt] = useState({});
+
+  let dots = [];
+  if (
+    drillInfo["outputs"].includes("sideLanding") &&
+    drillInfo["outputs"].includes("carryDiff")
+  ) {
+    dots = attempt["shots"].map((value, index) => [
+      value["sideLanding"],
+      value["carryDiff"],
+    ]);
+  }
   const { width } = useWindowDimensions();
+  useEffect(() => {
+    // massive data fetching on refresh. May or may not get its data from cache
+    let mainOutputAttempt = "";
+    getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
+      // get drill data
+      if (doc.exists()) {
+        setDrillInfo(doc.data());
+        console.log("got drill data", mainOutputAttempt);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    });
+    getDoc(doc(db, "teams", "1", "attempts", attemptId))
+      .then((doc) => {
+        setAttempt(doc.data());
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+    return () => {};
+  }, []);
 
   return (
     <>
@@ -31,13 +71,13 @@ function Result(props) {
           <View style={styles.dataRow}>
             <Text style={styles.dataLabel}>Total: </Text>
             <Text style={styles.dataValue}>
-              {numTrunc(submission["strokesGained"])}
+              {numTrunc(attempt["strokesGained"])}
             </Text>
           </View>
           <View style={styles.dataRow}>
             <Text style={styles.dataLabel}>Average: </Text>
             <Text style={styles.dataValue}>
-              {numTrunc(submission["strokesGainedAverage"])}
+              {numTrunc(attempt["strokesGainedAverage"])}
             </Text>
           </View>
         </View>
@@ -47,68 +87,59 @@ function Result(props) {
           <View style={styles.dataRow}>
             <Icon source={"arrow-up-down"} />
             <Text style={styles.dataValue}>
-              {numTrunc(submission["carryDiffAverage"])}
+              {numTrunc(attempt["carryDiffAverage"])}
             </Text>
           </View>
           <View style={styles.dataRow}>
             <Icon source={"arrow-left-right"} />
             <Text style={styles.dataValue}>
-              {numTrunc(submission["sideLandingAverage"])}
+              {numTrunc(attempt["sideLandingAverage"])}
             </Text>
           </View>
           <View style={styles.dataRow}>
             <Icon source={"flag"} />
             <Text style={styles.dataValue}>
-              {numTrunc(submission["proxHoleAverage"])}
+              {numTrunc(attempt["proxHoleAverage"])}
             </Text>
           </View>
         </View>
 
-        <View style={styles.chartSection}>
-          <Text style={styles.sectionTitle}>Shot Tendency</Text>
-          <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
-            <ScatterChart
-              style={styles.chart}
-              backgroundColor="#ffffff"
-              data={[
-                {
-                  color: "blue",
-                  unit: "%",
-                  values: dots,
-                },
-              ]}
-              horizontalLinesAt={[0]}
-              verticalLinesAt={[0]}
-              minY={-10}
-              maxY={10}
-              minX={-35}
-              maxX={35}
-              chartWidth={width * 0.8}
-            />
+        {dots.length > 0 && (
+          <View style={styles.chartSection}>
+            <Text style={styles.sectionTitle}>Shot Tendency</Text>
+            <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
+              <ScatterChart
+                style={styles.chart}
+                backgroundColor="#ffffff"
+                data={[
+                  {
+                    color: "blue",
+                    unit: "%",
+                    values: dots,
+                  },
+                ]}
+                horizontalLinesAt={[0]}
+                verticalLinesAt={[0]}
+                minY={-10}
+                maxY={10}
+                minX={-35}
+                maxX={35}
+                chartWidth={width * 0.8}
+              />
+            </View>
           </View>
-        </View>
+        )}
 
-        <ScrollView>
-          {submission["shots"].map((shot) => (
+        {attempt["shots"] &&
+          attempt["shots"].map((shot) => (
             <ShotAccordion
               key={shot["sid"]}
               shot={shot}
-              drillInfo={
-                drillData["teams"]["1"]["drills"]["SpvYyY94HaulVH2zmVyM"]
-              }
-              total={numTrunc(submission["shots"].length)}
+              drillInfo={drillInfo}
+              total={numTrunc(attempt["shots"].length)}
             />
           ))}
-        </ScrollView>
       </ScrollView>
-      <Button
-        style={styles.restartButton}
-        mode="contained"
-        buttonColor="#F24E1E"
-        textColor="white"
-      >
-        Restart Drill
-      </Button>
     </>
   );
 }

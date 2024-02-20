@@ -12,30 +12,38 @@ import {
 } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 import { numTrunc } from "~/Utility";
-import { useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  useLocalSearchParams,
+  usePathname,
+  useSegments,
+} from "expo-router";
 
 export default function Leaderboard() {
   const drillId = useLocalSearchParams()["id"];
   const [userInfo, setUserInfo] = useState({});
+  const currentPath = usePathname();
 
   const [drillLeaderboardAttempts, setDrillLeaderboardAttempts] = useState([]);
+  const [drillInfo, setDrillInfo] = useState({});
 
   useEffect(() => {
     // massive data fetching on refresh. May or may not get its data from cache
     let mainOutputAttempt = "";
     getDocs(collection(db, "teams", "1", "users")).then((querySnapshot) => {
-      // get all users
+      // get all attempts
       const newUserInfo = {};
       querySnapshot.forEach((doc) => {
         newUserInfo[doc.id] = doc.data();
       });
       setUserInfo(newUserInfo);
-      console.log("got users", userInfo);
+      console.log("got attempts", userInfo);
     });
     getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
       // get drill data
       if (doc.exists()) {
         mainOutputAttempt = doc.data()["mainOutputAttempt"];
+        setDrillInfo(doc.data());
         console.log("got drill data", mainOutputAttempt);
       } else {
         // doc.data() will be undefined in this case
@@ -50,24 +58,30 @@ export default function Leaderboard() {
     )
       .then((querySnapshot) => {
         // get all attempts in drill and filter only the highest score for a user
-        console.log("got attempts from ", drillId);
         let newDrillAttempts = {};
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          console.log("data: ", data);
+          // console.log("data: ", data);
           if (!newDrillAttempts[data["uid"]])
-            newDrillAttempts[data["uid"]] = doc.data()[mainOutputAttempt];
+            newDrillAttempts[data["uid"]] = {
+              score: doc.data()[mainOutputAttempt],
+              id: doc.id,
+            };
           else if (
             newDrillAttempts[data["uid"]][mainOutputAttempt] <
             doc.data()[mainOutputAttempt]
           )
-            newDrillAttempts[data["uid"]] = doc.data()[mainOutputAttempt];
+            newDrillAttempts[data["uid"]] = {
+              score: doc.data()[mainOutputAttempt],
+              id: doc.id,
+            };
         });
         setDrillLeaderboardAttempts(
           Object.keys(newDrillAttempts).map((key) => {
             return {
               user: key,
-              score: newDrillAttempts[key],
+              score: newDrillAttempts[key]["score"],
+              id: newDrillAttempts[key]["id"],
             };
           }),
         );
@@ -80,7 +94,7 @@ export default function Leaderboard() {
   }, []);
 
   const orderedLeaderboard = drillLeaderboardAttempts.sort(
-    (a, b) => a[1] - b[1],
+    (a, b) => a["score"] - b["score"],
   );
 
   const getUserInfo = (userId) => {
@@ -92,18 +106,25 @@ export default function Leaderboard() {
   return (
     <ScrollView>
       <List.Section>
-        {orderedLeaderboard.map((user) => (
-          <List.Item
-            key={user.user}
-            title={getUserInfo(user.user).name}
-            left={() => <Avatar.Text size={24} label="XD" />}
-            right={() => (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text>{numTrunc(user.score)} ft</Text>
-                <Icon source="chevron-right" />
-              </View>
-            )}
-          />
+        {orderedLeaderboard.map((attempt) => (
+          <Link
+            key={attempt.user}
+            href={{
+              pathname: `${currentPath}/attempts/${attempt.id}`,
+            }}
+            asChild
+          >
+            <List.Item
+              title={getUserInfo(attempt.user).name}
+              left={() => <Avatar.Text size={24} label="XD" />}
+              right={() => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text>{numTrunc(attempt.score)} ft</Text>
+                  <Icon source="chevron-right" />
+                </View>
+              )}
+            />
+          </Link>
         ))}
       </List.Section>
     </ScrollView>

@@ -39,8 +39,9 @@ export default function Input({ inputValues, setInputValues }) {
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
     if (
-      currentShot == AttemptData.shots.length - 1 &&
-      shotIndex == AttemptData.shots.length - 1
+      // currentShot == AttemptData.shots.length - 1 &&
+      // shotIndex == AttemptData.shots.length - 1
+      1
     ) {
       return (
         <Button

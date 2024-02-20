@@ -50,7 +50,7 @@
           //random id for each attempt. attempts will be found by querying
           // one submission
           "time": 1609023321, // unix time stamp, differentiator for multiple submissions
-          "did": "732489", // drill id
+          "did": "732489", // drillInfo id
           "uid": "1", // user id
           "strokesGained": -0.018999999999999018, // and other stats
           "strokesGainedAverage": 0.060272727272727374,
@@ -71,7 +71,7 @@
             },
             {
               "sid": 2,
-              "did": "732489", // drill id
+              "did": "732489", // drillInfo id
               "uid": "1", // user id
               "target": 114,
               "carry": 111.15626354611541,
@@ -116,7 +116,7 @@
       },
       "drills": [
         {
-          "did": "732489", // drill id
+          "did": "732489", // drillInfo id
           "drillType": "20 Shot Challenge", // e.g. "20 shot challenge", "putting challenge", "line test"
           "spec": "50ft - 150ft", // this is just a string shown to the user. TODO: Add numeric fields for random distance ranges
           "shotType": "arg", // e.g. "arg", "putt", "ott", "app"
