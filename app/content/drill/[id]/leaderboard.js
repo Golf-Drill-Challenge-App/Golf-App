@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { List, Text, Icon, Avatar } from "react-native-paper";
+import { Avatar, Icon, List, Text } from "react-native-paper";
 
-import { calculateAverageProxToHole, takeBestScore } from "~/Utility";
+import { takeBestScore } from "~/Utility";
 import drillsData from "~/drill_data.json";
 
 export default function Leaderboard({ leaderboardData, drillId }) {

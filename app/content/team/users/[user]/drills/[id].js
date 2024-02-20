@@ -11,8 +11,12 @@ export default function Stat() {
   return (
     <>
       <BarChartScreen
-        drillData={drillData["teams"]["1"]["users"][user_id]["history"][drill_id]}
-        mainOutputAttempt={drillData["teams"]["1"]["drills"][drill_id]["mainOutputAttempt"]}
+        drillData={
+          drillData["teams"]["1"]["users"][user_id]["history"][drill_id]
+        }
+        mainOutputAttempt={
+          drillData["teams"]["1"]["drills"][drill_id]["mainOutputAttempt"]
+        }
       />
     </>
   );

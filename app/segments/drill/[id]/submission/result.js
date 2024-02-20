@@ -1,12 +1,12 @@
 import React from "react";
 import {
   ScrollView,
-  Text,
   StyleSheet,
+  Text,
   useWindowDimensions,
   View,
 } from "react-native";
-import { Icon, Button } from "react-native-paper";
+import { Button, Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
 import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";

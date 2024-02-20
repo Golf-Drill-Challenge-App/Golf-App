@@ -3,16 +3,17 @@
     "1": {
       "uid": "1", // all ids must be a string
       "email": "john.doe@gmail.com",
-      "teams": [ // just in case there's a billion teams and lookup is slow
+      "teams": [
+        // just in case there's a billion teams and lookup is slow
         {
           "tid": "1",
-          "name": "Team 1"
+          "name": "Team 1",
         },
         {
           "tid": "2",
-          "name": "Team 2"
-        }
-      ]
+          "name": "Team 2",
+        },
+      ],
     },
     "2": {
       "uid": "2",
@@ -20,25 +21,28 @@
       "teams": [
         {
           "tid": "1",
-          "name": "Team 1"
-        }
-      ]
-    }
+          "name": "Team 1",
+        },
+      ],
+    },
   },
   "teams": {
-    "1":{
+    "1": {
       "tid": "1",
       "name": "Team 1",
       "users": {
-        "1": { // uid, corresponds with users list above
+        "1": {
+          // uid, corresponds with users list above
           "uid": "1", // just in case this whole object needs to be passed as a prop. Can remove if memory constrained
           "name": "John Doe", // putting name here allows different names for different teams
           "role": "owner", // creator and only person who can delete a team. Value can be "owner", "coach", or "student"
           "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
           "email": "john.doe@gmail.com",
           "history": {
-            "732489": [ // which drill
-              { // one submission
+            "732489": [
+              // which drill
+              {
+                // one submission
                 "time": 1609023321, // unix time stamp, differentiator for multiple submissions
                 "strokesGained": -0.018999999999999018, // and other stats
                 "strokesGainedAverage": 0.060272727272727374,
@@ -55,7 +59,7 @@
                     "proxHole": 37.238642286763536,
                     "baseline": 2.85,
                     "expectedPutts": 2.032,
-                    "strokesGained": -0.18199999999999994
+                    "strokesGained": -0.18199999999999994,
                   },
                   {
                     "sid": 2,
@@ -66,11 +70,12 @@
                     "proxHole": 18.07826376961579,
                     "baseline": 2.825,
                     "expectedPutts": 1.848,
-                    "strokesGained": -0.02299999999999991
-                  }
-                ]
+                    "strokesGained": -0.02299999999999991,
+                  },
+                ],
               },
-              { // 2nd submission
+              {
+                // 2nd submission
                 "time": 1705166999, // unix time stamp
                 "strokesGained": 3, // and other stats
                 "shots": [
@@ -83,7 +88,7 @@
                     "proxHole": 37.238642286763536,
                     "baseline": 2.85,
                     "expectedPutts": 2.032,
-                    "strokesGained": -0.18199999999999994
+                    "strokesGained": -0.18199999999999994,
                   },
                   {
                     "sid": 2,
@@ -94,20 +99,20 @@
                     "proxHole": 18.07826376961579,
                     "baseline": 2.825,
                     "expectedPutts": 1.848,
-                    "strokesGained": -0.02299999999999991
-                  }
-                ]
-              }
-            ]
-          }
+                    "strokesGained": -0.02299999999999991,
+                  },
+                ],
+              },
+            ],
+          },
         },
         "2": {
           "uid": "2", // correspond with users list above
           "name": "Doe John", // putting name here allows different names for different teams
           "role": "student", // Value can be "owner", "coach", or "student"
           "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-          "history": {}
-        }
+          "history": {},
+        },
       },
       "drills": [
         {
@@ -121,10 +126,30 @@
               "type": "random", // random or sequence. random to pick a value between min and max, sequence to pick a value from a list in order
               "min": 100,
               "max": 150,
-              "items": [ // array for sequence
-                "8", "9", "PW", "9", "8", "7", "8", "9", "PW", "9", "8", "7", "8", "9", "PW", "9", "8", "7", "8", "9"
-              ]
-            }
+              "items": [
+                // array for sequence
+                "8",
+                "9",
+                "PW",
+                "9",
+                "8",
+                "7",
+                "8",
+                "9",
+                "PW",
+                "9",
+                "8",
+                "7",
+                "8",
+                "9",
+                "PW",
+                "9",
+                "8",
+                "7",
+                "8",
+                "9",
+              ],
+            },
           ],
           "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
           "inputs": ["distance", "sideLanding"],
@@ -135,13 +160,13 @@
             "proxHole",
             "baseline",
             "expectedPutts",
-            "strokesGained"
+            "strokesGained",
           ], //all data that will be stored in a shot
           "mainOutputAttempt": "sideLandingAverage", // stat to be used for the barChart in statistics. This is the main data for attempt level data
           "mainOutputShot": "sideLanding", // stat to be used for the big number in shotAccordion. This is the main data for shot level data
-          "reps": 20
-        }
-      ]
-    }
-  }
+          "reps": 20,
+        },
+      ],
+    },
+  },
 }
