@@ -24,7 +24,20 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AttemptData } from "~/testData";
 import Description from "./modals/description";
-import { createOutputData } from "../../../../../Utility";
+
+function createOutputData(inputValues, attemptData) {
+  //Construct an array of each shot with keys, inputValues, and target Distances
+  const outputData = inputValues.map((object, index) => {
+    const shot = attemptData.shots[index];
+    const shotNum = shot ? shot.shotNum : undefined;
+
+    return { ...object, sid: shotNum };
+  });
+
+  console.log("Output Data: ", outputData);
+
+  return outputData;
+}
 
 export default function Input({ inputValues, setInputValues }) {
   //Helper varibles
@@ -51,6 +64,7 @@ export default function Input({ inputValues, setInputValues }) {
           mode="contained-tonal"
           onPress={() => {
             setOutputData = createOutputData(inputValues, AttemptData);
+            //send the output data to the database here
             setToggleResult = true;
             router.replace(`/segments/drill/${id}/submission/result`);
           }}
