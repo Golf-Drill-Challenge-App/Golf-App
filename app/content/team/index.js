@@ -29,7 +29,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 function Index() {
   const navigation = useNavigation();
-  const users = drillData["users"];
+  const users = drillData["teams"]["1"]["users"];
 
   const [searchQuery, setSearchQuery] = React.useState("");
 
