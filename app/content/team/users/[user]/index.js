@@ -27,16 +27,16 @@ function Index(props) {
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={""} />
+          <Appbar.Content title={userData["name"]+"'s Profile"} />
         </Appbar.Header>
 
-        <View style={styles.profileContainer}>
-          <ProfileCard user={userData} />
-        </View>
-
-        <Text style={styles.heading}>Drills</Text>
-
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <View style={styles.profileContainer}>
+            <ProfileCard user={userData} />
+          </View>
+
+          <Text style={styles.heading}>Drills</Text>
+
           {userData["history"] ? (
             attemptedDrills.map((drillId) => (
               <DrillCard
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
-    marginLeft: 20,
+    marginBottom: 5,
+    marginLeft: 4,
   },
   scrollViewContent: {
     paddingHorizontal: 20,
