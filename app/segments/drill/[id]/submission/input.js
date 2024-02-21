@@ -24,6 +24,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
+import { createOutputData } from "../../../../../Utility";
 
 export default function Input({ inputValues, setInputValues }) {
   //Helper varibles
@@ -47,9 +48,11 @@ export default function Input({ inputValues, setInputValues }) {
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
-          onPress={() =>
-            router.replace(`/segments/drill/${id}/submission/result`)
-          }
+          onPress={() => {
+            setOutputData = createOutputData(inputValues, AttemptData);
+            setToggleResult = true;
+            router.replace(`/segments/drill/${id}/submission/result`);
+          }}
         >
           Submit Drill
         </Button>
