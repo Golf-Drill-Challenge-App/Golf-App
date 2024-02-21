@@ -6,8 +6,8 @@ import DrillCard from "~/components/drillCard";
 import { Link } from "expo-router";
 
 function Index(props) {
-  const user = drillData["users"]["1"];
-  const drills = drillData["drills"];
+  const user = drillData["teams"]["1"]["users"]["1"];
+  const drills = drillData["teams"]["1"]["drills"];
   const attemptedDrills = user["history"]
     ? Object.keys(drills).filter((drillId) => drillId in user["history"])
     : [];

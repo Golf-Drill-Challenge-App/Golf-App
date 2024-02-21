@@ -20,7 +20,9 @@ export default function Index() {
   const findDrillAttempts = () => {
     const drillAttempts = [];
     const team = drillsData.teams["1"];
+
     Object.values(team.users).forEach((user) => {
+      if (!user.history) return; // idk if "no drills attempted" or something should be shown on leaderboard
       Object.values(user.history).forEach((drill) => {
         if (Object.keys(user.history).includes(id)) {
           drill.forEach((attempt) => {
