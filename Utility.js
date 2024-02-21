@@ -92,15 +92,3 @@ export function takeBestScore(userAverages) {
 
   return bestSubmissions;
 }
-
-export function createOutputData(inputValues, attemptData) {
-  //Construct an array of each shot with keys, inputValues, and target Distances
-  const outputData = inputValues.map((object, index) => {
-    const shot = attemptData.shots[index];
-    const shotNum = shot ? shot.shotNum : undefined;
-
-    return { ...object, sid: shotNum };
-  });
-
-  console.log("Output Data: ", outputData);
-}
