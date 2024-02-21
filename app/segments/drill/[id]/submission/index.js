@@ -11,9 +11,18 @@ export default function Index() {
     Array.from({ length: AttemptData.shots.length }, () => ({})),
   );
 
+  const [outputData, setOutputData] = useState([]);
+  const [toggleResult, setToggleResult] = useState(false);
+
   return (
     <PaperProvider>
-      <Input inputValues={inputValues} setInputValues={setInputValues} />
+      <Input
+        inputValues={inputValues}
+        setInputValues={setInputValues}
+        setToggleResult={setToggleResult}
+        setOutputData={setOutputData}
+      />
+      {toggleResult && <Result submission={outputData} />}
     </PaperProvider>
   );
 }
