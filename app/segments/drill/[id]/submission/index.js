@@ -14,15 +14,20 @@ export default function Index() {
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
 
-  return (
-    <PaperProvider>
-      <Input
-        inputValues={inputValues}
-        setInputValues={setInputValues}
-        setToggleResult={setToggleResult}
-        setOutputData={setOutputData}
-      />
-      {toggleResult && <Result submission={outputData} />}
-    </PaperProvider>
-  );
+  const display = () => {
+    if (toggleResult == true) {
+      return <Result submission={outputData} />;
+    } else {
+      return (
+        <Input
+          inputValues={inputValues}
+          setInputValues={setInputValues}
+          setToggleResult={setToggleResult}
+          setOutputData={setOutputData}
+        />
+      );
+    }
+  };
+
+  return <PaperProvider>{display()}</PaperProvider>;
 }
