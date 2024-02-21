@@ -34,23 +34,21 @@ function Index(props) {
           <ProfileCard user={userData} />
         </View>
 
-        <Text>Drills</Text>
+        <Text style={styles.heading}>Drills</Text>
 
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           {userData["history"] ? (
-            attemptedDrills.map((drillId) => {
-              return (
-                <DrillCard
-                  drill={drills[drillId]}
-                  hrefString={
-                    "/content/team/users/" + userData.uid + "/drills/" + drillId
-                  }
-                  key={drillId}
-                />
-              );
-            })
+            attemptedDrills.map((drillId) => (
+              <DrillCard
+                drill={drills[drillId]}
+                hrefString={
+                  "/content/team/users/" + userData.uid + "/drills/" + drillId
+                }
+                key={drillId}
+              />
+            ))
           ) : (
-            <Text>No drills attempted yet</Text>
+            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
           )}
         </ScrollView>
       </SafeAreaView>
@@ -62,6 +60,22 @@ const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
     marginBottom: 20,
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginLeft: 20,
+  },
+  scrollViewContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  noDrillsText: {
+    marginTop: 20,
+    fontSize: 16,
+    textAlign: "center",
+    color: "gray",
   },
 });
 
