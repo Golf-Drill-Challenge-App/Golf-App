@@ -163,8 +163,6 @@ function createOutputData(inputValues, attemptData) {
     uid: uid,
   };
 
-  console.log("Output Data: ", outputData);
-
   return {
     outputData,
   };
@@ -199,10 +197,9 @@ export default function Input({ attemptData, setToggleResult, setOutputData }) {
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            setOutputData = createOutputData(inputValues, attemptData);
+            setOutputData(createOutputData(inputValues, attemptData));
             //send the output data to the database here
-            setToggleResult = true;
-            router.replace(`/segments/drill/${id}/submission/result`);
+            setToggleResult(true);
           }}
         >
           Submit Drill
