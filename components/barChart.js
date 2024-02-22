@@ -1,30 +1,31 @@
-import * as scale from "d3-scale";
-import * as shape from "d3-shape";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useMemo, useRef, useState } from "react";
 import {
+  Button,
   ScrollView,
   StyleSheet,
   Text,
-  View,
   useWindowDimensions,
+  View,
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Path } from "react-native-svg";
 import { BarChart, Grid, YAxis } from "react-native-svg-charts";
+import { Path } from "react-native-svg";
+import React, { useMemo, useRef, useState } from "react";
+import * as scale from "d3-scale";
+import * as shape from "d3-shape";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
+import DropDownPicker from "react-native-dropdown-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { PaperProvider, Appbar } from "react-native-paper";
 
+import drillData from "~/drill_data.json";
 import ShotAccordion from "~/components/shotAccordion";
 
-export default function BarChartScreen({ drillData, drillInfo }) {
-  if (drillData.length === 0) {
-    return <Text>Loading...</Text>;
-  }
-  const drillDataSorted = drillData.sort((a, b) => a.time - b.time);
-  const data = drillDataSorted.map(
-    (value) => value[drillInfo["mainOutputAttempt"]],
-  );
-  console.log("data", drillInfo["mainOutputAttempt"]);
+export default function BarChartScreen(props) {
+  const navigation = useNavigation();
+  const slug = useLocalSearchParams()["id"];
+  const drillDataSorted = props.drillData.sort((a, b) => a.time - b.time);
+  const data = drillDataSorted.map((value) => value[props.mainOutputAttempt]);
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -131,80 +132,147 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     );
   };
 
+  const styles = StyleSheet.create({
+    movingAvgContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 20,
+      zIndex: 3,
+      justifyContent: "center", // Center the content horizontally
+    },
+    movingAvgLabel: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginRight: 10,
+      marginTop: 4.5,
+    },
+    dropdownContainer: {
+      width: "18%", // Set width to 18% of the screen width
+      height: 45,
+      zIndex: 3,
+    },
+    dropdown: {
+      width: "100%",
+      backgroundColor: "#fafafa",
+      borderColor: "#ccc",
+      borderWidth: 1,
+      borderRadius: 4,
+      paddingHorizontal: 10,
+    },
+    chartSection: {
+      marginTop: 20,
+      marginBottom: 20,
+      marginLeft: 10, // Adjust as needed
+      marginRight: 10, // Adjust as needed
+    },
+    yAxis: {
+      position: "absolute",
+      top: 0,
+      width: "8%",
+      bottom: 0,
+      left: 0,
+      height: chartHeight,
+      zIndex: 5,
+      backgroundColor: "#F4F4F4", // Set background color
+      paddingHorizontal: 5, // Add padding
+      borderRadius: 10, // Add border radius for rounded corners
+    },
+    middleLine: {
+      position: "absolute",
+      left: width / 2 - 1,
+      top: 0,
+      bottom: 0,
+      width: 1,
+      zIndex: 2,
+      backgroundColor: "black",
+    },
+    scrollViewContainer: {
+      flexDirection: "row",
+    },
+    chartContainer: {
+      width: chartWidth,
+      height: chartHeight,
+    },
+    barChart: {
+      height: chartHeight,
+      width: chartWidth,
+      position: "absolute",
+      top: 0,
+      left: 0,
+    },
+    bottomContainer: {
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    bottomTextContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 13,
+      marginLeft: 8,
+      marginRight: 8
+    },
+    bottomText: {
+      fontSize: 13,
+      color: "#333", // Adjust text color
+    },
+    scrollView: {
+      marginBottom: 20,
+    },
+    accordion: {
+      marginVertical: 10, // Adjust margin as needed
+    },
+  });
+
   return (
-    <>
-      <ScrollView style={{ marginBottom: 70 }}>
-        <View style={{ zIndex: 3 }}>
-          <Text>Moving Avg.</Text>
+    <PaperProvider>
+      <SafeAreaView>
+        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={"#F24E1E"}
+          />
+          <Appbar.Content title={"Statistics"} />
+        </Appbar.Header>
+
+        <View style={styles.movingAvgContainer}>
+          <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
           <DropDownPicker
             setValue={setMovingAvgRange}
             value={movingAvgRange}
             items={movingAvgRangeValues}
             open={movingAvgRangeDropdownOpen}
             setOpen={setMovingAvgRangeDropdownOpen}
-            containerStyle={{
-              width: 300,
-            }}
-            style={{
-              width: 300,
-            }}
+            containerStyle={styles.dropdownContainer}
+            style={styles.dropdown}
           />
         </View>
-        <View
-          style={{
-            marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
+
+        <View style={styles.chartSection}>
           <YAxis
             data={data}
             svg={{
               fill: "grey",
-              fontSize: 10,
+              fontSize: 12,
+              stroke: "#666", // Set stroke color for grid lines
             }}
-            // numberOfTicks={10}
-            style={StyleSheet.create({
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              height: chartHeight,
-              zIndex: 1,
-              backgroundColor: "white",
-            })}
+            style={styles.yAxis}
+            contentInset={{ top: 10, bottom: 10 }} // Adjust content inset
+            numberOfTicks={10} // Adjust number of ticks as needed
+            formatLabel={(value) => `${value}`} // Format label as needed
           />
-          <View //middle select line
-            style={{
-              position: "absolute",
-              left: width / 2 - 1, // Adjust this to place the line in the middle
-              top: 0,
-              bottom: 0,
-              width: 1,
-              zIndex: 2,
-              backgroundColor: "black", // Choose a color that stands out
-            }}
-          />
+          <View style={styles.middleLine} />
           <ScrollView
             horizontal={true}
-            // contentContainerStyle={{width: 2000}}
             onScroll={handleScroll}
             scrollEventThrottle={64}
             ref={scrollViewRef}
+            style={styles.scrollViewContainer}
           >
-            <View
-              style={{
-                width: chartWidth,
-                height: chartHeight,
-              }}
-            >
+            <View style={styles.chartContainer}>
               <BarChart
-                style={{
-                  height: chartHeight,
-                  width: chartWidth,
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                }}
+                style={styles.barChart}
                 data={processedData}
                 svg={{ fill }}
                 contentInset={{
@@ -222,13 +290,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
                 />
               </BarChart>
               <BarChart
-                style={{
-                  height: chartHeight,
-                  width: chartWidth,
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                }}
+                style={styles.barChart}
                 data={transparentData}
                 svg={{ fill }}
                 contentInset={{
@@ -240,27 +302,30 @@ export default function BarChartScreen({ drillData, drillInfo }) {
             </View>
           </ScrollView>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text>{dateString}</Text>
-          <Text>MA: {numTrunc(movingAvgData[selected])}</Text>
-          <Text>SG: {numTrunc(data[selected])}</Text>
-        </View>
 
-        {drillDataSorted[selected]["shots"].map((shot) => (
-          <ShotAccordion
-            key={shot["sid"]}
-            shot={shot}
-            drillInfo={drillInfo}
-            total={drillDataSorted[selected]["shots"].length}
-          />
-        ))}
-      </ScrollView>
-      <StatusBar style="auto" />
-    </>
+        <View style={styles.bottomContainer}>
+          <View style={styles.bottomTextContainer}>
+            <Text style={styles.bottomText}>{dateString}</Text>
+            <Text style={styles.bottomText}>
+              MA: {numTrunc(movingAvgData[selected])}
+            </Text>
+            <Text style={styles.bottomText}>
+              SG: {numTrunc(data[selected])}
+            </Text>
+          </View>
+          <ScrollView style={styles.scrollView}>
+            {drillDataSorted[selected]["shots"].map((shot) => (
+              <ShotAccordion
+                key={shot["sid"]}
+                shot={shot}
+                drill={drillData["teams"]["1"]["drills"][slug]}
+                total={drillDataSorted[selected]["shots"].length}
+                style={styles.accordion}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
