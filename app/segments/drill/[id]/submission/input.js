@@ -95,12 +95,17 @@ function createOutputData(inputValues, attemptData) {
 
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
-            calculateProxHole(shot.proxHole),
+            calculateProxHole(
+              attemptData.shots[j].value,
+              inputValues[j].carry,
+              inputValues[j].sideLanding,
+            ),
           );
           break;
 
         case "strokesGained":
-          shot.strokesGained = attemptData.shots[j].baseline - shot.expectedPutts - 1;
+          shot.strokesGained =
+            attemptData.shots[j].baseline - shot.expectedPutts - 1;
           strokesGainedTotal += shot.strokesGained;
           break;
 
@@ -165,9 +170,14 @@ function createOutputData(inputValues, attemptData) {
   };
 }
 
-export default function Input({ inputValues, setInputValues, attemptData }) {
+export default function Input({ attemptData, setToggleResult, setOutputData }) {
   //Helper varibles
-    const numInputs = attemptData.inputs.length;
+  const numInputs = attemptData.inputs.length;
+
+  //a useState hook to track the inputs on each shot
+  const [inputValues, setInputValues] = useState(
+    Array.from({ length: attemptData.shots.length }, () => ({})),
+  );
 
   const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
@@ -189,7 +199,7 @@ export default function Input({ inputValues, setInputValues, attemptData }) {
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-              setOutputData = createOutputData(inputValues, attemptData);
+            setOutputData = createOutputData(inputValues, attemptData);
             //send the output data to the database here
             setToggleResult = true;
             router.replace(`/segments/drill/${id}/submission/result`);
@@ -358,7 +368,7 @@ export default function Input({ inputValues, setInputValues, attemptData }) {
                       key={id}
                       description={item.description}
                       distanceMeasure={item.distanceMeasure}
-                      value={item.value}
+                      value={attemptData.shots[shotIndex].value}
                     />
                   ))}
                 </View>
@@ -393,6 +403,15 @@ export default function Input({ inputValues, setInputValues, attemptData }) {
                   }}
                 >
                   Log Input State Status
+                </Button>
+
+                <Button
+                  mode="contained-tonal"
+                  onPress={() => {
+                    console.log(attemptData);
+                  }}
+                >
+                  Log Input attemptData
                 </Button>
               </View>
 
