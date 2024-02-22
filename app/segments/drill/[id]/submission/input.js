@@ -15,7 +15,7 @@ import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectange from "~/components/input/navigationRectange";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AttemptData } from "~/testData";
+//import { AttemptData } from "~/testData";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   BottomSheetModal,
@@ -24,7 +24,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
-import { lookUpExpectedPutts } from "~/Utility";
+import { lookUpExpectedPutts, lookUpBaselineStrokesGained } from "~/Utility";
 
 const { id } = useLocalSearchParams();
 
@@ -43,29 +43,11 @@ const outputs = [
 
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
-  return Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2);
+  return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
 
 function calculateCarryDiff(target, carry) {
   return Math.abs(carry - target);
-}
-
-function getTargetDistance(shotRequirements) {
-  //iterate through shotRequirements until the distance id is found
-  for (let i = 0; i < shotRequirements.length; i++) {
-    if ((shotRequirements[i].id = "distance")) {
-      return shotRequirements[i].value;
-    }
-  }
-}
-
-function getBaselineData(shotRequirements) {
-  //iterate through shotRequirements until the distance id is found
-  for (let i = 0; i < shotRequirements.length; i++) {
-    if ((shotRequirements[i].id = "distance")) {
-      return shotRequirements[i].baseline;
-    }
-  }
 }
 
 function createOutputData(inputValues, attemptData) {
@@ -86,7 +68,7 @@ function createOutputData(inputValues, attemptData) {
 
       switch (output) {
         case "target":
-          shot.target = getTargetDistance(attemptData.shots[j].requirements);
+          shot.target = attemptData.shots[j].value;
           break;
 
         case "carry":
@@ -100,7 +82,7 @@ function createOutputData(inputValues, attemptData) {
 
         case "proxHole":
           shot.proxHole = calculateProxHole(
-            getTargetDistance(attemptData.shots[j].requirements),
+            attemptData.shots[j].value,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
@@ -108,36 +90,23 @@ function createOutputData(inputValues, attemptData) {
           break;
 
         case "baseline":
-          shot.baseline = getBaselineData(attemptData.shots[j].requirements);
+          shot.baseline = attemptData.shots[j].baseline;
           break;
 
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
-            calculateProxHole(
-              getTargetDistance(attemptData.shots[j].requirements),
-              inputValues[j].carry,
-              inputValues[j].sideLanding,
-            ),
+            calculateProxHole(shot.proxHole),
           );
           break;
 
         case "strokesGained":
-          shot.strokesGained =
-            getBaselineData(attemptData.shots[j].requirements) -
-            lookUpExpectedPutts(
-              calculateProxHole(
-                getTargetDistance(attemptData.shots[j].requirements),
-                inputValues[j].carry,
-                inputValues[j].sideLanding,
-              ),
-            ) -
-            1;
+          shot.strokesGained = attemptData.shots[j].baseline - shot.expectedPutts - 1;
           strokesGainedTotal += shot.strokesGained;
           break;
 
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
-            getTargetDistance(attemptData.shots[j].requirements),
+            attemptData.shots[j].value,
             inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
@@ -196,9 +165,9 @@ function createOutputData(inputValues, attemptData) {
   };
 }
 
-export default function Input({ inputValues, setInputValues }) {
+export default function Input({ inputValues, setInputValues, attemptData }) {
   //Helper varibles
-  const numInputs = AttemptData.shots[0].inputs.length;
+    const numInputs = attemptData.inputs.length;
 
   const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
@@ -210,8 +179,8 @@ export default function Input({ inputValues, setInputValues }) {
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
     if (
-      currentShot == AttemptData.shots.length - 1 &&
-      shotIndex == AttemptData.shots.length - 1
+      currentShot == attemptData.shots.length - 1 &&
+      shotIndex == attemptData.shots.length - 1
     ) {
       return (
         <Button
@@ -219,7 +188,7 @@ export default function Input({ inputValues, setInputValues }) {
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            setOutputData = createOutputData(inputValues, AttemptData);
+              setOutputData = createOutputData(inputValues, attemptData);
             //send the output data to the database here
             setToggleResult = true;
             router.replace(`/segments/drill/${id}/submission/result`);
@@ -372,9 +341,9 @@ export default function Input({ inputValues, setInputValues }) {
               {/* Shot Number / Total shots */}
               <View style={styles.shotNumContainer}>
                 <Text style={styles.shotNumber}>
-                  Shot {AttemptData.shots[shotIndex].shotNum}
+                  Shot {attemptData.shots[shotIndex].shotNum}
                   <Text style={styles.shotTotal}>
-                    /{AttemptData.shots.length}
+                    /{attemptData.shots.length}
                   </Text>
                 </Text>
               </View>
@@ -383,7 +352,7 @@ export default function Input({ inputValues, setInputValues }) {
                 {/* Instruction */}
 
                 <View style={styles.horizontalContainer}>
-                  {AttemptData.shots[shotIndex].requirements.map((item, id) => (
+                  {attemptData.requirements.map((item, id) => (
                     <DrillTarget
                       key={id}
                       description={item.description}
@@ -395,7 +364,7 @@ export default function Input({ inputValues, setInputValues }) {
 
                 {/* Inputs */}
 
-                {AttemptData.shots[shotIndex].inputs.map((item, id) => (
+                {attemptData.inputs.map((item, id) => (
                   <DrillInput
                     key={id}
                     icon={item.icon}
@@ -416,7 +385,7 @@ export default function Input({ inputValues, setInputValues }) {
                   mode="contained-tonal"
                   onPress={() => {
                     //this loop is a test to see if inputs are maintained in state
-                    for (let i = 0; i < AttemptData.shots.length; i++) {
+                    for (let i = 0; i < attemptData.shots.length; i++) {
                       console.log("InputValue[", i, "]: ", inputValues[i]);
                     }
                     console.log(inputValues);
@@ -435,7 +404,7 @@ export default function Input({ inputValues, setInputValues }) {
               >
                 <BottomSheetScrollView>
                   <View style={styles.bottomSheetContentContainer}>
-                    {AttemptData.shots.map((item, id) => (
+                    {attemptData.shots.map((item, id) => (
                       <Pressable
                         key={id}
                         onPress={() => {
@@ -451,11 +420,11 @@ export default function Input({ inputValues, setInputValues }) {
                             console.log("Clicked on ", id);
                             setShotIndex(id);
                           }}
-                          inputs={item.inputs}
-                          target={item.requirements}
+                          inputs={attemptData.inputs}
+                          target={attemptData.requirements}
                           inputValues={inputValues[id]}
                           shotIndex={item.shotNum}
-                          numShots={AttemptData.shots.length}
+                          numShots={attemptData.shots.length}
                         />
                       </Pressable>
                     ))}
