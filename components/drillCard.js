@@ -1,6 +1,5 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
 
 function DrillCard(props) {
   return (

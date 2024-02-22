@@ -1,8 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import drillData from "~/drill_data.json";
-import BarChartScreen from "~/components/barChart";
 import {
   collection,
   doc,
@@ -11,6 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import BarChartScreen from "~/components/barChart";
 import { db } from "~/firebaseConfig";
 
 export default function Stat() {

@@ -37,11 +37,13 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "^13.9.0",
     "react-native-svg-charts": "^5.4.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "prettier": "3.2.5"
+    "prettier": "3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4"
   },
   "private": true
 }

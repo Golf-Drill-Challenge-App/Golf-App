@@ -1,6 +1,5 @@
-import React from "react";
-import { List, Text } from "react-native-paper";
 import { View } from "react-native";
+import { List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 
 function DataField(field, value) {

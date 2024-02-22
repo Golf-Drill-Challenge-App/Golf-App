@@ -1,22 +1,21 @@
-import { router, useLocalSearchParams } from "expo-router";
+import * as scale from "d3-scale";
+import * as shape from "d3-shape";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useMemo, useRef, useState } from "react";
 import {
   Button,
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
-import { BarChart, Grid, YAxis } from "react-native-svg-charts";
-import { Path } from "react-native-svg";
-import React, { useMemo, useRef, useState } from "react";
-import * as scale from "d3-scale";
-import * as shape from "d3-shape";
-import { clampNumber, formatDate, numTrunc } from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Path } from "react-native-svg";
+import { BarChart, Grid, YAxis } from "react-native-svg-charts";
+import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
-import drillData from "~/drill_data.json";
 import ShotAccordion from "~/components/shotAccordion";
 
 export default function BarChartScreen({ drillData, drillInfo }) {

@@ -1,6 +1,6 @@
-import { View, Image } from "react-native";
-import { Text, Button } from "react-native-paper";
 import { Link, useLocalSearchParams } from "expo-router";
+import { Image, View } from "react-native";
+import { Button, Text } from "react-native-paper";
 
 export default function Description({ descData }) {
   const drillId = useLocalSearchParams()["id"];

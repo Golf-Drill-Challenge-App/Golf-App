@@ -1,22 +1,14 @@
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { PaperProvider, SegmentedButtons, Appbar } from "react-native-paper";
-import { useNavigation, useLocalSearchParams } from "expo-router";
+import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
-import Leaderboard from "./leaderboard";
 import Description from "./description";
+import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  getDocFromCache,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
 export default function Index() {

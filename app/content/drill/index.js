@@ -1,7 +1,7 @@
+import { Link, useNavigation } from "expo-router";
 import React, { useEffect } from "react";
 import { RefreshControl, ScrollView, StyleSheet } from "react-native";
-import { Appbar, PaperProvider, Text, List } from "react-native-paper";
-import { Link, useNavigation } from "expo-router";
+import { Appbar, List, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { collection, getDocs } from "firebase/firestore";

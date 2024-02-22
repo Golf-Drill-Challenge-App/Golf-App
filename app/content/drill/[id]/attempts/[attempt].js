@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
-import { Button, Icon } from "react-native-paper";
+import { Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
-import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";
-import { useLocalSearchParams } from "expo-router";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import ShotAccordion from "~/components/shotAccordion";
 import { db } from "~/firebaseConfig";
 
 function Result() {
