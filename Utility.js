@@ -109,6 +109,8 @@ export function lookUpBaselineStrokesGained(value) {
     3.11, 3.14, 3.165, 3.19, 3.255, 3.32, 3.385, 3.45, 3.515,
   ];
 
+  value = Math.ceil(value / 5) * 5;
+
   for (let i = 0; i < sgKeys.length; i++) {
     if (value < sgKeys[i]) {
       return sgValues[i - 1];
@@ -131,6 +133,8 @@ export function lookUpExpectedPutts(value) {
     2.177, 2.185, 2.193, 2.202, 2.21, 2.218, 2.226, 2.234, 2.242, 2.25, 2.257,
     2.265, 2.272, 2.279, 2.286, 2.293, 2.299, 2.306, 2.312, 2.318, 2.324,
   ];
+
+    value = Math.round(value);
 
   for (let i = 0; i < putt_keys.length; i++) {
     if (value < putt_keys[i]) {

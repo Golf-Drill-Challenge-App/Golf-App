@@ -12,8 +12,8 @@ export default function NavigationRectange({
       <View style={styles.rowContainer}>
         <Text>Shot {shotIndex}/20</Text>
         <Text>
-          {target[0].description}: {target[0].value}
-          {target[0].distanceMeasure}
+          {target.description}: {target.value}
+          {target.distanceMeasure}
         </Text>
       </View>
       <View style={styles.rowContainer}>
