@@ -2,16 +2,18 @@ export const AttemptData = {
   shots: [
     {
       shotNum: 1,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 150, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -26,21 +28,18 @@ export const AttemptData = {
     },
     {
       shotNum: 2,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 69, //this will need to be randomly generated
-        },
-        {
-          description: "Target Distance",
-          distanceMeasure: "yd",
-          value: 150, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -55,26 +54,18 @@ export const AttemptData = {
     },
     {
       shotNum: 3,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 144, //this will need to be randomly generated
-        },
-        {
-          description: "Target Distance",
-          distanceMeasure: "yd",
-          value: 69, //this will need to be randomly generated
-        },
-        {
-          description: "Target Distance",
-          distanceMeasure: "yd",
-          value: 150, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -89,16 +80,18 @@ export const AttemptData = {
     },
     {
       shotNum: 4,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -113,16 +106,18 @@ export const AttemptData = {
     },
     {
       shotNum: 5,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 74, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -137,16 +132,18 @@ export const AttemptData = {
     },
     {
       shotNum: 6,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 99, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -161,16 +158,18 @@ export const AttemptData = {
     },
     {
       shotNum: 7,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 104, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -185,16 +184,18 @@ export const AttemptData = {
     },
     {
       shotNum: 8,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -209,16 +210,18 @@ export const AttemptData = {
     },
     {
       shotNum: 9,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -233,16 +236,18 @@ export const AttemptData = {
     },
     {
       shotNum: 10,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -257,16 +262,18 @@ export const AttemptData = {
     },
     {
       shotNum: 11,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -281,16 +288,18 @@ export const AttemptData = {
     },
     {
       shotNum: 12,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -305,16 +314,18 @@ export const AttemptData = {
     },
     {
       shotNum: 13,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -329,16 +340,18 @@ export const AttemptData = {
     },
     {
       shotNum: 14,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -353,16 +366,18 @@ export const AttemptData = {
     },
     {
       shotNum: 15,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -377,16 +392,18 @@ export const AttemptData = {
     },
     {
       shotNum: 16,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -401,16 +418,18 @@ export const AttemptData = {
     },
     {
       shotNum: 17,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -425,16 +444,18 @@ export const AttemptData = {
     },
     {
       shotNum: 18,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -449,16 +470,18 @@ export const AttemptData = {
     },
     {
       shotNum: 19,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
@@ -473,16 +496,18 @@ export const AttemptData = {
     },
     {
       shotNum: 20,
-      target: [
+      requirements: [
         {
+          id: "distance",
           description: "Target Distance",
           distanceMeasure: "yd",
           value: 134, //this will need to be randomly generated
+          baseline: 2,
         },
       ],
       inputs: [
         {
-          id: "distance",
+          id: "carry",
           icon: "arrow-up",
           prompt: "Carry Distance",
           distanceMeasure: "yd",
