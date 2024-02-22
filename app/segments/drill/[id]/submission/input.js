@@ -79,7 +79,7 @@ function createOutputData(inputValues, attemptData) {
     let outputShotData = [];
     let shot = {};
     for (let i = 0; i < outputs.length; i++) {
-      const output = array[i];
+      const output = outputs[i];
 
       switch (output) {
         case target:
@@ -173,7 +173,8 @@ function createOutputData(inputValues, attemptData) {
   //TODO: figure out how to get this information
   const uid = "c0nEyjaOMhItMQTLMY0X"; //temporary until we can get this from params
 
-  return {
+  //create the outputData object
+  const outputData = {
     time: timeStamp,
     did: did,
     shots: outputShotData,
@@ -183,6 +184,12 @@ function createOutputData(inputValues, attemptData) {
     strokesGainedAverage: avgStrokesGained,
     strokesGained: strokesGainedTotal,
     uid: uid,
+  };
+
+  console.log("Output Data: ", outputData);
+
+  return {
+    outputData,
   };
 }
 
