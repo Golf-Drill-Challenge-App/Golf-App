@@ -26,7 +26,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
 import { lookUpExpectedPutts } from "~/Utility";
 
-const { id: did } = useLocalSearchParams();
+const { id } = useLocalSearchParams();
+
+const did = id;
 
 const outputs = [
   "target",
@@ -73,29 +75,30 @@ function createOutputData(inputValues, attemptData) {
   let sideLandingTotal = 0;
   let carryDiffTotal = 0;
 
+  let outputShotData = [];
+
   //Generate the shots array for output data
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
-    let outputShotData = [];
     let shot = {};
     for (let i = 0; i < outputs.length; i++) {
       const output = outputs[i];
 
       switch (output) {
-        case target:
+        case "target":
           shot.target = getTargetDistance(attemptData.shots[j].requirements);
           break;
 
-        case carry:
+        case "carry":
           shot.carry = inputValues[j].carry;
           break;
 
-        case sideLanding:
+        case "sideLanding":
           shot.sideLanding = inputValues[j].sideLanding;
           sideLandingTotal += shot.sideLanding;
           break;
 
-        case proxHole:
+        case "proxHole":
           shot.proxHole = calculateProxHole(
             getTargetDistance(attemptData.shots[j].requirements),
             inputValues[j].carry,
@@ -104,11 +107,11 @@ function createOutputData(inputValues, attemptData) {
           proxHoleTotal += shot.proxHole;
           break;
 
-        case baseline:
+        case "baseline":
           shot.baseline = getBaselineData(attemptData.shots[j].requirements);
           break;
 
-        case expectedPutts:
+        case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
             calculateProxHole(
               getTargetDistance(attemptData.shots[j].requirements),
@@ -118,7 +121,7 @@ function createOutputData(inputValues, attemptData) {
           );
           break;
 
-        case strokesGained:
+        case "strokesGained":
           shot.strokesGained =
             getBaselineData(attemptData.shots[j].requirements) -
             lookUpExpectedPutts(
@@ -132,7 +135,7 @@ function createOutputData(inputValues, attemptData) {
           strokesGainedTotal += shot.strokesGained;
           break;
 
-        case carryDiff:
+        case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
             getTargetDistance(attemptData.shots[j].requirements),
             inputValues[j].carry,
@@ -157,17 +160,17 @@ function createOutputData(inputValues, attemptData) {
   const timeStamp = Date.now();
 
   //get the average strokes gained
-  const avgStrokesGained = strokesGainedTotal / inputValues.length();
+  const avgStrokesGained = strokesGainedTotal / inputValues.length;
 
   //get the average carry Diff
-  const avgCarryDiff = carryDiffTotal / inputValues.length();
+  const avgCarryDiff = carryDiffTotal / inputValues.length;
 
   // get the average prox hole
 
-  const avgProxHole = proxHoleTotal / inputValues.length();
+  const avgProxHole = proxHoleTotal / inputValues.length;
 
   // get the average side landing
-  const avgSideLanding = sideLandingTotal / inputValues.length();
+  const avgSideLanding = sideLandingTotal / inputValues.length;
 
   //get uid
   //TODO: figure out how to get this information
