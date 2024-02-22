@@ -24,19 +24,166 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
+import { lookUpExpectedPutts } from "~/Utility";
+
+const { id: did } = useLocalSearchParams();
+
+const outputs = [
+  "target",
+  "carry",
+  "sideLanding",
+  "proxHole",
+  "baseline",
+  "expectedPutts",
+  "strokesGained",
+  "carryDiff",
+];
+
+function calculateProxHole(target, carry, sideLanding) {
+  let carryDiff = calculateCarryDiff(target, carry);
+  return Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2);
+}
+
+function calculateCarryDiff(target, carry) {
+  return Math.abs(carry - target);
+}
+
+function getTargetDistance(shotRequirements) {
+  //iterate through shotRequirements until the distance id is found
+  for (let i = 0; i < shotRequirements.length; i++) {
+    if ((shotRequirements[i].id = "distance")) {
+      return shotRequirements[i].value;
+    }
+  }
+}
+
+function getBaselineData(shotRequirements) {
+  //iterate through shotRequirements until the distance id is found
+  for (let i = 0; i < shotRequirements.length; i++) {
+    if ((shotRequirements[i].id = "distance")) {
+      return shotRequirements[i].baseline;
+    }
+  }
+}
 
 function createOutputData(inputValues, attemptData) {
-  //Construct an array of each shot with keys, inputValues, and target Distances
-  const outputData = inputValues.map((object, index) => {
-    const shot = attemptData.shots[index];
-    const shotNum = shot ? shot.shotNum : undefined;
+  //initialize total values
+  let strokesGainedTotal = 0;
+  let proxHoleTotal = 0;
+  let sideLandingTotal = 0;
+  let carryDiffTotal = 0;
 
-    return { ...object, sid: shotNum };
-  });
+  //Generate the shots array for output data
+  for (let j = 0; j < inputValues.length; j++) {
+    //Generate the shots array for output data
+    let outputShotData = [];
+    let shot = {};
+    for (let i = 0; i < outputs.length; i++) {
+      const output = array[i];
 
-  console.log("Output Data: ", outputData);
+      switch (output) {
+        case target:
+          shot.target = getTargetDistance(attemptData.shots[j].requirements);
+          break;
 
-  return outputData;
+        case carry:
+          shot.carry = inputValues[j].carry;
+          break;
+
+        case sideLanding:
+          shot.sideLanding = inputValues[j].sideLanding;
+          sideLandingTotal += shot.sideLanding;
+          break;
+
+        case proxHole:
+          shot.proxHole = calculateProxHole(
+            getTargetDistance(attemptData.shots[j].requirements),
+            inputValues[j].carry,
+            inputValues[j].sideLanding,
+          );
+          proxHoleTotal += shot.proxHole;
+          break;
+
+        case baseline:
+          shot.baseline = getBaselineData(attemptData.shots[j].requirements);
+          break;
+
+        case expectedPutts:
+          shot.expectedPutts = lookUpExpectedPutts(
+            calculateProxHole(
+              getTargetDistance(attemptData.shots[j].requirements),
+              inputValues[j].carry,
+              inputValues[j].sideLanding,
+            ),
+          );
+          break;
+
+        case strokesGained:
+          shot.strokesGained =
+            getBaselineData(attemptData.shots[j].requirements) -
+            lookUpExpectedPutts(
+              calculateProxHole(
+                getTargetDistance(attemptData.shots[j].requirements),
+                inputValues[j].carry,
+                inputValues[j].sideLanding,
+              ),
+            ) -
+            1;
+          strokesGainedTotal += shot.strokesGained;
+          break;
+
+        case carryDiff:
+          shot.carryDiff = calculateCarryDiff(
+            getTargetDistance(attemptData.shots[j].requirements),
+            inputValues[j].carry,
+          );
+          carryDiffTotal += shot.carryDiff;
+          break;
+
+        default:
+          console.log("Output Calculation not found\n");
+          break;
+      }
+    }
+
+    //add the sid to the shot
+    shot.sid = j;
+
+    //push the shot into the array
+    outputShotData.push(shot);
+  }
+
+  //get the time stamp
+  const timeStamp = Date.now();
+
+  //get the average strokes gained
+  const avgStrokesGained = strokesGainedTotal / inputValues.length();
+
+  //get the average carry Diff
+  const avgCarryDiff = carryDiffTotal / inputValues.length();
+
+  // get the average prox hole
+
+  const avgProxHole = proxHoleTotal / inputValues.length();
+
+  // get the average side landing
+  const avgSideLanding = sideLandingTotal / inputValues.length();
+
+  //get uid
+  //TODO: figure out how to get this information
+  const uid = "c0nEyjaOMhItMQTLMY0X"; //temporary until we can get this from params
+
+  return {
+    time: timeStamp,
+    did: did,
+    shots: outputShotData,
+    carryDiffAverage: avgCarryDiff,
+    proxHoleAverage: avgProxHole,
+    sideLandingAverage: avgSideLanding,
+    strokesGainedAverage: avgStrokesGained,
+    strokesGained: strokesGainedTotal,
+    uid: uid,
+  };
 }
 
 export default function Input({ inputValues, setInputValues }) {
@@ -226,7 +373,7 @@ export default function Input({ inputValues, setInputValues }) {
                 {/* Instruction */}
 
                 <View style={styles.horizontalContainer}>
-                  {AttemptData.shots[shotIndex].target.map((item, id) => (
+                  {AttemptData.shots[shotIndex].requirements.map((item, id) => (
                     <DrillTarget
                       key={id}
                       description={item.description}
@@ -295,7 +442,7 @@ export default function Input({ inputValues, setInputValues }) {
                             setShotIndex(id);
                           }}
                           inputs={item.inputs}
-                          target={item.target}
+                          target={item.requirements}
                           inputValues={inputValues[id]}
                           shotIndex={item.shotNum}
                           numShots={AttemptData.shots.length}
