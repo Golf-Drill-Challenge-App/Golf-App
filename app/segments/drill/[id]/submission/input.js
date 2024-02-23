@@ -168,7 +168,12 @@ function createOutputData(inputValues, attemptData) {
   };
 }
 
-export default function Input({ attemptData, setToggleResult, setOutputData }) {
+export default function Input({
+  outputData,
+  attemptData,
+  setToggleResult,
+  setOutputData,
+}) {
   //Helper varibles
   const numInputs = attemptData.inputs.length;
 
