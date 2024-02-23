@@ -11,7 +11,6 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   View,
-  Animated,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -25,11 +24,14 @@ import {
   Searchbar,
   Text,
 } from "react-native-paper";
+import { Feather } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const HEADER_HEIGHT = 44;
-import drillData from "~/drill_data.json";
 
 function Index() {
   const navigation = useNavigation();
@@ -56,15 +58,7 @@ function Index() {
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
   }, []);
-  const offset = useRef(new Animated.Value(0)).current;
 
-  const insets = useSafeAreaInsets();
-
-  const headerHeight = offset.interpolate({
-    inputRange: [0, HEADER_HEIGHT + insets.top],
-    outputRange: [HEADER_HEIGHT + insets.top, insets.top + 44],
-    extrapolate: "clamp",
-  });
   return (
     <PaperProvider>
       <SafeAreaView
@@ -79,7 +73,7 @@ function Index() {
           onPress={Keyboard.dismiss}
           accessible={false}
         >
-          <GestureHandlerRootView style={{ flex: 1 }}>
+          <>
             <Appbar.Header
               statusBarHeight={0}
               style={{ backgroundColor: "FFF" }}
@@ -94,20 +88,11 @@ function Index() {
             </Appbar.Header>
             <BottomSheetModalProvider>
               <KeyboardAwareScrollView
-                style={{ marginTop: 20, marginLeft: 20 }}
+                style={{ marginLeft: 20 }}
                 // allows opening links from search results without closing keyboard first
                 keyboardShouldPersistTaps="handled"
-                //contentContainerStyle={{
-                //  alignItems: "center",
-                //  paddingTop: 220,
-                //  paddingHorizontal: 20,
-                // }}
                 showsVerticalScrollIndicator={false}
-                scrollEventThrottle={16}
-                onScroll={Animated.event(
-                  [{ nativeEvent: { contentOffset: { y: offset } } }],
-                  { useNativeDriver: false },
-                )}
+                stickyHeaderIndices={[3]}
               >
                 <View style={{ alignItems: "center" }}>
                   <Image
@@ -189,24 +174,20 @@ function Index() {
                 <Text style={{ textAlign: "center", marginBottom: 20 }}>
                   {Object.keys(users).length} members
                 </Text>
-
-                <Animated.View // https://github.com/JscramblerBlog/react-native-examples/blob/master/animate-header-on-scroll/components/AnimatedHeader.js
+                <View
                   style={{
-                    // position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    zIndex: 10,
-                    height: headerHeight,
-                    // backgroundColor: "lightblue",
+                    // default react native background color or something, so stuff scrolling behind this is less jank
+                    backgroundColor: "#f2f2f2",
+                    paddingBottom: 10,
+                    paddingTop: 10,
                   }}
                 >
                   <Searchbar
                     onChangeText={onChangeSearch}
                     value={searchQuery}
-                    style={{ marginLeft: 20, marginRight: 20, marginTop: 0 }}
+                    style={{ paddingLeft: 20, paddingRight: 20 }}
                   />
-                </Animated.View>
+                </View>
 
                 <List.Section>
                   {foundUsers.map((user, i) => {
@@ -227,6 +208,7 @@ function Index() {
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
+                              height: 16,
                             }}
                           >
                             <Text>{user.role}</Text>
@@ -242,7 +224,7 @@ function Index() {
                 </List.Section>
               </KeyboardAwareScrollView>
             </BottomSheetModalProvider>
-          </GestureHandlerRootView>
+          </>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </PaperProvider>
