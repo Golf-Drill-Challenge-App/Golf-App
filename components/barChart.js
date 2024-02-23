@@ -132,7 +132,7 @@ export default function BarChartScreen(props) {
 
   const styles = StyleSheet.create({
     barChartComponent: {
-      marginTop: 13
+      marginTop: 13,
     },
     movingAvgContainer: {
       flexDirection: "row",
@@ -210,24 +210,23 @@ export default function BarChartScreen(props) {
       justifyContent: "space-between",
       marginBottom: 13,
       marginLeft: 8,
-      marginRight: 8
+      marginRight: 8,
     },
     bottomText: {
       fontSize: 13,
       color: "#333", // Adjust text color
     },
     scrollView: {
-      marginBottom: 20,
-    },
-    accordion: {
-      marginVertical: 10, // Adjust margin as needed
+      marginBottom: 70,
     },
   });
 
   return (
-      <View style={styles.barChartComponent}>
+    <View style={styles.barChartComponent}>
+      <ScrollView style={styles.scrollView}>
         <View style={styles.movingAvgContainer}>
           <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
+
           <DropDownPicker
             setValue={setMovingAvgRange}
             value={movingAvgRange}
@@ -303,18 +302,18 @@ export default function BarChartScreen(props) {
               SG: {numTrunc(data[selected])}
             </Text>
           </View>
-          <ScrollView style={styles.scrollView}>
-            {drillDataSorted[selected]["shots"].map((shot) => (
-              <ShotAccordion
-                key={shot["sid"]}
-                shot={shot}
-                drill={drillData["teams"]["1"]["drills"][slug]}
-                total={drillDataSorted[selected]["shots"].length}
-                style={styles.accordion}
-              />
-            ))}
-          </ScrollView>
+
+          {drillDataSorted[selected]["shots"].map((shot) => (
+            <ShotAccordion
+              key={shot["sid"]}
+              shot={shot}
+              drill={drillData["teams"]["1"]["drills"][slug]}
+              total={drillDataSorted[selected]["shots"].length}
+              style={styles.accordion}
+            />
+          ))}
         </View>
+      </ScrollView>
     </View>
   );
 }
