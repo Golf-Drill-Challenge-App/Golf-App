@@ -99,7 +99,7 @@ export default function Leaderboard() {
 
   return (
     <ScrollView>
-      <List.Section>
+      <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((attempt) => (
           <Link
             key={attempt.user}
