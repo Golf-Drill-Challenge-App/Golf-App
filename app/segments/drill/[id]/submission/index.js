@@ -60,6 +60,7 @@ export default function Index() {
     } else {
       return (
         <Input
+          outputData={outputData}
           attemptData={attemptData}
           setToggleResult={setToggleResult}
           setOutputData={setOutputData}
