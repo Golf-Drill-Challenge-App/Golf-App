@@ -77,44 +77,6 @@ function Result() {
               </View>
             ))}
 
-          {/*<View style={styles.dataSection}>*/}
-          {/*  <Text style={styles.dataTitle}>Strokes Gained</Text>*/}
-          {/*  <View style={styles.dataRow}>*/}
-          {/*    <Text style={styles.dataLabel}>Total: </Text>*/}
-          {/*    <Text style={styles.dataValue}>*/}
-          {/*      {numTrunc(attempt["strokesGained"])}*/}
-          {/*    </Text>*/}
-          {/*  </View>*/}
-          {/*  <View style={styles.dataRow}>*/}
-          {/*    <Text style={styles.dataLabel}>Average: </Text>*/}
-          {/*    <Text style={styles.dataValue}>*/}
-          {/*      {numTrunc(attempt["strokesGainedAverage"])}*/}
-          {/*    </Text>*/}
-          {/*  </View>*/}
-          {/*</View>*/}
-
-          {/*<View style={styles.dataSection}>*/}
-          {/*  <Text style={styles.dataTitle}>Average Differences</Text>*/}
-          {/*  <View style={styles.dataRow}>*/}
-          {/*    <Icon source={"arrow-up-down"} />*/}
-          {/*    <Text style={styles.dataValue}>*/}
-          {/*      {numTrunc(attempt["carryDiffAverage"])}*/}
-          {/*    </Text>*/}
-          {/*  </View>*/}
-          {/*  <View style={styles.dataRow}>*/}
-          {/*    <Icon source={"arrow-left-right"} />*/}
-          {/*    <Text style={styles.dataValue}>*/}
-          {/*      {numTrunc(attempt["sideLandingAverage"])}*/}
-          {/*    </Text>*/}
-          {/*  </View>*/}
-          {/*  <View style={styles.dataRow}>*/}
-          {/*    <Icon source={"flag"} />*/}
-          {/*    <Text style={styles.dataValue}>*/}
-          {/*      {numTrunc(attempt["proxHoleAverage"])}*/}
-          {/*    </Text>*/}
-          {/*  </View>*/}
-          {/*</View>*/}
-
           {dots.length > 0 && (
             <View style={styles.chartSection}>
               <Text style={styles.sectionTitle}>Shot Tendency</Text>

@@ -22,7 +22,6 @@ export default function Stat() {
       // get drill data
       if (doc.exists()) {
         setDrillInfo(doc.data());
-        console.log("got drill data", drillInfo);
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");

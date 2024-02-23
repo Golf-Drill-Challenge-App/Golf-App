@@ -2,6 +2,20 @@ import { View } from "react-native";
 import { List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 
+function Row({ name, value }) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}
+    >
+      <Text>{name}</Text>
+      <Text>{value}</Text>
+    </View>
+  );
+}
+
 function DataField(field, value) {
   let title = {
     target: "Target",
@@ -27,75 +41,26 @@ function DataField(field, value) {
               width: 200,
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text>(Actual)</Text>
-              <Text>{numTrunc(value["carry"])} yd</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text>(Target)</Text>
-              <Text>{numTrunc(value["target"])} yd</Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text>(Diff)</Text>
-              <Text>{numTrunc(value["carryDiff"])} yd</Text>
-            </View>
+            <Row name={"(Actual)"} value={numTrunc(value["carry"])} />
+            <Row name={"(Target)"} value={numTrunc(value["target"])} />
+            <Row name={"(Diff)"} value={numTrunc(value["carryDiff"])} />
           </View>
         </View>
       );
     case "sideLanding":
     case "proxHole": //has units
       return (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-          key={field}
-        >
-          <Text>{title[field]}</Text>
-          <Text>{numTrunc(value)} ft</Text>
-        </View>
+        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
       );
     case "strokesGained": //just round to 3 decimals
-      return (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-          key={field}
-        >
-          <Text>{title[field]}</Text>
-          <Text>{numTrunc(value)}</Text>
-        </View>
-      );
+      return <Row key={field} name={title[field]} value={numTrunc(value)} />;
     default:
       return (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+        <Row
           key={field}
-        >
-          <Text>{field in title ? title[field] : field}</Text>
-          <Text>{value}</Text>
-        </View>
+          name={field in title ? title[field] : field}
+          value={value}
+        />
       );
   }
 }
@@ -141,6 +106,9 @@ function ShotAccordion(props) {
               target: props.shot["target"],
               carryDiff: props.shot["carryDiff"],
             });
+          case "strokesGained":
+          case "carryDiff":
+            return null;
           default:
             return DataField(field, props.shot[field]);
         }

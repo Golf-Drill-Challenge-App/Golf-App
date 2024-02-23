@@ -9,6 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartScreen from "~/components/barChart";
 import { db } from "~/firebaseConfig";
 
@@ -48,7 +49,9 @@ export default function Stat() {
   }, []);
   return (
     <>
-      <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
+      <SafeAreaView>
+        <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
+      </SafeAreaView>
     </>
   );
 }

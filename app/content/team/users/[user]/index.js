@@ -32,7 +32,7 @@ function Index(props) {
             <DrillCard
               drill={drills[drillId]}
               hrefString={
-                "/content/team/attempts/" + userData.uid + "/drills/" + drillId
+                "/content/team/users/" + userData.uid + "/drills/" + drillId
               }
               key={drillId}
             />

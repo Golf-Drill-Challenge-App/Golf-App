@@ -6,9 +6,8 @@ import Description from "./description";
 import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
-import { SafeAreaView } from "react-native-safe-area-context";
-
 import { doc, getDoc } from "firebase/firestore";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "~/firebaseConfig";
 
 export default function Index() {
