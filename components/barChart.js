@@ -309,7 +309,6 @@ export default function BarChartScreen(props) {
               shot={shot}
               drill={drillData["teams"]["1"]["drills"][slug]}
               total={drillDataSorted[selected]["shots"].length}
-              style={styles.accordion}
             />
           ))}
         </View>

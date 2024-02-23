@@ -5,14 +5,9 @@ import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
-      <Text>{name}</Text>
-      <Text>{value}</Text>
+    <View style={styles.rowContainer}>
+      <Text style={styles.rowName}>{name}</Text>
+      <Text style={styles.rowValue}>{value}</Text>
     </View>
   );
 }
@@ -36,7 +31,7 @@ function DataField(field, value) {
           }}
           key={field}
         >
-          <Text>Carry</Text>
+          <Text style = {{marginLeft: 11, fontWeight: "bold"}}>Carry</Text>
           <View
             style={{
               width: 200,
@@ -50,77 +45,27 @@ function DataField(field, value) {
       );
     case "sideLanding":
     case "proxHole": //has units
-      return (
-        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
-      );
+      return <Row key = {field} name={title[field]} value={`${numTrunc(value)} ft`} />;
     case "strokesGained": //just round to 3 decimals
-      return <Row key={field} name={title[field]} value={numTrunc(value)} />;
+      return <Row key = {field} name={title[field]} value={numTrunc(value)} />;
     default:
-      return (
-        <Row
-          key={field}
-          name={field in title ? title[field] : field}
-          value={value}
-        />
-      );
+      return <Row key = {field} name={field in title ? title[field] : field} value={value} />;
   }
-// }
-// function DataField(field, value) {
-//   let title = {
-//     target: "Target",
-//     sideLanding: "Side Landing",
-//     proxHole: "Proximity to hole",
-//     baseline: "Baseline SG",
-//     expectedPutts: "Expected putts",
-//   };
-//   switch (field) {
-//     case "carry": //compound
-//       return (
-//         <View style={styles.fieldContainer} key={field}>
-//           <Text style={styles.fieldTitle}>Carry</Text>
-//           <View style={styles.fieldValuesContainer}>
-//             <View style={styles.fieldValueRow}>
-//               <Text>(Actual)</Text>
-//               <Text>{numTrunc(value["carry"])} yd</Text>
-//             </View>
-//             <View style={styles.fieldValueRow}>
-//               <Text>(Target)</Text>
-//               <Text>{numTrunc(value["target"])} yd</Text>
-//             </View>
-//             <View style={styles.fieldValueRow}>
-//               <Text>(Diff)</Text>
-//               <Text>{numTrunc(value["carryDiff"])} yd</Text>
-//             </View>
-//           </View>
-//         </View>
-//       );
-//     case "sideLanding":
-//     case "proxHole": //has units
-//     case "strokesGained": //just round to 3 decimals
-//       return (
-//         <View style={styles.fieldContainer} key={field}>
-//           <Text style={styles.fieldTitle}>{title[field]}</Text>
-//           <Text>
-//             {numTrunc(value)} {field === "sideLanding" ? "ft" : ""}
-//           </Text>
-//         </View>
-//       );
-//     default:
-//       return (
-//         <View style={styles.fieldContainer} key={field}>
-//           <Text style={styles.fieldTitle}>
-//             {field in title ? title[field] : field}
-//           </Text>
-//           <Text>{value}</Text>
-//         </View>
-//       );
-//   }
-// }
+}
 
 function ShotAccordion(props) {
   return (
-    <View style = {{backgroundColor: "#f5f5f5", paddingLeft: 11, paddingRight: 11, paddingBottom: 9}}>
+    <View style = {{
+      marginLeft: 11,
+      marginRight: 11,
+      marginBottom: 9,
+    }}>
       <List.Accordion
+        theme={{
+          colors:{
+            background: "#f5f5f5"
+          }
+        }}
         title={
           <View style={styles.titleContainer}>
             <Text>
@@ -138,11 +83,29 @@ function ShotAccordion(props) {
           </View>
         }
         style={styles.container}
-        contentStyle={styles.content}
       >
-        {props.drill["outputs"].map((field) =>
-          DataField(field, props.shot[field]),
-        )}
+        <View style={{
+          backgroundColor: "#f5f5f5"
+        }}>
+
+
+          {props.drill["outputs"].map((field) => {
+            switch (field) {
+              case "carry":
+                return DataField(field, {
+                  carry: props.shot["carry"],
+                  target: props.shot["target"],
+                  carryDiff: props.shot["carryDiff"],
+                });
+              case "strokesGained":
+              case "carryDiff":
+                return null;
+              default:
+                return DataField(field, props.shot[field]);
+            }
+          })}
+
+        </View>
       </List.Accordion>
     </View>
   );
@@ -150,14 +113,10 @@ function ShotAccordion(props) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#f5f5f5",
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 8
-  },
-  content: {
-    marginLeft: 0,
-    marginRight: 0,
-    borderRadius: 8,
   },
   titleContainer: {
     flexDirection: "row",
@@ -167,6 +126,19 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: "bold",
   },
+  rowContainer: {
+    flexDirection: "row",
+    fontSize: 8,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  rowName: {
+    fontWeight: "bold",
+  },
+  rowValue: {},
 });
 
 export default ShotAccordion;
