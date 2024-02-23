@@ -15,8 +15,6 @@ import * as scale from "d3-scale";
 import * as shape from "d3-shape";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { PaperProvider, Appbar } from "react-native-paper";
 
 import drillData from "~/drill_data.json";
 import ShotAccordion from "~/components/shotAccordion";
@@ -133,6 +131,9 @@ export default function BarChartScreen(props) {
   };
 
   const styles = StyleSheet.create({
+    barChartComponent: {
+      marginTop: 13
+    },
     movingAvgContainer: {
       flexDirection: "row",
       alignItems: "center",
@@ -147,7 +148,7 @@ export default function BarChartScreen(props) {
       marginTop: 4.5,
     },
     dropdownContainer: {
-      width: "18%", // Set width to 18% of the screen width
+      width: 70,
       height: 45,
       zIndex: 3,
     },
@@ -168,7 +169,7 @@ export default function BarChartScreen(props) {
     yAxis: {
       position: "absolute",
       top: 0,
-      width: "8%",
+      width: 35,
       bottom: 0,
       left: 0,
       height: chartHeight,
@@ -224,18 +225,7 @@ export default function BarChartScreen(props) {
   });
 
   return (
-    <PaperProvider>
-      <SafeAreaView>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.goBack();
-            }}
-            color={"#F24E1E"}
-          />
-          <Appbar.Content title={"Statistics"} />
-        </Appbar.Header>
-
+      <View style={styles.barChartComponent}>
         <View style={styles.movingAvgContainer}>
           <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
           <DropDownPicker
@@ -325,7 +315,6 @@ export default function BarChartScreen(props) {
             ))}
           </ScrollView>
         </View>
-      </SafeAreaView>
-    </PaperProvider>
+    </View>
   );
 }

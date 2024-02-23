@@ -48,10 +48,20 @@ export default function Stat() {
     return () => {};
   }, []);
   return (
-    <>
+    <PaperProvider>
       <SafeAreaView>
+        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={"#F24E1E"}
+          />
+          <Appbar.Content title={"Statistics"} />
+        </Appbar.Header>
+
         <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
       </SafeAreaView>
-    </>
+    </PaperProvider>
   );
 }
