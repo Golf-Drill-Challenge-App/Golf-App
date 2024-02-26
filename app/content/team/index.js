@@ -4,7 +4,8 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { router, useNavigation } from "expo-router";
-import React, { useCallback, useMemo, useRef } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
   Image,
   Keyboard,
@@ -24,19 +25,34 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import drillData from "~/drill_data.json";
+import { db } from "~/firebaseConfig";
 
 function Index() {
   const navigation = useNavigation();
-  const users = drillData["teams"]["1"]["users"];
+  // const users = drillData["teams"]["1"]["users"];
+  const [users, setUsers] = React.useState([]);
+
+  const usersRef = collection(db, "teams", "1", "users");
+
+  useEffect(() => {
+    getDocs(usersRef).then((querySnapshot) => {
+      let newUsers = [];
+      querySnapshot.forEach((doc) => {
+        newUsers.push(doc.data());
+      });
+      setUsers(newUsers);
+    });
+  }, []);
 
   const [searchQuery, setSearchQuery] = React.useState("");
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
-  const foundUsers = Object.values(users).filter((user) =>
+  const foundUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  console.log("Found: ", foundUsers);
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -184,9 +200,14 @@ function Index() {
 
                 <List.Section>
                   {foundUsers.map((user, i) => {
+                    const userid =
+                      user.uid["_key"] !== undefined
+                        ? user.uid["_key"]["path"]["segments"].at(-1)
+                        : "awefr";
+                    console.log("userid: ", userid);
                     return (
                       <List.Item
-                        key={user.uid}
+                        key={userid}
                         title={user.name}
                         left={() => (
                           <Avatar.Image
@@ -209,7 +230,7 @@ function Index() {
                           </View>
                         )}
                         onPress={() =>
-                          router.push(`content/team/users/${user.uid}`)
+                          router.push(`content/team/users/${userid}`)
                         }
                       />
                     );
