@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartScreen from "~/components/barChart";
 import { db } from "~/firebaseConfig";
+import { PaperProvider, Appbar } from "react-native-paper";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
@@ -48,10 +49,20 @@ export default function Stat() {
     return () => {};
   }, []);
   return (
-    <>
+    <PaperProvider>
       <SafeAreaView>
+        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={"#F24E1E"}
+          />
+          <Appbar.Content title={"Statistics"} />
+        </Appbar.Header>
+
         <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
       </SafeAreaView>
-    </>
+    </PaperProvider>
   );
 }
