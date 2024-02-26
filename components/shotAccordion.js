@@ -1,17 +1,12 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}
-    >
-      <Text>{name}</Text>
-      <Text>{value}</Text>
+    <View style={styles.rowContainer}>
+      <Text style={styles.rowName}>{name}</Text>
+      <Text style={styles.rowValue}>{value}</Text>
     </View>
   );
 }
@@ -35,7 +30,7 @@ function DataField(field, value) {
           }}
           key={field}
         >
-          <Text>Carry</Text>
+          <Text style={{ marginLeft: 11, fontWeight: "bold" }}>Carry</Text>
           <View
             style={{
               width: 200,
@@ -67,54 +62,91 @@ function DataField(field, value) {
 
 function ShotAccordion(props) {
   return (
-    <List.Accordion
-      title={
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignSelf: "stretch",
-          }}
-        >
-          <Text>
-            <Text style={{ fontWeight: "bold" }}>
-              Shot: {props.shot["sid"]}/
-            </Text>
-            {props.total}
-          </Text>
-          <Text>
-            <Text style={{ fontWeight: "bold" }}>Target:</Text>{" "}
-            {props.shot["target"]} yd
-          </Text>
-          <Text>
-            <Text style={{ fontWeight: "bold" }}>SG:</Text>{" "}
-            {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
-          </Text>
-        </View>
-      }
+    <View
       style={{
-        backgroundColor: "#fff",
-        borderWidth: 1,
-        borderStyle: "solid",
+        marginLeft: 11,
+        marginRight: 11,
+        marginBottom: 9,
       }}
     >
-      {props.drillInfo["outputs"].map((field) => {
-        switch (field) {
-          case "carry":
-            return DataField(field, {
-              carry: props.shot["carry"],
-              target: props.shot["target"],
-              carryDiff: props.shot["carryDiff"],
-            });
-          case "strokesGained":
-          case "carryDiff":
-            return null;
-          default:
-            return DataField(field, props.shot[field]);
+      <List.Accordion
+        theme={{
+          colors: {
+            background: "#f5f5f5",
+          },
+        }}
+        title={
+          <View style={styles.titleContainer}>
+            <Text>
+              <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
+              {props.total}
+            </Text>
+            <Text>
+              <Text style={styles.boldText}>Target:</Text>{" "}
+              {props.shot["target"]} yd
+            </Text>
+            <Text>
+              <Text style={styles.boldText}>SG:</Text>{" "}
+              {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
+            </Text>
+          </View>
         }
-      })}
-    </List.Accordion>
+        style={styles.container}
+      >
+        <View
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          {props.drillInfo["outputs"].map((field) => {
+            switch (field) {
+              case "carry":
+                return DataField(field, {
+                  carry: props.shot["carry"],
+                  target: props.shot["target"],
+                  carryDiff: props.shot["carryDiff"],
+                });
+              case "strokesGained":
+              case "carryDiff":
+                return null;
+              default:
+                return DataField(field, props.shot[field]);
+            }
+          })}
+        </View>
+      </List.Accordion>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#f5f5f5",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  boldText: {
+    fontWeight: "bold",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    fontSize: 8,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  rowName: {
+    fontWeight: "bold",
+  },
+  rowValue: {},
+});
 
 export default ShotAccordion;
