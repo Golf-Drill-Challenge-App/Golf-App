@@ -1,11 +1,10 @@
-import React from "react";
-import drillData from "~/drill_data.json";
-import ProfileCard from "~/components/profileCard";
-import { View, ScrollView, Text, StyleSheet } from "react-native";
-import DrillCard from "~/components/drillCard";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { PaperProvider, Appbar } from "react-native-paper";
+import DrillCard from "~/components/drillCard";
+import ProfileCard from "~/components/profileCard";
+import drillData from "~/drill_data.json";
 
 function Index(props) {
   const { user: user_id } = useLocalSearchParams();
@@ -27,7 +26,7 @@ function Index(props) {
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={userData["name"]+"'s Profile"} />
+          <Appbar.Content title={userData["name"] + "'s Profile"} />
         </Appbar.Header>
 
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
