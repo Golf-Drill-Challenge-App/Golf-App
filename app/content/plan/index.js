@@ -1,6 +1,5 @@
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { PaperProvider, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 //This is for the list of drills
 export default function Index() {

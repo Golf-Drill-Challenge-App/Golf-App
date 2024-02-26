@@ -1,5 +1,4 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
 import { Icon, Text, TextInput } from "react-native-paper";
 
 export default function DrillInput({

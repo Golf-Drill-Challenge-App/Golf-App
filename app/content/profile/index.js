@@ -1,9 +1,8 @@
-import React from "react";
-import drillData from "~/drill_data.json";
-import ProfileCard from "~/components/profileCard";
+import { Link } from "expo-router";
 import { ScrollView, Text } from "react-native";
 import DrillCard from "~/components/drillCard";
-import { Link } from "expo-router";
+import ProfileCard from "~/components/profileCard";
+import drillData from "~/drill_data.json";
 
 function Index(props) {
   const user = drillData["teams"]["1"]["users"]["1"];
