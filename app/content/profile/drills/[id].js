@@ -9,6 +9,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartScreen from "~/components/barChart";
 import { db } from "~/firebaseConfig";
@@ -48,10 +49,20 @@ export default function Stat() {
     return () => {};
   }, []);
   return (
-    <>
+    <PaperProvider>
       <SafeAreaView>
+        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={"#F24E1E"}
+          />
+          <Appbar.Content title={"Statistics"} />
+        </Appbar.Header>
+
         <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
       </SafeAreaView>
-    </>
+    </PaperProvider>
   );
 }
