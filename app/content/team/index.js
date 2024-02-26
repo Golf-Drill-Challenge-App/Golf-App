@@ -12,7 +12,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Appbar,
@@ -24,14 +23,8 @@ import {
   Searchbar,
   Text,
 } from "react-native-paper";
-import { Feather } from "@expo/vector-icons";
-import { router, useNavigation } from "expo-router";
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
+import drillData from "~/drill_data.json";
 
 function Index() {
   const navigation = useNavigation();
