@@ -71,6 +71,8 @@ def generate_submission(submission_id):
     # One submission
     submission = {
         "time": time_stamp,
+        "uid": "c0nEyjaOMhItMQTLMY0X",
+        "did": "SpvYyY94HaulVH2zmVyM",
         "strokesGained": strokes_gained_total,
         "strokesGainedAverage": strokes_gained_total / num_shots,
         "carryDiffAverage": carry_diff_total / num_shots,
@@ -78,7 +80,7 @@ def generate_submission(submission_id):
         "proxHoleAverage": prox_hole_total / num_shots,
         "shots": shots
     }
-    db.collection("teams").document("1").collection("users").document("c0nEyjaOMhItMQTLMY0X").collection("SpvYyY94HaulVH2zmVyM").document(str(time_stamp)).set(submission)
+    db.collection("teams").document("1").collection("attempts").document().set(submission)
     return submission
 
 def generate_submission_line(submission_id):
@@ -104,16 +106,18 @@ def generate_submission_line(submission_id):
     # One submission
     submission = {
         "time": time_stamp,
+        "uid": "c0nEyjaOMhItMQTLMY0X",
+        "did": "YtCsaxzscFScnpZYmnKI",
         "sideLandingTotal": side_landing_total,
         "sideLandingAverage": side_landing_total / len(shots),
         "shots": shots
     }
-    db.collection("teams").document("1").collection("users").document("c0nEyjaOMhItMQTLMY0X").collection("YtCsaxzscFScnpZYmnKI").document(str(time_stamp)).set(submission)
+    db.collection("teams").document("1").collection("attempts").document().set(submission)
 
     return submission
 
 # Generate 100 submissions
-submissions = [generate_submission_line(i) for i in range(100)]
+submissions = [generate_submission(i) for i in range(100)]
 
 # Print the submissions without indentation or new lines
 print(submissions)

@@ -1,7 +1,6 @@
+import { useFonts } from "expo-font";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-import React from "react";
-import { useFonts } from "expo-font";
 
 export default function DrillTarget({ description, distanceMeasure, value }) {
   const [fontsLoaded, fontError] = useFonts({

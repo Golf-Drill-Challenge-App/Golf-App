@@ -1,28 +1,30 @@
-import { router, useLocalSearchParams } from "expo-router";
+import * as scale from "d3-scale";
+import * as shape from "d3-shape";
 import { StatusBar } from "expo-status-bar";
+import { useMemo, useRef, useState } from "react";
 import {
-  Button,
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
-import { BarChart, Grid, YAxis } from "react-native-svg-charts";
-import { Path } from "react-native-svg";
-import React, { useMemo, useRef, useState } from "react";
-import * as scale from "d3-scale";
-import * as shape from "d3-shape";
-import { clampNumber, formatDate, numTrunc } from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Path } from "react-native-svg";
+import { BarChart, Grid, YAxis } from "react-native-svg-charts";
+import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
-import drillData from "~/drill_data.json";
 import ShotAccordion from "~/components/shotAccordion";
 
-export default function BarChartScreen(props) {
-  const slug = useLocalSearchParams()["id"];
-  const drillDataSorted = props.drillData.sort((a, b) => a.time - b.time);
-  const data = drillDataSorted.map((value) => value[props.mainOutputAttempt]);
+export default function BarChartScreen({ drillData, drillInfo }) {
+  if (drillData.length === 0) {
+    return <Text>Loading...</Text>;
+  }
+  const drillDataSorted = drillData.sort((a, b) => a.time - b.time);
+  const data = drillDataSorted.map(
+    (value) => value[drillInfo["mainOutputAttempt"]],
+  );
+  console.log("data", drillInfo["mainOutputAttempt"]);
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -131,131 +133,129 @@ export default function BarChartScreen(props) {
 
   return (
     <>
-      <Text>Open up App.js to start working on your app!asef</Text>
-      <Button title={"Back"} onPress={() => router.back()} />
-      <View style={{ zIndex: 3 }}>
-        <Text>Moving Avg.</Text>
-        <DropDownPicker
-          setValue={setMovingAvgRange}
-          value={movingAvgRange}
-          items={movingAvgRangeValues}
-          open={movingAvgRangeDropdownOpen}
-          setOpen={setMovingAvgRangeDropdownOpen}
-          containerStyle={{
-            width: 300,
-          }}
-          style={{
-            width: 300,
-          }}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: 20,
-          marginBottom: 20,
-        }}
-      >
-        <YAxis
-          data={data}
-          svg={{
-            fill: "grey",
-            fontSize: 10,
-          }}
-          // numberOfTicks={10}
-          style={StyleSheet.create({
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            height: chartHeight,
-            zIndex: 1,
-            backgroundColor: "white",
-          })}
-        />
-        <View //middle select line
-          style={{
-            position: "absolute",
-            left: width / 2 - 1, // Adjust this to place the line in the middle
-            top: 0,
-            bottom: 0,
-            width: 1,
-            zIndex: 2,
-            backgroundColor: "black", // Choose a color that stands out
-          }}
-        />
-        <ScrollView
-          horizontal={true}
-          // contentContainerStyle={{width: 2000}}
-          onScroll={handleScroll}
-          scrollEventThrottle={64}
-          ref={scrollViewRef}
-        >
-          <View
-            style={{
-              width: chartWidth,
-              height: chartHeight,
+      <ScrollView style={{ marginBottom: 70 }}>
+        <View style={{ zIndex: 3 }}>
+          <Text>Moving Avg.</Text>
+          <DropDownPicker
+            setValue={setMovingAvgRange}
+            value={movingAvgRange}
+            items={movingAvgRangeValues}
+            open={movingAvgRangeDropdownOpen}
+            setOpen={setMovingAvgRangeDropdownOpen}
+            containerStyle={{
+              width: 300,
             }}
+            style={{
+              width: 300,
+            }}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: 20,
+            marginBottom: 20,
+          }}
+        >
+          <YAxis
+            data={data}
+            svg={{
+              fill: "grey",
+              fontSize: 10,
+            }}
+            // numberOfTicks={10}
+            style={StyleSheet.create({
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              height: chartHeight,
+              zIndex: 1,
+              backgroundColor: "white",
+            })}
+          />
+          <View //middle select line
+            style={{
+              position: "absolute",
+              left: width / 2 - 1, // Adjust this to place the line in the middle
+              top: 0,
+              bottom: 0,
+              width: 1,
+              zIndex: 2,
+              backgroundColor: "black", // Choose a color that stands out
+            }}
+          />
+          <ScrollView
+            horizontal={true}
+            // contentContainerStyle={{width: 2000}}
+            onScroll={handleScroll}
+            scrollEventThrottle={64}
+            ref={scrollViewRef}
           >
-            <BarChart
+            <View
               style={{
-                height: chartHeight,
                 width: chartWidth,
-                position: "absolute",
-                top: 0,
-                left: 0,
+                height: chartHeight,
               }}
-              data={processedData}
-              svg={{ fill }}
-              contentInset={{
-                left: halfScreenCompensation,
-                right: halfScreenCompensation,
-              }}
-              yAccessor={({ item }) => item.value}
-              pointerEvents={"none"}
             >
-              <Grid pointerEvents={"none"} />
-              <MovingAvgPath
-                line={line}
+              <BarChart
+                style={{
+                  height: chartHeight,
+                  width: chartWidth,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                }}
+                data={processedData}
+                svg={{ fill }}
+                contentInset={{
+                  left: halfScreenCompensation,
+                  right: halfScreenCompensation,
+                }}
+                yAccessor={({ item }) => item.value}
                 pointerEvents={"none"}
-                style={{ pointerEvents: "none" }}
-              />
-            </BarChart>
-            <BarChart
-              style={{
-                height: chartHeight,
-                width: chartWidth,
-                position: "absolute",
-                top: 0,
-                left: 0,
-              }}
-              data={transparentData}
-              svg={{ fill }}
-              contentInset={{
-                left: halfScreenCompensation,
-                right: halfScreenCompensation,
-              }}
-              yAccessor={({ item }) => item.value}
-            ></BarChart>
-          </View>
-        </ScrollView>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text>{dateString}</Text>
-        <Text>MA: {numTrunc(movingAvgData[selected])}</Text>
-        <Text>SG: {numTrunc(data[selected])}</Text>
-      </View>
+              >
+                <Grid pointerEvents={"none"} />
+                <MovingAvgPath
+                  line={line}
+                  pointerEvents={"none"}
+                  style={{ pointerEvents: "none" }}
+                />
+              </BarChart>
+              <BarChart
+                style={{
+                  height: chartHeight,
+                  width: chartWidth,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                }}
+                data={transparentData}
+                svg={{ fill }}
+                contentInset={{
+                  left: halfScreenCompensation,
+                  right: halfScreenCompensation,
+                }}
+                yAccessor={({ item }) => item.value}
+              ></BarChart>
+            </View>
+          </ScrollView>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text>{dateString}</Text>
+          <Text>MA: {numTrunc(movingAvgData[selected])}</Text>
+          <Text>SG: {numTrunc(data[selected])}</Text>
+        </View>
 
-      <ScrollView>
         {drillDataSorted[selected]["shots"].map((shot) => (
           <ShotAccordion
             key={shot["sid"]}
             shot={shot}
-            drill={drillData["teams"]["1"]["drills"][slug]}
+            drillInfo={drillInfo}
             total={drillDataSorted[selected]["shots"].length}
           />
         ))}

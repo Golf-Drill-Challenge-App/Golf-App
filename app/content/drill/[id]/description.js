@@ -1,8 +1,9 @@
+import { Link, useLocalSearchParams } from "expo-router";
 import { Image, View } from "react-native";
 import { Button, Text } from "react-native-paper";
-import { Link } from "expo-router";
 
-export default function Description({ descData, drillId }) {
+export default function Description({ descData }) {
+  const drillId = useLocalSearchParams()["id"];
   return (
     <View style={{ margin: 10 }}>
       <Text style={{ paddingBottom: 10 }} variant="headlineLarge">

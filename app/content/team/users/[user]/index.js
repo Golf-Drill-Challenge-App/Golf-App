@@ -1,9 +1,8 @@
-import React from "react";
-import drillData from "~/drill_data.json";
-import ProfileCard from "~/components/profileCard";
+import { Link, useLocalSearchParams } from "expo-router";
 import { ScrollView, Text } from "react-native";
 import DrillCard from "~/components/drillCard";
-import { Link, useLocalSearchParams } from "expo-router";
+import ProfileCard from "~/components/profileCard";
+import drillData from "~/drill_data.json";
 
 function Index(props) {
   const { user: user_id } = useLocalSearchParams();

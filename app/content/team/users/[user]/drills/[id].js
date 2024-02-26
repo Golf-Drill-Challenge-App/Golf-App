@@ -1,8 +1,7 @@
 //assumed to be statistics
-import React from "react";
 import { useLocalSearchParams } from "expo-router";
-import drillData from "~/drill_data.json";
 import BarChartScreen from "~/components/barChart";
+import drillData from "~/drill_data.json";
 
 export default function Stat() {
   const { user: user_id, id: drill_id } = useLocalSearchParams();
