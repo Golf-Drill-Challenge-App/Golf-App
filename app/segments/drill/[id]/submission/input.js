@@ -26,10 +26,6 @@ import { AttemptData } from "~/testData";
 import Description from "./modals/description";
 import { lookUpExpectedPutts, lookUpBaselineStrokesGained } from "~/Utility";
 
-const { id } = useLocalSearchParams();
-
-const did = id;
-
 const outputs = [
   "target",
   "carry",
@@ -50,7 +46,7 @@ function calculateCarryDiff(target, carry) {
   return Math.abs(carry - target);
 }
 
-function createOutputData(inputValues, attemptData) {
+function createOutputData(inputValues, attemptData, did) {
   //initialize total values
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
@@ -140,7 +136,6 @@ function createOutputData(inputValues, attemptData) {
   const avgCarryDiff = carryDiffTotal / inputValues.length;
 
   // get the average prox hole
-
   const avgProxHole = proxHoleTotal / inputValues.length;
 
   // get the average side landing
@@ -188,6 +183,8 @@ export default function Input({
 
   const { id } = useLocalSearchParams();
 
+  const did = id;
+
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
@@ -202,7 +199,7 @@ export default function Input({
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            setOutputData(createOutputData(inputValues, attemptData));
+            setOutputData(createOutputData(inputValues, attemptData, did));
             //send the output data to the database here
             setToggleResult(true);
           }}
