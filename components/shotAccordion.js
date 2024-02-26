@@ -1,6 +1,5 @@
-import React from "react";
+import { StyleSheet, View } from "react-native";
 import { List, Text } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
 import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
@@ -31,7 +30,7 @@ function DataField(field, value) {
           }}
           key={field}
         >
-          <Text style = {{marginLeft: 11, fontWeight: "bold"}}>Carry</Text>
+          <Text style={{ marginLeft: 11, fontWeight: "bold" }}>Carry</Text>
           <View
             style={{
               width: 200,
@@ -45,26 +44,36 @@ function DataField(field, value) {
       );
     case "sideLanding":
     case "proxHole": //has units
-      return <Row key = {field} name={title[field]} value={`${numTrunc(value)} ft`} />;
+      return (
+        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
+      );
     case "strokesGained": //just round to 3 decimals
-      return <Row key = {field} name={title[field]} value={numTrunc(value)} />;
+      return <Row key={field} name={title[field]} value={numTrunc(value)} />;
     default:
-      return <Row key = {field} name={field in title ? title[field] : field} value={value} />;
+      return (
+        <Row
+          key={field}
+          name={field in title ? title[field] : field}
+          value={value}
+        />
+      );
   }
 }
 
 function ShotAccordion(props) {
   return (
-    <View style = {{
-      marginLeft: 11,
-      marginRight: 11,
-      marginBottom: 9,
-    }}>
+    <View
+      style={{
+        marginLeft: 11,
+        marginRight: 11,
+        marginBottom: 9,
+      }}
+    >
       <List.Accordion
         theme={{
-          colors:{
-            background: "#f5f5f5"
-          }
+          colors: {
+            background: "#f5f5f5",
+          },
         }}
         title={
           <View style={styles.titleContainer}>
@@ -78,18 +87,18 @@ function ShotAccordion(props) {
             </Text>
             <Text>
               <Text style={styles.boldText}>SG:</Text>{" "}
-              {numTrunc(props.shot[props.drill["mainOutputShot"]])}
+              {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
             </Text>
           </View>
         }
         style={styles.container}
       >
-        <View style={{
-          backgroundColor: "#f5f5f5"
-        }}>
-
-
-          {props.drill["outputs"].map((field) => {
+        <View
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
+        >
+          {props.drillInfo["outputs"].map((field) => {
             switch (field) {
               case "carry":
                 return DataField(field, {
@@ -104,7 +113,6 @@ function ShotAccordion(props) {
                 return DataField(field, props.shot[field]);
             }
           })}
-
         </View>
       </List.Accordion>
     </View>
@@ -116,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     borderWidth: 1,
     borderColor: "#ddd",
-    borderRadius: 8
+    borderRadius: 8,
   },
   titleContainer: {
     flexDirection: "row",

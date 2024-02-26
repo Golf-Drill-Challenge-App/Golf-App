@@ -1,29 +1,29 @@
-import { useNavigation, useLocalSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import * as scale from "d3-scale";
+import * as shape from "d3-shape";
+import { useMemo, useRef, useState } from "react";
 import {
-  Button,
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
-import { BarChart, Grid, YAxis } from "react-native-svg-charts";
-import { Path } from "react-native-svg";
-import React, { useMemo, useRef, useState } from "react";
-import * as scale from "d3-scale";
-import * as shape from "d3-shape";
-import { clampNumber, formatDate, numTrunc } from "~/Utility";
 import DropDownPicker from "react-native-dropdown-picker";
+import { Path } from "react-native-svg";
+import { BarChart, Grid, YAxis } from "react-native-svg-charts";
+import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
-import drillData from "~/drill_data.json";
 import ShotAccordion from "~/components/shotAccordion";
 
-export default function BarChartScreen(props) {
-  const navigation = useNavigation();
-  const slug = useLocalSearchParams()["id"];
-  const drillDataSorted = props.drillData.sort((a, b) => a.time - b.time);
-  const data = drillDataSorted.map((value) => value[props.mainOutputAttempt]);
+export default function BarChartScreen({ drillData, drillInfo }) {
+  if (drillData.length === 0) {
+    return <Text>Loading...</Text>;
+  }
+  const drillDataSorted = drillData.sort((a, b) => a.time - b.time);
+  const data = drillDataSorted.map(
+    (value) => value[drillInfo["mainOutputAttempt"]],
+  );
+  console.log("data", drillInfo["mainOutputAttempt"]);
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -163,8 +163,6 @@ export default function BarChartScreen(props) {
     chartSection: {
       marginTop: 20,
       marginBottom: 20,
-      marginLeft: 10, // Adjust as needed
-      marginRight: 10, // Adjust as needed
     },
     yAxis: {
       position: "absolute",
@@ -307,7 +305,7 @@ export default function BarChartScreen(props) {
             <ShotAccordion
               key={shot["sid"]}
               shot={shot}
-              drill={drillData["teams"]["1"]["drills"][slug]}
+              drillInfo={drillInfo}
               total={drillDataSorted[selected]["shots"].length}
             />
           ))}

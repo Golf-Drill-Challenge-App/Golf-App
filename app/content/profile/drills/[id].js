@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartScreen from "~/components/barChart";
 import { db } from "~/firebaseConfig";
+import { PaperProvider, Appbar } from "react-native-paper";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
