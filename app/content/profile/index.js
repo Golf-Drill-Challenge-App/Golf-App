@@ -1,11 +1,10 @@
-import React from "react";
-import drillData from "~/drill_data.json";
-import ProfileCard from "~/components/profileCard";
-import { View, ScrollView, Text, StyleSheet } from "react-native";
 import { useNavigation } from "expo-router";
-import DrillCard from "~/components/drillCard";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { PaperProvider, Appbar } from "react-native-paper";
+import DrillCard from "~/components/drillCard";
+import ProfileCard from "~/components/profileCard";
+import drillData from "~/drill_data.json";
 
 function Index(props) {
   const navigation = useNavigation();
@@ -14,7 +13,7 @@ function Index(props) {
   const attemptedDrills = user["history"]
     ? Object.keys(drills).filter((drillId) => drillId in user["history"])
     : [];
-  
+
   return (
     <PaperProvider>
       <SafeAreaView>
