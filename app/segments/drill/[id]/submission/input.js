@@ -324,7 +324,8 @@ export default function Input({
               style={{ backgroundColor: "FFF" }}
               statusBarHeight={0}
             >
-              <Appbar.BackAction
+              <Appbar.Action
+                icon="close"
                 onPress={showLeaveDrillDialog}
                 color={"#F24E1E"}
               />
