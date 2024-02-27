@@ -451,6 +451,7 @@ export default function Input({
                           }}
                           inputs={attemptData.inputs}
                           target={attemptData.requirements[0]}
+                          targetValue={attemptData.shots[id].value}
                           inputValues={inputValues[id]}
                           shotIndex={item.shotNum}
                           numShots={attemptData.shots.length}

@@ -4,6 +4,7 @@ import { Icon, Text } from "react-native-paper";
 export default function NavigationRectange({
   inputs,
   target,
+  targetValue,
   inputValues,
   shotIndex,
 }) {
@@ -12,7 +13,7 @@ export default function NavigationRectange({
       <View style={styles.rowContainer}>
         <Text>Shot {shotIndex}/20</Text>
         <Text>
-          {target.description}: {target.value}
+          {target.description}: {targetValue}
           {target.distanceMeasure}
         </Text>
       </View>
