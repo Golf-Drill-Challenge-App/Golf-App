@@ -8,7 +8,7 @@ Cross Platform Mobile app for the OSU Men's Golf Team.
 - [React Native Paper](https://reactnativepaper.com/)
 - [React Native SVG Charts](https://www.npmjs.com/package/react-native-svg-charts)
 - [Expo Go](https://expo.dev/)
-- [FireStore](https://firebase.google.com/docs/firestore)
+- [Firestore](https://firebase.google.com/docs/firestore)
 
 See [package.json](package.json) for more details on libraries used
 
