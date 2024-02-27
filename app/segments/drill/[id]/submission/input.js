@@ -390,6 +390,8 @@ export default function Input({
                     onInputChange={(newText) => {
                       handleInputChange(item.id, newText);
                     }}
+                    currentShot={currentShot}
+                    shotIndex={shotIndex}
                   />
                 ))}
               </View>
@@ -446,7 +448,7 @@ export default function Input({
                             setShotIndex(id);
                           }}
                           inputs={attemptData.inputs}
-                          target={attemptData.requirements}
+                          target={attemptData.requirements[0]}
                           inputValues={inputValues[id]}
                           shotIndex={item.shotNum}
                           numShots={attemptData.shots.length}
