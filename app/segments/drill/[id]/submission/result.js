@@ -162,6 +162,13 @@ function Result(props) {
 
   const { width } = useWindowDimensions();
 
+  console.log(
+    "Drill Data: ",
+    drillData["teams"]["1"]["users"]["1"]["history"]["732489"][0],
+  );
+
+  console.log("Props.submission.output: ", props.submission.outputData);
+
   return (
     <>
       <PaperProvider>
