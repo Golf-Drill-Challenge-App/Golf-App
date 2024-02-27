@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Image, View, Pressable, TouchableWithoutFeedback, Dimensions } from "react-native";
 import Carousel from 'react-native-reanimated-carousel';
 import { Button, Text, Portal, Modal } from "react-native-paper";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 
-export default function Description({ descData, drillId }) {
+export default function Description({ descData }) {
+    const drillId = useLocalSearchParams()["id"];
     const [visible, setVisible] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
 
