@@ -2,6 +2,31 @@
 
 Cross Platform Mobile app for the OSU Men's Golf Team.
 
+## Tech Stack
+
+- [React Native](https://reactnative.dev/)
+- [React Native Paper](https://reactnativepaper.com/)
+- [React Native SVG Charts](https://www.npmjs.com/package/react-native-svg-charts)
+- [Expo Go](https://expo.dev/)
+- [FireStore](https://firebase.google.com/docs/firestore)
+
+See [package.json](package.json) for more details on libraries used
+
+## Design Docs
+
+- See [Figma](https://www.figma.com/file/8fP7vgmQ9kNhYeyFIS5guP/OSU-Golf-App-Prototype?type=design&node-id=1840%3A1676&mode=design&t=vQ8CIjrhrU7uoO9z-1) for mock-ups of overall visual styling of each page, as well as how navigation is intended to work
+  - Currently on "Prototype V2" of the Figma prototype
+
+## Database Specifications
+
+Info below subject to change
+
+- Database Schema: [db_spec.jsonc](db_spec.jsonc)
+  - The current database on Firestore, as well as the local test data in [drill_data.json](drill_data.json), follows the schema starting on line 29 ("teams" object) of `db_spec.jsonc`
+    - May be moving drill attempts out of `teams` and into a separate data object soon
+- Currently, some pages in profile, team, drill submission still use the local data from `drill_data.json`, but the rest are connected to Firestore
+- Login / Signup functionality is not implemented yet on the main `layout` branch
+
 ## Commands
 
 ### Install dependencies
@@ -47,14 +72,9 @@ Cross Platform Mobile app for the OSU Men's Golf Team.
 - Hot Reload is enabled by default whenever you edit a page on the app, and you can also manually trigger a reload by entering "r" into command line
 - If reloading isn't working for some reason, double swipe up on your mobile device to exit Expo Go, and restart the app from command line
 
-## Tech Stack
+## Last Year's Codebase
 
-- [React Native](https://reactnative.dev/)
-- [Expo Go](https://expo.dev/)
-- [Axios](https://axios-http.com/)
-- [Prettier](https://prettier.io/)
-
-## Other Useful Stuff
+A different team of students worked on this projects last year, linked here for reference.
 
 - Last year's codebase (JavaScript): https://github.com/efmmoncada/golf-drill-challenge-app
   - Check this repo's README for other useful tips on software stack
