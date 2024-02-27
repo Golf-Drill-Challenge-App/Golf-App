@@ -14,12 +14,14 @@ See [package.json](package.json) for more details on libraries used
 
 ## Design References
 
-- See [Figma](https://www.figma.com/file/8fP7vgmQ9kNhYeyFIS5guP/OSU-Golf-App-Prototype?type=design&node-id=1840%3A1676&mode=design&t=vQ8CIjrhrU7uoO9z-1) for mock-ups of overall visual styling of each page, as well as how navigation is intended to work
+- [Figma](https://www.figma.com/file/8fP7vgmQ9kNhYeyFIS5guP/OSU-Golf-App-Prototype?type=design&node-id=1840%3A1676&mode=design&t=vQ8CIjrhrU7uoO9z-1)
+  - Mock-ups of overall visual styling of each page, as well as how navigation is intended to work
   - Currently on "Prototype V2" of the Figma prototype
-- See also for examples of golf drills and stats calculations, courtesy of golf coach:
+- Golf Coach's Spreadsheets (sample golf drills / calculations)
   - [Approach Shots / Line Tests](https://docs.google.com/spreadsheets/d/1ZufXjRCTzbIqJln_fJ5NDvNo0ahHIM-bkv9ZB8a6Drw/edit#gid=259638677)
   - [Putting](https://docs.google.com/spreadsheets/d/12gnHaMyzP0eGAi3MGVBYaG5obCJ0xri9d0RiqiWKfuA/edit#gid=865463318)
-- See [Data Golf](https://datagolf.com/player-profiles?dg_id=18841) for an example on graph logic / styling
+- [Data Golf](https://datagolf.com/player-profiles?dg_id=18841)
+  - Example of graph logic / styling, for golf stats
 
 ## Database Specifications
 
