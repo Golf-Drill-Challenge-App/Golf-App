@@ -72,8 +72,8 @@ function createOutputData(inputValues, attemptData, did) {
           break;
 
         case "sideLanding":
-          shot.sideLanding = inputValues[j].sideLanding;
-          sideLandingTotal += shot.sideLanding;
+          shot.sideLanding = Number(inputValues[j].sideLanding);
+          sideLandingTotal += Number(inputValues[j].sideLanding);
           break;
 
         case "proxHole":
@@ -82,7 +82,11 @@ function createOutputData(inputValues, attemptData, did) {
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
-          proxHoleTotal += shot.proxHole;
+          proxHoleTotal += calculateProxHole(
+            attemptData.shots[j].value,
+            inputValues[j].carry,
+            inputValues[j].sideLanding,
+          );
           break;
 
         case "baseline":
@@ -140,6 +144,9 @@ function createOutputData(inputValues, attemptData, did) {
 
   // get the average side landing
   const avgSideLanding = sideLandingTotal / inputValues.length;
+
+  //TEST
+  console.log("sideLandingTotal: ", sideLandingTotal);
 
   //get uid
   //TODO: figure out how to get this information
