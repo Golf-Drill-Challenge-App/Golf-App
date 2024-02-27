@@ -28,7 +28,7 @@ See [package.json](package.json) for more details on libraries used
 Info below subject to change
 
 - Database Schema: [db_spec.jsonc](db_spec.jsonc)
-  - The current database on Firestore, as well as the local test data in [drill_data.json](drill_data.json), follows the schema starting on line 29 ("teams" object) of `db_spec.jsonc`
+  - The current database on Firestore, as well as the local test data in [drill_data.json](drill_data.json), follows the schema starting on line 29 (`teams` object) of `db_spec.jsonc`
     - May be moving drill attempts out of `teams` and into a separate data object soon
 - Currently, some pages in profile, team, drill submission still use the local data from `drill_data.json`, but the rest are connected to Firestore
 - Login / Signup functionality is not implemented yet on the main `layout` branch
@@ -75,7 +75,7 @@ Info below subject to change
 
 ### App Compilation Troubleshooting
 
-- Hot Reload is enabled by default whenever you edit a page on the app, and you can also manually trigger a reload by entering "r" into command line
+- Hot Reload is enabled by default whenever you edit a page on the app, and you can also manually trigger a reload by entering `r` into command line
 - If reloading isn't working for some reason, double swipe up on your mobile device to exit Expo Go, and restart the app from command line
 
 ## Last Year's Codebase
