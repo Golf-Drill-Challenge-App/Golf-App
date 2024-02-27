@@ -113,7 +113,7 @@ export function lookUpBaselineStrokesGained(value) {
     }
   }
 }
-export function lookUpExpectedPutts(value) {
+export function lookUpExpectedPutts(proxHole) {
   const putt_keys = [
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
@@ -130,11 +130,15 @@ export function lookUpExpectedPutts(value) {
     2.265, 2.272, 2.279, 2.286, 2.293, 2.299, 2.306, 2.312, 2.318, 2.324,
   ];
 
-    value = Math.round(value);
+  proxHole = Math.round(proxHole);
 
   for (let i = 0; i < putt_keys.length; i++) {
-    if (value < putt_keys[i]) {
+    if (proxHole < putt_keys[i]) {
       return putt_values[i - 1];
     }
   }
+  //If the prox hole exceeds the expected putts range, convert to yards
+  const proxHoleInYards = proxHole / 3;
+
+  return lookUpBaselineStrokesGained(proxHoleInYards);
 }
