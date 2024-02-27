@@ -35,7 +35,7 @@ function DataField(field, value) {
               }}
             >
               <Text>(Actual)</Text>
-              <Text>{numTrunc(value["carry"])} yd</Text>
+              <Text>{numTrunc(Number(value["carry"]))} yd</Text>
             </View>
             <View
               style={{
@@ -44,7 +44,7 @@ function DataField(field, value) {
               }}
             >
               <Text>(Target)</Text>
-              <Text>{numTrunc(value["target"])} yd</Text>
+              <Text>{numTrunc(Number(value["target"]))} yd</Text>
             </View>
             <View
               style={{
@@ -53,7 +53,7 @@ function DataField(field, value) {
               }}
             >
               <Text>(Diff)</Text>
-              <Text>{numTrunc(value["carryDiff"])} yd</Text>
+              <Text>{numTrunc(Number(value["carryDiff"]))} yd</Text>
             </View>
           </View>
         </View>
@@ -69,7 +69,7 @@ function DataField(field, value) {
           key={field}
         >
           <Text>{title[field]}</Text>
-          <Text>{numTrunc(value)} ft</Text>
+          <Text>{numTrunc(Number(value))} ft</Text>
         </View>
       );
     case "strokesGained": //just round to 3 decimals
@@ -82,7 +82,7 @@ function DataField(field, value) {
           key={field}
         >
           <Text>{title[field]}</Text>
-          <Text>{numTrunc(value)}</Text>
+          <Text>{numTrunc(Number(value))}</Text>
         </View>
       );
     default:
@@ -114,7 +114,7 @@ function ShotAccordion(props) {
         >
           <Text>
             <Text style={{ fontWeight: "bold" }}>
-              Shot: {props.shot["sid"]}/
+              Shot: {props.shot["sid"] + 1}/
             </Text>
             {props.total}
           </Text>
@@ -124,7 +124,7 @@ function ShotAccordion(props) {
           </Text>
           <Text>
             <Text style={{ fontWeight: "bold" }}>SG:</Text>{" "}
-            {numTrunc(props.shot[props.drill["mainOutputShot"]])}
+            {numTrunc(Number(props.shot[props.drill["mainOutputShot"]]))}
           </Text>
         </View>
       }

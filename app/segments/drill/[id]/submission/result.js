@@ -13,13 +13,23 @@ import { numTrunc } from "~/Utility";
 import drillData from "~/drill_data.json";
 
 function Result(props) {
-  const submission =
-    drillData["teams"]["1"]["users"]["1"]["history"]["732489"][0];
+  // const submission =
+  //   drillData["teams"]["1"]["users"]["1"]["history"]["732489"][0];
+
+  const submission = props.submission.outputData;
+
   const dots = submission["shots"].map((value, index) => [
     value["sideLanding"],
     value["carryDiff"],
   ]);
   const { width } = useWindowDimensions();
+
+  console.log(
+    "Drill Data: ",
+    drillData["teams"]["1"]["users"]["1"]["history"]["732489"][0],
+  );
+
+  console.log("Props.submission.output: ", props.submission.outputData);
 
   return (
     <>
