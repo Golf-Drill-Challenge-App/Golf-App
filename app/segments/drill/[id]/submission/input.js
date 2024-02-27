@@ -433,31 +433,30 @@ export default function Input({
               >
                 <BottomSheetScrollView>
                   <View style={styles.bottomSheetContentContainer}>
-                    {attemptData.shots.map((item, id) => (
-                      <Pressable
-                        key={id}
-                        onPress={() => {
-                          setShotIndex(id);
-                          navigationBottomSheetModalRef.current.close();
-                        }}
-                        width={"100%"}
-                        alignItems={"center"}
-                      >
-                        <NavigationRectange
+                    {attemptData.shots
+                      .slice(0, currentShot + 1)
+                      .map((item, id) => (
+                        <Pressable
                           key={id}
                           onPress={() => {
                             console.log("Clicked on ", id);
                             setShotIndex(id);
+                            navigationBottomSheetModalRef.current.close();
                           }}
-                          inputs={attemptData.inputs}
-                          target={attemptData.requirements[0]}
-                          targetValue={attemptData.shots[id].value}
-                          inputValues={inputValues[id]}
-                          shotIndex={item.shotNum}
-                          numShots={attemptData.shots.length}
-                        />
-                      </Pressable>
-                    ))}
+                          width={"100%"}
+                          alignItems={"center"}
+                        >
+                          <NavigationRectange
+                            key={id}
+                            inputs={attemptData.inputs}
+                            target={attemptData.requirements[0]}
+                            targetValue={attemptData.shots[id].value}
+                            inputValues={inputValues[id]}
+                            shotIndex={item.shotNum}
+                            numShots={attemptData.shots.length}
+                          />
+                        </Pressable>
+                      ))}
                   </View>
                 </BottomSheetScrollView>
               </BottomSheetModal>
