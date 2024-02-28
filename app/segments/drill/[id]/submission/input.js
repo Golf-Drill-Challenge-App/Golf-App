@@ -25,7 +25,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Description from "./modals/description";
 import { lookUpExpectedPutts, lookUpBaselineStrokesGained } from "~/Utility";
 
-const outputs = [
+const outputsTest = [
   "target",
   "carry",
   "sideLanding",
@@ -34,6 +34,14 @@ const outputs = [
   "expectedPutts",
   "strokesGained",
   "carryDiff",
+];
+
+const aggOutputsTest = [
+  "carryDiffAverage",
+  "proxHoleAverage",
+  "sideLandingAverage",
+  "strokesGained",
+  "strokesGainedAverage",
 ];
 
 function calculateProxHole(target, carry, sideLanding) {
@@ -45,7 +53,7 @@ function calculateCarryDiff(target, carry) {
   return Math.abs(carry - target);
 }
 
-function createOutputData(inputValues, attemptData, did) {
+function createOutputData(inputValues, attemptData, did, outputs, aggOutputs) {
   //initialize total values
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
@@ -132,21 +140,6 @@ function createOutputData(inputValues, attemptData, did) {
   //get the time stamp
   const timeStamp = Date.now();
 
-  //get the average strokes gained
-  const avgStrokesGained = strokesGainedTotal / inputValues.length;
-
-  //get the average carry Diff
-  const avgCarryDiff = carryDiffTotal / inputValues.length;
-
-  // get the average prox hole
-  const avgProxHole = proxHoleTotal / inputValues.length;
-
-  // get the average side landing
-  const avgSideLanding = sideLandingTotal / inputValues.length;
-
-  //TEST
-  console.log("sideLandingTotal: ", sideLandingTotal);
-
   //get uid
   //TODO: figure out how to get this information
   const uid = "c0nEyjaOMhItMQTLMY0X"; //temporary until we can get this from params
@@ -155,14 +148,44 @@ function createOutputData(inputValues, attemptData, did) {
   const outputData = {
     time: timeStamp,
     did: did,
-    shots: outputShotData,
-    carryDiffAverage: avgCarryDiff,
-    proxHoleAverage: avgProxHole,
-    sideLandingAverage: avgSideLanding,
-    strokesGainedAverage: avgStrokesGained,
-    strokesGained: strokesGainedTotal,
     uid: uid,
+    shots: outputShotData,
   };
+
+  //Generate the aggOutputs for output data
+  for (let i = 0; i < aggOutputs.length; i++) {
+    const aggOutput = aggOutputs[i];
+
+    switch (aggOutput) {
+      case "carryDiffAverage":
+        outputData.carryDiffAverage = carryDiffTotal / inputValues.length;
+        break;
+
+      case "proxHoleAverage":
+        outputData.proxHoleAverage = proxHoleTotal / inputValues.length;
+        break;
+
+      case "sideLandingAverage":
+        outputData.sideLandingAverage = sideLandingTotal / inputValues.length;
+        break;
+
+      case "strokesGained":
+        outputData.strokesGained = strokesGainedTotal;
+        break;
+
+      case "strokesGainedAverage":
+        outputData.strokesGainedAverage =
+          strokesGainedTotal / inputValues.length;
+        break;
+
+      default:
+        console.log("Output Calculation not found\n");
+        break;
+    }
+  }
+
+  //TEST
+  console.log(outputData);
 
   return {
     outputData,
@@ -204,7 +227,15 @@ export default function Input({
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            setOutputData(createOutputData(inputValues, attemptData, did));
+            setOutputData(
+              createOutputData(
+                inputValues,
+                attemptData,
+                did,
+                outputsTest,
+                aggOutputsTest,
+              ),
+            );
             //send the output data to the database here
             setToggleResult(true);
           }}
