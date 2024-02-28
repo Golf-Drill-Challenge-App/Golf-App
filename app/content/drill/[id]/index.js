@@ -1,80 +1,36 @@
-import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
-import Leaderboard from "./leaderboard";
 import Description from "./description";
+import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
-import drillsData from "~/drill_data.json";
+import { doc, getDoc } from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { db } from "~/firebaseConfig";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
-  const drillData = drillsData.teams["1"].drills[id]
-    ? drillsData.teams["1"].drills[id]
-    : null;
 
-  const findDrillAttempts = () => {
-    const drillAttempts = [];
-    const team = drillsData.teams["1"];
+  const drillsRef = doc(db, "teams", "1", "drills", id);
 
-    Object.values(team.users).forEach((user) => {
-      if (!user.history) return; // idk if "no drills attempted" or something should be shown on leaderboard
-      Object.values(user.history).forEach((drill) => {
-        if (Object.keys(user.history).includes(id)) {
-          drill.forEach((attempt) => {
-            if (drillAttempts.length === 0) {
-              drillAttempts.push({
-                attempts: [attempt.averageProximity],
-                totalSubmissions: 1,
-                userId: user.uid,
-              });
-            } else {
-              var userIdx = -1;
-              for (let i = 0; i < drillAttempts.length; i++) {
-                if (drillAttempts[i].userId === user.uid) {
-                  userIdx = i;
-                  break;
-                }
-              }
+  const [drillData, setDrillData] = useState({});
 
-              if (userIdx >= 0) {
-                drillAttempts[userIdx].attempts.push(attempt.averageProximity);
-                drillAttempts[userIdx].totalSubmissions++;
-              } else {
-                drillAttempts.push({
-                  attempts: [attempt.averageProximity],
-                  totalSubmissions: 1,
-                  userId: user.uid,
-                });
-              }
-            }
-          });
-        }
-      });
+  useEffect(() => {
+    getDoc(drillsRef).then((document) => {
+      setDrillData(document.data());
     });
-
-    return drillAttempts;
-  };
-
-  const drillLeaderboardAttempts = findDrillAttempts();
-
-  console.log("Attempts: ", drillLeaderboardAttempts);
+  }, []);
 
   const tabComponent = () => {
     switch (value) {
       case "leaderboard":
-        return (
-          <Leaderboard
-            leaderboardData={drillLeaderboardAttempts}
-            drillId={id}
-          />
-        );
+        return <Leaderboard />;
       case "description":
-        return <Description descData={drillData} drillId={id} />;
+        return <Description descData={drillData} />;
       case "stats":
         return <Stat />;
     }

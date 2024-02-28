@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { PaperProvider, Text } from "react-native-paper";
 import { Link, Redirect } from "expo-router";
+import { useState } from "react";
+import { PaperProvider, Text } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 //This is the root file
 export default function Index() {
   const [signedIn, setSignedin] = useState(true);

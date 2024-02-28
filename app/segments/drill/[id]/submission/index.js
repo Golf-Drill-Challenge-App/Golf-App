@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PaperProvider } from "react-native-paper";
-import Input from "./input";
 import { AttemptData } from "~/testData";
+import Input from "./input";
 
 export default function Index() {
   //Franks thoughts: State should be shared here between
