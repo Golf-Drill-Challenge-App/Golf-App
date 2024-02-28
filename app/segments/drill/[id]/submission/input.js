@@ -184,9 +184,6 @@ function createOutputData(inputValues, attemptData, did, outputs, aggOutputs) {
     }
   }
 
-  //TEST
-  console.log(outputData);
-
   return {
     outputData,
   };
