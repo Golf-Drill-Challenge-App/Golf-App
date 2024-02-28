@@ -23,7 +23,6 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   const data = drillDataSorted.map(
     (value) => value[drillInfo["mainOutputAttempt"]],
   );
-  console.log("data", drillInfo["mainOutputAttempt"]);
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -80,9 +79,11 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
   const transparentData = data.map((value, index) => ({
     value: value > 0 ? Math.max(...data) : Math.min(...data),
+    index: index,
     svg: {
       fill: "transparent",
       onPress: () => {
+        console.log("scrolling");
         setSelected(index);
         scrollViewRef.current.scrollTo({ x: index * barWidth, animated: true });
       },
@@ -276,16 +277,20 @@ export default function BarChartScreen({ drillData, drillInfo }) {
                   style={{ pointerEvents: "none" }}
                 />
               </BarChart>
-              <BarChart
-                style={styles.barChart}
-                data={transparentData}
-                svg={{ fill }}
-                contentInset={{
-                  left: halfScreenCompensation,
-                  right: halfScreenCompensation,
-                }}
-                yAccessor={({ item }) => item.value}
-              ></BarChart>
+              {/*<BarChart*/}
+              {/*  style={{*/}
+              {/*    ...styles.barChart,*/}
+              {/*    zIndex: 10,*/}
+              {/*    backgroundColor: "blue",*/}
+              {/*  }}*/}
+              {/*  data={transparentData}*/}
+              {/*  svg={{ fill }}*/}
+              {/*  contentInset={{*/}
+              {/*    left: halfScreenCompensation,*/}
+              {/*    right: halfScreenCompensation,*/}
+              {/*  }}*/}
+              {/*  yAccessor={({ item }) => item.value}*/}
+              {/*></BarChart>*/}
             </View>
           </ScrollView>
         </View>
