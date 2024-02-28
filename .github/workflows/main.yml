@@ -12,6 +12,6 @@ jobs:
         with:
           node-version: "21" # Use whatever node version your project requires
       - name: Install Prettier
-        run: npm install --save-dev prettier
+        run: yarn add prettier --dev
       - name: Check code formatting
-        run: npx prettier --check .
+        run: yarn pretty --check
