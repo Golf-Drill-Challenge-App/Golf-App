@@ -83,7 +83,6 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     svg: {
       fill: "transparent",
       onPress: () => {
-        console.log("scrolling");
         setSelected(index);
         scrollViewRef.current.scrollTo({ x: index * barWidth, animated: true });
       },
