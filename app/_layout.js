@@ -10,7 +10,6 @@ export default function RootLayoutNav() {
   const [currentUser, setCurrentUser] = useState("c0nEyjaOMhItMQTLMY0X");
   const [currentTeam, setCurrentTeam] = useState("1");
 
-export default function RootLayoutNav() {
   return (
     <QueryClientProvider client={queryClient}>
       <CurrentUserContext.Provider

@@ -1,7 +1,10 @@
 import { Tabs } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useAuth } from "~/context/Auth";
 
 export default () => {
+  const { user } = useAuth();
+  console.log("user", user);
   return (
     <Tabs options={{ headerShown: false }}>
       <Tabs.Screen

@@ -180,6 +180,7 @@ function Index() {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                     style={{ paddingLeft: 20, paddingRight: 20 }}
+                    placeholder="Search team members"
                   />
                 </View>
 
