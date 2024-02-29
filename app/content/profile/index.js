@@ -1,3 +1,7 @@
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 import { useNavigation } from "expo-router";
 import { useContext } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -14,6 +18,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index(props) {
+  const { signOut } = useAuth();
   const navigation = useNavigation();
   const userId = useContext(CurrentUserContext)["currentUser"];
   const {
@@ -45,6 +50,20 @@ function Index(props) {
 
   const uniqueDrills = getUnique(attempts, "did");
 
+  // ref
+  const bottomSheetModalRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -53,9 +72,7 @@ function Index(props) {
           <Appbar.Action
             icon="cog"
             color={"#F24E1E"}
-            onPress={() => {
-              // Handle opening the edit modal
-            }}
+            onPress={handlePresentModalPress}
             style={{ marginRight: 7 }}
           />
         </Appbar.Header>
@@ -102,6 +119,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    height: "100%",
   },
   noDrillsText: {
     marginTop: 20,
