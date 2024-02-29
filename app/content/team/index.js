@@ -192,7 +192,7 @@ function Index() {
                     //console.log("userid: ", userid);
                     return (
                       <List.Item
-                        key={userid}
+                        key={user.uid}
                         title={user.name}
                         left={() => (
                           <Avatar.Image
@@ -215,7 +215,7 @@ function Index() {
                           </View>
                         )}
                         onPress={() =>
-                          router.push(`content/team/users/${userid}`)
+                          router.push(`content/team/users/${user.uid}`)
                         }
                       />
                     );

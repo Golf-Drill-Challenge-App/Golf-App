@@ -46,7 +46,12 @@ export default function Stat() {
           <Appbar.Content title={"Statistics"} />
         </Appbar.Header>
 
-        <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
+        <BarChartScreen
+          drillData={
+            drillData["teams"]["1"]["users"][user_id]["history"][drill_id]
+          }
+          drillInfo={drillData["teams"]["1"]["drills"][drill_id]}
+        />
       </SafeAreaView>
     </PaperProvider>
   );

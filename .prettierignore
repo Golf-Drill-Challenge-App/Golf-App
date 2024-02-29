@@ -1,17 +1,7 @@
-node_modules/
-.expo/
-dist/
-npm-debug.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-web-build/
-.vs/
-app.json
-babel.config.js
-
-# macOS
-.DS_Store
+# Ignore artifacts:
+node_modules
+assets
+*.lock
+venv
+.expo
+.idea
