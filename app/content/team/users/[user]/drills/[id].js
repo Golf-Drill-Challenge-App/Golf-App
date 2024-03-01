@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import BarChartScreen from "~/components/barChart";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 export default function Stat() {
   const navigation = useNavigation();
@@ -54,7 +54,7 @@ export default function Stat() {
   }, []);
   return (
     <PaperProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {

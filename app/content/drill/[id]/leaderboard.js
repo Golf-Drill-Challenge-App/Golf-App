@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 export default function Leaderboard() {
   const drillId = useLocalSearchParams()["id"];

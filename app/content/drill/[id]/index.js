@@ -1,22 +1,14 @@
-import React, { useEffect } from "react";
-import { PaperProvider, SegmentedButtons, Appbar } from "react-native-paper";
-import { useNavigation, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
-import Leaderboard from "./leaderboard";
 import Description from "./description";
+import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
+import { doc, getDoc } from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
@@ -46,7 +38,7 @@ export default function Index() {
 
   return (
     <PaperProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {

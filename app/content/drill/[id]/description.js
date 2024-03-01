@@ -1,11 +1,16 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { Image, View } from "react-native";
+import { Image, ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
 
 export default function Description({ descData }) {
   const drillId = useLocalSearchParams()["id"];
   return (
-    <View style={{ margin: 10 }}>
+    <ScrollView
+      contentContainerStyle={{
+        padding: 10,
+        flex: 1,
+      }}
+    >
       <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
         Description
       </Text>
@@ -29,6 +34,6 @@ export default function Description({ descData }) {
           Start Drill
         </Button>
       </Link>
-    </View>
+    </ScrollView>
   );
 }

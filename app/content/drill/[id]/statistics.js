@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import {
   collection,
@@ -9,13 +9,15 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { CurrentUserContext } from "~/Contexts";
 import BarChartScreen from "~/components/barChart";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
   const [drillInfo, setDrillInfo] = useState("");
   const [drillAttempts, setDrillAttempts] = useState([]);
+  const userId = useContext(CurrentUserContext)["currentUser"];
   useEffect(() => {
     // massive data fetching on refresh. May or may not get its data from cache
     getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
@@ -31,7 +33,7 @@ export default function Stat() {
       query(
         collection(db, "teams", "1", "attempts"),
         where("did", "==", drillId),
-        where("uid", "==", "c0nEyjaOMhItMQTLMY0X"),
+        where("uid", "==", userId),
       ),
     )
       .then((querySnapshot) => {
@@ -45,9 +47,5 @@ export default function Stat() {
       });
     return () => {};
   }, []);
-  return (
-    <>
-      <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
-    </>
-  );
+  return <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />;
 }

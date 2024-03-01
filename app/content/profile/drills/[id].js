@@ -1,5 +1,5 @@
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useContext, useEffect, useState } from "react";
 
 import {
   collection,
@@ -11,13 +11,16 @@ import {
 } from "firebase/firestore";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CurrentUserContext } from "~/Contexts";
 import BarChartScreen from "~/components/barChart";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
+  const userId = useContext(CurrentUserContext)["currentUser"];
   const [drillInfo, setDrillInfo] = useState("");
   const [drillAttempts, setDrillAttempts] = useState([]);
+  const navigation = useNavigation();
   useEffect(() => {
     // massive data fetching on refresh. May or may not get its data from cache
     getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
@@ -34,7 +37,7 @@ export default function Stat() {
       query(
         collection(db, "teams", "1", "attempts"),
         where("did", "==", drillId),
-        where("uid", "==", "c0nEyjaOMhItMQTLMY0X"),
+        where("uid", "==", userId),
       ),
     )
       .then((querySnapshot) => {
@@ -50,7 +53,7 @@ export default function Stat() {
   }, []);
   return (
     <PaperProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {
