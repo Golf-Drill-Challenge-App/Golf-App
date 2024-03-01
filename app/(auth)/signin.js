@@ -54,8 +54,11 @@ export default function SignIn() {
           <Text style={[styles.title]}>Oregon State Golf</Text>
         </View>
         <View style={styles.section}>
-          <KeyboardAwareScrollView>
-            {/* TODO: Refactor TextInput into Themed */}
+          <KeyboardAwareScrollView
+            // allows opening links from search results without closing keyboard first
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
             <TextInput
               autoCapitalize="none"
               autoComplete="email"

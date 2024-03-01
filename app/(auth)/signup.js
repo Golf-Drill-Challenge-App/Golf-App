@@ -67,7 +67,11 @@ export default function SignUp() {
           <Text style={[styles.title]}>Oregon State Golf</Text>
         </View>
         <View style={styles.section}>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView
+            // allows opening links from search results without closing keyboard first
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
             <TextInput
               autoCapitalize="none"
               autoComplete="name"

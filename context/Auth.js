@@ -44,8 +44,9 @@ export const Provider = ({ children }) => {
 
       if (user) {
         setUser({
-          name: user.displayName ?? "Error",
-          email: user.email ?? "Error@email.com",
+          name: user.displayName ?? "Error (name)",
+          email: user.email ?? "Error (email)",
+          uid: user.uid ?? "Error (uid)",
         });
       }
     });
