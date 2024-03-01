@@ -14,8 +14,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectange from "~/components/input/navigationRectange";
-
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -23,7 +21,6 @@ import {
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AttemptData } from "~/testData";
 import Description from "./modals/description";
 import { lookUpExpectedPutts, lookUpBaselineStrokesGained } from "~/Utility";
 
@@ -401,7 +398,6 @@ export default function Input({
                   {attemptData.requirements.map((item, id) => (
                     <DrillTarget
                       key={id}
-                      description={item.description}
                       distanceMeasure={item.distanceMeasure}
                       value={attemptData.shots[shotIndex].value}
                     />
