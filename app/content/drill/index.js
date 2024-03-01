@@ -1,14 +1,33 @@
-import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import { Appbar, List, PaperProvider } from "react-native-paper";
 import { Link, useNavigation } from "expo-router";
-
-import drillsData from "~/drill_data.json";
+import React, { useEffect } from "react";
+import { RefreshControl, ScrollView, StyleSheet } from "react-native";
+import { Appbar, List, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "~/firebaseConfig";
+
 export default function Index() {
-  const drills = drillsData.teams["1"].drills;
+  const [drills, setDrills] = React.useState([]); // [{}
+  const drillsRef = collection(db, "teams", "1", "drills");
   const navigation = useNavigation();
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  useEffect(() => {
+    getDocs(drillsRef).then((querySnapshot) => {
+      let newDrills = [];
+      querySnapshot.forEach((doc) => {
+        newDrills.push(doc.data());
+      });
+      setDrills(newDrills);
+      setRefreshing(false);
+    });
+  }, [refreshing]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
 
   return (
     <PaperProvider>
@@ -24,8 +43,9 @@ export default function Index() {
         </Appbar.Header>
 
         <ScrollView contentContainerStyle={styles.scrollView}>
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           <List.Section>
-            {Object.values(drills).map((drill) => (
+            {drills.map((drill) => (
               <Link
                 key={drill.did}
                 href={{

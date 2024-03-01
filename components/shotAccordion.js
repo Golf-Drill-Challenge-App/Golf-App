@@ -1,7 +1,15 @@
-import React from "react";
+import { StyleSheet, View } from "react-native";
 import { List, Text } from "react-native-paper";
-import { View } from "react-native";
 import { numTrunc } from "~/Utility";
+
+function Row({ name, value }) {
+  return (
+    <View style={styles.rowContainer}>
+      <Text style={styles.rowName}>{name}</Text>
+      <Text style={styles.rowValue}>{value}</Text>
+    </View>
+  );
+}
 
 function DataField(field, value) {
   let title = {
@@ -22,7 +30,7 @@ function DataField(field, value) {
           }}
           key={field}
         >
-          <Text>Carry</Text>
+          <Text style={{ marginLeft: 11, fontWeight: "bold" }}>Carry</Text>
           <View
             style={{
               width: 200,
@@ -87,16 +95,11 @@ function DataField(field, value) {
       );
     default:
       return (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+        <Row
           key={field}
-        >
-          <Text>{field in title ? title[field] : field}</Text>
-          <Text>{value}</Text>
-        </View>
+          name={field in title ? title[field] : field}
+          value={value}
+        />
       );
   }
 }
@@ -149,5 +152,35 @@ function ShotAccordion(props) {
     </List.Accordion>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#f5f5f5",
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  boldText: {
+    fontWeight: "bold",
+  },
+  rowContainer: {
+    flexDirection: "row",
+    fontSize: 8,
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  rowName: {
+    fontWeight: "bold",
+  },
+  rowValue: {},
+});
 
 export default ShotAccordion;

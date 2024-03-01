@@ -1,3 +1,4 @@
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import {
@@ -9,11 +10,10 @@ import {
   Portal,
   Text,
 } from "react-native-paper";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectange from "~/components/input/navigationRectange";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
@@ -22,6 +22,8 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AttemptData } from "~/testData";
 import Description from "./modals/description";
 import { lookUpExpectedPutts, lookUpBaselineStrokesGained } from "~/Utility";
 

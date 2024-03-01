@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -9,8 +8,8 @@ import {
 import { Button, Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
 import ShotAccordion from "~/components/shotAccordion";
-import { numTrunc } from "~/Utility";
 import drillData from "~/drill_data.json";
+import { numTrunc } from "~/Utility";
 
 function Result(props) {
   // const submission =
@@ -96,7 +95,9 @@ function Result(props) {
             <ShotAccordion
               key={shot["sid"]}
               shot={shot}
-              drill={drillData["teams"]["1"]["drills"]["732489"]}
+              drillInfo={
+                drillData["teams"]["1"]["drills"]["SpvYyY94HaulVH2zmVyM"]
+              }
               total={numTrunc(submission["shots"].length)}
             />
           ))}

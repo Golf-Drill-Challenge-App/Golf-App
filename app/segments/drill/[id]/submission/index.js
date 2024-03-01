@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PaperProvider } from "react-native-paper";
 
 import Input from "./input";
