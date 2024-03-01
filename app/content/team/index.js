@@ -35,6 +35,8 @@ function Index() {
 
   //console.log("Found: ", foundUsers);
 
+  console.log("Found: ", foundUsers);
+
   // ref
   const bottomSheetModalRef = useRef(null);
 
@@ -183,7 +185,7 @@ function Index() {
                     //console.log("userid: ", userid);
                     return (
                       <List.Item
-                        key={user.uid}
+                        key={userid}
                         title={user.name}
                         left={() => (
                           <Avatar.Image
@@ -206,7 +208,7 @@ function Index() {
                           </View>
                         )}
                         onPress={() =>
-                          router.push(`content/team/users/${user.uid}`)
+                          router.push(`content/team/users/${userid}`)
                         }
                       />
                     );

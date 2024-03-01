@@ -23,7 +23,6 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   const data = drillDataSorted.map(
     (value) => value[drillInfo["mainOutputAttempt"]],
   );
-  console.log("data", drillInfo["mainOutputAttempt"]);
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -80,6 +79,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
   const transparentData = data.map((value, index) => ({
     value: value > 0 ? Math.max(...data) : Math.min(...data),
+    index: index,
     svg: {
       fill: "transparent",
       onPress: () => {
