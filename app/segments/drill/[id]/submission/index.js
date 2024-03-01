@@ -4,14 +4,35 @@ import { AttemptData } from "~/testData";
 import Input from "./input";
 
 export default function Index() {
+  const { id } = useLocalSearchParams();
+
+  const drillsRef = doc(db, "teams", "1", "drills", id);
+
+  const [drillData, setDrillData] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              setLoading(true);
+              await getDoc(drillsRef).then((document) => {
+                  setDrillData(document.data());
+              });
+
+              setLoading(false);
+          }
+          catch (error) {
+              console.error("Could not fetch data from database.", error);
+              setLoading(false);
+          }
+      }
+      fetchData();
+    
+  }, []);
+
+
   const attemptData = {
-    requirements: [
-      {
-        id: "distance",
-        description: "Target Distance",
-        distanceMeasure: "yd",
-      },
-    ],
+    requirements: drillData.requirements,
     inputs: [
       {
         id: "carry",
@@ -45,7 +66,10 @@ export default function Index() {
     }
     console.log("Attempt Data changed");
     return shots;
-  };
+    };
+
+    console.log("Attempt Data: ", attemptData.requirements)
+
 
   attemptData.shots = fillShotTargets(100, 150); //current this is getting recalled everytime state changes
 
@@ -53,18 +77,22 @@ export default function Index() {
   const [toggleResult, setToggleResult] = useState(false);
 
   const display = () => {
-    if (toggleResult == true) {
-      return <Result submission={outputData} />;
-    } else {
-      return (
-        <Input
-          outputData={outputData}
-          attemptData={attemptData}
-          setToggleResult={setToggleResult}
-          setOutputData={setOutputData}
-        />
-      );
-    }
+      if (toggleResult == true) {
+          return <Result submission={outputData} />;
+      } else if (!loading) {
+          return (
+              <Input
+                  outputData={outputData}
+                  attemptData={attemptData}
+                  setToggleResult={setToggleResult}
+                  setOutputData={setOutputData}
+              />
+          );
+      }
+      else {
+          //Loading spinner icon
+         return (<Text>Loading</Text>)
+      }
   };
 
   return <PaperProvider>{display()}</PaperProvider>;
