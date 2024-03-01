@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
   Image,
@@ -13,7 +14,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAuth } from "~/context/Auth";
-import { auth } from "~/firebaseConfig";
+import { auth, db } from "~/firebaseConfig";
 
 export default function SignUp() {
   const { signIn } = useAuth();
@@ -37,6 +38,15 @@ export default function SignUp() {
       );
       await updateProfile(userCredential.user, {
         displayName: name,
+      });
+      await setDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
+        email: email,
+        name: name,
+        // hardcoded pfp string for now, add pfp upload to profile settings in future PR
+        pfp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        // hardcoded "player" role for now, add role selection to profile settings in future PR
+        role: "player",
+        uid: userCredential.user.uid,
       });
       console.log(userCredential.user);
       signIn();
