@@ -10,6 +10,9 @@ const AuthContext = createContext({
   signOut() {
     return;
   },
+  setUser() {
+    return;
+  },
   user: null,
 });
 
@@ -57,6 +60,14 @@ export const Provider = ({ children }) => {
         user,
         signIn: () => {
           return;
+        },
+        setUser: (namevar, emailvar, uidvar) => {
+          setUser({
+            name: namevar ?? "Error (name)",
+            email: emailvar ?? "Error (email)",
+            uid: uidvar ?? "Error (uid)",
+          });
+          console.log(user);
         },
         // setUser({ name: "Test", email: "test@example.com", type: type }),
         signOut: () => setUser(null),

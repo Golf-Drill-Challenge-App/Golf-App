@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
   Image,
@@ -17,7 +17,7 @@ import { useAuth } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 
 export default function SignUp() {
-  const { signIn } = useAuth();
+  const { signIn, setUser } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -46,10 +46,17 @@ export default function SignUp() {
         pfp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
         // hardcoded "player" role for now, add role selection to profile settings in future PR
         role: "player",
-        uid: userCredential.user.uid,
       });
-      console.log(userCredential.user);
+
+      // use doc ref to add reference value: https://stackoverflow.com/a/54310245
+      const userRef = doc(db, "users", userCredential.user.uid);
+      await updateDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
+        uid: userRef,
+      });
       signIn();
+      setUser(name, email, userCredential.user.uid);
+
+      console.log(userCredential.user);
     } catch (e) {
       // might remove console.error later and just use alert
       alert(e);
