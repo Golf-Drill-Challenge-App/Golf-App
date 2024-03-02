@@ -18,6 +18,8 @@ export default function DrillInput({
     }
   };
 
+  console.log("icon", icon)
+
   return (
     <View style={styles.item}>
       <Text style={styles.description}>
