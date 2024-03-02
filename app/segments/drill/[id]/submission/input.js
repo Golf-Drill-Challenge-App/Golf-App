@@ -22,7 +22,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Description from "./modals/description";
-import { lookUpExpectedPutts, lookUpBaselineStrokesGained } from "~/Utility";
+import { lookUpExpectedPutts, lookUpBaselineStrokesGained, getIconByKey } from "~/Utility";
 
 const outputsTest = [
   "target",
@@ -409,7 +409,7 @@ export default function Input({
                 {attemptData.inputs.map((item, id) => (
                   <DrillInput
                     key={id}
-                    icon={item.icon}
+                    icon={getIconByKey(item.id)}
                     prompt={item.prompt}
                     distanceMeasure={item.distanceMeasure}
                     inputValue={inputValues[shotIndex]?.[item.id] || ""}
