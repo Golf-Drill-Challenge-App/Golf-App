@@ -141,4 +141,15 @@ export function lookUpExpectedPutts(proxHole) {
   const proxHoleInYards = proxHole / 3;
 
   return lookUpBaselineStrokesGained(proxHoleInYards);
+
+}
+
+export function getIconByKey(key) {
+    const icons = [
+        { "carry": "arrow-up" },
+        { "sideLanding": "arrow-left-right" },
+    ]
+
+    const iconObject = icons.find(icon => icon[key]);
+    return iconObject ? iconObject[key] : null;
 }
