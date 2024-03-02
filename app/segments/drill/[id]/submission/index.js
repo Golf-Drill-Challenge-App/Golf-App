@@ -41,7 +41,9 @@ export default function Index() {
     const maxFloored = Math.floor(max);
     let shots = [];
 
-    for (var i = 0; i < 20; i++) {
+      console.log("drillData.reps", drillData.reps)
+
+    for (var i = 0; i < drillData.reps; i++) {
       var target = Math.floor(
         Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
       );
@@ -56,10 +58,31 @@ export default function Index() {
     return shots;
   };
 
- 
+  const fillClubTargets = () => {
+      let shots = [];
+      for (var i = 0; i < drillData.reps; i++) {
+          shots.push({
+              shotNum: i + 1,
+              value: drillData.requirments[0].items[i],
+          });
+      }
+      return;
+  }
 
-
-  attemptData.shots = fillRandomShotTargets(100, 150); //current this is getting recalled everytime state changes
+    const getAttemptDataShots = () => {
+        switch (drillData.drillType) {
+            case "20 Shot Challenge":
+                attemptData.shots = fillRandomShotTargets(drillData.requirements[0].min, drillData.requirements[0].max); //current this is getting recalled everytime state changes
+                break;
+            case "Line Test":
+                attemptData.shots = fillClubTargets();
+                break;
+            default:
+                attemptData.shots = null;
+                break;
+        }
+        return; 
+    }
 
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
@@ -68,6 +91,10 @@ export default function Index() {
       if (toggleResult == true) {
           return <Result submission={outputData} />;
       } else if (!loading) {
+          getAttemptDataShots();
+
+          console.log("attemptData", attemptData)
+
           return (
               <Input
                   outputData={outputData}
