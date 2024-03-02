@@ -47,8 +47,6 @@ export default function Index() {
     const maxFloored = Math.floor(max);
     let shots = [];
 
-      console.log("drillData.reps", drillData.reps)
-
     for (var i = 0; i < drillData.reps; i++) {
       var target = Math.floor(
         Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
@@ -69,10 +67,10 @@ export default function Index() {
       for (var i = 0; i < drillData.reps; i++) {
           shots.push({
               shotNum: i + 1,
-              value: drillData.requirments[0].items[i],
+              value: drillData.requirements[0].items[i],
           });
       }
-      return;
+      return shots;
   }
 
     const getAttemptDataShots = () => {
@@ -98,8 +96,6 @@ export default function Index() {
           return <Result submission={outputData} />;
       } else if (!loading) {
           getAttemptDataShots();
-
-          console.log("attemptData", attemptData)
 
           return (
               <Input
