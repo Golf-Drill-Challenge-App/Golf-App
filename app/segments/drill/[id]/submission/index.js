@@ -39,22 +39,10 @@ export default function Index() {
 
   const attemptData = {
     requirements: drillData.requirements,
-    inputs: [
-      {
-        id: "carry",
-        icon: "arrow-up",
-        prompt: "Carry Distance",
-        distanceMeasure: "yd",
-      },
-      {
-        id: "sideLanding",
-        icon: "arrow-left-right",
-        prompt: "Side Landing",
-        distanceMeasure: "ft",
-      },
-    ],
+    inputs: drillData.inputs
   };
-  const fillShotTargets = (min, max) => {
+
+  const fillRandomShotTargets = (min, max) => {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     let shots = [];
@@ -72,12 +60,12 @@ export default function Index() {
     }
     console.log("Attempt Data changed");
     return shots;
-    };
+  };
 
-    console.log("Attempt Data: ", attemptData.requirements)
+ 
 
 
-  attemptData.shots = fillShotTargets(100, 150); //current this is getting recalled everytime state changes
+  attemptData.shots = fillRandomShotTargets(100, 150); //current this is getting recalled everytime state changes
 
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
