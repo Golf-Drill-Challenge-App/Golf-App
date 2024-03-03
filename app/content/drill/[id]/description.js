@@ -1,9 +1,29 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link, useLocalSearchParams } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
 import { Image, ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
+import db from "~/firebaseConfig";
+import Error from "../../../../components/error";
+import Loading from "../../../../components/loading";
 
-export default function Description({ descData }) {
+export default function Description() {
   const drillId = useLocalSearchParams()["id"];
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ["drillInfo", drillId],
+    queryFn: ({ queryKey }) => {
+      const [_key, id] = queryKey;
+      return getDoc(doc(db, "teams", "1", "drills", id));
+    },
+  });
+
+  if (isPending) return <Loading />;
+
+  if (error) return <Error error={error.message} />;
+
+  const drillData = data?.data();
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -14,7 +34,7 @@ export default function Description({ descData }) {
       <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
         Description
       </Text>
-      <Text variant="bodySmall">{descData.description}</Text>
+      <Text variant="bodySmall">{drillData.description}</Text>
       <Image
         source={require("~/assets/drill-description-image.jpg")}
         style={{ width: "100%", maxHeight: 200, marginTop: 50 }}

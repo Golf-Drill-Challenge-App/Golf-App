@@ -11,13 +11,14 @@ import {
 } from "firebase/firestore";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CurrentUserContext } from "~/Contexts";
 import BarChartScreen from "~/components/barChart";
+import { CurrentUserContext } from "~/contexts/CurrentUserContext";
 import db from "~/firebaseConfig";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
   const userId = useContext(CurrentUserContext)["currentUser"];
+  const teamId = useContext(CurrentTeamContext)["currentTeam"];
   const [drillInfo, setDrillInfo] = useState("");
   const [drillAttempts, setDrillAttempts] = useState([]);
   const navigation = useNavigation();

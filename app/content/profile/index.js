@@ -11,9 +11,9 @@ import { useContext, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CurrentUserContext } from "~/Contexts";
 import DrillCard from "~/components/drillCard";
 import ProfileCard from "~/components/profileCard";
+import { CurrentUserContext } from "~/contexts/CurrentUserContext";
 import db from "~/firebaseConfig";
 
 function Index(props) {

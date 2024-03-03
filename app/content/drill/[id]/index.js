@@ -1,13 +1,16 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
+import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Error from "~/components/error";
+import Loading from "~/components/loading";
 import db from "~/firebaseConfig";
 
 export default function Index() {
@@ -15,22 +18,32 @@ export default function Index() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
 
-  const drillsRef = doc(db, "teams", "1", "drills", id);
+  console.log("ID: ", id);
 
-  const [drillData, setDrillData] = useState({});
+  const { isPending, error, data } = useQuery({
+    queryKey: ["drillInfo", id],
+    queryFn: ({ queryKey }) => {
+      const [_key, drillId] = queryKey;
+      console.log("drillId: ", drillId);
+      return getDoc(doc(db, "teams", "1", "drills", drillId));
+    },
+  });
 
-  useEffect(() => {
-    getDoc(drillsRef).then((document) => {
-      setDrillData(document.data());
-    });
-  }, []);
+  if (isPending) return <Loading />;
+
+  if (error) {
+    console.log("error: ", error);
+    return <Error error={error.message} />;
+  }
+
+  const drillData = data?.data();
 
   const tabComponent = () => {
     switch (value) {
       case "leaderboard":
         return <Leaderboard />;
       case "description":
-        return <Description descData={drillData} />;
+        return <Description />;
       case "stats":
         return <Stat />;
     }

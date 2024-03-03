@@ -5,6 +5,8 @@ import firebase_admin
 from firebase_admin import firestore
 
 # Application Default credentials are automatically created.
+os.environ["FIRESTORE_EMULATOR_HOST"] = "localhost:8080"
+
 app = firebase_admin.initialize_app()
 db = firestore.client()
 

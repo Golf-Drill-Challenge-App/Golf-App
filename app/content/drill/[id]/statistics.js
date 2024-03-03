@@ -9,8 +9,8 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { CurrentUserContext } from "~/Contexts";
 import BarChartScreen from "~/components/barChart";
+import { CurrentUserContext } from "~/contexts/CurrentUserContext";
 import db from "~/firebaseConfig";
 
 export default function Stat() {
