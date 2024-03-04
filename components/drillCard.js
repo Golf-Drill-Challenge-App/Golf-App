@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function DrillCard(props) {
+  console.log(props);
   return (
     <Link href={props.hrefString} asChild>
       <TouchableOpacity style={styles.cardContainer}>

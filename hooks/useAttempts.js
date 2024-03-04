@@ -1,25 +1,43 @@
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useContext } from "react";
+import { CurrentUserContext } from "~/contexts/CurrentUserContext";
 import db from "~/firebaseConfig";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-export const useAttempts = (drillId) => {
+//this code scares me
+export const useAttempts = ({
+  attemptId = null,
+  userId = null,
+  drillId = null,
+}) => {
   const teamId = useContext(CurrentUserContext).currentTeam;
   const { data, error, isLoading } = useQuery({
-    queryKey: ["attempts", teamId, drillId],
+    queryKey: ["attempts", teamId, { attemptId, userId, drillId }],
     queryFn: async () => {
-      const newAttempts = {};
-      const querySnapshot = await getDocs(
-        query(
-          collection(db, "teams", teamId, "attempts"),
-          where("did", "==", drillId),
-        ),
-      );
-      querySnapshot.forEach((doc) => {
-        newAttempts[doc.data().uid] = doc.data();
-      });
-      return newAttempts;
+      if (attemptId) {
+        const querySnapshot = await getDoc(
+          doc(db, "teams", teamId, "attempts", attemptId),
+        );
+        return querySnapshot.data();
+      } else {
+        let q = query(collection(db, "teams", teamId, "attempts"));
+        if (drillId) {
+          q = query(q, where("did", "==", drillId));
+        }
+        if (userId) {
+          q = query(q, where("uid", "==", userId));
+        }
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot.docs.map((doc) => doc.data());
+      }
     },
   });
 

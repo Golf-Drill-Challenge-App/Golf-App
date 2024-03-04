@@ -1,51 +1,49 @@
 import { useNavigation } from "expo-router";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getUnique } from "~/Utility";
 import DrillCard from "~/components/drillCard";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { CurrentUserContext } from "~/contexts/CurrentUserContext";
-import db from "~/firebaseConfig";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index(props) {
   const navigation = useNavigation();
-  const [userData, setUserData] = useState({});
   const userId = useContext(CurrentUserContext)["currentUser"];
-  const [drills, setDrills] = useState({});
+  const {
+    data: userData,
+    userError: userError,
+    userIsLoading: userIsLoading,
+  } = useUserInfo(userId);
+  const {
+    data: attempts,
+    error: attemptsError,
+    isLoading: attemptsIsLoading,
+  } = useAttempts({ userId });
 
-  useEffect(() => {
-    let uniqueDrills = new Set();
-    getDoc(doc(db, "teams", "1", "users", userId)).then((doc) => {
-      setUserData(doc.data());
-    });
-    getDocs(
-      query(collection(db, "teams", "1", "attempts")),
-      where("uid", "==", userId),
-    ).then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        uniqueDrills.add(doc.data()["did"]);
-      });
-    });
-    getDocs(
-      query(collection(db, "teams", "1", "drills")),
-      where("did", "in", uniqueDrills),
-    ).then((querySnapshot) => {
-      let newDrills = {};
-      querySnapshot.forEach((doc) => {
-        newDrills[doc.id] = doc.data();
-      });
-      setDrills(newDrills);
-    });
-  }, []);
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo();
+
+  if (userIsLoading || drillInfoIsLoading || attemptsIsLoading) {
+    return <Loading />;
+  }
+
+  if (userError || drillInfoError || attemptsError) {
+    return (
+      <ErrorComponent message={[userError, drillInfoError, attemptsError]} />
+    );
+  }
+
+  const uniqueDrills = getUnique(attempts, "did");
 
   return (
     <PaperProvider>
@@ -69,11 +67,12 @@ function Index(props) {
 
           <Text style={styles.heading}>Drill History</Text>
 
-          {Object.keys(drills).length > 0 ? (
-            Object.keys(drills).map((drillId) => {
+          {uniqueDrills.length > 0 ? (
+            uniqueDrills.map((drill) => {
+              const drillId = drill["did"];
               return (
                 <DrillCard
-                  drill={drills[drillId]}
+                  drill={drillInfo[drillId]}
                   hrefString={"content/profile/drills/" + drillId}
                   key={drillId}
                 />

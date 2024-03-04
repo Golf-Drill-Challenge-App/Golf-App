@@ -1,6 +1,4 @@
 import { useLocalSearchParams } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -11,19 +9,39 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScatterChart from "react-native-scatter-chart";
 import { numTrunc } from "~/Utility";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
 import ShotAccordion from "~/components/shotAccordion";
-import db from "~/firebaseConfig";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 function Result() {
   const drillId = useLocalSearchParams()["id"];
   const attemptId = useLocalSearchParams()["attempt"];
-  const [drillInfo, setDrillInfo] = useState({});
-  const [attempt, setAttempt] = useState({});
+  const { width } = useWindowDimensions();
+
+  const {
+    data: drillInfo,
+    isLoading: drillInfoIsLoading,
+    error: drillInfoError,
+  } = useDrillInfo(drillId);
+
+  const {
+    data: attempt,
+    isLoading: attemptIsLoading,
+    error: attemptError,
+  } = useAttempts({ attemptId });
+
+  if (drillInfoIsLoading || attemptIsLoading) {
+    return <Loading />;
+  }
+
+  if (drillInfoError || attemptError) {
+    return <ErrorComponent message={[drillInfoError, attemptError]} />;
+  }
 
   let dots = [];
   if (
-    Object.keys(drillInfo).length > 0 &&
-    Object.keys(attempt).length > 0 &&
     drillInfo["outputs"].includes("sideLanding") &&
     drillInfo["outputs"].includes("carryDiff")
   ) {
@@ -32,29 +50,6 @@ function Result() {
       value["carryDiff"],
     ]);
   }
-  const { width } = useWindowDimensions();
-  useEffect(() => {
-    // massive data fetching on refresh. May or may not get its data from cache
-    let mainOutputAttempt = "";
-    getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
-      // get drill data
-      if (doc.exists()) {
-        setDrillInfo(doc.data());
-        console.log("got drill data", mainOutputAttempt);
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    });
-    getDoc(doc(db, "teams", "1", "attempts", attemptId))
-      .then((doc) => {
-        setAttempt(doc.data());
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-    return () => {};
-  }, []);
 
   return (
     <>

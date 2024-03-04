@@ -4,34 +4,33 @@ import { useContext } from "react";
 import { CurrentUserContext } from "~/contexts/CurrentUserContext";
 import db from "~/firebaseConfig";
 
-export const useDrillInfo = (drillId = null) => {
+export const useUserInfo = (userId = null) => {
   const teamId = useContext(CurrentUserContext).currentTeam;
+
   const { data, error, isLoading } = useQuery({
-    queryKey: drillId ? ["drillInfo", teamId, drillId] : ["drillInfo", teamId],
+    queryKey: userId ? ["user", teamId, userId] : ["users", teamId],
     queryFn: async () => {
-      if (drillId) {
-        // Fetch specific drill info
-        const docSnapshot = await getDoc(
-          doc(db, "teams", teamId, "drills", drillId),
+      if (userId) {
+        const querySnapshot = await getDoc(
+          doc(db, "teams", teamId, "users", userId),
         );
-        return docSnapshot.data();
+        return querySnapshot.data();
       } else {
-        // Fetch all drills info
-        const newDrillInfo = {};
+        const newUserInfo = {};
         const querySnapshot = await getDocs(
-          collection(db, "teams", teamId, "drills"),
+          collection(db, "teams", teamId, "users"),
         );
         querySnapshot.forEach((doc) => {
-          newDrillInfo[doc.id] = doc.data();
+          newUserInfo[doc.id] = doc.data();
         });
-        return newDrillInfo;
+        return newUserInfo;
       }
     },
   });
 
   return {
     data,
-    error,
-    isLoading,
+    userError: error,
+    userIsLoading: isLoading,
   };
 };
