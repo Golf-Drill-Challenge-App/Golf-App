@@ -1,15 +1,7 @@
-import { useFonts } from "expo-font";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function DrillTarget({ distanceMeasure, value }) {
-  const [fontsLoaded, fontError] = useFonts({
-    "Inter-Regular": require("~/assets/fonts/Inter-Regular.ttf"),
-    "Inter-Bold": require("~/assets/fonts/Inter-Bold.ttf"),
-    "Inter-SemiBold": require("~/assets/fonts/Inter-SemiBold.ttf"),
-    "IBMPlexMono-Regular": require("~/assets/fonts/IBMPlexMono-Regular.ttf"),
-  });
-
   return (
     <View style={styles.item}>
       <Text style={styles.description}>Target</Text>
