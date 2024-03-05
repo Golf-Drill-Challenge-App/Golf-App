@@ -34,7 +34,7 @@ export default function Index() {
     fetchData();
   }, []);
 
-  console.log(drillData);
+  console.log(drillData.mainOutputShot);
 
   const attemptData = {
     requirements: drillData.requirements,
@@ -94,14 +94,16 @@ export default function Index() {
   const [toggleResult, setToggleResult] = useState(false);
 
   const display = () => {
-    if (toggleResult == true) {
-      return <Result submission={outputData} />;
-    } else if (!loading) {
+    if (!loading && toggleResult == true) {
+      return <Result submission={outputData} drill={drillData} />;
+    } else if (!loading && toggleResult == false) {
       getAttemptDataShots();
 
       return (
         <Input
           drillTitle={drillData.drillType}
+          outputs={drillData.outputs}
+          aggOutputs={drillData.aggOutputs}
           outputData={outputData}
           attemptData={attemptData}
           setToggleResult={setToggleResult}

@@ -127,7 +127,7 @@ function ShotAccordion(props) {
           </Text>
           <Text>
             <Text style={{ fontWeight: "bold" }}>SG:</Text>{" "}
-            {numTrunc(Number(props.shot[props.drill["mainOutputShot"]]))}
+            {numTrunc(Number(props.shot[props.drill.mainOutputShot]))}
           </Text>
         </View>
       }
