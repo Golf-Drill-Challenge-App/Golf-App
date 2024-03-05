@@ -76,22 +76,34 @@ function ShotAccordion(props) {
           },
         }}
         title={
-          <View style={styles.titleContainer}>
-            <Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Text style={{ width: "30%" }}>
               <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
               {props.total}
             </Text>
-            <Text>
+            <Text style={{ width: "40%", textAlign: "center" }}>
               <Text style={styles.boldText}>Target:</Text>{" "}
               {props.shot["target"]} yd
             </Text>
-            <Text>
+            <Text style={{ width: "30%", textAlign: "right" }}>
               <Text style={styles.boldText}>SG:</Text>{" "}
               {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
             </Text>
           </View>
         }
-        style={styles.container}
+        style={{
+          backgroundColor: "#f5f5f5",
+          borderWidth: 1,
+          borderColor: "#ddd",
+          borderRadius: 8,
+        }}
       >
         <View
           style={{
