@@ -198,6 +198,8 @@ function createOutputData(inputValues, attemptData, did, outputs, aggOutputs) {
 
 export default function Input({
   drillTitle,
+  outputs,
+  aggOutputs,
   outputData,
   attemptData,
   setToggleResult,
@@ -238,8 +240,8 @@ export default function Input({
                 inputValues,
                 attemptData,
                 did,
-                outputsTest,
-                aggOutputsTest,
+                outputs,
+                aggOutputs,
               ),
             );
             //send the output data to the database here
