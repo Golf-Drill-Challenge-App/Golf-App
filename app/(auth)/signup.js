@@ -57,7 +57,6 @@ export default function SignUp() {
 
       console.log(userCredential.user);
     } catch (e) {
-      // might remove console.error later and just use alert
       alert(e);
       console.error(e);
     }

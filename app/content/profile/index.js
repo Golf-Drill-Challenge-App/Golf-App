@@ -54,27 +54,28 @@ function Index(props) {
     // ref
     const bottomSheetModalRef = useRef(null);
 
-    // variables
-    const snapPoints = useMemo(() => ["25%", "50%"], []);
-  
-    // callbacks
-    const handlePresentModalPress = useCallback(() => {
-      bottomSheetModalRef.current?.present();
-    }, []);
-    const handleSheetChanges = useCallback((index) => {
-      console.log("handleSheetChanges", index);
-    }, []);
-  
-    async function handleSignOut() {
-      try {
-        signoutFireBase(auth);
-        signOut();
-      } catch (e) {
-        // might remove console.error later and just use alert
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  async function handleSignOut() {
+    signoutFireBase(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((e) => {
         alert(e);
         console.error(e);
-      }
-    }
+      });
+    signOut();
+  }
 
   return (
     <PaperProvider>

@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import {
+  getAuth,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -32,7 +33,7 @@ export default function SignIn() {
       console.log(userCredential.user);
       signIn();
     } catch (e) {
-      // might remove console.error later and just use alert
+      // dual catch to handle empty email field
       alert(e);
       console.error(e);
     }
@@ -41,12 +42,18 @@ export default function SignIn() {
   async function handleForgotPassword() {
     try {
       if (email === "") {
-        throw "Please enter an email address";
+        throw "Please enter an email address for password reset";
       }
-      sendPasswordResetEmail(auth, email);
-      alert("Password reset email sent");
+      sendPasswordResetEmail(getAuth(), email)
+        .then(() => {
+          alert("Password reset email sent");
+        })
+        .catch((e) => {
+          alert(e);
+          console.error(e);
+        });
     } catch (e) {
-      // might remove console.error later and just use alert
+      // dual catch but had to handle empty email
       alert(e);
       console.error(e);
     }
