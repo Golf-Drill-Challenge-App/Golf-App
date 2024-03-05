@@ -32,25 +32,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Description from "./modals/description";
 
-const outputsTest = [
-  "target",
-  "carry",
-  "sideLanding",
-  "proxHole",
-  "baseline",
-  "expectedPutts",
-  "strokesGained",
-  "carryDiff",
-];
-
-const aggOutputsTest = [
-  "carryDiffAverage",
-  "proxHoleAverage",
-  "sideLandingAverage",
-  "strokesGained",
-  "strokesGainedAverage",
-];
-
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
   return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
