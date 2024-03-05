@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { PaperProvider, Text } from "react-native-paper";
+import { View } from "react-native";
+import { ActivityIndicator, PaperProvider } from "react-native-paper";
 
 import { lookUpBaselineStrokesGained } from "~/Utility";
 import Input from "./input";
@@ -112,7 +113,13 @@ export default function Index() {
       );
     } else {
       //Loading spinner icon
-      return <Text>Loading</Text>;
+      return (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator animating={true} size="large" color="#F24E1E" />
+        </View>
+      );
     }
   };
 
