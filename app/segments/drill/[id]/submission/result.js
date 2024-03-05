@@ -8,12 +8,11 @@ import {
 import { Button, Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
 import ShotAccordion from "~/components/shotAccordion";
-import drillData from "~/drill_data.json";
 import { numTrunc } from "~/Utility";
 
 function Result(props) {
-  const submission =
-    drillData["teams"]["1"]["users"]["1"]["history"]["SpvYyY94HaulVH2zmVyM"][0];
+  const submission = props.submission.outputData;
+
   const dots = submission["shots"].map((value, index) => [
     value["sideLanding"],
     value["carryDiff"],
@@ -92,9 +91,7 @@ function Result(props) {
             <ShotAccordion
               key={shot["sid"]}
               shot={shot}
-              drillInfo={
-                drillData["teams"]["1"]["drills"]["SpvYyY94HaulVH2zmVyM"]
-              }
+              drill={props.drill}
               total={numTrunc(submission["shots"].length)}
             />
           ))}
