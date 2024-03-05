@@ -33,9 +33,8 @@ export default function SignIn() {
       console.log(userCredential.user);
       signIn();
     } catch (e) {
-      // dual catch to handle empty email field
       alert(e);
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -50,12 +49,12 @@ export default function SignIn() {
         })
         .catch((e) => {
           alert(e);
-          console.error(e);
+          console.log(e);
         });
     } catch (e) {
       // dual catch but had to handle empty email
       alert(e);
-      console.error(e);
+      console.log(e);
     }
   }
 
@@ -66,57 +65,55 @@ export default function SignIn() {
       accessible={false}
     >
       <View style={styles.container}>
-        <View style={styles.section}>
-          <Image
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-              resizeMode: "contain",
-              width: 131,
-              height: 75,
-            }}
-            style={{ marginTop: 0 }}
+        <Image
+          source={{
+            uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+            resizeMode: "contain",
+            width: 131,
+            height: 75,
+          }}
+          style={[styles.image]}
+        />
+        <Text style={[styles.title]}>Oregon State Golf</Text>
+        <KeyboardAwareScrollView
+          // allows opening links from search results without closing keyboard first
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={[styles.placeholderText]}>Email</Text>
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+            onChangeText={setEmail}
+            style={[styles.input]}
           />
-          <Text style={[styles.title]}>Oregon State Golf</Text>
-        </View>
-        <View style={styles.section}>
-          <KeyboardAwareScrollView
-            // allows opening links from search results without closing keyboard first
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-              onChangeText={setEmail}
-              style={[styles.input]}
-              placeholder="Email"
-            />
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="password-new"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={setPassword}
-              style={[styles.input]}
-              placeholder="Password"
-            />
-            <Pressable style={[styles.button]} onPress={handleForgotPassword}>
-              <Text style={{ alignSelf: "flex-start" }}>
-                Forgot your password?
-              </Text>
-            </Pressable>
+          <Text style={[styles.placeholderText]}>Password</Text>
+          <TextInput
+            autoCapitalize="none"
+            autoComplete="password-new"
+            autoCorrect={false}
+            secureTextEntry={true}
+            onChangeText={setPassword}
+            style={[styles.input]}
+          />
+          <Pressable style={[styles.button]} onPress={handleForgotPassword}>
+            <Text style={[styles.forgotPassword]}>Forgot your password?</Text>
+          </Pressable>
 
-            <Pressable style={[styles.button]} onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
-            <Pressable style={[styles.button]}>
-              <Link asChild href={"/signup"}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </Link>
-            </Pressable>
-          </KeyboardAwareScrollView>
-        </View>
+          <Pressable
+            style={[styles.button]}
+            onPress={handleSignIn}
+            backgroundColor={"#F24E1E"}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </Pressable>
+          <Pressable style={[styles.button]} backgroundColor={"#F24E1E"}>
+            <Link asChild href={"/signup"}>
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </Link>
+          </Pressable>
+        </KeyboardAwareScrollView>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -125,18 +122,11 @@ export default function SignIn() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-around",
     alignItems: "center",
-  },
-  section: {
-    height: "70%",
-    width: "85%",
-    alignItems: "center",
-    justifyContent: "center",
+    marginTop: 100,
   },
   image: {
-    width: "20%",
-    height: "20%",
+    marginTop: 0,
   },
   title: {
     fontSize: 32,
@@ -146,15 +136,25 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 12,
     marginVertical: 10,
+    width: 150,
   },
   buttonText: {
     fontSize: 18,
-    color: "black",
+    color: "white",
     paddingVertical: 8,
-    paddingHorizontal: 35,
+    textAlign: "center",
   },
   input: {
     marginVertical: 5,
-    width: "100%",
+    backgroundColor: "white",
+    paddingHorizontal: 5,
+    maxWidth: 150,
+  },
+  placeholderText: {
+    marginTop: 5,
+  },
+  forgotPassword: {
+    alignSelf: "flex-start",
+    textDecorationLine: "underline",
   },
 });

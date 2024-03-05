@@ -72,7 +72,7 @@ function Index(props) {
       })
       .catch((e) => {
         alert(e);
-        console.error(e);
+        console.log(e);
       });
     signOut();
   }
