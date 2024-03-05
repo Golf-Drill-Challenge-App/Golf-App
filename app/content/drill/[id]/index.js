@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { ScrollView } from "react-native";
 import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
@@ -70,7 +71,7 @@ export default function Index() {
           ]}
         />
 
-        {tabComponent()}
+        <ScrollView>{tabComponent()}</ScrollView>
       </SafeAreaView>
     </PaperProvider>
   );
