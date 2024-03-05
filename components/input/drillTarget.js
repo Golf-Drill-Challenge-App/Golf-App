@@ -18,17 +18,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  fontTest: {
-    fontFamily: "Inter-Regular",
-  },
   description: {
     fontSize: 20,
-    fontWeight: "bold", //temporary until I get the fonts to work
+    fontWeight: "bold",
     textAlign: "center",
   },
   target: {
     fontSize: 40,
-    fontWeight: "200", //temporary until I get the fonts to work
+    fontWeight: "200",
     textAlign: "center",
   },
 });
