@@ -398,6 +398,7 @@ export default function Input({
                   {attemptData.requirements.map((item, id) => (
                     <DrillTarget
                       key={id}
+                      drillTitle={drillTitle}
                       distanceMeasure={item.distanceMeasure}
                       value={attemptData.shots[shotIndex].value}
                     />
