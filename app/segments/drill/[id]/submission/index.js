@@ -12,28 +12,27 @@ export default function Index() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-      const fetchData = async () => {
-          try {
-              setLoading(true);
-              await getDoc(drillsRef).then((document) => {
-                  setDrillData(document.data());
-              });
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await getDoc(drillsRef).then((document) => {
+          setDrillData(document.data());
+        });
 
-              setLoading(false);
-          }
-          catch (error) {
-              console.error("Could not fetch data from database.", error);
-              setLoading(false);
-          }
+        setLoading(false);
+      } catch (error) {
+        console.error("Could not fetch data from database.", error);
+        setLoading(false);
       }
-      fetchData();
-    
+    };
+    fetchData();
   }, []);
 
+  console.log(drillData);
 
   const attemptData = {
     requirements: drillData.requirements,
-    inputs: drillData.inputs
+    inputs: drillData.inputs,
   };
 
   const fillRandomShotTargets = (min, max) => {
@@ -57,53 +56,56 @@ export default function Index() {
   };
 
   const fillClubTargets = () => {
-      let shots = [];
-      for (var i = 0; i < drillData.reps; i++) {
-          shots.push({
-              shotNum: i + 1,
-              value: drillData.requirements[0].items[i],
-          });
-      }
-      return shots;
-  }
-
-    const getAttemptDataShots = () => {
-        switch (drillData.drillType) {
-            case "20 Shot Challenge":
-                attemptData.shots = fillRandomShotTargets(drillData.requirements[0].min, drillData.requirements[0].max); //current this is getting recalled everytime state changes
-                break;
-            case "Line Test":
-                attemptData.shots = fillClubTargets();
-                break;
-            default:
-                attemptData.shots = null;
-                break;
-        }
-        return; 
+    let shots = [];
+    for (var i = 0; i < drillData.reps; i++) {
+      shots.push({
+        shotNum: i + 1,
+        value: drillData.requirements[0].items[i],
+      });
     }
+    return shots;
+  };
+
+  const getAttemptDataShots = () => {
+    switch (drillData.drillType) {
+      case "20 Shot Challenge":
+        attemptData.shots = fillRandomShotTargets(
+          drillData.requirements[0].min,
+          drillData.requirements[0].max,
+        ); //current this is getting recalled everytime state changes
+        break;
+      case "Line Test":
+        attemptData.shots = fillClubTargets();
+        break;
+      default:
+        attemptData.shots = null;
+        break;
+    }
+    return;
+  };
 
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
 
   const display = () => {
-      if (toggleResult == true) {
-          return <Result submission={outputData} />;
-      } else if (!loading) {
-          getAttemptDataShots();
+    if (toggleResult == true) {
+      return <Result submission={outputData} />;
+    } else if (!loading) {
+      getAttemptDataShots();
 
-          return (
-              <Input
-                  outputData={outputData}
-                  attemptData={attemptData}
-                  setToggleResult={setToggleResult}
-                  setOutputData={setOutputData}
-              />
-          );
-      }
-      else {
-          //Loading spinner icon
-         return (<Text>Loading</Text>)
-      }
+      return (
+        <Input
+          drillTitle={drillData.drillType}
+          outputData={outputData}
+          attemptData={attemptData}
+          setToggleResult={setToggleResult}
+          setOutputData={setOutputData}
+        />
+      );
+    } else {
+      //Loading spinner icon
+      return <Text>Loading</Text>;
+    }
   };
 
   return <PaperProvider>{display()}</PaperProvider>;
