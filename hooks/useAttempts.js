@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { useContext } from "react";
 import { CurrentUserContext } from "~/contexts/CurrentUserContext";
-import db from "~/firebaseConfig";
+import {db} from "~/firebaseConfig";
 
 //this code scares me
 export const useAttempts = ({

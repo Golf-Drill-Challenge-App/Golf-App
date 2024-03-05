@@ -1,5 +1,8 @@
 import { Link } from "expo-router";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useState } from "react";
 import {
   Image,
@@ -19,7 +22,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleSubmit() {
+  async function handleSignIn() {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -34,6 +37,21 @@ export default function SignIn() {
       console.error(e);
     }
   }
+
+  async function handleForgotPassword() {
+    try {
+      if (email === "") {
+        throw "Please enter an email address";
+      }
+      sendPasswordResetEmail(auth, email);
+      alert("Password reset email sent");
+    } catch (e) {
+      // might remove console.error later and just use alert
+      alert(e);
+      console.error(e);
+    }
+  }
+
   return (
     <TouchableWithoutFeedback
       // dismiss keyboard after tapping outside of search bar input
@@ -76,10 +94,13 @@ export default function SignIn() {
               style={[styles.input]}
               placeholder="Password"
             />
-            <Text style={{ alignSelf: "flex-start" }}>
-              Forgot your password?
-            </Text>
-            <Pressable style={[styles.button]} onPress={handleSubmit}>
+            <Pressable style={[styles.button]} onPress={handleForgotPassword}>
+              <Text style={{ alignSelf: "flex-start" }}>
+                Forgot your password?
+              </Text>
+            </Pressable>
+
+            <Pressable style={[styles.button]} onPress={handleSignIn}>
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
             <Pressable style={[styles.button]}>

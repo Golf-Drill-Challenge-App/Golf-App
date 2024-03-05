@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useContext } from "react";
 import { CurrentUserContext } from "~/contexts/CurrentUserContext";
-import db from "~/firebaseConfig";
+import {db} from "~/firebaseConfig";
 
 export const useUserInfo = (userId = null) => {
   const teamId = useContext(CurrentUserContext).currentTeam;
