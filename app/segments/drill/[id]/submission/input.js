@@ -404,32 +404,6 @@ export default function Input({
                 ))}
               </View>
 
-              {/* Test Buttons for navigation between shots and state status */}
-
-              <View style={styles.container}>
-                <Button
-                  mode="contained-tonal"
-                  onPress={() => {
-                    //this loop is a test to see if inputs are maintained in state
-                    for (let i = 0; i < attemptData.shots.length; i++) {
-                      console.log("InputValue[", i, "]: ", inputValues[i]);
-                    }
-                    console.log(inputValues);
-                  }}
-                >
-                  Log Input State Status
-                </Button>
-
-                <Button
-                  mode="contained-tonal"
-                  onPress={() => {
-                    console.log(attemptData);
-                  }}
-                >
-                  Log Input attemptData
-                </Button>
-              </View>
-
               {/*Navigation Bottom Sheet */}
               <BottomSheetModal
                 ref={navigationBottomSheetModalRef}
