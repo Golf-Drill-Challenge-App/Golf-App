@@ -9,6 +9,7 @@ export default function DrillInput({
   onInputChange,
   currentShot,
   shotIndex,
+  setShowNavigation,
 }) {
   const checkEditable = () => {
     if (currentShot == shotIndex) {
@@ -18,7 +19,7 @@ export default function DrillInput({
     }
   };
 
-  console.log("icon", icon)
+  console.log("icon", icon);
 
   return (
     <View style={styles.item}>
@@ -36,6 +37,16 @@ export default function DrillInput({
           returnKeyType="done"
           editable={checkEditable()}
           onChangeText={onInputChange}
+          onFocus={() => {
+            // Your onFocus event handler code here
+            console.log("TextInput focused!");
+            setShowNavigation(false);
+          }}
+          onBlur={() => {
+            // Your onBlur event handler code here
+            console.log("TextInput blurred!");
+            setShowNavigation(true);
+          }}
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
       </View>

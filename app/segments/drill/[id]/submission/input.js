@@ -190,6 +190,30 @@ export default function Input({
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
+  const [showNavigation, setShowNavigation] = useState(true); //a useState hook display navigation
+
+  const handleNavigationDisplay = () => {
+    if (showNavigation) {
+      return (
+        <View style={styles.navigationContainer}>
+          {buttonDisplayHandler()}
+
+          <Text
+            style={{ color: "#F3572A" }}
+            onPress={() => {
+              console.log("Pressed View All Shots");
+              handlePresentNavigationModalPress();
+            }}
+          >
+            View all shots
+          </Text>
+        </View>
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   const { id } = useLocalSearchParams();
 
   const did = id;
@@ -401,6 +425,7 @@ export default function Input({
                       }}
                       currentShot={currentShot}
                       shotIndex={shotIndex}
+                      setShowNavigation={setShowNavigation}
                     />
                   ))}
                 </View>
@@ -487,19 +512,7 @@ export default function Input({
 
               {/* Navigation */}
 
-              <View style={styles.navigationContainer}>
-                {buttonDisplayHandler()}
-
-                <Text
-                  style={{ color: "#F3572A" }}
-                  onPress={() => {
-                    console.log("Pressed View All Shots");
-                    handlePresentNavigationModalPress();
-                  }}
-                >
-                  View all shots
-                </Text>
-              </View>
+              {handleNavigationDisplay()}
             </BottomSheetModalProvider>
           </View>
         </SafeAreaView>
