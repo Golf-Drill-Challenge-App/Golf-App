@@ -1,3 +1,4 @@
+import { useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -5,13 +6,15 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { Button, Icon } from "react-native-paper";
+import { Appbar, Button, Icon, PaperProvider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ScatterChart from "react-native-scatter-chart";
 import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";
 
 function Result(props) {
   const submission = props.submission.outputData;
+  const navigation = useNavigation();
 
   const display = () => {
     switch (props.drill.drillType) {
@@ -160,30 +163,43 @@ function Result(props) {
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.sectionTitle}>Drill Results</Text>
-
-        {display()}
-
-        <ScrollView>
-          {submission["shots"].map((shot) => (
-            <ShotAccordion
-              key={shot["sid"]}
-              shot={shot}
-              drill={props.drill}
-              total={numTrunc(submission["shots"].length)}
+      <PaperProvider>
+        <SafeAreaView>
+          <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+            <Appbar.Action
+              icon="close"
+              onPress={navigation.goBack}
+              color={"#F24E1E"}
             />
-          ))}
-        </ScrollView>
-      </ScrollView>
-      <Button
-        style={styles.restartButton}
-        mode="contained"
-        buttonColor="#F24E1E"
-        textColor="white"
-      >
-        Restart Drill
-      </Button>
+            <Appbar.Content title={props.drill.drillType} />
+          </Appbar.Header>
+
+          <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.sectionTitle}>Drill Results</Text>
+
+            {display()}
+
+            <ScrollView>
+              {submission["shots"].map((shot) => (
+                <ShotAccordion
+                  key={shot["sid"]}
+                  shot={shot}
+                  drill={props.drill}
+                  total={numTrunc(submission["shots"].length)}
+                />
+              ))}
+            </ScrollView>
+            <Button
+              style={styles.restartButton}
+              mode="contained"
+              buttonColor="#F24E1E"
+              textColor="white"
+            >
+              Restart Drill
+            </Button>
+          </ScrollView>
+        </SafeAreaView>
+      </PaperProvider>
     </>
   );
 }
@@ -260,5 +276,6 @@ const styles = StyleSheet.create({
   restartButton: {
     margin: 10,
     alignItems: "center",
+    marginBottom: 100,
   },
 });
