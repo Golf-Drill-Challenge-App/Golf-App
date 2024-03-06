@@ -100,7 +100,15 @@ function createOutputData(inputValues, attemptData, did, outputs, aggOutputs) {
 
         case "strokesGained":
           shot.strokesGained =
-            attemptData.shots[j].baseline - shot.expectedPutts - 1;
+            attemptData.shots[j].baseline -
+            lookUpExpectedPutts(
+              calculateProxHole(
+                attemptData.shots[j].value,
+                inputValues[j].carry,
+                inputValues[j].sideLanding,
+              ),
+            );
+          -1;
           strokesGainedTotal += shot.strokesGained;
           break;
 
