@@ -72,7 +72,7 @@ export default function Index() {
           ]}
         />
 
-        <ScrollView>{tabComponent()}</ScrollView>
+        {tabComponent()}
       </SafeAreaView>
     </PaperProvider>
   );
