@@ -16,8 +16,6 @@ function Result(props) {
       case "20 Shot Challenge":
         return (
           <>
-            <Text style={styles.sectionTitle}>Drill Results</Text>
-
             <View style={styles.dataSection}>
               <Text style={styles.dataTitle}>Strokes Gained</Text>
               <View style={styles.dataRow}>
@@ -90,19 +88,41 @@ function Result(props) {
                 />
               ))}
             </ScrollView>
-          </>);
+          </>
+        );
       case "Line Test":
-        return (<Text>Line Test Result</Text>);
+        return (
+          <>
+            <Text>Line Test Result (Temp text for testing)</Text>
+            <View style={styles.dataSection}>
+              <Text style={styles.dataTitle}>Side Landing</Text>
+              <View style={styles.dataRow}>
+                <Text style={styles.dataLabel}>Total: </Text>
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["sideLandingTotal"])}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.dataSection}>
+              <Text style={styles.dataTitle}>Average Differences</Text>
+              <View style={styles.dataRow}>
+                <Icon source={"arrow-left-right"} />
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["sideLandingAverage"])}
+                </Text>
+              </View>
+            </View>
+          </>
+        );
       default:
-        console.log("Results page not found")
+        console.log("Results page not found");
         break;
-
     }
-  }
-
-
+  };
 
   const submission = props.submission.outputData;
+
+  console.log(props.submission.outputData);
 
   const dots = submission["shots"].map((value, index) => [
     value["sideLanding"],
@@ -113,7 +133,7 @@ function Result(props) {
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-
+        <Text style={styles.sectionTitle}>Drill Results</Text>
 
         {display()}
       </ScrollView>
@@ -124,7 +144,7 @@ function Result(props) {
         textColor="white"
       >
         Restart Drill
-        </Button>
+      </Button>
     </>
   );
 }
