@@ -16,9 +16,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useAuth } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 
+const BUTTON_WIDTH = 150;
+const INPUT_WIDTH = 200;
+
 export default function SignUp() {
   const { signIn, setUser } = useAuth();
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -85,51 +87,53 @@ export default function SignUp() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Text style={[styles.placeholderText]}>Name</Text>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="name"
-            onChangeText={setName}
-            style={[styles.input]}
-          />
-          <Text style={[styles.placeholderText]}>Email</Text>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-            onChangeText={setEmail}
-            style={[styles.input]}
-          />
-          <Text style={[styles.placeholderText]}>Password</Text>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="password-new"
-            autoCorrect={false}
-            secureTextEntry={true}
-            onChangeText={setPassword}
-            style={[styles.input]}
-          />
-          <Text style={[styles.placeholderText]}>Confirm Password</Text>
-          <TextInput
-            autoCapitalize="none"
-            autoComplete="password-new"
-            autoCorrect={false}
-            secureTextEntry={true}
-            onChangeText={setPasswordCheck}
-            style={[styles.input]}
-          />
-          <Pressable
-            style={[styles.button]}
-            onPress={handleSubmit}
-            backgroundColor={"#F24E1E"}
-          >
-            <Text style={styles.buttonText}>Submit</Text>
-          </Pressable>
-          <Pressable style={[styles.button]} backgroundColor={"#F24E1E"}>
-            <Link asChild href={"/signin"}>
-              <Text style={styles.buttonText}>Back to SignIn</Text>
-            </Link>
-          </Pressable>
+          <View style={[styles.inputView]}>
+            <Text style={[styles.placeholderText]}>Name</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="name"
+              onChangeText={setName}
+              style={[styles.input]}
+            />
+            <Text style={[styles.placeholderText]}>Email</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect={false}
+              onChangeText={setEmail}
+              style={[styles.input]}
+            />
+            <Text style={[styles.placeholderText]}>Password</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="password-new"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={setPassword}
+              style={[styles.input]}
+            />
+            <Text style={[styles.placeholderText]}>Confirm Password</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="password-new"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={setPasswordCheck}
+              style={[styles.input]}
+            />
+            <Pressable
+              style={[styles.button]}
+              onPress={handleSubmit}
+              backgroundColor={"#F24E1E"}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </Pressable>
+            <Pressable style={[styles.button]} backgroundColor={"#F24E1E"}>
+              <Link asChild href={"/signin"}>
+                <Text style={styles.buttonText}>Back to SignIn</Text>
+              </Link>
+            </Pressable>
+          </View>
         </KeyboardAwareScrollView>
       </View>
     </TouchableWithoutFeedback>
@@ -152,8 +156,9 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 12,
-    marginVertical: 10,
-    width: 150,
+    marginTop: 20,
+    marginHorizontal: (INPUT_WIDTH - BUTTON_WIDTH) / 2,
+    width: BUTTON_WIDTH,
   },
   buttonText: {
     fontSize: 18,
@@ -163,11 +168,16 @@ const styles = StyleSheet.create({
   },
   input: {
     marginVertical: 5,
+    paddingVertical: Platform.OS === "ios" ? 10 : 5, // padding and margins on ios look different than android?
     backgroundColor: "white",
     paddingHorizontal: 5,
-    maxWidth: 150,
+    width: INPUT_WIDTH,
+    maxWidth: INPUT_WIDTH,
   },
   placeholderText: {
     marginTop: 5,
+  },
+  inputView: {
+    marginTop: 20,
   },
 });
