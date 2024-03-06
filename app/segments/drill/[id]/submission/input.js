@@ -158,6 +158,10 @@ function createOutputData(inputValues, attemptData, did, outputs, aggOutputs) {
           strokesGainedTotal / inputValues.length;
         break;
 
+      case "sideLandingTotal":
+        outputData.sideLandingTotal = sideLandingTotal;
+        break;
+
       default:
         console.log("Output Calculation not found\n");
         break;
