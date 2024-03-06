@@ -11,6 +11,107 @@ import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";
 
 function Result(props) {
+  const display = () => {
+    switch (props.drill.drillType) {
+      case "20 Shot Challenge":
+        return (
+          <>
+            <ScrollView contentContainerStyle={styles.container}>
+              <Text style={styles.sectionTitle}>Drill Results</Text>
+
+              <View style={styles.dataSection}>
+                <Text style={styles.dataTitle}>Strokes Gained</Text>
+                <View style={styles.dataRow}>
+                  <Text style={styles.dataLabel}>Total: </Text>
+                  <Text style={styles.dataValue}>
+                    {numTrunc(submission["strokesGained"])}
+                  </Text>
+                </View>
+                <View style={styles.dataRow}>
+                  <Text style={styles.dataLabel}>Average: </Text>
+                  <Text style={styles.dataValue}>
+                    {numTrunc(submission["strokesGainedAverage"])}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.dataSection}>
+                <Text style={styles.dataTitle}>Average Differences</Text>
+                <View style={styles.dataRow}>
+                  <Icon source={"arrow-up-down"} />
+                  <Text style={styles.dataValue}>
+                    {numTrunc(submission["carryDiffAverage"])}
+                  </Text>
+                </View>
+                <View style={styles.dataRow}>
+                  <Icon source={"arrow-left-right"} />
+                  <Text style={styles.dataValue}>
+                    {numTrunc(submission["sideLandingAverage"])}
+                  </Text>
+                </View>
+                <View style={styles.dataRow}>
+                  <Icon source={"flag"} />
+                  <Text style={styles.dataValue}>
+                    {numTrunc(submission["proxHoleAverage"])}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.chartSection}>
+                <Text style={styles.sectionTitle}>Shot Tendency</Text>
+                <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
+                  <ScatterChart
+                    style={styles.chart}
+                    backgroundColor="#ffffff"
+                    data={[
+                      {
+                        color: "blue",
+                        unit: "%",
+                        values: dots,
+                      },
+                    ]}
+                    horizontalLinesAt={[0]}
+                    verticalLinesAt={[0]}
+                    minY={-10}
+                    maxY={10}
+                    minX={-35}
+                    maxX={35}
+                    chartWidth={width * 0.8}
+                  />
+                </View>
+              </View>
+
+              <ScrollView>
+                {submission["shots"].map((shot) => (
+                  <ShotAccordion
+                    key={shot["sid"]}
+                    shot={shot}
+                    drill={props.drill}
+                    total={numTrunc(submission["shots"].length)}
+                  />
+                ))}
+              </ScrollView>
+            </ScrollView>
+            <Button
+              style={styles.restartButton}
+              mode="contained"
+              buttonColor="#F24E1E"
+              textColor="white"
+            >
+              Restart Drill
+        </Button>
+          </>);
+      case "Line Test":
+        return (<Text>Line Test Result</Text>);
+      default:
+        console.log("Results page not found")
+        break;
+
+    }
+  }
+
+
+
   const submission = props.submission.outputData;
 
   const dots = submission["shots"].map((value, index) => [
@@ -21,90 +122,7 @@ function Result(props) {
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.sectionTitle}>Drill Results</Text>
-
-        <View style={styles.dataSection}>
-          <Text style={styles.dataTitle}>Strokes Gained</Text>
-          <View style={styles.dataRow}>
-            <Text style={styles.dataLabel}>Total: </Text>
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["strokesGained"])}
-            </Text>
-          </View>
-          <View style={styles.dataRow}>
-            <Text style={styles.dataLabel}>Average: </Text>
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["strokesGainedAverage"])}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.dataSection}>
-          <Text style={styles.dataTitle}>Average Differences</Text>
-          <View style={styles.dataRow}>
-            <Icon source={"arrow-up-down"} />
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["carryDiffAverage"])}
-            </Text>
-          </View>
-          <View style={styles.dataRow}>
-            <Icon source={"arrow-left-right"} />
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["sideLandingAverage"])}
-            </Text>
-          </View>
-          <View style={styles.dataRow}>
-            <Icon source={"flag"} />
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["proxHoleAverage"])}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.chartSection}>
-          <Text style={styles.sectionTitle}>Shot Tendency</Text>
-          <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
-            <ScatterChart
-              style={styles.chart}
-              backgroundColor="#ffffff"
-              data={[
-                {
-                  color: "blue",
-                  unit: "%",
-                  values: dots,
-                },
-              ]}
-              horizontalLinesAt={[0]}
-              verticalLinesAt={[0]}
-              minY={-10}
-              maxY={10}
-              minX={-35}
-              maxX={35}
-              chartWidth={width * 0.8}
-            />
-          </View>
-        </View>
-
-        <ScrollView>
-          {submission["shots"].map((shot) => (
-            <ShotAccordion
-              key={shot["sid"]}
-              shot={shot}
-              drill={props.drill}
-              total={numTrunc(submission["shots"].length)}
-            />
-          ))}
-        </ScrollView>
-      </ScrollView>
-      <Button
-        style={styles.restartButton}
-        mode="contained"
-        buttonColor="#F24E1E"
-        textColor="white"
-      >
-        Restart Drill
-      </Button>
+      {display()}
     </>
   );
 }
