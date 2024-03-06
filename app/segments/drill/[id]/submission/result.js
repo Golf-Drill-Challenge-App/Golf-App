@@ -77,17 +77,6 @@ function Result(props) {
                 />
               </View>
             </View>
-
-            <ScrollView>
-              {submission["shots"].map((shot) => (
-                <ShotAccordion
-                  key={shot["sid"]}
-                  shot={shot}
-                  drill={props.drill}
-                  total={numTrunc(submission["shots"].length)}
-                />
-              ))}
-            </ScrollView>
           </>
         );
       case "Line Test":
@@ -112,6 +101,30 @@ function Result(props) {
                 </Text>
               </View>
             </View>
+
+            <View style={styles.chartSection}>
+              <Text style={styles.sectionTitle}>Shot Tendency</Text>
+              <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
+                <ScatterChart
+                  style={styles.chart}
+                  backgroundColor="#ffffff"
+                  data={[
+                    {
+                      color: "blue",
+                      unit: "%",
+                      values: dots,
+                    },
+                  ]}
+                  horizontalLinesAt={[0]}
+                  verticalLinesAt={[0]}
+                  minY={-10}
+                  maxY={10}
+                  minX={-35}
+                  maxX={35}
+                  chartWidth={width * 0.8}
+                />
+              </View>
+            </View>
           </>
         );
       default:
@@ -124,10 +137,27 @@ function Result(props) {
 
   console.log(props.submission.outputData);
 
-  const dots = submission["shots"].map((value, index) => [
-    value["sideLanding"],
-    value["carryDiff"],
-  ]);
+  const getDots = () => {
+    switch (props.drill.drillType) {
+      case "20 Shot Challenge":
+        return submission["shots"].map((value, index) => [
+          value["sideLanding"],
+          value["carryDiff"],
+        ]);
+
+      case "Line Test":
+        return submission["shots"].map((value, index) => [
+          value["sideLanding"],
+          0,
+        ]);
+
+      default:
+        break;
+    }
+  };
+
+  const dots = getDots();
+
   const { width } = useWindowDimensions();
 
   return (
@@ -136,6 +166,17 @@ function Result(props) {
         <Text style={styles.sectionTitle}>Drill Results</Text>
 
         {display()}
+
+        <ScrollView>
+          {submission["shots"].map((shot) => (
+            <ShotAccordion
+              key={shot["sid"]}
+              shot={shot}
+              drill={props.drill}
+              total={numTrunc(submission["shots"].length)}
+            />
+          ))}
+        </ScrollView>
       </ScrollView>
       <Button
         style={styles.restartButton}
