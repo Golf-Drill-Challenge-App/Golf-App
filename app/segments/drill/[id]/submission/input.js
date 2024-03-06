@@ -342,202 +342,178 @@ export default function Input({
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
         <SafeAreaView>
-          <BottomSheetModalProvider>
-            <Appbar.Header
-              style={{ backgroundColor: "FFF" }}
-              statusBarHeight={0}
-            >
-              <Appbar.Action
-                icon="close"
-                onPress={showLeaveDrillDialog}
-                color={"#F24E1E"}
-              />
-              <Appbar.Content title={drillTitle} titleStyle={styles.title} />
-              <Appbar.Action
-                icon="information-outline"
-                onPress={() => {
-                  handlePresentDesciptionModalPress();
-                }}
-                color={"#F24E1E"}
-              />
-            </Appbar.Header>
-            {/* Empty Input Banner */}
+          <View style={{ height: "100%" }}>
+            <BottomSheetModalProvider>
+              <Appbar.Header
+                style={{ backgroundColor: "FFF" }}
+                statusBarHeight={0}
+              >
+                <Appbar.Action
+                  icon="close"
+                  onPress={showLeaveDrillDialog}
+                  color={"#F24E1E"}
+                />
+                <Appbar.Content title={drillTitle} titleStyle={styles.title} />
+                <Appbar.Action
+                  icon="information-outline"
+                  onPress={() => {
+                    handlePresentDesciptionModalPress();
+                  }}
+                  color={"#F24E1E"}
+                />
+              </Appbar.Header>
+              {/* Empty Input Banner */}
 
-            <Banner
-              visible={emptyInputBannerVisable}
-              actions={[
-                {
-                  label: "Dismiss",
-                  onPress: () => setEmptyInputBannerVisable(false),
-                },
-              ]}
-            >
-              Error! All input fields must be filled!
-            </Banner>
+              <Banner
+                visible={emptyInputBannerVisable}
+                actions={[
+                  {
+                    label: "Dismiss",
+                    onPress: () => setEmptyInputBannerVisable(false),
+                  },
+                ]}
+              >
+                Error! All input fields must be filled!
+              </Banner>
 
-            <KeyboardAwareScrollView>
-              {/* Shot Number / Total shots */}
-              <View style={styles.shotNumContainer}>
-                <Text style={styles.shotNumber}>
-                  Shot {attemptData.shots[shotIndex].shotNum}
-                  <Text style={styles.shotTotal}>
-                    /{attemptData.shots.length}
+              <KeyboardAwareScrollView>
+                {/* Shot Number / Total shots */}
+                <View style={styles.shotNumContainer}>
+                  <Text style={styles.shotNumber}>
+                    Shot {attemptData.shots[shotIndex].shotNum}
+                    <Text style={styles.shotTotal}>
+                      /{attemptData.shots.length}
+                    </Text>
                   </Text>
-                </Text>
-              </View>
+                </View>
 
-              <View style={styles.container}>
-                {/* Instruction */}
+                <View style={styles.container}>
+                  {/* Instruction */}
 
-                <View style={styles.horizontalContainer}>
-                  {attemptData.requirements.map((item, id) => (
-                    <DrillTarget
+                  <View style={styles.horizontalContainer}>
+                    {attemptData.requirements.map((item, id) => (
+                      <DrillTarget
+                        key={id}
+                        drillTitle={drillTitle}
+                        distanceMeasure={item.distanceMeasure}
+                        value={attemptData.shots[shotIndex].value}
+                      />
+                    ))}
+                  </View>
+
+                  {/* Inputs */}
+
+                  {attemptData.inputs.map((item, id) => (
+                    <DrillInput
                       key={id}
-                      drillTitle={drillTitle}
+                      icon={getIconByKey(item.id)}
+                      prompt={item.prompt}
                       distanceMeasure={item.distanceMeasure}
-                      value={attemptData.shots[shotIndex].value}
+                      inputValue={inputValues[shotIndex]?.[item.id] || ""}
+                      onInputChange={(newText) => {
+                        handleInputChange(item.id, newText);
+                      }}
+                      currentShot={currentShot}
+                      shotIndex={shotIndex}
                     />
                   ))}
                 </View>
 
-                {/* Inputs */}
-
-                {attemptData.inputs.map((item, id) => (
-                  <DrillInput
-                    key={id}
-                    icon={getIconByKey(item.id)}
-                    prompt={item.prompt}
-                    distanceMeasure={item.distanceMeasure}
-                    inputValue={inputValues[shotIndex]?.[item.id] || ""}
-                    onInputChange={(newText) => {
-                      handleInputChange(item.id, newText);
-                    }}
-                    currentShot={currentShot}
-                    shotIndex={shotIndex}
-                  />
-                ))}
-              </View>
-
-              {/* Test Buttons for navigation between shots and state status */}
-
-              <View style={styles.container}>
-                <Button
-                  mode="contained-tonal"
-                  onPress={() => {
-                    //this loop is a test to see if inputs are maintained in state
-                    for (let i = 0; i < attemptData.shots.length; i++) {
-                      console.log("InputValue[", i, "]: ", inputValues[i]);
-                    }
-                    console.log(inputValues);
-                  }}
+                {/*Navigation Bottom Sheet */}
+                <BottomSheetModal
+                  ref={navigationBottomSheetModalRef}
+                  index={1}
+                  snapPoints={snapPoints}
+                  onChange={handleNavigationSheetChanges}
                 >
-                  Log Input State Status
-                </Button>
-
-                <Button
-                  mode="contained-tonal"
-                  onPress={() => {
-                    console.log(attemptData);
-                  }}
-                >
-                  Log Input attemptData
-                </Button>
-              </View>
-
-              {/*Navigation Bottom Sheet */}
-              <BottomSheetModal
-                ref={navigationBottomSheetModalRef}
-                index={1}
-                snapPoints={snapPoints}
-                onChange={handleNavigationSheetChanges}
-              >
-                <BottomSheetScrollView>
-                  <View style={styles.bottomSheetContentContainer}>
-                    {attemptData.shots
-                      .slice(0, currentShot + 1)
-                      .map((item, id) => (
-                        <Pressable
-                          key={id}
-                          onPress={() => {
-                            setShotIndex(id);
-                            navigationBottomSheetModalRef.current.close();
-                          }}
-                          width={"100%"}
-                          alignItems={"center"}
-                        >
-                          <NavigationRectange
+                  <BottomSheetScrollView>
+                    <View style={styles.bottomSheetContentContainer}>
+                      {attemptData.shots
+                        .slice(0, currentShot + 1)
+                        .map((item, id) => (
+                          <Pressable
                             key={id}
-                            inputs={attemptData.inputs}
-                            target={attemptData.requirements[0]}
-                            targetValue={attemptData.shots[id].value}
-                            inputValues={inputValues[id]}
-                            shotIndex={item.shotNum}
-                            numShots={attemptData.shots.length}
-                          />
-                        </Pressable>
-                      ))}
-                  </View>
-                </BottomSheetScrollView>
-              </BottomSheetModal>
+                            onPress={() => {
+                              setShotIndex(id);
+                              navigationBottomSheetModalRef.current.close();
+                            }}
+                            width={"100%"}
+                            alignItems={"center"}
+                          >
+                            <NavigationRectange
+                              key={id}
+                              inputs={attemptData.inputs}
+                              target={attemptData.requirements[0]}
+                              targetValue={attemptData.shots[id].value}
+                              inputValues={inputValues[id]}
+                              shotIndex={item.shotNum}
+                              numShots={attemptData.shots.length}
+                            />
+                          </Pressable>
+                        ))}
+                    </View>
+                  </BottomSheetScrollView>
+                </BottomSheetModal>
 
-              {/* Description Bottom Sheet */}
-              <BottomSheetModal
-                ref={descriptionBottomSheetModalRef}
-                index={1}
-                snapPoints={snapPoints}
-                onChange={handleDesciptionSheetChanges}
-              >
-                <BottomSheetScrollView>
-                  <Description />
-                </BottomSheetScrollView>
-              </BottomSheetModal>
-
-              {/* Leave Drill Dialog */}
-              <Portal>
-                <Dialog
-                  visible={visibleLeaveDrill}
-                  onDismiss={hideLeaveDrillDialog}
+                {/* Description Bottom Sheet */}
+                <BottomSheetModal
+                  ref={descriptionBottomSheetModalRef}
+                  index={1}
+                  snapPoints={snapPoints}
+                  onChange={handleDesciptionSheetChanges}
                 >
-                  <Dialog.Title>Alert</Dialog.Title>
-                  <Dialog.Content>
-                    <Text variant="bodyMedium">All inputs will be lost.</Text>
-                  </Dialog.Content>
-                  <Dialog.Actions>
-                    <Button
-                      onPress={() => {
-                        hideLeaveDrillDialog();
-                        goBack();
-                      }}
-                    >
-                      Leave Drill
-                    </Button>
-                    <Button
-                      onPress={() => {
-                        hideLeaveDrillDialog();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </Dialog.Actions>
-                </Dialog>
-              </Portal>
-            </KeyboardAwareScrollView>
+                  <BottomSheetScrollView>
+                    <Description />
+                  </BottomSheetScrollView>
+                </BottomSheetModal>
 
-            {/* Navigation */}
+                {/* Leave Drill Dialog */}
+                <Portal>
+                  <Dialog
+                    visible={visibleLeaveDrill}
+                    onDismiss={hideLeaveDrillDialog}
+                  >
+                    <Dialog.Title>Alert</Dialog.Title>
+                    <Dialog.Content>
+                      <Text variant="bodyMedium">All inputs will be lost.</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                      <Button
+                        onPress={() => {
+                          hideLeaveDrillDialog();
+                          goBack();
+                        }}
+                      >
+                        Leave Drill
+                      </Button>
+                      <Button
+                        onPress={() => {
+                          hideLeaveDrillDialog();
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Dialog.Actions>
+                  </Dialog>
+                </Portal>
+              </KeyboardAwareScrollView>
 
-            <View style={styles.navigationContainer}>
-              {buttonDisplayHandler()}
+              {/* Navigation */}
 
-              <Text
-                style={{ color: "#F3572A" }}
-                onPress={() => {
-                  handlePresentNavigationModalPress();
-                }}
-              >
-                View all shots
-              </Text>
-            </View>
-          </BottomSheetModalProvider>
+              <View style={styles.navigationContainer}>
+                {buttonDisplayHandler()}
+
+                <Text
+                  style={{ color: "#F3572A" }}
+                  onPress={() => {
+                    handlePresentNavigationModalPress();
+                  }}
+                >
+                  View all shots
+                </Text>
+              </View>
+            </BottomSheetModalProvider>
+          </View>
         </SafeAreaView>
       </PaperProvider>
     </GestureHandlerRootView>
