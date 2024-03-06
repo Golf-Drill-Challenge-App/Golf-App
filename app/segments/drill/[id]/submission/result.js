@@ -11,6 +11,8 @@ import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";
 
 function Result(props) {
+  const submission = props.submission.outputData;
+
   const display = () => {
     switch (props.drill.drillType) {
       case "20 Shot Challenge":
@@ -82,7 +84,6 @@ function Result(props) {
       case "Line Test":
         return (
           <>
-            <Text>Line Test Result (Temp text for testing)</Text>
             <View style={styles.dataSection}>
               <Text style={styles.dataTitle}>Side Landing</Text>
               <View style={styles.dataRow}>
@@ -133,10 +134,6 @@ function Result(props) {
     }
   };
 
-  const submission = props.submission.outputData;
-
-  console.log(props.submission.outputData);
-
   const getDots = () => {
     switch (props.drill.drillType) {
       case "20 Shot Challenge":
@@ -152,6 +149,7 @@ function Result(props) {
         ]);
 
       default:
+        console.log("Dots not set up for this drill");
         break;
     }
   };
