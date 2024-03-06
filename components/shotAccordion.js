@@ -62,60 +62,50 @@ function DataField(field, value) {
 
 function ShotAccordion(props) {
   return (
-    <View
-      style={{
-        marginLeft: 11,
-        marginRight: 11,
-        marginBottom: 9,
-      }}
-    >
-      <List.Accordion
-        theme={{
-          colors: {
-            background: "#f5f5f5",
-          },
-        }}
-        title={
-          <View style={styles.titleContainer}>
-            <Text>
-              <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
-              {props.total}
-            </Text>
-            <Text>
-              <Text style={styles.boldText}>Target:</Text>{" "}
-              {props.shot["target"]} yd
-            </Text>
-            <Text>
-              <Text style={styles.boldText}>SG:</Text>{" "}
-              {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
-            </Text>
-          </View>
-        }
-        style={styles.container}
-      >
+    <List.Accordion
+      title={
         <View
           style={{
-            backgroundColor: "#f5f5f5",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignSelf: "stretch",
           }}
         >
-          {props.drillInfo["outputs"].map((field) => {
-            switch (field) {
-              case "carry":
-                return DataField(field, {
-                  carry: props.shot["carry"],
-                  target: props.shot["target"],
-                  carryDiff: props.shot["carryDiff"],
-                });
-              case "strokesGained":
-              case "carryDiff":
-                return null;
-              default:
-                return DataField(field, props.shot[field]);
-            }
-          })}
+          <Text>
+            <Text style={{ fontWeight: "bold" }}>
+              Shot: {props.shot["sid"] + 1}/
+            </Text>
+            {props.total}
+          </Text>
+          <Text>
+            <Text style={{ fontWeight: "bold" }}>Target:</Text>{" "}
+            {props.shot["target"]} yd
+          </Text>
+          <Text>
+            <Text style={{ fontWeight: "bold" }}>SG:</Text>{" "}
+            {numTrunc(Number(props.shot[props.drillInfo["mainOutputShot"]]))}
+          </Text>
         </View>
-      </List.Accordion>
-    </View>
+      }
+      style={{
+        backgroundColor: "#fff",
+        borderWidth: 1,
+        borderStyle: "solid",
+      }}
+    >
+      {props.drillInfo["outputs"].map((field) => {
+        switch (field) {
+          case "carry":
+            return DataField(field, {
+              carry: props.shot["carry"],
+              target: props.shot["target"],
+              carryDiff: props.shot["carryDiff"],
+            });
+          default:
+            return DataField(field, props.shot[field]);
+        }
+      })}
+    </List.Accordion>
   );
 }
 
