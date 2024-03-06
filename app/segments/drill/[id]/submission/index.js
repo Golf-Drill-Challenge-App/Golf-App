@@ -31,8 +31,6 @@ export default function Index() {
     fetchData();
   }, []);
 
-  console.log(drillData.mainOutputShot);
-
   const attemptData = {
     requirements: drillData.requirements,
     inputs: drillData.inputs,
@@ -54,7 +52,6 @@ export default function Index() {
         baseline: baseline,
       });
     }
-    console.log("Attempt Data changed");
     return shots;
   };
 
