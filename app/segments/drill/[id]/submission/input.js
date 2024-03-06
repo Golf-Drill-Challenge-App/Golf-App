@@ -245,7 +245,6 @@ export default function Input({
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            console.log("Pressed Next Shot");
             handleNextShotButtonClick();
           }}
         >
@@ -259,7 +258,6 @@ export default function Input({
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            console.log("Pressed Back to Latest");
             setShotIndex(currentShot);
           }}
         >
@@ -289,7 +287,6 @@ export default function Input({
       setShotIndex(shotIndex + 1);
       setCurrentShot(currentShot + 1);
     } else {
-      console.log("Not all input fields entered!");
       setEmptyInputBannerVisable(true);
     }
   };
@@ -309,9 +306,7 @@ export default function Input({
   const handlePresentNavigationModalPress = useCallback(() => {
     navigationBottomSheetModalRef.current?.present();
   }, []);
-  const handleNavigationSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  const handleNavigationSheetChanges = useCallback((index) => {}, []);
 
   /***** Description Bottom Sheet Stuff *****/
 
@@ -321,9 +316,7 @@ export default function Input({
   const handlePresentDesciptionModalPress = useCallback(() => {
     descriptionBottomSheetModalRef.current?.present();
   }, []);
-  const handleDesciptionSheetChanges = useCallback((index) => {
-    console.log("handleDesciptionSheetChanges", index);
-  }, []);
+  const handleDesciptionSheetChanges = useCallback((index) => {}, []);
 
   /***** Leave drill Dialog Stuff *****/
 
@@ -457,7 +450,6 @@ export default function Input({
                         <Pressable
                           key={id}
                           onPress={() => {
-                            console.log("Clicked on ", id);
                             setShotIndex(id);
                             navigationBottomSheetModalRef.current.close();
                           }}
@@ -530,7 +522,6 @@ export default function Input({
               <Text
                 style={{ color: "#F3572A" }}
                 onPress={() => {
-                  console.log("Pressed View All Shots");
                   handlePresentNavigationModalPress();
                 }}
               >
