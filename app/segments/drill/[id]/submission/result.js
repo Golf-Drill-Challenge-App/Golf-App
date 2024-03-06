@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -15,6 +15,7 @@ import { numTrunc } from "~/Utility";
 function Result(props) {
   const submission = props.submission.outputData;
   const navigation = useNavigation();
+  const drillId = useLocalSearchParams()["id"];
 
   const display = () => {
     switch (props.drill.drillType) {
@@ -184,19 +185,26 @@ function Result(props) {
                 <ShotAccordion
                   key={shot["sid"]}
                   shot={shot}
-                  drill={props.drill}
+                  drillInfo={props.drill}
                   total={numTrunc(submission["shots"].length)}
                 />
               ))}
             </ScrollView>
-            <Button
-              style={styles.restartButton}
-              mode="contained"
-              buttonColor="#F24E1E"
-              textColor="white"
+            <Link
+              href={{
+                pathname: `/content/drill/${drillId}`,
+              }}
+              asChild
             >
-              Restart Drill
-            </Button>
+              <Button
+                style={styles.restartButton}
+                mode="contained"
+                buttonColor="#F24E1E"
+                textColor="white"
+              >
+                Restart Drill
+              </Button>
+            </Link>
           </ScrollView>
         </SafeAreaView>
       </PaperProvider>
