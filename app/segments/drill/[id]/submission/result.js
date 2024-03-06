@@ -274,8 +274,8 @@ const styles = StyleSheet.create({
   },
 
   restartButton: {
-    margin: 10,
+    marginTop: 15,
+    marginBottom: 45,
     alignItems: "center",
-    marginBottom: 100,
   },
 });
