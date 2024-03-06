@@ -127,7 +127,7 @@ function ShotAccordion(props) {
           </Text>
           <Text>
             <Text style={{ fontWeight: "bold" }}>SG:</Text>{" "}
-            {numTrunc(Number(props.shot[props.drill.mainOutputShot]))}
+            {numTrunc(Number(props.shot[props.drillInfo["mainOutputShot"]]))}
           </Text>
         </View>
       }
@@ -137,7 +137,7 @@ function ShotAccordion(props) {
         borderStyle: "solid",
       }}
     >
-      {props.drill["outputs"].map((field) => {
+      {props.drillInfo["outputs"].map((field) => {
         switch (field) {
           case "carry":
             return DataField(field, {
