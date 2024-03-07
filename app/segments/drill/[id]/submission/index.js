@@ -16,7 +16,7 @@ export default function Index() {
 
   const drillsRef = doc(db, "teams", "1", "drills", id);
 
-  const [drillData, setDrillData] = useState({});
+  const [drillInfo, setDrillInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Index() {
       try {
         setLoading(true);
         await getDoc(drillsRef).then((document) => {
-          setDrillData(document.data());
+          setDrillInfo(document.data());
         });
 
         setLoading(false);
@@ -36,9 +36,9 @@ export default function Index() {
     fetchData();
   }, []);
 
-  const attemptData = {
-    requirements: drillData.requirements,
-    inputs: drillData.inputs,
+  const attemptInfo = {
+    requirements: drillInfo.requirements,
+    inputs: drillInfo.inputs,
   };
 
   const fillRandomShotTargets = (min, max) => {
@@ -46,7 +46,7 @@ export default function Index() {
     const maxFloored = Math.floor(max);
     let shots = [];
 
-    for (var i = 0; i < drillData.reps; i++) {
+    for (var i = 0; i < drillInfo.reps; i++) {
       var target = Math.floor(
         Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
       );
@@ -62,28 +62,28 @@ export default function Index() {
 
   const fillClubTargets = () => {
     let shots = [];
-    for (var i = 0; i < drillData.reps; i++) {
+    for (var i = 0; i < drillInfo.reps; i++) {
       shots.push({
         shotNum: i + 1,
-        value: drillData.requirements[0].items[i],
+        value: drillInfo.requirements[0].items[i],
       });
     }
     return shots;
   };
 
-  const getAttemptDataShots = () => {
-    switch (drillData.drillType) {
+  const getAttemptInfoShots = () => {
+    switch (drillInfo.drillType) {
       case "20 Shot Challenge":
-        attemptData.shots = fillRandomShotTargets(
-          drillData.requirements[0].min,
-          drillData.requirements[0].max,
+        attemptInfo.shots = fillRandomShotTargets(
+          drillInfo.requirements[0].min,
+          drillInfo.requirements[0].max,
         ); //current this is getting recalled everytime state changes
         break;
       case "Line Test":
-        attemptData.shots = fillClubTargets();
+        attemptInfo.shots = fillClubTargets();
         break;
       default:
-        attemptData.shots = null;
+        attemptInfo.shots = null;
         break;
     }
     return;
@@ -97,17 +97,17 @@ export default function Index() {
       return <Loading />
     }
     if (toggleResult == true) {
-      return <Result submission={outputData} drill={drillData} />;
+      return <Result submission={outputData} drill={drillInfo} />;
     } else {
-      getAttemptDataShots();
+      getAttemptInfoShots();
 
       return (
         <Input
-          drillTitle={drillData.drillType}
-          outputs={drillData.outputs}
-          aggOutputs={drillData.aggOutputs}
+          drillTitle={drillInfo.drillType}
+          outputs={drillInfo.outputs}
+          aggOutputs={drildrillInfo.aggOutputs}
           outputData={outputData}
-          attemptData={attemptData}
+          attemptInfo={attemptInfo}
           setToggleResult={setToggleResult}
           setOutputData={setOutputData}
         />
