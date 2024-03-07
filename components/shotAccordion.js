@@ -36,19 +36,63 @@ function DataField(field, value) {
               width: 200,
             }}
           >
-            <Row name={"(Actual)"} value={numTrunc(value["carry"])} />
-            <Row name={"(Target)"} value={numTrunc(value["target"])} />
-            <Row name={"(Diff)"} value={numTrunc(value["carryDiff"])} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text>(Actual)</Text>
+              <Text>{numTrunc(Number(value["carry"]))} yd</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text>(Target)</Text>
+              <Text>{numTrunc(Number(value["target"]))} yd</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text>(Diff)</Text>
+              <Text>{numTrunc(Number(value["carryDiff"]))} yd</Text>
+            </View>
           </View>
         </View>
       );
     case "sideLanding":
     case "proxHole": //has units
       return (
-        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+          key={field}
+        >
+          <Text>{title[field]}</Text>
+          <Text>{numTrunc(Number(value))} ft</Text>
+        </View>
       );
     case "strokesGained": //just round to 3 decimals
-      return <Row key={field} name={title[field]} value={numTrunc(value)} />;
+      return (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+          key={field}
+        >
+          <Text>{title[field]}</Text>
+          <Text>{numTrunc(Number(value))}</Text>
+        </View>
+      );
     default:
       return (
         <Row

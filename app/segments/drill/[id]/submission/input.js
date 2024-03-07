@@ -22,14 +22,6 @@ import { getIconByKey, lookUpExpectedPutts } from "~/Utility";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectange from "~/components/input/navigationRectange";
-
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Description from "./modals/description";
 
 function calculateProxHole(target, carry, sideLanding) {
@@ -218,9 +210,8 @@ export default function Input({
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
     if (
-      // currentShot == AttemptData.shots.length - 1 &&
-      // shotIndex == AttemptData.shots.length - 1
-      1
+      currentShot == attemptData.shots.length - 1 &&
+      shotIndex == attemptData.shots.length - 1
     ) {
       return (
         <Button

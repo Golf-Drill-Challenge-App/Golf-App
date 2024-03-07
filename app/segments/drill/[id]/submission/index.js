@@ -5,6 +5,10 @@ import { ActivityIndicator, PaperProvider } from "react-native-paper";
 
 import { lookUpBaselineStrokesGained } from "~/Utility";
 import Input from "./input";
+import Result from "./result";
+
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "~/firebaseConfig";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
