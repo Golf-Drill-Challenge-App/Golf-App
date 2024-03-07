@@ -6,6 +6,7 @@ import { ActivityIndicator, PaperProvider } from "react-native-paper";
 import { lookUpBaselineStrokesGained } from "~/Utility";
 import Input from "./input";
 import Result from "./result";
+import Loading from "~/components/Loading"
 
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
@@ -92,9 +93,12 @@ export default function Index() {
   const [toggleResult, setToggleResult] = useState(false);
 
   const display = () => {
-    if (!loading && toggleResult == true) {
+    if (loading) {
+      return <Loading />
+    }
+    if (toggleResult == true) {
       return <Result submission={outputData} drill={drillData} />;
-    } else if (!loading && toggleResult == false) {
+    } else {
       getAttemptDataShots();
 
       return (
@@ -107,15 +111,6 @@ export default function Index() {
           setToggleResult={setToggleResult}
           setOutputData={setOutputData}
         />
-      );
-    } else {
-      //Loading spinner icon
-      return (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator animating={true} size="large" color="#F24E1E" />
-        </View>
       );
     }
   };
