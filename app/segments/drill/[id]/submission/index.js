@@ -71,7 +71,7 @@ export default function Index() {
     return shots;
   };
 
-  const getAttemptInfoShots = () => {
+  const getShotInfo = () => {
     switch (drillInfo.drillType) {
       case "20 Shot Challenge":
         attemptInfo.shots = fillRandomShotTargets(
@@ -99,7 +99,7 @@ export default function Index() {
     if (toggleResult == true) {
       return <Result submission={outputData} drill={drillInfo} />;
     } else {
-      getAttemptInfoShots();
+      getShotInfo();
 
       return (
         <Input
