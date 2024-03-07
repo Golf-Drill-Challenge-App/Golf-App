@@ -182,10 +182,8 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 }
 
 export default function Input({
-  drillTitle,
-  outputs,
-  aggOutputs,
   outputData,
+  drillInfo,
   attemptInfo,
   setToggleResult,
   setOutputData,
@@ -224,8 +222,8 @@ export default function Input({
                 inputValues,
                 attemptInfo,
                 did,
-                outputs,
-                aggOutputs,
+                drillInfo.outputs,
+                drillInfo.aggOutputs,
               ),
             );
             //send the output data to the database here
@@ -344,7 +342,7 @@ export default function Input({
                   onPress={showLeaveDrillDialog}
                   color={"#F24E1E"}
                 />
-                <Appbar.Content title={drillTitle} titleStyle={styles.title} />
+                <Appbar.Content title={drillInfo.drillTitle} titleStyle={styles.title} />
                 <Appbar.Action
                   icon="information-outline"
                   onPress={() => {
@@ -385,7 +383,7 @@ export default function Input({
                     {attemptInfo.requirements.map((item, id) => (
                       <DrillTarget
                         key={id}
-                        drillTitle={drillTitle}
+                        drillTitle={drillInfo.drillTitle}
                         distanceMeasure={item.distanceMeasure}
                         value={attemptInfo.shots[shotIndex].value}
                       />
