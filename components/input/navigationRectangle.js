@@ -9,11 +9,12 @@ export default function NavigationRectange({
   targetValue,
   inputValues,
   shotIndex,
+  numShots
 }) {
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
-        <Text>Shot {shotIndex}/20</Text>
+        <Text>Shot {shotIndex}/{numShots}</Text>
         <Text>
           Target: {targetValue}
           {target.distanceMeasure}
