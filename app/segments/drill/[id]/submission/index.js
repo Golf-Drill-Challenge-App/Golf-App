@@ -105,7 +105,7 @@ export default function Index() {
         <Input
           drillTitle={drillInfo.drillType}
           outputs={drillInfo.outputs}
-          aggOutputs={drildrillInfo.aggOutputs}
+          aggOutputs={drillInfo.aggOutputs}
           outputData={outputData}
           attemptInfo={attemptInfo}
           setToggleResult={setToggleResult}
