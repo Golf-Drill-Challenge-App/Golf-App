@@ -10,14 +10,6 @@ export default function DrillInput({
   currentShot,
   shotIndex,
 }) {
-  const checkEditable = () => {
-    if (currentShot == shotIndex) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   return (
     <View style={styles.item}>
       <Text style={styles.description}>
@@ -32,7 +24,7 @@ export default function DrillInput({
           value={inputValue}
           keyboardType="numeric"
           returnKeyType="done"
-          editable={checkEditable()}
+          editable={currentShot == shotIndex}
           onChangeText={onInputChange}
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
