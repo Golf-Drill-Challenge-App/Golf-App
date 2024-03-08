@@ -308,10 +308,11 @@ export default function Input({
 
   /***** Leave drill Dialog Stuff *****/
 
-  const [visibleLeaveDrill, setVisibleLeaveDrill] = React.useState(false);
+  const [leaveDrillDialogVisable, setLeaveDrillDialogVisable] =
+    React.useState(false);
 
-  const showLeaveDrillDialog = () => setVisibleLeaveDrill(true);
-  const hideLeaveDrillDialog = () => setVisibleLeaveDrill(false);
+  const showLeaveDrillDialog = () => setLeaveDrillDialogVisable(true);
+  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisable(false);
 
   /***** Empty Input Banner Stuff *****/
 
@@ -450,7 +451,7 @@ export default function Input({
                 {/* Leave Drill Dialog */}
                 <Portal>
                   <Dialog
-                    visible={visibleLeaveDrill}
+                    visible={leaveDrillDialogVisable}
                     onDismiss={hideLeaveDrillDialog}
                   >
                     <Dialog.Title>Alert</Dialog.Title>
