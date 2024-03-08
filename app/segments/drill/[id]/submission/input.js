@@ -4,7 +4,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -23,6 +23,7 @@ import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Description from "./modals/description";
+import { lookUpBaselineStrokesGained } from "~/Utility";
 
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
@@ -69,11 +70,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
-          proxHoleTotal += calculateProxHole(
-            attemptInfo.shots[j].target,
-            inputValues[j].carry,
-            inputValues[j].sideLanding,
-          );
+          proxHoleTotal += shot.proxHole;
           break;
 
         case "baseline":
@@ -91,16 +88,16 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
           break;
 
         case "strokesGained":
+          const baseline = lookUpBaselineStrokesGained(shots[j].target);
           shot.strokesGained =
-            attemptInfo.shots[j].baseline -
+            baseline -
             lookUpExpectedPutts(
               calculateProxHole(
                 attemptInfo.shots[j].target,
                 inputValues[j].carry,
                 inputValues[j].sideLanding,
               ),
-            );
-          -1;
+            ) - 1;
           strokesGainedTotal += shot.strokesGained;
           break;
 
@@ -181,36 +178,120 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
   };
 }
 
-export default function Input({
-  outputData,
-  drillInfo,
-  attemptInfo,
-  setToggleResult,
-  setOutputData,
-}) {
+export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
-  const numInputs = attemptInfo.inputs.length;
+  const numInputs = drillInfo["inputs"].length;
+  const numShots = drillInfo["reps"];
 
   const navigation = useNavigation();
 
   //a useState hook to track the inputs on each shot
-  const [inputValues, setInputValues] = useState(
-    Array.from({ length: attemptInfo.shots.length }, () => ({})),
-  );
+  const [shotRequirements, setShotRequirements] = useState([]);
+  const [shotInputs, setShotInputs] = useState([])
 
-  const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
+  const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot index
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
+
+  useEffect(() => {
+    const newShots = Array.from({ drillInfo["rep"] }, () => ({}))
+    drillInfo["requirement"].forEach((requirement) => {
+      switch (requirement["type"]) {
+        case "sequence": {
+          for (let i = 0; i < drillInfo.reps; i++) {
+            newShots[i] = {
+              target: drillInfo.requirements[0].items[i],
+            };
+          }
+        }
+        case "random":{
+          const minCeiled = Math.ceil(requirement["min"]);
+          const maxFloored = Math.floor(requirement["max"]);
+
+          for (var i = 0; i < drillInfo.reps; i++) {
+            var target = Math.floor(
+              Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
+            );
+            var baseline = lookUpBaselineStrokesGained(target);
+            shots.push({
+              shotNum: i + 1,
+              target: target,
+              baseline: baseline,
+            });
+          }
+        }
+      }
+    });
+  }, []);
+
+  const fillRandomShotTargets = (min, max) => {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    let shots = [];
+
+    for (var i = 0; i < drillInfo.reps; i++) {
+      var target = Math.floor(
+        Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
+      );
+      var baseline = lookUpBaselineStrokesGained(target);
+      shots.push({
+        shotNum: i + 1,
+        target: target,
+        baseline: baseline,
+      });
+    }
+    return shots;
+  };
+
+  const fillClubTargets = () => {
+    let shots = [];
+    for (var i = 0; i < drillInfo.reps; i++) {
+      shots.push({
+        shotNum: i + 1,
+        target: drillInfo.requirements[0].items[i],
+      });
+    }
+    return shots;
+  };
+
+  const getShotInfo = () => {
+    switch (drillInfo.drillType) {
+      case "20 Shot Challenge":
+        attemptInfo.shots = fillRandomShotTargets(
+          drillInfo.requirements[0].min,
+          drillInfo.requirements[0].max,
+        ); //current this is getting recalled everytime state changes
+        break;
+      case "Line Test":
+        attemptInfo.shots = fillClubTargets();
+        break;
+      default:
+        attemptInfo.shots = null;
+        break;
+    }
+    return;
+  };
 
   const { id: did } = useLocalSearchParams();
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
+    if (currentShot !== displayedShot)
+      return (
+        <Button
+          style={styles.disabledButton}
+          labelStyle={styles.buttonText}
+          mode="contained-tonal"
+          onPress={() => {
+            setDisplayedShot(currentShot);
+          }}
+        >
+          Back to Latest
+        </Button>
+      );
+
     //Logic to display "Submit Drill"
-    if (
-      currentShot == attemptInfo.shots.length - 1 &&
-      shotIndex == attemptInfo.shots.length - 1
-    ) {
+    if (currentShot === numShots)
       return (
         <Button
           style={styles.button}
@@ -219,8 +300,7 @@ export default function Input({
           onPress={() => {
             setOutputData(
               createOutputData(
-                inputValues,
-                attemptInfo,
+                shotRequirements,
                 did,
                 drillInfo.outputs,
                 drillInfo.aggOutputs,
@@ -233,42 +313,26 @@ export default function Input({
           Submit Drill
         </Button>
       );
-    }
 
     //Logic to dislay "Next Shot"
-    if (shotIndex == currentShot) {
-      return (
-        <Button
-          style={styles.button}
-          labelStyle={styles.buttonText}
-          mode="contained-tonal"
-          onPress={handleNextShotButtonClick}
-        >
-          Next Shot
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          style={styles.disabledButton}
-          labelStyle={styles.buttonText}
-          mode="contained-tonal"
-          onPress={() => {
-            setShotIndex(currentShot);
-          }}
-        >
-          Back to Latest
-        </Button>
-      );
-    }
+    return (
+      <Button
+        style={styles.button}
+        labelStyle={styles.buttonText}
+        mode="contained-tonal"
+        onPress={handleNextShotButtonClick}
+      >
+        Next Shot
+      </Button>
+    );
   };
 
   //Function to help in maintaing State of inputs
   const handleInputChange = (id, newText) => {
-    setInputValues((prevValues) => {
+    setShotRequirements((prevValues) => {
       const updatedValues = [...prevValues];
-      updatedValues[shotIndex] = {
-        ...updatedValues[shotIndex],
+      updatedValues[displayedShot] = {
+        ...updatedValues[displayedShot],
         [id]: newText,
       };
       return updatedValues;
@@ -278,47 +342,34 @@ export default function Input({
   //Function to handle "Next shot" button click
   const handleNextShotButtonClick = () => {
     //Check if all inputs have been filled in
-    if (Object.keys(inputValues[shotIndex]).length === numInputs) {
-      setEmptyInputBannerVisable(false);
-      setShotIndex(shotIndex + 1);
+    if (Object.keys(shotRequirements[displayedShot]).length === numInputs) {
+      setEmptyInputBannerVisible(false);
+      setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
     } else {
-      setEmptyInputBannerVisable(true);
+      setEmptyInputBannerVisible(true);
     }
   };
 
   /***** Navigation Bottom Sheet stuff *****/
-  const navigationBottomSheetModalRef = useRef(null);
+  const navigationModalRef = useRef(null);
 
   const snapPoints = useMemo(() => ["50%", "90%"], []);
 
-  // callbacks
-  const handlePresentNavigationModalPress = useCallback(() => {
-    navigationBottomSheetModalRef.current?.present();
-  }, []);
-  const handleNavigationSheetChanges = useCallback((index) => {}, []);
-
   /***** Description Bottom Sheet Stuff *****/
 
-  const descriptionBottomSheetModalRef = useRef(null);
-
-  // callbacks
-  const handlePresentDesciptionModalPress = useCallback(() => {
-    descriptionBottomSheetModalRef.current?.present();
-  }, []);
-  const handleDesciptionSheetChanges = useCallback((index) => {}, []);
+  const descriptionModalRef = useRef(null);
 
   /***** Leave drill Dialog Stuff *****/
 
-  const [leaveDrillDialogVisable, setLeaveDrillDialogVisable] =
-    React.useState(false);
+  const [leaveDialogVisible, setLeaveDialogVisible] = React.useState(false);
 
-  const showLeaveDrillDialog = () => setLeaveDrillDialogVisable(true);
-  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisable(false);
+  const showLeaveDialog = () => setLeaveDialogVisible(true);
+  const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
   /***** Empty Input Banner Stuff *****/
 
-  const [emptyInputBannerVisable, setEmptyInputBannerVisable] = useState(false);
+  const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -332,7 +383,7 @@ export default function Input({
               >
                 <Appbar.Action
                   icon="close"
-                  onPress={showLeaveDrillDialog}
+                  onPress={showLeaveDialog}
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
@@ -341,18 +392,20 @@ export default function Input({
                 />
                 <Appbar.Action
                   icon="information-outline"
-                  onPress={handlePresentDesciptionModalPress}
+                  onPress={() => {
+                    descriptionModalRef.current?.present();
+                  }}
                   color={"#F24E1E"}
                 />
               </Appbar.Header>
               {/* Empty Input Banner */}
 
               <Banner
-                visible={emptyInputBannerVisable}
+                visible={emptyInputBannerVisible}
                 actions={[
                   {
                     label: "Dismiss",
-                    onPress: () => setEmptyInputBannerVisable(false),
+                    onPress: () => setEmptyInputBannerVisible(false),
                   },
                 ]}
               >
@@ -363,10 +416,8 @@ export default function Input({
                 {/* Shot Number / Total shots */}
                 <View style={styles.shotNumContainer}>
                   <Text style={styles.shotNumber}>
-                    Shot {attemptInfo.shots[shotIndex].shotNum}
-                    <Text style={styles.shotTotal}>
-                      /{attemptInfo.shots.length}
-                    </Text>
+                    Shot {displayedShot + 1}
+                    <Text style={styles.shotTotal}>/{numShots}</Text>
                   </Text>
                 </View>
 
@@ -374,73 +425,72 @@ export default function Input({
                   {/* Instruction */}
 
                   <View style={styles.horizontalContainer}>
-                    {attemptInfo.requirements.map((item, id) => (
+                    {drillInfo.requirements.map((item, id) => (
                       <DrillTarget
                         key={id}
                         drillTitle={drillInfo.drillType}
                         distanceMeasure={item.distanceMeasure}
-                        target={attemptInfo.shots[shotIndex].target}
+                        target={shotRequirements[displayedShot].target}
                       />
                     ))}
                   </View>
 
                   {/* Inputs */}
 
-                  {attemptInfo.inputs.map((item, id) => (
+                  {drillInfo.inputs.map((item, id) => (
                     <DrillInput
                       key={id}
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[shotIndex]?.[item.id] || ""}
+                      inputValue={shotRequirements[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
                       currentShot={currentShot}
-                      shotIndex={shotIndex}
+                      displayedShot={displayedShot}
                     />
                   ))}
                 </View>
 
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetModal
-                  ref={navigationBottomSheetModalRef}
+                  ref={navigationModalRef}
                   index={1}
                   snapPoints={snapPoints}
-                  onChange={handleNavigationSheetChanges}
                 >
                   <BottomSheetScrollView>
                     <View style={styles.bottomSheetContentContainer}>
-                      {attemptInfo.shots
-                        .slice(0, currentShot + 1)
-                        .map((item, id) => (
-                          <Pressable
+                      {shotRequirements.map((item, id) => (
+                        <Pressable
+                          key={id}
+                          onPress={() => {
+                            setDisplayedShot(id);
+                            navigationModalRef.current.close();
+                          }}
+                          width={"100%"}
+                          alignItems={"center"}
+                        >
+                          <NavigationRectangle
                             key={id}
-                            onPress={() => {
-                              setShotIndex(id);
-                              navigationBottomSheetModalRef.current.close();
-                            }}
-                            width={"100%"}
-                            alignItems={"center"}
-                          >
-                            <NavigationRectangle
-                              key={id}
-                              attemptInfo={attemptInfo}
-                              inputValues={inputValues[id]}
-                              shotIndex={item.shotNum}
-                            />
-                          </Pressable>
-                        ))}
+                            inputs={drillInfo.inputs}
+                            target={drillInfo.requirements[0]}
+                            targetValue={shotRequirements[id].target}
+                            inputValues={shotRequirements[id]}
+                            shotIndex={item.shotNum}
+                            numShots={numShots}
+                          />
+                        </Pressable>
+                      ))}
                     </View>
                   </BottomSheetScrollView>
                 </BottomSheetModal>
 
                 {/* Description Bottom Sheet */}
                 <BottomSheetModal
-                  ref={descriptionBottomSheetModalRef}
+                  ref={descriptionModalRef}
                   index={1}
                   snapPoints={snapPoints}
-                  onChange={handleDesciptionSheetChanges}
                 >
                   <BottomSheetScrollView>
                     <Description />
@@ -450,8 +500,8 @@ export default function Input({
                 {/* Leave Drill Dialog */}
                 <Portal>
                   <Dialog
-                    visible={leaveDrillDialogVisable}
-                    onDismiss={hideLeaveDrillDialog}
+                    visible={leaveDialogVisible}
+                    onDismiss={hideLeaveDialog}
                   >
                     <Dialog.Title>Alert</Dialog.Title>
                     <Dialog.Content>
@@ -460,13 +510,13 @@ export default function Input({
                     <Dialog.Actions>
                       <Button
                         onPress={() => {
-                          hideLeaveDrillDialog();
+                          hideLeaveDialog();
                           navigation.goBack();
                         }}
                       >
                         Leave Drill
                       </Button>
-                      <Button onPress={hideLeaveDrillDialog}>Cancel</Button>
+                      <Button onPress={hideLeaveDialog}>Cancel</Button>
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
@@ -479,7 +529,9 @@ export default function Input({
 
                 <Text
                   style={{ color: "#F3572A" }}
-                  onPress={handlePresentNavigationModalPress}
+                  onPress={() => {
+                    navigationModalRef.current?.present();
+                  }}
                 >
                   View all shots
                 </Text>

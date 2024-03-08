@@ -7,10 +7,14 @@ export default function NavigationRectangle({
   attemptInfo,
   inputValues,
   shotIndex,
+  numShots,
 }) {
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
+        <Text>
+          Shot {shotIndex}/{numShots}
+        </Text>
         <Text>
           Shot {shotIndex}/{attemptInfo.shots.length}
         </Text>
