@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
-export default function DrillTarget({ drillTitle, distanceMeasure, value }) {
+export default function DrillTarget({ drillTitle, distanceMeasure, target }) {
   const getInstructionDisplay = (drill) => {
     switch (drill) {
       case "20 Shot Challenge":
@@ -19,7 +19,7 @@ export default function DrillTarget({ drillTitle, distanceMeasure, value }) {
         {getInstructionDisplay(drillTitle)}
       </Text>
       <Text style={styles.target}>
-        {value} {distanceMeasure}
+        {target} {distanceMeasure}
       </Text>
     </View>
   );
