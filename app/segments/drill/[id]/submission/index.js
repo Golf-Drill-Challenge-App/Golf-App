@@ -1,12 +1,11 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { ActivityIndicator, PaperProvider } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 
 import { lookUpBaselineStrokesGained } from "~/Utility";
+import Loading from "~/components/Loading";
 import Input from "./input";
 import Result from "./result";
-import Loading from "~/components/Loading"
 
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
@@ -16,6 +15,8 @@ export default function Index() {
 
   const drillsRef = doc(db, "teams", "1", "drills", id);
 
+  const [outputData, setOutputData] = useState([]);
+  const [toggleResult, setToggleResult] = useState(false);
   const [drillInfo, setDrillInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -89,12 +90,9 @@ export default function Index() {
     return;
   };
 
-  const [outputData, setOutputData] = useState([]);
-  const [toggleResult, setToggleResult] = useState(false);
-
   const display = () => {
     if (loading) {
-      return <Loading />
+      return <Loading />;
     }
     if (toggleResult == true) {
       return <Result submission={outputData} drill={drillInfo} />;
