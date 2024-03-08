@@ -92,7 +92,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
         case "strokesGained":
           shot.strokesGained =
-          attemptInfo.shots[j].baseline -
+            attemptInfo.shots[j].baseline -
             lookUpExpectedPutts(
               calculateProxHole(
                 attemptInfo.shots[j].target,
@@ -200,9 +200,7 @@ export default function Input({
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
-  const { id } = useLocalSearchParams();
-
-  const did = id;
+  const { id: did } = useLocalSearchParams();
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
@@ -342,7 +340,10 @@ export default function Input({
                   onPress={showLeaveDrillDialog}
                   color={"#F24E1E"}
                 />
-                <Appbar.Content title={drillInfo.drillTitle} titleStyle={styles.title} />
+                <Appbar.Content
+                  title={drillInfo.drillTitle}
+                  titleStyle={styles.title}
+                />
                 <Appbar.Action
                   icon="information-outline"
                   onPress={() => {
