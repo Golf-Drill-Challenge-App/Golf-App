@@ -242,9 +242,7 @@ export default function Input({
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
-          onPress={() => {
-            handleNextShotButtonClick();
-          }}
+          onPress={handleNextShotButtonClick}
         >
           Next Shot
         </Button>
@@ -343,9 +341,7 @@ export default function Input({
                 />
                 <Appbar.Action
                   icon="information-outline"
-                  onPress={() => {
-                    handlePresentDesciptionModalPress();
-                  }}
+                  onPress={handlePresentDesciptionModalPress}
                   color={"#F24E1E"}
                 />
               </Appbar.Header>
@@ -473,13 +469,7 @@ export default function Input({
                       >
                         Leave Drill
                       </Button>
-                      <Button
-                        onPress={() => {
-                          hideLeaveDrillDialog();
-                        }}
-                      >
-                        Cancel
-                      </Button>
+                      <Button onPress={hideLeaveDrillDialog}>Cancel</Button>
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
@@ -492,9 +482,7 @@ export default function Input({
 
                 <Text
                   style={{ color: "#F3572A" }}
-                  onPress={() => {
-                    handlePresentNavigationModalPress();
-                  }}
+                  onPress={handlePresentNavigationModalPress}
                 >
                   View all shots
                 </Text>
