@@ -8,60 +8,77 @@ import { View } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { Link } from 'expo-router';
 import drillsData from "~/drill_data.json";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { db } from "~/firebaseConfig";
+import { useEffect } from 'react';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="check-bold" color='green' back />;
-const cardData = [
-  // ... your array of card data objects here ...
-  { id: 1, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 2, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 3, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 4, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 5, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 6, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 7, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 8, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 9, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  { id: 10, title: "20 Shot Challenge", description: "50ft - 150ft" },
-  // ... more card data ...
+const assignedData = [
+
+  {
+    "pid": "1",
+    "title": "Task 1",
+    "description": "Laborum velit duis consequat pariatur velit laborum est sunt non. Anim do sunt amet magna fugiat. Esse aliquip id id voluptate velit deserunt Lorem adipisicing cillum quis reprehenderit tempor et Lorem et. Nostrud ut elit id irure nisi ipsum adipisicing eiusmod excepteur quis anim est labore.",
+    "assigned_time": "2345654",
+    "drills": ["YtCsaxzscFScnpZYmnKI", "SpvYyY94HaulVH2zmVyM"],
+    "assignee": [{ "uid": "4", "completed": ["YtCsaxzscFScnpZYmnKI"] }, { "uid": "5", "completed": ["SpvYyY94HaulVH2zmVyM"] }]
+  },
+
 ];
 
 
-function MyComponent() {
-  const drills = drillsData.teams["1"].drills
+const cardData = [
+  // ... your array of card data objects here ...
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "YtCsaxzscFScnpZYmnKI", drillType: "Line Test", spec: "7 - PW" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challengeeeeeeeeeeee", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  { did: "SpvYyY94HaulVH2zmVyM", drillType: "20 Shot Challenge", spec: "50ft - 150ft" },
+  // ... more car
+];
 
-  const navigation = useNavigation();
-  const handleCardClick = (item) => {
-    // Perform your desired action on card click
-    console.log('Card clicked:', item);
-  };
+function MyComponent(props) {
+  const drillsRef = collection(db, "teams", "1", "drills");
+  //const test = doc(db, "teams", "1", "drills", "SpvYyY94HaulVH2zmVyM")
+  //console.log("GET TEST", test)
+
+  //getDocs(drillsRef).then(q => q.forEach(d => console.log("DOC DATA", d.data())))
+
+
+
 
   return (
-
     <FlatList
       showsHorizontalScrollIndicator={false}
       style={styles.row}
       horizontal={true}
-      data={cardData.slice(0, 5)} // First 5 cards for first row
+      data={props.cardData}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
 
-        <TouchableOpacity onPress={() => handleCardClick(item)}>
-          <Link
-            key={'732489'}
-            href={{
-              pathname: `/content/drill/732489`,
-              params: { id: '732489' },
-            }}
-            style={{ paddingVertical: 8 }}
-          >
-            <Card style={styles.card}>
-              <Card.Content>
-                <Text variant="titleLarge" numberOfLines={2}>{item.title}</Text>
-                <Text variant="bodyMedium">{item.description}</Text>
-              </Card.Content>
-            </Card>
-          </Link>
-        </TouchableOpacity>
+
+        <Link
+          key={'732489'}
+          href={{
+            pathname: `/content/drill/${item.did}`,
+            params: { id: item.did },
+          }}
+          style={{ paddingLeft: 10 }}
+          disabled={assignedData[0].assignee[0].completed == item.did}
+        >
+          <Card style={{ width: 150, height: 150, paddingLeft: 10, backgroundColor: assignedData[0].assignee[0].completed == item.did ? 'green' : 'white' }}>
+            <Card.Content>
+              <Text variant="titleLarge" numberOfLines={3}>{item.drillType}</Text>
+              <Text variant="bodyMedium">{item.spec}</Text>
+            </Card.Content>
+          </Card>
+        </Link>
+
 
       )}
     />
@@ -74,7 +91,9 @@ const styles = StyleSheet.create({
 
   row: {
     maxHeight: 190,
-    marginBottom: 20
+    marginBottom: 20,
+    paddingTop: 10
+
   },
   card: {
     width: 150, // Adjust card width
@@ -89,12 +108,36 @@ const styles = StyleSheet.create({
 });
 
 export default function Index() {
+  const d = doc(db, "teams", "1", "drills", "SpvYyY94HaulVH2zmVyM")
+  //getDoc(d).then(value => console.log(value.data()));
 
+  const [cardDataTest, setCardDataTest] = React.useState([])
+  useEffect(() => {
+    let drillList = [];
+    let promiseList = [];
+    assignedData.forEach(assignemnt => {
+      assignemnt.drills.forEach(did => {
+        promiseList.push(getDoc(doc(db, "teams", "1", "drills", did)))
+      })
+    })
+    Promise.all(promiseList).then((values) => {
+      values.forEach((drillData => {
 
-  const HandleClick = () => {
-    console.log("Clicked Plan Index");
-  };
+        console.log("DRILL DATA", drillData.data());
+        drillList.push(drillData.data())
+      }))
+      setCardDataTest(drillList)
+    })
+
+  }, [])
+  console.log("TEST CARD DATA", cardDataTest)
+
   const navigation = useNavigation();
+
+
+  const drill_ids = assignedData[0].drills
+
+
   return (
     <PaperProvider>
       <SafeAreaView
@@ -106,8 +149,10 @@ export default function Index() {
           <Appbar.Content title={"Dashboard"} titleStyle={{ fontWeight: 'bold' }} />
         </Appbar.Header>
 
+
+
         <Text style={styles.drillListTitle}>Todays Drills</Text>
-        <MyComponent cardData={cardData} />
+        {(cardDataTest.length != 0) ? <MyComponent cardData={cardDataTest} /> : <Text>Loading</Text>}
         <Text style={styles.drillListTitle}>Pinned Drills</Text>
         <MyComponent cardData={cardData} />
       </SafeAreaView>

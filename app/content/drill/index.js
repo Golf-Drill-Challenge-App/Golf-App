@@ -53,6 +53,7 @@ export default function Index() {
                   params: { id: drill.did },
                 }}
                 style={{ paddingVertical: 8 }}
+                onPress={() => console.log(drill.did)}
               >
                 <List.Item
                   title={drill.drillType}
