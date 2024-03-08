@@ -51,7 +51,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
       switch (output) {
         case "target":
-          shot.target = attemptInfo.shots[j].value;
+          shot.target = attemptInfo.shots[j].target;
           break;
 
         case "carry":
@@ -65,12 +65,12 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
         case "proxHole":
           shot.proxHole = calculateProxHole(
-            attemptInfo.shots[j].value,
+            attemptInfo.shots[j].target,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
           proxHoleTotal += calculateProxHole(
-            attemptInfo.shots[j].value,
+            attemptInfo.shots[j].target,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
@@ -83,7 +83,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
             calculateProxHole(
-              attemptInfo.shots[j].value,
+              attemptInfo.shots[j].target,
               inputValues[j].carry,
               inputValues[j].sideLanding,
             ),
@@ -95,7 +95,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
           attemptInfo.shots[j].baseline -
             lookUpExpectedPutts(
               calculateProxHole(
-                attemptInfo.shots[j].value,
+                attemptInfo.shots[j].target,
                 inputValues[j].carry,
                 inputValues[j].sideLanding,
               ),
@@ -106,7 +106,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
-            attemptInfo.shots[j].value,
+            attemptInfo.shots[j].target,
             inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
@@ -385,7 +385,7 @@ export default function Input({
                         key={id}
                         drillTitle={drillInfo.drillTitle}
                         distanceMeasure={item.distanceMeasure}
-                        value={attemptInfo.shots[shotIndex].value}
+                        target={attemptInfo.shots[shotIndex].target}
                       />
                     ))}
                   </View>
@@ -433,7 +433,7 @@ export default function Input({
                               key={id}
                               inputs={attemptInfo.inputs}
                               target={attemptInfo.requirements[0]}
-                              targetValue={attemptInfo.shots[id].value}
+                              targetValue={attemptInfo.shots[id].target}
                               inputValues={inputValues[id]}
                               shotIndex={item.shotNum}
                               numShots={attemptInfo.shots.length}

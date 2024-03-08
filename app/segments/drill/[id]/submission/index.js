@@ -53,7 +53,7 @@ export default function Index() {
       var baseline = lookUpBaselineStrokesGained(target);
       shots.push({
         shotNum: i + 1,
-        value: target,
+        target: target,
         baseline: baseline,
       });
     }
@@ -65,7 +65,7 @@ export default function Index() {
     for (var i = 0; i < drillInfo.reps; i++) {
       shots.push({
         shotNum: i + 1,
-        value: drillInfo.requirements[0].items[i],
+        target: drillInfo.requirements[0].items[i],
       });
     }
     return shots;
