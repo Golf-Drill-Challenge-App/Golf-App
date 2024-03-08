@@ -5,7 +5,6 @@ import { getIconByKey } from "~/Utility";
 
 export default function NavigationRectangle({
   attemptInfo,
-  targetValue,
   inputValues,
   shotIndex,
 }) {
@@ -16,7 +15,7 @@ export default function NavigationRectangle({
           Shot {shotIndex}/{attemptInfo.shots.length}
         </Text>
         <Text>
-          Target: {targetValue}
+          Target: {attemptInfo.shots[shotIndex - 1].target}
           {attemptInfo.requirements[0].distanceMeasure}
         </Text>
       </View>

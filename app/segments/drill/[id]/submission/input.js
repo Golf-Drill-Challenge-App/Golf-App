@@ -426,12 +426,8 @@ export default function Input({
                             <NavigationRectangle
                               key={id}
                               attemptInfo={attemptInfo}
-                              inputs={attemptInfo.inputs}
-                              target={attemptInfo.requirements[0]}
-                              targetValue={attemptInfo.shots[id].target}
                               inputValues={inputValues[id]}
                               shotIndex={item.shotNum}
-                              numShots={attemptInfo.shots.length}
                             />
                           </Pressable>
                         ))}
