@@ -203,7 +203,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     },
     bottomTextContainer: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       marginBottom: 13,
       marginLeft: 8,
       marginRight: 8,
@@ -276,11 +276,19 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
       <View style={styles.bottomContainer}>
         <View style={styles.bottomTextContainer}>
-          <Text style={styles.bottomText}>{dateString}</Text>
-          <Text style={styles.bottomText}>
+          <Text style={{ ...styles.bottomText, width: "30%" }}>
+            {dateString}
+          </Text>
+          <Text
+            style={{ ...styles.bottomText, width: "40%", textAlign: "center" }}
+          >
             MA: {numTrunc(movingAvgData[selected])}
           </Text>
-          <Text style={styles.bottomText}>SG: {numTrunc(data[selected])}</Text>
+          <Text
+            style={{ ...styles.bottomText, width: "30%", textAlign: "right" }}
+          >
+            SG: {numTrunc(data[selected])}
+          </Text>
         </View>
 
         {drillDataSorted[selected]["shots"].map((shot) => (

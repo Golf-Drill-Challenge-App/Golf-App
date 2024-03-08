@@ -1,36 +1,37 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
-import { doc, getDoc } from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
-import db from "~/firebaseConfig";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
+import { useDrillInfo } from "../../../../hooks/useDrillInfo";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
   const navigation = useNavigation();
-  const { id } = useLocalSearchParams();
+  const drillId = useLocalSearchParams()["id"];
 
-  const drillsRef = doc(db, "teams", "1", "drills", id);
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo(drillId);
 
-  const [drillData, setDrillData] = useState({});
+  if (drillInfoIsLoading) return <Loading />;
 
-  useEffect(() => {
-    getDoc(drillsRef).then((document) => {
-      setDrillData(document.data());
-    });
-  }, []);
+  if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
 
   const tabComponent = () => {
     switch (value) {
       case "leaderboard":
         return <Leaderboard />;
       case "description":
-        return <Description descData={drillData} />;
+        return <Description />;
       case "stats":
         return <Stat />;
     }
@@ -46,7 +47,7 @@ export default function Index() {
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={drillData.drillType} />
+          <Appbar.Content title={drillInfo["drillType"]} />
         </Appbar.Header>
 
         {/* Tab system */}

@@ -1,56 +1,39 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useContext, useEffect, useState } from "react";
-
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { useContext } from "react";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CurrentUserContext } from "~/Contexts";
 import BarChartScreen from "~/components/barChart";
-import db from "~/firebaseConfig";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
+import { CurrentUserContext } from "~/contexts/CurrentUserContext";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
+  const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
   const userId = useContext(CurrentUserContext)["currentUser"];
-  const [drillInfo, setDrillInfo] = useState("");
-  const [drillAttempts, setDrillAttempts] = useState([]);
-  const navigation = useNavigation();
-  useEffect(() => {
-    // massive data fetching on refresh. May or may not get its data from cache
-    getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
-      // get drill data
-      if (doc.exists()) {
-        setDrillInfo(doc.data());
-        console.log("got drill data", drillInfo);
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    });
-    getDocs(
-      query(
-        collection(db, "teams", "1", "attempts"),
-        where("did", "==", drillId),
-        where("uid", "==", userId),
-      ),
-    )
-      .then((querySnapshot) => {
-        // get all attempts in drill and filter only the highest score for a user
-        let newDrillAttempts = [];
-        querySnapshot.forEach((doc) => newDrillAttempts.push(doc.data()));
-        setDrillAttempts(newDrillAttempts);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-    return () => {};
-  }, []);
+
+  const {
+    data: drillInfo,
+    isLoading: drillInfoIsLoading,
+    drillInfoError,
+  } = useDrillInfo(drillId);
+
+  const {
+    data: drillAttempts,
+    isLoading: drillAttemptsIsLoading,
+    error: drillAttemptsError,
+  } = useAttempts({ drillId, userId });
+
+  if (drillInfoIsLoading || drillAttemptsIsLoading) {
+    return <Loading />;
+  }
+
+  if (drillInfoError || drillAttemptsError) {
+    return <ErrorComponent message={[drillInfoError, drillAttemptsError]} />;
+  }
+
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
