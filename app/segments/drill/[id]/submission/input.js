@@ -191,6 +191,8 @@ export default function Input({
   //Helper varibles
   const numInputs = attemptInfo.inputs.length;
 
+  const navigation = useNavigation();
+
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
     Array.from({ length: attemptInfo.shots.length }, () => ({})),
@@ -281,12 +283,6 @@ export default function Input({
     } else {
       setEmptyInputBannerVisable(true);
     }
-  };
-
-  const navigation = useNavigation();
-
-  const goBack = () => {
-    navigation.goBack();
   };
 
   /***** Navigation Bottom Sheet stuff *****/
@@ -465,7 +461,7 @@ export default function Input({
                       <Button
                         onPress={() => {
                           hideLeaveDrillDialog();
-                          goBack();
+                          navigation.goBack();
                         }}
                       >
                         Leave Drill
