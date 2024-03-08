@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ScatterChart from "react-native-scatter-chart";
 import { numTrunc } from "~/Utility";
 import ShotAccordion from "~/components/shotAccordion";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 function Result() {
   const drillId = useLocalSearchParams()["id"];
@@ -58,7 +58,7 @@ function Result() {
 
   return (
     <>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.sectionTitle}>Drill Results</Text>
 
@@ -123,6 +123,7 @@ export default Result;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingBottom: 0,
   },
   header: {
     flexDirection: "row",

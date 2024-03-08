@@ -25,7 +25,7 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 function Index() {
   const navigation = useNavigation();
@@ -87,12 +87,6 @@ function Index() {
               statusBarHeight={0}
               style={{ backgroundColor: "FFF" }}
             >
-              <Appbar.BackAction
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                color={"#F24E1E"}
-              />
               <Appbar.Content title={"Team"} />
             </Appbar.Header>
             <BottomSheetModalProvider>

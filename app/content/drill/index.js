@@ -5,7 +5,7 @@ import { Appbar, List, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 
 export default function Index() {
   const [drills, setDrills] = React.useState([]); // [{}
@@ -33,12 +33,6 @@ export default function Index() {
     <PaperProvider>
       <SafeAreaView>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.goBack();
-            }}
-            color={"#F24E1E"}
-          />
           <Appbar.Content title="Drills" />
         </Appbar.Header>
 

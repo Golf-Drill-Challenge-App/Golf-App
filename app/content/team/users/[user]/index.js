@@ -13,7 +13,7 @@ import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DrillCard from "~/components/drillCard";
 import ProfileCard from "~/components/profileCard";
-import { db } from "~/firebaseConfig";
+import db from "~/firebaseConfig";
 import { refToID } from "~/Utility";
 
 function Index(props) {
