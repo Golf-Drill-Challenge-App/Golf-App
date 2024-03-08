@@ -377,7 +377,7 @@ export default function Input({
                     {attemptInfo.requirements.map((item, id) => (
                       <DrillTarget
                         key={id}
-                        drillTitle={drillInfo.drillTitle}
+                        drillTitle={drillInfo.drillType}
                         distanceMeasure={item.distanceMeasure}
                         target={attemptInfo.shots[shotIndex].target}
                       />
@@ -425,6 +425,7 @@ export default function Input({
                           >
                             <NavigationRectangle
                               key={id}
+                              attemptInfo={attemptInfo}
                               inputs={attemptInfo.inputs}
                               target={attemptInfo.requirements[0]}
                               targetValue={attemptInfo.shots[id].target}
