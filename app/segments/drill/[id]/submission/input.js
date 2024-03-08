@@ -21,7 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getIconByKey, lookUpExpectedPutts } from "~/Utility";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
-import NavigationRectange from "~/components/input/navigationRectange";
+import NavigationRectangle from "~/components/input/navigationRectangle";
 import Description from "./modals/description";
 
 function calculateProxHole(target, carry, sideLanding) {
@@ -429,7 +429,7 @@ export default function Input({
                             width={"100%"}
                             alignItems={"center"}
                           >
-                            <NavigationRectange
+                            <NavigationRectangle
                               key={id}
                               inputs={attemptInfo.inputs}
                               target={attemptInfo.requirements[0]}
