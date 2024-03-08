@@ -3,7 +3,7 @@ import { Icon, Text } from "react-native-paper";
 
 import { getIconByKey } from "~/Utility"
 
-export default function NavigationRectange({
+export default function NavigationRectangle({
   inputs,
   target,
   targetValue,
