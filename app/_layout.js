@@ -1,20 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
-import { useState } from "react";
-import { CurrentUserContext } from "~/contexts/CurrentUserContext";
+import { AuthProvider } from "~/context/Auth";
 
 // Create a client
 const queryClient = new QueryClient();
 
 export default function RootLayoutNav() {
-  const [currentUser, setCurrentUser] = useState("c0nEyjaOMhItMQTLMY0X");
-  const [currentTeam, setCurrentTeam] = useState("1");
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <CurrentUserContext.Provider
-        value={{ currentUser, currentTeam, setCurrentUser, setCurrentTeam }}
-      >
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
         <Stack
           screenOptions={{
             headerShown: false,
@@ -24,7 +18,7 @@ export default function RootLayoutNav() {
           <Stack.Screen name="content" />
           <Stack.Screen name="test" />
         </Stack>
-      </CurrentUserContext.Provider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }

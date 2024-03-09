@@ -13,14 +13,14 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useAuth } from "~/context/Auth";
+import { currentAuthContext } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
 
 export default function SignUp() {
-  const { signIn, setUser } = useAuth();
+  const { signIn, setUser } = currentAuthContext();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -106,7 +106,7 @@ export default function SignUp() {
             <Text style={[styles.placeholderText]}>Password</Text>
             <TextInput
               autoCapitalize="none"
-              autoComplete="password-new"
+              autoComplete="new-password"
               autoCorrect={false}
               secureTextEntry={true}
               onChangeText={setPassword}
@@ -115,7 +115,7 @@ export default function SignUp() {
             <Text style={[styles.placeholderText]}>Confirm Password</Text>
             <TextInput
               autoCapitalize="none"
-              autoComplete="password-new"
+              autoComplete="new-password"
               autoCorrect={false}
               secureTextEntry={true}
               onChangeText={setPasswordCheck}

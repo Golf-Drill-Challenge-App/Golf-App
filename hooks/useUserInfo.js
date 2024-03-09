@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { useContext } from "react";
-import { CurrentUserContext } from "~/contexts/CurrentUserContext";
-import {db} from "~/firebaseConfig";
+import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 
-export const useUserInfo = (userId = null) => {
-  const teamId = useContext(CurrentUserContext).currentTeam;
+export const useUserInfo = (userId) => {
+  const { teamId } = currentAuthContext();
 
   const { data, error, isLoading } = useQuery({
     queryKey: userId ? ["user", teamId, userId] : ["users", teamId],

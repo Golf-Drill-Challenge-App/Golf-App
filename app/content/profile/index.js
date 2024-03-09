@@ -2,9 +2,9 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useNavigation } from "expo-router";
-import { useContext, useCallback, useMemo, useRef } from "react";
-import { ScrollView, StyleSheet, Text, View, Pressable } from "react-native";
+import { signOut as signoutFireBase } from "firebase/auth";
+import { useCallback, useMemo, useRef } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
@@ -12,16 +12,42 @@ import DrillCard from "~/components/drillCard";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
-import { CurrentUserContext } from "~/contexts/CurrentUserContext";
+import { currentAuthContext } from "~/context/Auth";
+import { auth } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { signOut as signoutFireBase } from "firebase/auth";
-import { auth } from "~/firebaseConfig";
 
 function Index(props) {
-  const navigation = useNavigation();
-  const userId = useContext(CurrentUserContext)["currentUser"];
+  const { signOut } = currentAuthContext();
+  // ref
+  const bottomSheetModalRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  async function handleSignOut() {
+    signoutFireBase(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((e) => {
+        alert(e);
+        console.log(e);
+      });
+    signOut();
+  }
+
+  const { user } = currentAuthContext();
+  const userId = user ? user.uid : null;
   const {
     data: userData,
     userError: userError,
@@ -51,32 +77,6 @@ function Index(props) {
 
   const uniqueDrills = getUnique(attempts, "did");
 
-    // ref
-    const bottomSheetModalRef = useRef(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
-  async function handleSignOut() {
-    signoutFireBase(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((e) => {
-        alert(e);
-        console.log(e);
-      });
-    signOut();
-  }
-
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -90,28 +90,28 @@ function Index(props) {
           />
         </Appbar.Header>
         <BottomSheetModalProvider>
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
-          <View style={styles.profileContainer}>
-            <ProfileCard user={userData} />
-          </View>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.profileContainer}>
+              <ProfileCard user={userData} />
+            </View>
 
-          <Text style={styles.heading}>Drill History</Text>
+            <Text style={styles.heading}>Drill History</Text>
 
-          {uniqueDrills.length > 0 ? (
-            uniqueDrills.map((drill) => {
-              const drillId = drill["did"];
-              return (
-                <DrillCard
-                  drill={drillInfo[drillId]}
-                  hrefString={"content/profile/drills/" + drillId}
-                  key={drillId}
-                />
-              );
-            })
-          ) : (
-            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
-          )}
-                      <BottomSheetModal
+            {uniqueDrills.length > 0 ? (
+              uniqueDrills.map((drill) => {
+                const drillId = drill["did"];
+                return (
+                  <DrillCard
+                    drill={drillInfo[drillId]}
+                    hrefString={"content/profile/drills/" + drillId}
+                    key={drillId}
+                  />
+                );
+              })
+            ) : (
+              <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            )}
+            <BottomSheetModal
               ref={bottomSheetModalRef}
               index={1}
               snapPoints={snapPoints}
@@ -160,7 +160,7 @@ function Index(props) {
                 </Pressable>
               </View>
             </BottomSheetModal>
-        </ScrollView>
+          </ScrollView>
         </BottomSheetModalProvider>
       </SafeAreaView>
     </PaperProvider>

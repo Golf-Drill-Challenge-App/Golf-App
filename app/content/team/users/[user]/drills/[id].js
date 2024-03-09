@@ -3,15 +3,6 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";

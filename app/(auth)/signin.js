@@ -16,14 +16,14 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useAuth } from "~/context/Auth";
+import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
 
 export default function SignIn() {
-  const { signIn } = useAuth();
+  const { signIn } = currentAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -96,7 +96,7 @@ export default function SignIn() {
             <Text style={[styles.placeholderText]}>Password</Text>
             <TextInput
               autoCapitalize="none"
-              autoComplete="password-new"
+              autoComplete="current-password"
               autoCorrect={false}
               secureTextEntry={true}
               onChangeText={setPassword}

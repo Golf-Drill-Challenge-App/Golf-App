@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useAuth } from "~/context/Auth";
+import { currentAuthContext } from "~/context/Auth";
 
 export default () => {
-  const { user } = useAuth();
+  const { user } = currentAuthContext();
   console.log("user", user);
   return (
     <Tabs options={{ headerShown: false }}>

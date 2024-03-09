@@ -14,9 +14,10 @@ const AuthContext = createContext({
     return;
   },
   user: null,
+  teamId: null,
 });
 
-export function useAuth() {
+export function currentAuthContext() {
   return useContext(AuthContext);
 }
 
@@ -35,8 +36,9 @@ function useProtectedRoute(user) {
   }, [user, segments]);
 }
 
-export const Provider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [teamId, setTeamId] = useState("1"); // TODO: Set this properly instead of hardcoding team
 
   useProtectedRoute(user);
 
@@ -45,6 +47,16 @@ export const Provider = ({ children }) => {
     onAuthStateChanged(auth, (user) => {
       console.log("user changed");
 
+      // yarn test
+      // If you sign out, reload app to sign back in as test user
+      // TODO: After setting users properly, set test user too
+      if (process.env.EXPO_PUBLIC_TEST_UID) {
+        setUser({
+          name: process.env.EXPO_PUBLIC_TEST_NAME,
+          email: process.env.EXPO_PUBLIC_TEST_EMAIL,
+          uid: process.env.EXPO_PUBLIC_TEST_UID,
+        });
+      }
       if (user) {
         setUser({
           name: user.displayName ?? "Error (name)",
@@ -71,6 +83,7 @@ export const Provider = ({ children }) => {
         },
         // setUser({ name: "Test", email: "test@example.com", type: type }),
         signOut: () => setUser(null),
+        teamId, // todo: add teamId setter
       }}
     >
       {children}

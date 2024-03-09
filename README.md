@@ -45,7 +45,6 @@ Info below subject to change
   - [iOS](https://apps.apple.com/us/app/expo-go/id982107779)
   - [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US)
 - `yarn start`
-  - If on OSU school wifi (or any other wifi that doesn't support peer-to-peer), use `yarn start --tunnel`
   - Run app, scan QR code on physical phone
 
 ### Running App on Android Emulator (Windows PC or MacOS)
@@ -58,7 +57,6 @@ Info below subject to change
   - `C:\Users\<username>\AppData\Local\Android\Sdk\emulator\emulator -avd <emulated phone name> -feature -Vulkan`
     - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulator\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
 - `yarn android` to run the app
-  - If on OSU school wifi (or any other wifi that doesn't support peer-to-peer), use `yarn android --tunnel`
 
 ### Running App in iOS Emulator (MacOS)
 
@@ -66,7 +64,27 @@ Info below subject to change
 - Documentation: https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device
 - Should be more straightforwards than Android, you shouldn't need to use command line to open iOS emulator
 - `yarn ios` to run the app
-  - If on OSU school wifi (or any other wifi that doesn't support peer-to-peer), use `yarn ios --tunnel`
+
+### WiFi / Tunneling
+
+- In general, if running the app on a physical mobile device, the mobile device and the PC compiling the app should be on the same WiFi network
+- If on OSU WiFi, or any other WiFi that disables peer-to-peer, use the `--tunnel` argument, e.g:
+  - `yarn start --tunnel`
+  - `yarn ios -tunnel`
+  - `yarn android --tunnel`
+- Using a mobile hotspot is another potential solution, if the other WiFi networks nearby disable peer-to-peer
+
+### Login Bypass
+
+- `yarn test`
+  - Bypass login for testing purposes, will log you in as a dummy user "John Doe"
+  - If you logged out of app, reload / restart app to automatically log back in as dummy user
+  - Optional arguments:
+    - `--tunnel`
+      - For WiFi tunneling as described above
+    - `--ios` or `--android`
+      - For running app on iOS or Android emulator
+    - Note that arguments can be combined, e.g. `yarn test --android --tunnel`
 
 ### Formatting Script
 
