@@ -16,14 +16,12 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
 
 export default function SignIn() {
-  const { signIn } = currentAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,7 +33,6 @@ export default function SignIn() {
         password,
       );
       console.log(userCredential.user);
-      signIn();
     } catch (e) {
       alert(e);
       console.log(e);
@@ -76,44 +73,44 @@ export default function SignIn() {
             width: 131,
             height: 75,
           }}
-          style={[styles.image]}
+          style={styles.image}
         />
-        <Text style={[styles.title]}>Oregon State Golf</Text>
+        <Text style={styles.title}>Oregon State Golf</Text>
         <KeyboardAwareScrollView
           // allows opening links from search results without closing keyboard first
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={[styles.inputView]}>
-            <Text style={[styles.placeholderText]}>Email</Text>
+          <View style={styles.inputView}>
+            <Text style={styles.placeholderText}>Email</Text>
             <TextInput
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect={false}
               onChangeText={setEmail}
-              style={[styles.input]}
+              style={styles.input}
             />
-            <Text style={[styles.placeholderText]}>Password</Text>
+            <Text style={styles.placeholderText}>Password</Text>
             <TextInput
               autoCapitalize="none"
               autoComplete="current-password"
               autoCorrect={false}
               secureTextEntry={true}
               onChangeText={setPassword}
-              style={[styles.input]}
+              style={styles.input}
             />
-            <Pressable style={[styles.button]} onPress={handleForgotPassword}>
-              <Text style={[styles.forgotPassword]}>Forgot your password?</Text>
+            <Pressable style={styles.button} onPress={handleForgotPassword}>
+              <Text style={styles.forgotPassword}>Forgot your password?</Text>
             </Pressable>
 
             <Pressable
-              style={[styles.button]}
+              style={styles.button}
               onPress={handleSignIn}
               backgroundColor={"#F24E1E"}
             >
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
-            <Pressable style={[styles.button]} backgroundColor={"#F24E1E"}>
+            <Pressable style={styles.button} backgroundColor={"#F24E1E"}>
               <Link asChild href={"/signup"}>
                 <Text style={styles.buttonText}>Sign Up</Text>
               </Link>

@@ -7,8 +7,8 @@ const queryClient = new QueryClient();
 
 export default function RootLayoutNav() {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <Stack
           screenOptions={{
             headerShown: false,
@@ -18,7 +18,7 @@ export default function RootLayoutNav() {
           <Stack.Screen name="content" />
           <Stack.Screen name="test" />
         </Stack>
-      </QueryClientProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

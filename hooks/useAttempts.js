@@ -16,7 +16,7 @@ export const useAttempts = ({
   userId = null,
   drillId = null,
 }) => {
-  const { teamId } = currentAuthContext();
+  const { teamId } = currentAuthContext().currentTeam;
   const { data, error, isLoading } = useQuery({
     queryKey: ["attempts", teamId, { attemptId, userId, drillId }],
     queryFn: async () => {

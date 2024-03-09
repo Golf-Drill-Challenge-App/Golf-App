@@ -4,86 +4,75 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "~/firebaseConfig";
 
 const AuthContext = createContext({
-  signIn() {
-    return;
-  },
   signOut() {
     return;
   },
-  setUser() {
+  setCurrentUser() {
     return;
   },
-  user: null,
-  teamId: null,
+  setCurrentTeam() {
+    return;
+  },
+  currentUser: null,
+  currentTeam: null,
 });
 
 export function currentAuthContext() {
   return useContext(AuthContext);
 }
 
-function useProtectedRoute(user) {
+function useProtectedRoute(currentUser) {
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     const inAuthGroup = segments.at(0) === "(auth)";
 
-    if (!user && !inAuthGroup) {
+    if (!currentUser && !inAuthGroup) {
       router.replace("/signin");
-    } else if (user && inAuthGroup) {
+    } else if (currentUser && inAuthGroup) {
       router.replace("/");
     }
-  }, [user, segments]);
+  }, [currentUser, segments]);
 }
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [teamId, setTeamId] = useState("1"); // TODO: Set this properly instead of hardcoding team
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentTeam, setCurrentTeam] = useState("1");
 
-  useProtectedRoute(user);
+  useProtectedRoute(currentUser);
 
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (currentUser) => {
       console.log("user changed");
-
-      // yarn test
-      // If you sign out, reload app to sign back in as test user
-      // TODO: After setting users properly, set test user too
-      if (process.env.EXPO_PUBLIC_TEST_UID) {
-        setUser({
-          name: process.env.EXPO_PUBLIC_TEST_NAME,
-          email: process.env.EXPO_PUBLIC_TEST_EMAIL,
-          uid: process.env.EXPO_PUBLIC_TEST_UID,
-        });
-      }
-      if (user) {
-        setUser({
-          name: user.displayName ?? "Error (name)",
-          email: user.email ?? "Error (email)",
-          uid: user.uid ?? "Error (uid)",
-        });
+      if (currentUser) {
+        setCurrentUser(currentUser.uid ?? "Error (uid)");
       }
     });
+
+    // yarn test
+    // If you sign out, reload app to sign back in as test user
+    // Moved outside of useEffect to avoid race condition with logout
+    if (process.env.EXPO_PUBLIC_TEST_UID) {
+      setCurrentUser(process.env.EXPO_PUBLIC_TEST_UID);
+    }
   }, []);
   return (
     <AuthContext.Provider
       value={{
-        user,
-        signIn: () => {
-          return;
+        currentUser: currentUser,
+        setCurrentUser: (uidvar) => {
+          setCurrentUser(uidvar ?? "Error (uid)");
+          console.log(currentUser);
         },
-        setUser: (namevar, emailvar, uidvar) => {
-          setUser({
-            name: namevar ?? "Error (name)",
-            email: emailvar ?? "Error (email)",
-            uid: uidvar ?? "Error (uid)",
-          });
-          console.log(user);
+        // setCurrentUser({ name: "Test", email: "test@example.com", type: type }),
+        signOut: () => setCurrentUser(null),
+        currentTeam,
+        setCurrentTeam: (tidvar) => {
+          setCurrentTeam(tidvar ?? "Error (tid)");
+          console.log(currentTeam);
         },
-        // setUser({ name: "Test", email: "test@example.com", type: type }),
-        signOut: () => setUser(null),
-        teamId, // todo: add teamId setter
       }}
     >
       {children}

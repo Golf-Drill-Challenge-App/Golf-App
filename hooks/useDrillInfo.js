@@ -4,7 +4,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useDrillInfo = (drillId = null) => {
-  const { teamId } = currentAuthContext();
+  const { teamId } = currentAuthContext().currentTeam;
   const { data, error, isLoading } = useQuery({
     queryKey: drillId ? ["drillInfo", teamId, drillId] : ["drillInfo", teamId],
     queryFn: async () => {

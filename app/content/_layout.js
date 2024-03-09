@@ -3,8 +3,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { currentAuthContext } from "~/context/Auth";
 
 export default () => {
-  const { user } = currentAuthContext();
-  console.log("user", user);
+  const { currentUser } = currentAuthContext();
+  console.log("user", currentUser);
   return (
     <Tabs options={{ headerShown: false }}>
       <Tabs.Screen

@@ -1,18 +1,17 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useContext } from "react";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import { CurrentUserContext } from "~/contexts/CurrentUserContext";
+import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
-  const userId = useContext(CurrentUserContext)["currentUser"];
+  const userId = currentAuthContext().currentUser;
 
   const {
     data: drillInfo,

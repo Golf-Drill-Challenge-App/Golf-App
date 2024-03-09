@@ -4,7 +4,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useUserInfo = (userId) => {
-  const { teamId } = currentAuthContext();
+  const { teamId } = currentAuthContext().currentTeam;
 
   const { data, error, isLoading } = useQuery({
     queryKey: userId ? ["user", teamId, userId] : ["users", teamId],
