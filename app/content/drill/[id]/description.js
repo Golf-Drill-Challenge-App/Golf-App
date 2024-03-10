@@ -1,7 +1,13 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Dimensions, Image, ScrollView, View } from "react-native";
-import Lightbox from "react-native-lightbox-v2";
+import {
+  Dimensions,
+  Image,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Button, Text } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -9,35 +15,42 @@ export default function Description({ descData }) {
   const drillId = useLocalSearchParams()["id"];
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const loadCarousel = (index) => {
+  const openModal = (index) => {
+    setActiveIndex(index);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const loadCarousel = () => {
     return (
       <Carousel
         width={windowWidth}
-        height={height}
+        height={windowHeight}
         data={images}
-        defaultIndex={index}
+        defaultIndex={activeIndex}
         scrollAnimationDuration={300}
-        onSnapToItem={() => setActiveIndex(index)}
-        renderItem={({ index }) => (
-          <View style={{ flex: 1, justifyContent: "center" }}>
+        renderItem={({ item }) => (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
             <Image
               style={{
                 width: "100%",
-                maxHeight: height,
-                objectFit: "contain",
+                height: "100%",
               }}
-              source={images[index]}
+              resizeMode="contain"
+              source={item}
             />
           </View>
         )}
       />
     );
   };
-
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
-  const height = windowWidth / 2;
 
   const images = [
     require("~/assets/drill-description-image.jpg"),
@@ -46,6 +59,10 @@ export default function Description({ descData }) {
     require("~/assets/splash.png"),
     require("~/assets/favicon.png"),
   ];
+
+  const windowWidth = Dimensions.get("window").width;
+  const windowHeight = Dimensions.get("window").height;
+  const height = windowWidth / 2;
 
   return (
     <View
@@ -65,12 +82,7 @@ export default function Description({ descData }) {
             }}
           >
             {images.map((image, index) => (
-              <Lightbox
-                key={index}
-                underlayColor="white"
-                onOpen={() => setActiveIndex(index)}
-                renderContent={() => loadCarousel(index)}
-              >
+              <TouchableOpacity key={index} onPress={() => openModal(index)}>
                 <Image
                   style={{
                     width: windowWidth / 3 - 10,
@@ -79,7 +91,7 @@ export default function Description({ descData }) {
                   }}
                   source={image}
                 />
-              </Lightbox>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -105,6 +117,30 @@ export default function Description({ descData }) {
           Start Drill
         </Button>
       </Link>
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "black",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={{ padding: 20, position: "absolute", top: 20, left: 20 }}
+            onPress={closeModal}
+          >
+            <Text style={{ color: "white", fontSize: 18 }}>Close</Text>
+          </TouchableOpacity>
+          {loadCarousel()}
+        </View>
+      </Modal>
     </View>
   );
 }
