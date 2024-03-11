@@ -7,47 +7,47 @@ const AuthContext = createContext({
   signOut() {
     return;
   },
-  setCurrentUser() {
+  setCurrentUserId() {
     return;
   },
-  setCurrentTeam() {
+  setCurrentTeamId() {
     return;
   },
-  currentUser: null,
-  currentTeam: null,
+  currentUserId: null,
+  currentTeamId: null,
 });
 
 export function currentAuthContext() {
   return useContext(AuthContext);
 }
 
-function useProtectedRoute(currentUser) {
+function useProtectedRoute(currentUserId) {
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     const inAuthGroup = segments.at(0) === "(auth)";
 
-    if (!currentUser && !inAuthGroup) {
+    if (!currentUserId && !inAuthGroup) {
       router.replace("/signin");
-    } else if (currentUser && inAuthGroup) {
+    } else if (currentUserId && inAuthGroup) {
       router.replace("/");
     }
-  }, [currentUser, segments]);
+  }, [currentUserId, segments]);
 }
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [currentTeam, setCurrentTeam] = useState("1");
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentTeamId, setCurrentTeamId] = useState("1");
 
-  useProtectedRoute(currentUser);
+  useProtectedRoute(currentUserId);
 
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
-    onAuthStateChanged(auth, (currentUser) => {
+    onAuthStateChanged(auth, (currentUserId) => {
       console.log("user changed");
-      if (currentUser) {
-        setCurrentUser(currentUser.uid ?? "Error (uid)");
+      if (currentUserId) {
+        setCurrentUserId(currentUserId.uid ?? "Error (uid)");
       }
     });
 
@@ -55,23 +55,23 @@ export const AuthProvider = ({ children }) => {
     // If you sign out, reload app to sign back in as test user
     // Moved outside of useEffect to avoid race condition with logout
     if (process.env.EXPO_PUBLIC_TEST_UID) {
-      setCurrentUser(process.env.EXPO_PUBLIC_TEST_UID);
+      setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
     }
   }, []);
   return (
     <AuthContext.Provider
       value={{
-        currentUser: currentUser,
-        setCurrentUser: (uidvar) => {
-          setCurrentUser(uidvar ?? "Error (uid)");
-          console.log(currentUser);
+        currentUserId: currentUserId,
+        setCurrentUserId: (uidvar) => {
+          setCurrentUserId(uidvar ?? "Error (uid)");
+          console.log(currentUserId);
         },
-        // setCurrentUser({ name: "Test", email: "test@example.com", type: type }),
-        signOut: () => setCurrentUser(null),
-        currentTeam,
-        setCurrentTeam: (tidvar) => {
-          setCurrentTeam(tidvar ?? "Error (tid)");
-          console.log(currentTeam);
+        // setCurrentUserId({ name: "Test", email: "test@example.com", type: type }),
+        signOut: () => setCurrentUserId(null),
+        currentTeamId,
+        setCurrentTeamId: (tidvar) => {
+          setCurrentTeamId(tidvar ?? "Error (tid)");
+          console.log(currentTeamId);
         },
       }}
     >

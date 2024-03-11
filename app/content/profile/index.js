@@ -46,8 +46,8 @@ function Index(props) {
     signOut();
   }
 
-  const { currentUser } = currentAuthContext();
-  const userId = currentUser ?? null;
+  const { currentUserId } = currentAuthContext();
+  const userId = currentUserId ?? null;
   const {
     data: userData,
     userError: userError,

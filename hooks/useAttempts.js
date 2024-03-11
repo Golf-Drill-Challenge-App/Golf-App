@@ -16,17 +16,17 @@ export const useAttempts = ({
   userId = null,
   drillId = null,
 }) => {
-  const { teamId } = currentAuthContext().currentTeam;
+  const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
-    queryKey: ["attempts", teamId, { attemptId, userId, drillId }],
+    queryKey: ["attempts", currentTeamId, { attemptId, userId, drillId }],
     queryFn: async () => {
       if (attemptId) {
         const querySnapshot = await getDoc(
-          doc(db, "teams", teamId, "attempts", attemptId),
+          doc(db, "teams", currentTeamId, "attempts", attemptId),
         );
         return querySnapshot.data();
       } else {
-        let q = query(collection(db, "teams", teamId, "attempts"));
+        let q = query(collection(db, "teams", currentTeamId, "attempts"));
         if (drillId) {
           q = query(q, where("did", "==", drillId));
         }

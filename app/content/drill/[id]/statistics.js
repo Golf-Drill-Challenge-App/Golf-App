@@ -9,7 +9,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
-  const { userId } = currentAuthContext().currentUser;
+  const { userId } = currentAuthContext().currentUserId;
 
   const {
     data: drillInfo,

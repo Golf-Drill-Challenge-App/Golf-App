@@ -4,21 +4,23 @@ import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useDrillInfo = (drillId = null) => {
-  const { teamId } = currentAuthContext().currentTeam;
+  const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
-    queryKey: drillId ? ["drillInfo", teamId, drillId] : ["drillInfo", teamId],
+    queryKey: drillId
+      ? ["drillInfo", currentTeamId, drillId]
+      : ["drillInfo", currentTeamId],
     queryFn: async () => {
       if (drillId) {
         // Fetch specific drill info
         const docSnapshot = await getDoc(
-          doc(db, "teams", teamId, "drills", drillId),
+          doc(db, "teams", currentTeamId, "drills", drillId),
         );
         return docSnapshot.data();
       } else {
         // Fetch all drills info
         const newDrillInfo = {};
         const querySnapshot = await getDocs(
-          collection(db, "teams", teamId, "drills"),
+          collection(db, "teams", currentTeamId, "drills"),
         );
         querySnapshot.forEach((doc) => {
           newDrillInfo[doc.id] = doc.data();
