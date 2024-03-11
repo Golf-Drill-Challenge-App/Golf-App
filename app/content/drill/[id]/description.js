@@ -133,7 +133,7 @@ export default function Description({ descData }) {
           }}
         >
           <TouchableOpacity
-            style={{ padding: 20, position: "absolute", top: 20, left: 20 }}
+            style={{ padding: 20, position: "absolute", top: 20, left: 20, zIndex: 10 }}
             onPress={closeModal}
           >
             <Text style={{ color: "white", fontSize: 18 }}>Close</Text>
