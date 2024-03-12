@@ -2,7 +2,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { refToID } from "~/Utility";
+import { getUnique, refToID } from "~/Utility";
 import DrillCard from "~/components/drillCard";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -10,7 +10,6 @@ import ProfileCard from "~/components/profileCard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { getUnique } from "../../../../../Utility";
 
 function Index(props) {
   const userId = useLocalSearchParams()["user"];

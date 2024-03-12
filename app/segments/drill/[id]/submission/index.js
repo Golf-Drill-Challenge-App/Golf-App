@@ -1,44 +1,32 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PaperProvider } from "react-native-paper";
 
 import { lookUpBaselineStrokesGained } from "~/Utility";
-import Loading from "~/components/Loading";
+import Loading from "~/components/loading";
 import Input from "./input";
 import Result from "./result";
 
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "~/firebaseConfig";
+import { useDrillInfo } from "../../../../../hooks/useDrillInfo";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
 
-  const drillsRef = doc(db, "teams", "1", "drills", id);
-
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
-  const [drillInfo, setDrillInfo] = useState({});
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        await getDoc(drillsRef).then((document) => {
-          setDrillInfo(document.data());
-        });
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo(id);
 
-        setLoading(false);
-      } catch (error) {
-        console.error("Could not fetch data from database.", error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  if (drillInfoIsLoading) return <Loading />;
+
+  if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
 
   const attemptInfo = {
-    requirements: drillInfo.requirements,
+    requirement: drillInfo.requirement,
     inputs: drillInfo.inputs,
   };
 
@@ -66,18 +54,19 @@ export default function Index() {
     for (var i = 0; i < drillInfo.reps; i++) {
       shots.push({
         shotNum: i + 1,
-        target: drillInfo.requirements[0].items[i],
+        target: drillInfo.requirement[0].items[i],
       });
     }
     return shots;
   };
 
+  console.log(drillInfo);
   const getShotInfo = () => {
     switch (drillInfo.drillType) {
       case "20 Shot Challenge":
         attemptInfo.shots = fillRandomShotTargets(
-          drillInfo.requirements[0].min,
-          drillInfo.requirements[0].max,
+          drillInfo.requirement[0].min,
+          drillInfo.requirement[0].max,
         ); //current this is getting recalled everytime state changes
         break;
       case "Line Test":
@@ -91,9 +80,6 @@ export default function Index() {
   };
 
   const display = () => {
-    if (loading) {
-      return <Loading />;
-    }
     if (toggleResult == true) {
       return <Result submission={outputData} drill={drillInfo} />;
     } else {

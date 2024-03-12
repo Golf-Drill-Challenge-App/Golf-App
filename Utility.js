@@ -26,7 +26,9 @@ export function formatDate(unixTimestamp) {
 }
 
 export function numTrunc(value) {
-  return value === undefined ? "aaaaaaa" : parseFloat(value.toFixed(3));
+  if (value === undefined) return "aaaaaaa";
+  else if (value.toFixed === undefined) return value;
+  else return parseFloat(value.toFixed(3));
 }
 
 export function calculateAverageProxToHole(drillSubmissions) {
@@ -141,15 +143,11 @@ export function lookUpExpectedPutts(proxHole) {
   const proxHoleInYards = proxHole / 3;
 
   return lookUpBaselineStrokesGained(proxHoleInYards);
-
 }
 
 export function getIconByKey(key) {
-    const icons = [
-        { "carry": "arrow-up" },
-        { "sideLanding": "arrow-left-right" },
-    ]
+  const icons = [{ carry: "arrow-up" }, { sideLanding: "arrow-left-right" }];
 
-    const iconObject = icons.find(icon => icon[key]);
-    return iconObject ? iconObject[key] : null;
+  const iconObject = icons.find((icon) => icon[key]);
+  return iconObject ? iconObject[key] : null;
 }

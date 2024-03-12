@@ -374,7 +374,7 @@ export default function Input({
                   {/* Instruction */}
 
                   <View style={styles.horizontalContainer}>
-                    {attemptInfo.requirements.map((item, id) => (
+                    {attemptInfo.requirement.map((item, id) => (
                       <DrillTarget
                         key={id}
                         drillTitle={drillInfo.drillType}
@@ -475,6 +475,26 @@ export default function Input({
               {/* Navigation */}
 
               <View style={styles.navigationContainer}>
+                <Text
+                  onPress={() => {
+                    const newInputValues = Array.from(
+                      { length: attemptInfo.shots.length },
+                      () => ({}),
+                    );
+                    for (let i = 0; i < attemptInfo.shots.length; i++) {
+                      attemptInfo.inputs.forEach((item) => {
+                        newInputValues[i][item.id] = Math.floor(
+                          Math.random() * attemptInfo.shots[shotIndex].target,
+                        ).toString();
+                      });
+                    }
+                    setInputValues(newInputValues);
+                    setShotIndex(attemptInfo.shots.length - 1);
+                    setCurrentShot(attemptInfo.shots.length - 1);
+                  }}
+                >
+                  Fill in all inputs
+                </Text>
                 {buttonDisplayHandler()}
 
                 <Text
