@@ -1,4 +1,3 @@
-import { Feather } from "@expo/vector-icons";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -16,7 +15,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import {
   Appbar,
   Avatar,
-  Button,
   Icon,
   List,
   PaperProvider,
@@ -36,6 +34,8 @@ function Index() {
   const onChangeSearch = (query) => setSearchQuery(query);
 
   //console.log("Found: ", foundUsers);
+
+  console.log("Found: ", foundUsers);
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -79,6 +79,12 @@ function Index() {
               style={{ backgroundColor: "FFF" }}
             >
               <Appbar.Content title={"Team"} />
+              <Appbar.Action
+                icon="cog"
+                color={"#F24E1E"}
+                onPress={handlePresentModalPress}
+                style={{ marginRight: 7 }}
+              />
             </Appbar.Header>
             <BottomSheetModalProvider>
               <KeyboardAwareScrollView
@@ -111,20 +117,6 @@ function Index() {
                     >
                       OSU Golf Team
                     </Text>
-                    <Button
-                      onPress={handlePresentModalPress}
-                      size={24}
-                      style={{ width: 10 }}
-                      // react native buttons and icons don't play well together: https://stackoverflow.com/a/70038112
-                      icon={({ size, color }) => (
-                        <Feather
-                          name="settings"
-                          size={24}
-                          color="#F24E1E"
-                          style={{ paddingBottom: 3 }}
-                        ></Feather>
-                      )}
-                    ></Button>
 
                     <BottomSheetModal
                       ref={bottomSheetModalRef}
@@ -180,6 +172,7 @@ function Index() {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                     style={{ paddingLeft: 20, paddingRight: 20 }}
+                    placeholder="Search team members"
                   />
                 </View>
 

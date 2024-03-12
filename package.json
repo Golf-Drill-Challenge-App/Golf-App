@@ -4,6 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
+    "test": "cross-env NODE_ENV=test expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -15,8 +16,10 @@
     "@expo/ngrok": "^4.1.0",
     "@expo/webpack-config": "^19.0.0",
     "@gorhom/bottom-sheet": "^4",
+    "@react-native-async-storage/async-storage": "^1.22.3",
     "@tanstack/react-query": "^5.24.1",
     "babel-plugin-root-import": "^6.6.0",
+    "cross-env": "^7.0.3",
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.2.0",
     "expo": "~49.0.15",

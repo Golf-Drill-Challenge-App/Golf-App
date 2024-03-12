@@ -7,9 +7,8 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useContext } from "react";
-import { CurrentUserContext } from "~/contexts/CurrentUserContext";
-import db from "~/firebaseConfig";
+import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 
 //this code scares me
 export const useAttempts = ({
@@ -17,17 +16,17 @@ export const useAttempts = ({
   userId = null,
   drillId = null,
 }) => {
-  const teamId = useContext(CurrentUserContext).currentTeam;
+  const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
-    queryKey: ["attempts", teamId, { attemptId, userId, drillId }],
+    queryKey: ["attempts", currentTeamId, { attemptId, userId, drillId }],
     queryFn: async () => {
       if (attemptId) {
         const querySnapshot = await getDoc(
-          doc(db, "teams", teamId, "attempts", attemptId),
+          doc(db, "teams", currentTeamId, "attempts", attemptId),
         );
         return querySnapshot.data();
       } else {
-        let q = query(collection(db, "teams", teamId, "attempts"));
+        let q = query(collection(db, "teams", currentTeamId, "attempts"));
         if (drillId) {
           q = query(q, where("did", "==", drillId));
         }
