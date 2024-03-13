@@ -1,4 +1,3 @@
-import { Feather } from "@expo/vector-icons";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -16,7 +15,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import {
   Appbar,
   Avatar,
-  Button,
   Icon,
   List,
   PaperProvider,
@@ -87,7 +85,6 @@ function Index() {
                 onPress={handlePresentModalPress}
                 style={{ marginRight: 7 }}
               />
-              <Appbar.Content title={"Team"} />
             </Appbar.Header>
             <BottomSheetModalProvider>
               <KeyboardAwareScrollView
@@ -120,20 +117,6 @@ function Index() {
                     >
                       OSU Golf Team
                     </Text>
-                    <Button
-                      onPress={handlePresentModalPress}
-                      size={24}
-                      style={{ width: 10 }}
-                      // react native buttons and icons don't play well together: https://stackoverflow.com/a/70038112
-                      icon={({ size, color }) => (
-                        <Feather
-                          name="settings"
-                          size={24}
-                          color="#F24E1E"
-                          style={{ paddingBottom: 3 }}
-                        ></Feather>
-                      )}
-                    ></Button>
 
                     <BottomSheetModal
                       ref={bottomSheetModalRef}
