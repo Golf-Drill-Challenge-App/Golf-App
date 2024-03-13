@@ -269,7 +269,7 @@ export default function Input({
 
   const [attemptShots, setattemptShots] = useState([]);
 
-  const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
+  const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot index
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
@@ -314,7 +314,10 @@ export default function Input({
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
-    if (currentShot == drillInfo.reps - 1 && shotIndex == drillInfo.reps - 1) {
+    if (
+      currentShot == drillInfo.reps - 1 &&
+      displayedShot == drillInfo.reps - 1
+    ) {
       return (
         <Button
           style={styles.button}
@@ -340,7 +343,7 @@ export default function Input({
     }
 
     //Logic to dislay "Next Shot"
-    if (shotIndex == currentShot) {
+    if (displayedShot == currentShot) {
       return (
         <Button
           style={styles.button}
@@ -358,7 +361,7 @@ export default function Input({
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            setShotIndex(currentShot);
+            setDisplayedShot(currentShot);
           }}
         >
           Back to Latest
@@ -371,8 +374,8 @@ export default function Input({
   const handleInputChange = (id, newText) => {
     setInputValues((prevValues) => {
       const updatedValues = [...prevValues];
-      updatedValues[shotIndex] = {
-        ...updatedValues[shotIndex],
+      updatedValues[displayedShot] = {
+        ...updatedValues[displayedShot],
         [id]: newText,
       };
       return updatedValues;
@@ -382,9 +385,9 @@ export default function Input({
   //Function to handle "Next shot" button click
   const handleNextShotButtonClick = () => {
     //Check if all inputs have been filled in
-    if (Object.keys(inputValues[shotIndex]).length === numInputs) {
+    if (Object.keys(inputValues[displayedShot]).length === numInputs) {
       setEmptyInputBannerVisable(false);
-      setShotIndex(shotIndex + 1);
+      setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
     } else {
       setEmptyInputBannerVisable(true);
@@ -439,7 +442,7 @@ export default function Input({
                 {/* Shot Number / Total shots */}
                 <View style={styles.shotNumContainer}>
                   <Text style={styles.shotNumber}>
-                    Shot {attemptShots[shotIndex].shotNum}
+                    Shot {attemptShots[displayedShot].shotNum}
                     <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
                   </Text>
                 </View>
@@ -453,7 +456,7 @@ export default function Input({
                         key={id}
                         drillTitle={drillInfo.drillType}
                         distanceMeasure={item.distanceMeasure}
-                        target={attemptShots[shotIndex].target}
+                        target={attemptShots[displayedShot].target}
                       />
                     ))}
                   </View>
@@ -466,12 +469,12 @@ export default function Input({
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[shotIndex]?.[item.id] || ""}
+                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
                       currentShot={currentShot}
-                      shotIndex={shotIndex}
+                      displayedShot={displayedShot}
                     />
                   ))}
                 </View>
@@ -491,7 +494,7 @@ export default function Input({
                           <Pressable
                             key={id}
                             onPress={() => {
-                              setShotIndex(id);
+                              setDisplayedShot(id);
                               navigationBottomSheetModalRef.current.close();
                             }}
                             width={"100%"}
@@ -558,12 +561,12 @@ export default function Input({
                     for (let i = 0; i < attemptShots.length; i++) {
                       drillInfo.inputs.forEach((item) => {
                         newInputValues[i][item.id] = Math.floor(
-                          Math.random() * attemptShots[shotIndex].target,
+                          Math.random() * attemptShots[displayedShot].target,
                         ).toString();
                       });
                     }
                     setInputValues(newInputValues);
-                    setShotIndex(attemptShots.length - 1);
+                    setDisplayedShot(attemptShots.length - 1);
                     setCurrentShot(attemptShots.length - 1);
                   }}
                 >

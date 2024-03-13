@@ -8,7 +8,7 @@ export default function DrillInput({
   inputValue,
   onInputChange,
   currentShot,
-  shotIndex,
+  displayedShot,
 }) {
   return (
     <View style={styles.item}>
@@ -24,7 +24,7 @@ export default function DrillInput({
           value={inputValue}
           keyboardType="numeric"
           returnKeyType="done"
-          editable={currentShot == shotIndex}
+          editable={currentShot == displayedShot}
           onChangeText={onInputChange}
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
