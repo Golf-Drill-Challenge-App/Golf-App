@@ -1,15 +1,34 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { Image, View } from "react-native";
+import { Image, ScrollView } from "react-native";
 import { Button, Text } from "react-native-paper";
+import Loading from "~/components/loading";
+import ErrorComponent from "../../../../components/errorComponent";
+import { useDrillInfo } from "../../../../hooks/useDrillInfo";
 
-export default function Description({ descData }) {
+export default function Description() {
   const drillId = useLocalSearchParams()["id"];
+
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo(drillId);
+
+  if (drillInfoIsLoading) return <Loading />;
+
+  if (drillInfoError) return <ErrorComponent error={error.message} />;
+
   return (
-    <View style={{ margin: 10 }}>
+    <ScrollView
+      contentContainerStyle={{
+        padding: 10,
+        flex: 1,
+      }}
+    >
       <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
         Description
       </Text>
-      <Text variant="bodySmall">{descData.description}</Text>
+      <Text variant="bodySmall">{drillInfo["description"]}</Text>
       <Image
         source={require("~/assets/drill-description-image.jpg")}
         style={{ width: "100%", maxHeight: 200, marginTop: 50 }}
@@ -29,6 +48,6 @@ export default function Description({ descData }) {
           Start Drill
         </Button>
       </Link>
-    </View>
+    </ScrollView>
   );
 }

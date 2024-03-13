@@ -29,6 +29,21 @@ export function numTrunc(value) {
   return value === undefined ? "aaaaaaa" : parseFloat(value.toFixed(3));
 }
 
+export function refToID(ref) {
+  return ref["_key"] ? ref["_key"]["path"]["segments"].at(-1) : "bad ref";
+}
+
+export function getUnique(array, field) {
+  const uniqueMap = new Map();
+  array.forEach((element) => {
+    const keyValue = element[field];
+    if (!uniqueMap.has(keyValue)) {
+      uniqueMap.set(keyValue, element);
+    }
+  });
+  return Array.from(uniqueMap.values());
+}
+
 export function calculateAverageProxToHole(drillSubmissions) {
   const userAverages = [];
   drillSubmissions.forEach((submission) => {
@@ -102,5 +117,5 @@ export function createOutputData(inputValues, attemptData) {
     return { ...object, sid: shotNum };
   });
 
-  console.log("Output Data: ", outputData);
+  //console.log("Output Data: ", outputData);
 }

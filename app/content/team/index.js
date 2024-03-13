@@ -3,7 +3,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import React, { useCallback, useMemo, useRef } from "react";
 import {
   Image,
@@ -24,19 +24,20 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import drillData from "~/drill_data.json";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const navigation = useNavigation();
-  const users = drillData["teams"]["1"]["users"];
+  const { data: userInfo, userIsLoading, userError } = useUserInfo();
 
   const [searchQuery, setSearchQuery] = React.useState("");
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
-  const foundUsers = Object.values(users).filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  //console.log("Found: ", foundUsers);
+
+  console.log("Found: ", foundUsers);
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -49,8 +50,16 @@ function Index() {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
+    //console.log("handleSheetChanges", index);
   }, []);
+
+  if (userIsLoading) return <Loading />;
+
+  if (userError) return <ErrorComponent message={userError.message} />;
+
+  const foundUsers = Object.values(userInfo).filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <PaperProvider>
@@ -71,11 +80,12 @@ function Index() {
               statusBarHeight={0}
               style={{ backgroundColor: "FFF" }}
             >
-              <Appbar.BackAction
-                onPress={() => {
-                  navigation.goBack();
-                }}
+              <Appbar.Content title={"Team"} />
+              <Appbar.Action
+                icon="cog"
                 color={"#F24E1E"}
+                onPress={handlePresentModalPress}
+                style={{ marginRight: 7 }}
               />
               <Appbar.Content title={"Team"} />
             </Appbar.Header>
@@ -165,7 +175,7 @@ function Index() {
                 </View>
 
                 <Text style={{ textAlign: "center", marginBottom: 20 }}>
-                  {Object.keys(users).length} members
+                  {Object.keys(userInfo).length} members
                 </Text>
                 <View
                   style={{
@@ -179,14 +189,20 @@ function Index() {
                     onChangeText={onChangeSearch}
                     value={searchQuery}
                     style={{ paddingLeft: 20, paddingRight: 20 }}
+                    placeholder="Search team members"
                   />
                 </View>
 
                 <List.Section>
                   {foundUsers.map((user, i) => {
+                    const userid =
+                      user.uid["_key"] !== undefined
+                        ? user.uid["_key"]["path"]["segments"].at(-1)
+                        : "awefr";
+                    //console.log("userid: ", userid);
                     return (
                       <List.Item
-                        key={user.uid}
+                        key={userid}
                         title={user.name}
                         left={() => (
                           <Avatar.Image
@@ -209,7 +225,7 @@ function Index() {
                           </View>
                         )}
                         onPress={() =>
-                          router.push(`content/team/users/${user.uid}`)
+                          router.push(`content/team/users/${userid}`)
                         }
                       />
                     );

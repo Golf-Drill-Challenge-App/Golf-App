@@ -4,14 +4,38 @@ import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import BarChartScreen from "~/components/barChart";
-import drillData from "~/drill_data.json";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
   const navigation = useNavigation();
-  const { user: user_id, id: drill_id } = useLocalSearchParams();
+  const { user: userId, id: drillId } = useLocalSearchParams();
+
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo(drillId);
+
+  const {
+    data: drillAttempts,
+    error: drillAttemptsError,
+    isLoading: drillAttemptsIsLoading,
+  } = useAttempts({ drillId, userId });
+
+  if (drillInfoIsLoading || drillAttemptsIsLoading) {
+    return <Loading />;
+  }
+
+  if (drillInfoError || drillAttemptsError) {
+    return <ErrorComponent message={[drillInfoError, drillAttemptsError]} />;
+  }
+
   return (
     <PaperProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {
@@ -22,12 +46,7 @@ export default function Stat() {
           <Appbar.Content title={"Statistics"} />
         </Appbar.Header>
 
-        <BarChartScreen
-          drillData={
-            drillData["teams"]["1"]["users"][user_id]["history"][drill_id]
-          }
-          drillInfo={drillData["teams"]["1"]["drills"][drill_id]}
-        />
+        <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
       </SafeAreaView>
     </PaperProvider>
   );

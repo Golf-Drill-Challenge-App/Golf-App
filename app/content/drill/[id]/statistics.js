@@ -10,44 +10,36 @@ import {
   where,
 } from "firebase/firestore";
 import BarChartScreen from "~/components/barChart";
-import { db } from "~/firebaseConfig";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
+import { currentAuthContext } from "~/context/Auth";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
-  const [drillInfo, setDrillInfo] = useState("");
-  const [drillAttempts, setDrillAttempts] = useState([]);
-  useEffect(() => {
-    // massive data fetching on refresh. May or may not get its data from cache
-    getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
-      // get drill data
-      if (doc.exists()) {
-        setDrillInfo(doc.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    });
-    getDocs(
-      query(
-        collection(db, "teams", "1", "attempts"),
-        where("did", "==", drillId),
-        where("uid", "==", "c0nEyjaOMhItMQTLMY0X"),
-      ),
-    )
-      .then((querySnapshot) => {
-        // get all attempts in drill and filter only the highest score for a user
-        let newDrillAttempts = [];
-        querySnapshot.forEach((doc) => newDrillAttempts.push(doc.data()));
-        setDrillAttempts(newDrillAttempts);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
-    return () => {};
-  }, []);
-  return (
-    <>
-      <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
-    </>
-  );
+  const { userId } = currentAuthContext().currentUserId;
+
+  const {
+    data: drillInfo,
+    isLoading: drillInfoIsLoading,
+    drillInfoError,
+  } = useDrillInfo(drillId);
+
+  const {
+    data: drillAttempts,
+    isLoading: drillAttemptsIsLoading,
+    error: drillAttemptsError,
+  } = useAttempts({ drillId, userId });
+
+  if (drillInfoIsLoading || drillAttemptsIsLoading) {
+    return <Loading />;
+  }
+
+  if (drillInfoError || drillAttemptsError) {
+    return <ErrorComponent message={[drillInfoError, drillAttemptsError]} />;
+  }
+  // console.log(drillAttempts);
+
+  return <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />;
 }

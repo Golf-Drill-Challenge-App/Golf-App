@@ -1,33 +1,30 @@
 import { Link, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
-import { RefreshControl, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { Appbar, List, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "~/firebaseConfig";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const [drills, setDrills] = React.useState([]); // [{}
   const drillsRef = collection(db, "teams", "1", "drills");
   const navigation = useNavigation();
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo();
 
-  useEffect(() => {
-    getDocs(drillsRef).then((querySnapshot) => {
-      let newDrills = [];
-      querySnapshot.forEach((doc) => {
-        newDrills.push(doc.data());
-      });
-      setDrills(newDrills);
-      setRefreshing(false);
-    });
-  }, [refreshing]);
+  if (drillInfoIsLoading) {
+    return <Loading />;
+  }
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-  }, []);
+  if (drillInfoError) {
+    return <ErrorComponent message={drillInfoError} />;
+  }
 
   return (
     <PaperProvider>
@@ -45,7 +42,7 @@ export default function Index() {
         <ScrollView contentContainerStyle={styles.scrollView}>
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           <List.Section>
-            {drills.map((drill) => (
+            {Object.values(drillInfo).map((drill) => (
               <Link
                 key={drill.did}
                 href={{

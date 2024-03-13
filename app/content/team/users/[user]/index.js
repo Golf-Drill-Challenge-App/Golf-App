@@ -2,19 +2,48 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { refToID } from "~/Utility";
 import DrillCard from "~/components/drillCard";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
-import drillData from "~/drill_data.json";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useUserInfo } from "~/hooks/useUserInfo";
+import { getUnique } from "../../../../../Utility";
 
 function Index(props) {
-  const { user: user_id } = useLocalSearchParams();
-  const userData = drillData["teams"]["1"]["users"][user_id];
-  const drills = drillData["teams"]["1"]["drills"];
+  const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
-  console.log(userData);
-  const attemptedDrills = userData["history"]
-    ? Object.keys(drills).filter((drillId) => drillId in userData["history"])
-    : [];
+  const {
+    data: userData,
+    userError: userError,
+    userIsLoading: userIsLoading,
+  } = useUserInfo(userId);
+
+  const {
+    data: attempts,
+    error: attemptsError,
+    isLoading: attemptsIsLoading,
+  } = useAttempts({ userId });
+
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo();
+
+  if (userIsLoading || drillInfoIsLoading || attemptsIsLoading) {
+    return <Loading />;
+  }
+
+  if (userError || drillInfoError || attemptsError) {
+    return (
+      <ErrorComponent message={[userError, drillInfoError, attemptsError]} />
+    );
+  }
+
+  const uniqueDrills = getUnique(attempts, "did");
 
   return (
     <PaperProvider>
@@ -36,16 +65,22 @@ function Index(props) {
 
           <Text style={styles.heading}>Drills</Text>
 
-          {userData["history"] ? (
-            attemptedDrills.map((drillId) => (
-              <DrillCard
-                drill={drills[drillId]}
-                hrefString={
-                  "/content/team/users/" + userData.uid + "/drills/" + drillId
-                }
-                key={drillId}
-              />
-            ))
+          {uniqueDrills.length > 0 ? (
+            uniqueDrills.map((drill) => {
+              const drillId = drill["did"];
+              return (
+                <DrillCard
+                  drill={drillInfo[drillId]}
+                  hrefString={
+                    "/content/team/users/" +
+                    refToID(userData.uid) +
+                    "/drills/" +
+                    drillId
+                  }
+                  key={drillId}
+                />
+              );
+            })
           ) : (
             <Text style={styles.noDrillsText}>No drills attempted yet</Text>
           )}

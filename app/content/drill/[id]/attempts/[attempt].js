@@ -11,14 +11,36 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScatterChart from "react-native-scatter-chart";
 import { numTrunc } from "~/Utility";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
 import ShotAccordion from "~/components/shotAccordion";
-import { db } from "~/firebaseConfig";
+import { useAttempts } from "~/hooks/useAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 function Result() {
   const drillId = useLocalSearchParams()["id"];
   const attemptId = useLocalSearchParams()["attempt"];
-  const [drillInfo, setDrillInfo] = useState({});
-  const [attempt, setAttempt] = useState({});
+  const { width } = useWindowDimensions();
+
+  const {
+    data: drillInfo,
+    isLoading: drillInfoIsLoading,
+    error: drillInfoError,
+  } = useDrillInfo(drillId);
+
+  const {
+    data: attempt,
+    isLoading: attemptIsLoading,
+    error: attemptError,
+  } = useAttempts({ attemptId });
+
+  if (drillInfoIsLoading || attemptIsLoading) {
+    return <Loading />;
+  }
+
+  if (drillInfoError || attemptError) {
+    return <ErrorComponent message={[drillInfoError, attemptError]} />;
+  }
 
   let dots = [];
   if (
@@ -58,7 +80,7 @@ function Result() {
 
   return (
     <>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.sectionTitle}>Drill Results</Text>
 
@@ -123,6 +145,7 @@ export default Result;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingBottom: 0,
   },
   header: {
     flexDirection: "row",

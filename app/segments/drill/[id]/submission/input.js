@@ -65,7 +65,7 @@ export default function Input({ inputValues, setInputValues }) {
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            console.log("Pressed Next Shot");
+            //console.log("Pressed Next Shot");
             handleNextShotButtonClick();
           }}
         >
@@ -79,7 +79,7 @@ export default function Input({ inputValues, setInputValues }) {
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            console.log("Pressed Back to Latest");
+            //console.log("Pressed Back to Latest");
             setShotIndex(currentShot);
           }}
         >
@@ -109,7 +109,7 @@ export default function Input({ inputValues, setInputValues }) {
       setShotIndex(shotIndex + 1);
       setCurrentShot(currentShot + 1);
     } else {
-      console.log("Not all input fields entered!");
+      //console.log("Not all input fields entered!");
       setEmptyInputBannerVisable(true);
     }
   };
@@ -130,7 +130,7 @@ export default function Input({ inputValues, setInputValues }) {
     navigationBottomSheetModalRef.current?.present();
   }, []);
   const handleNavigationSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
+    //console.log("handleSheetChanges", index);
   }, []);
 
   /***** Description Bottom Sheet Stuff *****/
@@ -142,7 +142,7 @@ export default function Input({ inputValues, setInputValues }) {
     descriptionBottomSheetModalRef.current?.present();
   }, []);
   const handleDesciptionSheetChanges = useCallback((index) => {
-    console.log("handleDesciptionSheetChanges", index);
+    //console.log("handleDesciptionSheetChanges", index);
   }, []);
 
   /***** Leave drill Dialog Stuff *****/
@@ -244,9 +244,9 @@ export default function Input({ inputValues, setInputValues }) {
                   onPress={() => {
                     //this loop is a test to see if inputs are maintained in state
                     for (let i = 0; i < AttemptData.shots.length; i++) {
-                      console.log("InputValue[", i, "]: ", inputValues[i]);
+                      //console.log("InputValue[", i, "]: ", inputValues[i]);
                     }
-                    console.log(inputValues);
+                    //console.log(inputValues);
                   }}
                 >
                   Log Input State Status
@@ -275,7 +275,7 @@ export default function Input({ inputValues, setInputValues }) {
                         <NavigationRectange
                           key={id}
                           onPress={() => {
-                            console.log("Clicked on ", id);
+                            //console.log("Clicked on ", id);
                             setShotIndex(id);
                           }}
                           inputs={item.inputs}
@@ -341,7 +341,7 @@ export default function Input({ inputValues, setInputValues }) {
               <Text
                 style={{ color: "#F3572A" }}
                 onPress={() => {
-                  console.log("Pressed View All Shots");
+                  //console.log("Pressed View All Shots");
                   handlePresentNavigationModalPress();
                 }}
               >

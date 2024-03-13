@@ -3,8 +3,11 @@ import time
 import math
 import firebase_admin
 from firebase_admin import firestore
+import os
 
 # Application Default credentials are automatically created.
+# os.environ["FIRESTORE_EMULATOR_HOST"] = "localhost:8080"
+
 app = firebase_admin.initialize_app()
 db = firestore.client()
 
@@ -26,9 +29,12 @@ putt_values = [0,1.001,1.009,1.053,1.147,1.256,1.357,1.443,1.515,1.575,1.626,1.6
 
 line_test = ["8", "9", "PW", "9", "8", "7", "8", "9", "PW", "9", "8", "7", "8", "9", "PW", "9", "8", "7", "8", "9"]
 
+users = ["rcnS0atnVgt4svjVK0ZS","dkjydFrmyi9dRK9Jj2Su","TaSveOyBkVaK012r6meC","c0nEyjaOMhItMQTLMY0X","8mTnNFsMQYlTDeaQmluZ","8j6vfO5xpIdZF9dUAAV8oizr60v1","8aUSErrZSHWEsgRYIedq","6r2BOnaLTaiDgPMd7RWa"]
+
+collection_ref = db.collection("teams").document("1").collection("attempts")
 
 # Function to generate random data for one submission
-def generate_submission(submission_id):
+def generate_submission(user_id):
     # Unix timestamp for the submission
     time_stamp = random.randint(1600000000, 1800000000)
 
@@ -68,11 +74,19 @@ def generate_submission(submission_id):
         strokes_gained_total += strokes_gained
         shots.append(shot)
 
+
+    # Generate a new document reference with an auto-generated ID
+    doc_ref = collection_ref.document()
+
+    # Get the auto-generated ID
+    doc_id = doc_ref.id
+
     # One submission
     submission = {
         "time": time_stamp,
-        "uid": "c0nEyjaOMhItMQTLMY0X",
+        "uid": user_id,
         "did": "SpvYyY94HaulVH2zmVyM",
+        "id": doc_id,
         "strokesGained": strokes_gained_total,
         "strokesGainedAverage": strokes_gained_total / num_shots,
         "carryDiffAverage": carry_diff_total / num_shots,
@@ -80,10 +94,11 @@ def generate_submission(submission_id):
         "proxHoleAverage": prox_hole_total / num_shots,
         "shots": shots
     }
-    db.collection("teams").document("1").collection("attempts").document().set(submission)
+
+    doc_ref.set(submission)
     return submission
 
-def generate_submission_line(submission_id):
+def generate_submission_line(user_id):
     # Unix timestamp for the submission
     time_stamp = random.randint(1600000000, 1800000000)
 
@@ -103,21 +118,31 @@ def generate_submission_line(submission_id):
         side_landing_total += side_landing
         shots.append(shot)
 
+
+    # Generate a new document reference with an auto-generated ID
+    doc_ref = collection_ref.document()
+
+    # Get the auto-generated ID
+    doc_id = doc_ref.id
+
     # One submission
     submission = {
         "time": time_stamp,
-        "uid": "c0nEyjaOMhItMQTLMY0X",
+        "uid": user_id,
         "did": "YtCsaxzscFScnpZYmnKI",
+        "id": doc_id,
         "sideLandingTotal": side_landing_total,
         "sideLandingAverage": side_landing_total / len(shots),
         "shots": shots
     }
-    db.collection("teams").document("1").collection("attempts").document().set(submission)
+
+    doc_ref.set(submission)
 
     return submission
 
 # Generate 100 submissions
-submissions = [generate_submission(i) for i in range(100)]
-
-# Print the submissions without indentation or new lines
-print(submissions)
+for user_id in users:
+    for i in range(random.randint(50, 150)):
+        submission = generate_submission(user_id)
+    for i in range(random.randint(50, 150)):
+        submission = generate_submission_line(user_id)

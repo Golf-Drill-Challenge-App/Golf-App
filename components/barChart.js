@@ -80,6 +80,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
   const transparentData = data.map((value, index) => ({
     value: value > 0 ? Math.max(...data) : Math.min(...data),
+    index: index,
     svg: {
       fill: "transparent",
       onPress: () => {
@@ -138,6 +139,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       flexDirection: "row",
       alignItems: "center",
       marginBottom: 20,
+      marginTop: 13,
       zIndex: 3,
       justifyContent: "center", // Center the content horizontally
     },
@@ -201,11 +203,11 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     },
     bottomContainer: {
       marginTop: 20,
-      marginBottom: 20,
+      // marginBottom: 20,
     },
     bottomTextContainer: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       marginBottom: 13,
       marginLeft: 8,
       marginRight: 8,
@@ -220,62 +222,61 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   });
 
   return (
-    <View style={styles.barChartComponent}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.movingAvgContainer}>
-          <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
+    <ScrollView>
+      <View style={styles.movingAvgContainer}>
+        <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
 
-          <DropDownPicker
-            setValue={setMovingAvgRange}
-            value={movingAvgRange}
-            items={movingAvgRangeValues}
-            open={movingAvgRangeDropdownOpen}
-            setOpen={setMovingAvgRangeDropdownOpen}
-            containerStyle={styles.dropdownContainer}
-            style={styles.dropdown}
-          />
-        </View>
+        <DropDownPicker
+          setValue={setMovingAvgRange}
+          value={movingAvgRange}
+          items={movingAvgRangeValues}
+          open={movingAvgRangeDropdownOpen}
+          setOpen={setMovingAvgRangeDropdownOpen}
+          containerStyle={styles.dropdownContainer}
+          style={styles.dropdown}
+        />
+      </View>
 
-        <View style={styles.chartSection}>
-          <YAxis
-            data={data}
-            svg={{
-              fill: "grey",
-              fontSize: 12,
-              stroke: "#666", // Set stroke color for grid lines
-            }}
-            style={styles.yAxis}
-            contentInset={{ top: 10, bottom: 10 }} // Adjust content inset
-            numberOfTicks={10} // Adjust number of ticks as needed
-            formatLabel={(value) => `${value}`} // Format label as needed
-          />
-          <View style={styles.middleLine} />
-          <ScrollView
-            horizontal={true}
-            onScroll={handleScroll}
-            scrollEventThrottle={64}
-            ref={scrollViewRef}
-            style={styles.scrollViewContainer}
-          >
-            <View style={styles.chartContainer}>
-              <BarChart
-                style={styles.barChart}
-                data={processedData}
-                svg={{ fill }}
-                contentInset={{
-                  left: halfScreenCompensation,
-                  right: halfScreenCompensation,
-                }}
-                yAccessor={({ item }) => item.value}
+      <View style={styles.chartSection}>
+        <YAxis
+          data={data}
+          svg={{
+            fill: "grey",
+            fontSize: 12,
+            stroke: "#666", // Set stroke color for grid lines
+          }}
+          style={styles.yAxis}
+          contentInset={{ top: 10, bottom: 10 }} // Adjust content inset
+          numberOfTicks={10} // Adjust number of ticks as needed
+          formatLabel={(value) => `${value}`} // Format label as needed
+        />
+        <View style={styles.middleLine} />
+        <ScrollView
+          horizontal={true}
+          onScroll={handleScroll}
+          scrollEventThrottle={64}
+          ref={scrollViewRef}
+          style={styles.scrollViewContainer}
+        >
+          <View style={styles.chartContainer}>
+            <BarChart
+              style={styles.barChart}
+              data={processedData}
+              svg={{ fill }}
+              contentInset={{
+                left: halfScreenCompensation,
+                right: halfScreenCompensation,
+              }}
+              yAccessor={({ item }) => item.value}
+              pointerEvents={"none"}
+            >
+              <Grid pointerEvents={"none"} />
+              <MovingAvgPath
+                line={line}
                 pointerEvents={"none"}
-              >
-                <Grid pointerEvents={"none"} />
-                <MovingAvgPath
-                  line={line}
-                  pointerEvents={"none"}
-                  style={{ pointerEvents: "none" }}
-                />
-              </BarChart>
+                style={{ pointerEvents: "none" }}
+              />
+            </BarChart>
               <BarChart
                 style={styles.barChart}
                 data={transparentData}
@@ -286,31 +287,37 @@ export default function BarChartScreen({ drillData, drillInfo }) {
                 }}
                 yAccessor={({ item }) => item.value}
               ></BarChart>
-            </View>
-          </ScrollView>
-        </View>
-
-        <View style={styles.bottomContainer}>
-          <View style={styles.bottomTextContainer}>
-            <Text style={styles.bottomText}>{dateString}</Text>
-            <Text style={styles.bottomText}>
-              MA: {numTrunc(movingAvgData[selected])}
-            </Text>
-            <Text style={styles.bottomText}>
-              SG: {numTrunc(data[selected])}
-            </Text>
           </View>
+        </ScrollView>
+      </View>
 
-          {drillDataSorted[selected]["shots"].map((shot) => (
-            <ShotAccordion
-              key={shot["sid"]}
-              shot={shot}
-              drillInfo={drillInfo}
-              total={drillDataSorted[selected]["shots"].length}
-            />
-          ))}
+      <View style={styles.bottomContainer}>
+        <View style={styles.bottomTextContainer}>
+          <Text style={{ ...styles.bottomText, width: "30%" }}>
+            {dateString}
+          </Text>
+          <Text
+            style={{ ...styles.bottomText, width: "40%", textAlign: "center" }}
+          >
+            MA: {numTrunc(movingAvgData[selected])}
+          </Text>
+          <Text
+            style={{ ...styles.bottomText, width: "30%", textAlign: "right" }}
+          >
+            SG: {numTrunc(data[selected])}
+          </Text>
         </View>
-      </ScrollView>
+
+        {drillDataSorted[selected]["shots"].map((shot) => (
+          <ShotAccordion
+            key={shot["sid"]}
+            shot={shot}
+            drillInfo={drillInfo}
+            total={drillDataSorted[selected]["shots"].length}
+          />
+        ))}
+      </View>
+    </ScrollView>
     </View>
   );
 }
