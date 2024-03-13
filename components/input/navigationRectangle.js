@@ -4,7 +4,8 @@ import { Icon, Text } from "react-native-paper";
 import { getIconByKey } from "~/Utility";
 
 export default function NavigationRectangle({
-  attemptInfo,
+  drillInfo,
+  attemptShots,
   inputValues,
   shotIndex,
 }) {
@@ -12,15 +13,15 @@ export default function NavigationRectangle({
     <View style={styles.container}>
       <View style={styles.rowContainer}>
         <Text>
-          Shot {shotIndex}/{attemptInfo.shots.length}
+          Shot {shotIndex}/{attemptShots.length}
         </Text>
         <Text>
-          Target: {attemptInfo.shots[shotIndex - 1].target}
-          {attemptInfo.requirements[0].distanceMeasure}
+          Target: {attemptShots[shotIndex - 1].target}
+          {drillInfo.requirements[0].distanceMeasure}
         </Text>
       </View>
       <View style={styles.rowContainer}>
-        {attemptInfo.inputs.map((item, id) => (
+        {drillInfo.inputs.map((item, id) => (
           <View style={styles.horizontalContainer} key={id}>
             <Icon source={getIconByKey(item.id)} />
             <Text>

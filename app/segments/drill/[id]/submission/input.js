@@ -343,18 +343,7 @@ export default function Input({
     }
 
     //Logic to dislay "Next Shot"
-    if (displayedShot == currentShot) {
-      return (
-        <Button
-          style={styles.button}
-          labelStyle={styles.buttonText}
-          mode="contained-tonal"
-          onPress={handleNextShotButtonClick}
-        >
-          Next Shot
-        </Button>
-      );
-    } else {
+    if (displayedShot !== currentShot) {
       return (
         <Button
           style={styles.disabledButton}
@@ -368,6 +357,18 @@ export default function Input({
         </Button>
       );
     }
+
+    //Logic to dislay "Next Shot"
+    return (
+      <Button
+        style={styles.button}
+        labelStyle={styles.buttonText}
+        mode="contained-tonal"
+        onPress={handleNextShotButtonClick}
+      >
+        Next Shot
+      </Button>
+    );
   };
 
   //Function to help in maintaing State of inputs
@@ -502,7 +503,8 @@ export default function Input({
                           >
                             <NavigationRectangle
                               key={id}
-                              attemptInfo={drillInfo}
+                              drillInfo={drillInfo}
+                              attemptShots={attemptShots}
                               inputValues={inputValues[id]}
                               shotIndex={item.shotNum}
                             />
