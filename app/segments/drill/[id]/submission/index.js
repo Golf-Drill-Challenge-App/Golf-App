@@ -25,6 +25,9 @@ export default function Index() {
 
   if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
 
+  /***************************************
+   * Attempt Info Generation
+   ***************************************/
   const attemptInfo = {
     requirements: drillInfo.requirements,
     inputs: drillInfo.inputs,
@@ -49,34 +52,35 @@ export default function Index() {
     return shots;
   };
 
-  const fillClubTargets = () => {
+  const fillClubTargets = (idx) => {
     let shots = [];
     for (var i = 0; i < drillInfo.reps; i++) {
       shots.push({
         shotNum: i + 1,
-        target: drillInfo.requirements[0].items[i],
+        target: drillInfo.requirements[idx].items[i],
       });
     }
-    console.log(shots);
     return shots;
   };
 
-  console.log(drillInfo);
-  console.log(id);
   const getShotInfo = () => {
-    switch (drillInfo.drillType) {
-      case "20 Shot Challenge":
-        attemptInfo.shots = fillRandomShotTargets(
-          drillInfo.requirement[0].min,
-          drillInfo.requirement[0].max,
-        ); //current this is getting recalled everytime state changes
-        break;
-      case "Line Test":
-        attemptInfo.shots = fillClubTargets();
-        break;
-      default:
-        attemptInfo.shots = null;
-        break;
+    for (let i = 0; i < attemptInfo.requirements.length; i++) {
+      switch (attemptInfo.requirements[i].type) {
+        case "random":
+          attemptInfo.shots = fillRandomShotTargets(
+            attemptInfo.requirements[i].min,
+            attemptInfo.requirements[i].max,
+            drillInfo,
+          );
+          break;
+        case "sequence":
+          attemptInfo.shots = fillClubTargets(i);
+          break;
+        default:
+          console.log("Shots not found");
+          attemptInfo.shots = null;
+          break;
+      }
     }
     return;
   };
@@ -90,7 +94,6 @@ export default function Index() {
       return (
         <Input
           drillInfo={drillInfo}
-          outputData={outputData}
           attemptInfo={attemptInfo}
           setToggleResult={setToggleResult}
           setOutputData={setOutputData}

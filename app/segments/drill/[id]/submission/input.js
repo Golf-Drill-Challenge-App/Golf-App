@@ -24,15 +24,21 @@ import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Description from "./modals/description";
 
+/***************************************
+ * Output Data Generation
+ ***************************************/
+
+//Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
   return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
-
+//Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
   return Math.abs(carry - target);
 }
 
+//Function to create and format output data
 function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
   //initialize total values
   let strokesGainedTotal = 0;
@@ -182,14 +188,14 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 }
 
 export default function Input({
-  outputData,
   drillInfo,
   attemptInfo,
   setToggleResult,
   setOutputData,
 }) {
   //Helper varibles
-  const numInputs = attemptInfo.inputs.length;
+
+  const numInputs = drillInfo.inputs.length;
 
   const navigation = useNavigation();
 
