@@ -10,10 +10,8 @@ export const useEmailInfo = (userId) => {
   } = useQuery({
     queryKey: userId ? ["user", userId] : null,
     queryFn: async () => {
-      console.log("userId:", userId);
       if (userId) {
         const querySnapshot = await getDoc(doc(db, "users", userId));
-        console.log("querySnapshot:", querySnapshot.data().email);
         return querySnapshot.data().email;
       } else {
         throw new Error("User ID not found!");

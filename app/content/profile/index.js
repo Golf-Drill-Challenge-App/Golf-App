@@ -4,6 +4,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { signOut as signoutFireBase } from "firebase/auth";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
@@ -23,7 +24,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
-import { auth } from "~/firebaseConfig";
+import { auth, db } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
@@ -120,8 +121,13 @@ function Index(props) {
     console.log("TODO: create a separate screen for changing password!");
   };
 
-  const handleNameEmailUpdate = () => {
-    console.log("TODO: update user name and eamil in the database!");
+  const handleNameEmailUpdate = async () => {
+    if (name) {
+      await updateDoc(doc(db, "teams", "1", "users", userId), {
+        // email: email, // TODO: Do we want to allow a user update their email?
+        name: name,
+      });
+    }
     bottomSheetModalRef.current.close();
   };
 
