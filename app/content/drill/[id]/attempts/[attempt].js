@@ -1,4 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -42,6 +44,8 @@ function Result() {
 
   let dots = [];
   if (
+    Object.keys(drillInfo).length > 0 &&
+    Object.keys(attempt).length > 0 &&
     drillInfo["outputs"].includes("sideLanding") &&
     drillInfo["outputs"].includes("carryDiff")
   ) {
@@ -50,6 +54,29 @@ function Result() {
       value["carryDiff"],
     ]);
   }
+
+  useEffect(() => {
+    // massive data fetching on refresh. May or may not get its data from cache
+    let mainOutputAttempt = "";
+    getDoc(doc(db, "teams", "1", "drills", drillId)).then((doc) => {
+      // get drill data
+      if (doc.exists()) {
+        setDrillInfo(doc.data());
+        console.log("got drill data", mainOutputAttempt);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    });
+    getDoc(doc(db, "teams", "1", "attempts", attemptId))
+      .then((doc) => {
+        setAttempt(doc.data());
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+    return () => {};
+  }, []);
 
   return (
     <>

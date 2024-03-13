@@ -28,6 +28,12 @@ export default function Index() {
     <PaperProvider>
       <SafeAreaView>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={"#F24E1E"}
+          />
           <Appbar.Content title="Drills" />
         </Appbar.Header>
 

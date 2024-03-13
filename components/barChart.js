@@ -23,6 +23,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   const data = drillDataSorted.map(
     (value) => value[drillInfo["mainOutputAttempt"]],
   );
+  console.log("data", drillInfo["mainOutputAttempt"]);
 
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
@@ -131,6 +132,9 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   };
 
   const styles = StyleSheet.create({
+    barChartComponent: {
+      marginTop: 13,
+    },
     movingAvgContainer: {
       flexDirection: "row",
       alignItems: "center",
@@ -212,6 +216,9 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       fontSize: 13,
       color: "#333", // Adjust text color
     },
+    scrollView: {
+      marginBottom: 70,
+    },
   });
 
   return (
@@ -270,6 +277,16 @@ export default function BarChartScreen({ drillData, drillInfo }) {
                 style={{ pointerEvents: "none" }}
               />
             </BarChart>
+            <BarChart
+              style={styles.barChart}
+              data={transparentData}
+              svg={{ fill }}
+              contentInset={{
+                left: halfScreenCompensation,
+                right: halfScreenCompensation,
+              }}
+              yAccessor={({ item }) => item.value}
+            ></BarChart>
           </View>
         </ScrollView>
       </View>

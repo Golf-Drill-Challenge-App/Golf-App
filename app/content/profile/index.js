@@ -81,6 +81,12 @@ function Index(props) {
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={"#F24E1E"}
+          />
           <Appbar.Content title={"Personal Profile"} />
           <Appbar.Action
             icon="cog"
