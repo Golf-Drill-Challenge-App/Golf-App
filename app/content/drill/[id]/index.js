@@ -6,7 +6,6 @@ import Description from "./description";
 import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
-import { doc, getDoc } from "firebase/firestore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";

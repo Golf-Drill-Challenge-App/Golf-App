@@ -11,7 +11,6 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Leaderboard() {
   const drillId = useLocalSearchParams()["id"];
-  const [userInfo, setUserInfo] = useState({});
   const currentPath = usePathname();
   const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
     useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user

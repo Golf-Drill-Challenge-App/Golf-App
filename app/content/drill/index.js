@@ -8,8 +8,6 @@ import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
-  const [drills, setDrills] = React.useState([]); // [{}
-  const drillsRef = collection(db, "teams", "1", "drills");
   const navigation = useNavigation();
 
   const {
@@ -40,7 +38,6 @@ export default function Index() {
         </Appbar.Header>
 
         <ScrollView contentContainerStyle={styles.scrollView}>
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           <List.Section>
             {Object.values(drillInfo).map((drill) => (
               <Link

@@ -1,14 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
 
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";

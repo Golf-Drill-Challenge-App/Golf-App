@@ -277,16 +277,16 @@ export default function BarChartScreen({ drillData, drillInfo }) {
                 style={{ pointerEvents: "none" }}
               />
             </BarChart>
-              <BarChart
-                style={styles.barChart}
-                data={transparentData}
-                svg={{ fill }}
-                contentInset={{
-                  left: halfScreenCompensation,
-                  right: halfScreenCompensation,
-                }}
-                yAccessor={({ item }) => item.value}
-              ></BarChart>
+            <BarChart
+              style={styles.barChart}
+              data={transparentData}
+              svg={{ fill }}
+              contentInset={{
+                left: halfScreenCompensation,
+                right: halfScreenCompensation,
+              }}
+              yAccessor={({ item }) => item.value}
+            ></BarChart>
           </View>
         </ScrollView>
       </View>
@@ -318,6 +318,5 @@ export default function BarChartScreen({ drillData, drillInfo }) {
         ))}
       </View>
     </ScrollView>
-    </View>
   );
 }

@@ -11,7 +11,11 @@ import {
 import { Button, Text } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 
-export default function Description({ descData }) {
+import Loading from "~/components/loading";
+import ErrorComponent from "../../../../components/errorComponent";
+import { useDrillInfo } from "../../../../hooks/useDrillInfo";
+
+export default function Description() {
   const drillId = useLocalSearchParams()["id"];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -62,7 +66,17 @@ export default function Description({ descData }) {
 
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
-  const height = windowWidth / 2;
+
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo(drillId);
+
+  if (drillInfoIsLoading) return <Loading />;
+
+  if (drillInfoError) return <ErrorComponent error={error.message} />;
+
 
   return (
     <View
@@ -72,7 +86,7 @@ export default function Description({ descData }) {
         <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
           Description
         </Text>
-        <Text variant="bodySmall">{descData.description}</Text>
+        <Text variant="bodySmall">{drillInfo["description"]}</Text>
         <View style={{ marginTop: 10 }}>
           <View
             style={{

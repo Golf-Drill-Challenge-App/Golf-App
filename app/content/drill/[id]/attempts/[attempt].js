@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -54,7 +54,7 @@ function Result() {
       value["carryDiff"],
     ]);
   }
-  const { width } = useWindowDimensions();
+
   useEffect(() => {
     // massive data fetching on refresh. May or may not get its data from cache
     let mainOutputAttempt = "";
