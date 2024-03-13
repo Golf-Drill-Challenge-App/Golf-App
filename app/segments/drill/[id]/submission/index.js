@@ -26,7 +26,7 @@ export default function Index() {
   if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
 
   const attemptInfo = {
-    requirement: drillInfo.requirement,
+    requirements: drillInfo.requirements,
     inputs: drillInfo.inputs,
   };
 
@@ -54,13 +54,15 @@ export default function Index() {
     for (var i = 0; i < drillInfo.reps; i++) {
       shots.push({
         shotNum: i + 1,
-        target: drillInfo.requirement[0].items[i],
+        target: drillInfo.requirements[0].items[i],
       });
     }
+    console.log(shots);
     return shots;
   };
 
   console.log(drillInfo);
+  console.log(id);
   const getShotInfo = () => {
     switch (drillInfo.drillType) {
       case "20 Shot Challenge":

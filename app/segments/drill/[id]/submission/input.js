@@ -374,7 +374,7 @@ export default function Input({
                   {/* Instruction */}
 
                   <View style={styles.horizontalContainer}>
-                    {attemptInfo.requirement.map((item, id) => (
+                    {attemptInfo.requirements.map((item, id) => (
                       <DrillTarget
                         key={id}
                         drillTitle={drillInfo.drillType}
