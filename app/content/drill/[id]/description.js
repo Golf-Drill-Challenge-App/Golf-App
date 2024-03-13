@@ -77,7 +77,6 @@ export default function Description() {
 
   if (drillInfoError) return <ErrorComponent error={error.message} />;
 
-
   return (
     <View
       style={{ margin: 10, position: "relative", height: windowHeight - 150 }}
