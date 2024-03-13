@@ -26,6 +26,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index(props) {
@@ -38,6 +39,12 @@ function Index(props) {
     userError: userError,
     userIsLoading: userIsLoading,
   } = useUserInfo(userId);
+
+  const {
+    userEmail: userEmail,
+    userEmailError: userEmailError,
+    userEmailIsLoading: userEmailIsLoading,
+  } = useEmailInfo(userId);
 
   async function handleSignOut() {
     signoutFireBase(auth)
@@ -78,9 +85,7 @@ function Index(props) {
   }, []);
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState(
-    "example@gmail.com" /* TODO: !! user["email"]*/,
-  );
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     // Check if userData has been loaded and it contains the name property
@@ -91,6 +96,13 @@ function Index(props) {
       }
     }
   }, [userData, name]); // Watch for changes in userData and name
+
+  useEffect(() => {
+    if (userEmail) {
+      console.log("userEmail: ", userEmail);
+      setEmail(userEmail); // Set email once userEmail is available
+    }
+  }, [userEmail]); // Watch for changes in userEmail
 
   const handleNameChange = (text) => {
     setName(text);
