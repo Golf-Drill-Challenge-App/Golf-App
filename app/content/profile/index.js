@@ -3,15 +3,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useNavigation } from "expo-router";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { signOut as signoutFireBase } from "firebase/auth";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Pressable,
@@ -29,19 +22,34 @@ import DrillCard from "~/components/drillCard";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
-import { CurrentUserContext } from "~/contexts/CurrentUserContext";
+import { currentAuthContext } from "~/context/Auth";
+import { auth } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index(props) {
-  const navigation = useNavigation();
-  const userId = useContext(CurrentUserContext)["currentUser"];
+  const { signOut } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
+
+  const userId = currentUserId ?? null;
   const {
     data: userData,
     userError: userError,
     userIsLoading: userIsLoading,
   } = useUserInfo(userId);
+
+  async function handleSignOut() {
+    signoutFireBase(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((e) => {
+        alert(e);
+        console.log(e);
+      });
+    signOut();
+  }
 
   const {
     data: attempts,
@@ -98,12 +106,6 @@ function Index(props) {
 
   const handleChangePassword = () => {
     console.log("TODO: create a separate screen for changing password!");
-  };
-
-  const handleSignOut = () => {
-    console.log("signing out!");
-    // signoutFireBase(auth);
-    // signOut();
   };
 
   const handleNameEmailUpdate = () => {
