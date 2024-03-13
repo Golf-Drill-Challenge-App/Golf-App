@@ -4,7 +4,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -18,11 +18,74 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getIconByKey, lookUpExpectedPutts } from "~/Utility";
+import {
+  getIconByKey,
+  lookUpBaselineStrokesGained,
+  lookUpExpectedPutts,
+} from "~/Utility";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
+import Loading from "~/components/loading";
 import Description from "./modals/description";
+
+/***************************************
+ * AttemptShots Generation
+ ***************************************/
+function getShotInfo(drillInfo) {
+  let shots = [];
+  for (let i = 0; i < drillInfo.requirements.length; i++) {
+    switch (drillInfo.requirements[i].type) {
+      case "random":
+        shots = fillRandomShotTargets(
+          drillInfo.requirements[i].min,
+          drillInfo.requirements[i].max,
+          drillInfo,
+        );
+        break;
+      case "sequence":
+        shots = fillClubTargets(i, drillInfo);
+        break;
+      default:
+        console.log("Shots not found");
+        shots = [];
+        break;
+    }
+  }
+  return shots;
+}
+
+//Helper function for the sequence drill type
+function fillClubTargets(idx, drillInfo) {
+  let shots = [];
+  for (var i = 0; i < drillInfo.reps; i++) {
+    shots.push({
+      shotNum: i + 1,
+      target: drillInfo.requirements[idx].items[i],
+    });
+  }
+  return shots;
+}
+
+//Helper function for the random drill type
+function fillRandomShotTargets(min, max, drillInfo) {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  let shots = [];
+
+  for (var i = 0; i < drillInfo.reps; i++) {
+    var target = Math.floor(
+      Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
+    );
+    var baseline = lookUpBaselineStrokesGained(target);
+    shots.push({
+      shotNum: i + 1,
+      target: target,
+      baseline: baseline,
+    });
+  }
+  return shots;
+}
 
 /***************************************
  * Output Data Generation
@@ -39,7 +102,7 @@ function calculateCarryDiff(target, carry) {
 }
 
 //Function to create and format output data
-function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
+function createOutputData(inputValues, attemptShots, did, outputs, aggOutputs) {
   //initialize total values
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
@@ -57,7 +120,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
       switch (output) {
         case "target":
-          shot.target = attemptInfo.shots[j].target;
+          shot.target = attemptShots[j].target;
           break;
 
         case "carry":
@@ -71,25 +134,25 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
         case "proxHole":
           shot.proxHole = calculateProxHole(
-            attemptInfo.shots[j].target,
+            attemptShots[j].target,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
           proxHoleTotal += calculateProxHole(
-            attemptInfo.shots[j].target,
+            attemptShots[j].target,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
           break;
 
         case "baseline":
-          shot.baseline = attemptInfo.shots[j].baseline;
+          shot.baseline = attemptShots[j].baseline;
           break;
 
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
             calculateProxHole(
-              attemptInfo.shots[j].target,
+              attemptShots[j].target,
               inputValues[j].carry,
               inputValues[j].sideLanding,
             ),
@@ -98,10 +161,10 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
         case "strokesGained":
           shot.strokesGained =
-            attemptInfo.shots[j].baseline -
+            attemptShots[j].baseline -
             lookUpExpectedPutts(
               calculateProxHole(
-                attemptInfo.shots[j].target,
+                attemptShots[j].target,
                 inputValues[j].carry,
                 inputValues[j].sideLanding,
               ),
@@ -112,7 +175,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
-            attemptInfo.shots[j].target,
+            attemptShots[j].target,
             inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
@@ -189,7 +252,7 @@ function createOutputData(inputValues, attemptInfo, did, outputs, aggOutputs) {
 
 export default function Input({
   drillInfo,
-  attemptInfo,
+  // attemptInfo,
   setToggleResult,
   setOutputData,
 }) {
@@ -201,8 +264,10 @@ export default function Input({
 
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
-    Array.from({ length: attemptInfo.shots.length }, () => ({})),
+    Array.from({ length: drillInfo.reps }, () => ({})),
   );
+
+  const [attemptShots, setattemptShots] = useState([]);
 
   const [shotIndex, setShotIndex] = useState(0); //a useState hook to track what shot index
 
@@ -210,13 +275,46 @@ export default function Input({
 
   const { id: did } = useLocalSearchParams();
 
+  /***** Navigation Bottom Sheet stuff *****/
+  const navigationBottomSheetModalRef = useRef(null);
+
+  const snapPoints = useMemo(() => ["50%", "90%"], []);
+
+  // callbacks
+  const handlePresentNavigationModalPress = useCallback(() => {
+    navigationBottomSheetModalRef.current?.present();
+  }, []);
+  const handleNavigationSheetChanges = useCallback((index) => {}, []);
+
+  /***** Description Bottom Sheet Stuff *****/
+
+  const descriptionBottomSheetModalRef = useRef(null);
+
+  // callbacks
+  const handlePresentDesciptionModalPress = useCallback(() => {
+    descriptionBottomSheetModalRef.current?.present();
+  }, []);
+  const handleDesciptionSheetChanges = useCallback((index) => {}, []);
+
+  /***** Leave drill Dialog Stuff *****/
+
+  const [leaveDrillDialogVisable, setLeaveDrillDialogVisable] = useState(false);
+
+  const showLeaveDrillDialog = () => setLeaveDrillDialogVisable(true);
+  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisable(false);
+
+  /***** Empty Input Banner Stuff *****/
+
+  const [emptyInputBannerVisable, setEmptyInputBannerVisable] = useState(false);
+
+  useEffect(() => {
+    setattemptShots(getShotInfo(drillInfo));
+  }, []);
+
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
-    if (
-      currentShot == attemptInfo.shots.length - 1 &&
-      shotIndex == attemptInfo.shots.length - 1
-    ) {
+    if (currentShot == drillInfo.reps - 1 && shotIndex == drillInfo.reps - 1) {
       return (
         <Button
           style={styles.button}
@@ -226,7 +324,7 @@ export default function Input({
             setOutputData(
               createOutputData(
                 inputValues,
-                attemptInfo,
+                attemptShots,
                 did,
                 drillInfo.outputs,
                 drillInfo.aggOutputs,
@@ -293,38 +391,10 @@ export default function Input({
     }
   };
 
-  /***** Navigation Bottom Sheet stuff *****/
-  const navigationBottomSheetModalRef = useRef(null);
-
-  const snapPoints = useMemo(() => ["50%", "90%"], []);
-
-  // callbacks
-  const handlePresentNavigationModalPress = useCallback(() => {
-    navigationBottomSheetModalRef.current?.present();
-  }, []);
-  const handleNavigationSheetChanges = useCallback((index) => {}, []);
-
-  /***** Description Bottom Sheet Stuff *****/
-
-  const descriptionBottomSheetModalRef = useRef(null);
-
-  // callbacks
-  const handlePresentDesciptionModalPress = useCallback(() => {
-    descriptionBottomSheetModalRef.current?.present();
-  }, []);
-  const handleDesciptionSheetChanges = useCallback((index) => {}, []);
-
-  /***** Leave drill Dialog Stuff *****/
-
-  const [leaveDrillDialogVisable, setLeaveDrillDialogVisable] =
-    React.useState(false);
-
-  const showLeaveDrillDialog = () => setLeaveDrillDialogVisable(true);
-  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisable(false);
-
-  /***** Empty Input Banner Stuff *****/
-
-  const [emptyInputBannerVisable, setEmptyInputBannerVisable] = useState(false);
+  if (attemptShots.length === 0) {
+    console.log("Loading");
+    return <Loading />;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -369,10 +439,8 @@ export default function Input({
                 {/* Shot Number / Total shots */}
                 <View style={styles.shotNumContainer}>
                   <Text style={styles.shotNumber}>
-                    Shot {attemptInfo.shots[shotIndex].shotNum}
-                    <Text style={styles.shotTotal}>
-                      /{attemptInfo.shots.length}
-                    </Text>
+                    Shot {attemptShots[shotIndex].shotNum}
+                    <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
                   </Text>
                 </View>
 
@@ -380,19 +448,19 @@ export default function Input({
                   {/* Instruction */}
 
                   <View style={styles.horizontalContainer}>
-                    {attemptInfo.requirements.map((item, id) => (
+                    {drillInfo.requirements.map((item, id) => (
                       <DrillTarget
                         key={id}
                         drillTitle={drillInfo.drillType}
                         distanceMeasure={item.distanceMeasure}
-                        target={attemptInfo.shots[shotIndex].target}
+                        target={attemptShots[shotIndex].target}
                       />
                     ))}
                   </View>
 
                   {/* Inputs */}
 
-                  {attemptInfo.inputs.map((item, id) => (
+                  {drillInfo.inputs.map((item, id) => (
                     <DrillInput
                       key={id}
                       icon={getIconByKey(item.id)}
@@ -417,7 +485,7 @@ export default function Input({
                 >
                   <BottomSheetScrollView>
                     <View style={styles.bottomSheetContentContainer}>
-                      {attemptInfo.shots
+                      {attemptShots
                         .slice(0, currentShot + 1)
                         .map((item, id) => (
                           <Pressable
@@ -431,7 +499,7 @@ export default function Input({
                           >
                             <NavigationRectangle
                               key={id}
-                              attemptInfo={attemptInfo}
+                              attemptInfo={drillInfo}
                               inputValues={inputValues[id]}
                               shotIndex={item.shotNum}
                             />
@@ -484,19 +552,19 @@ export default function Input({
                 <Text
                   onPress={() => {
                     const newInputValues = Array.from(
-                      { length: attemptInfo.shots.length },
+                      { length: attemptShots.length },
                       () => ({}),
                     );
-                    for (let i = 0; i < attemptInfo.shots.length; i++) {
-                      attemptInfo.inputs.forEach((item) => {
+                    for (let i = 0; i < attemptShots.length; i++) {
+                      drillInfo.inputs.forEach((item) => {
                         newInputValues[i][item.id] = Math.floor(
-                          Math.random() * attemptInfo.shots[shotIndex].target,
+                          Math.random() * attemptShots[shotIndex].target,
                         ).toString();
                       });
                     }
                     setInputValues(newInputValues);
-                    setShotIndex(attemptInfo.shots.length - 1);
-                    setCurrentShot(attemptInfo.shots.length - 1);
+                    setShotIndex(attemptShots.length - 1);
+                    setCurrentShot(attemptShots.length - 1);
                   }}
                 >
                   Fill in all inputs
