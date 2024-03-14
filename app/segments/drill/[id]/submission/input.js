@@ -298,14 +298,14 @@ export default function Input({
 
   /***** Leave drill Dialog Stuff *****/
 
-  const [leaveDrillDialogVisable, setLeaveDrillDialogVisable] = useState(false);
+  const [leaveDrillDialogVisible, setLeaveDrillDialogVisible] = useState(false);
 
-  const showLeaveDrillDialog = () => setLeaveDrillDialogVisable(true);
-  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisable(false);
+  const showLeaveDrillDialog = () => setLeaveDrillDialogVisible(true);
+  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisible(false);
 
   /***** Empty Input Banner Stuff *****/
 
-  const [emptyInputBannerVisable, setEmptyInputBannerVisable] = useState(false);
+  const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
 
   useEffect(() => {
     setattemptShots(getShotInfo(drillInfo));
@@ -387,11 +387,11 @@ export default function Input({
   const handleNextShotButtonClick = () => {
     //Check if all inputs have been filled in
     if (Object.keys(inputValues[displayedShot]).length === numInputs) {
-      setEmptyInputBannerVisable(false);
+      setEmptyInputBannerVisible(false);
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
     } else {
-      setEmptyInputBannerVisable(true);
+      setEmptyInputBannerVisible(true);
     }
   };
 
@@ -428,11 +428,11 @@ export default function Input({
               {/* Empty Input Banner */}
 
               <Banner
-                visible={emptyInputBannerVisable}
+                visible={emptyInputBannerVisible}
                 actions={[
                   {
                     label: "Dismiss",
-                    onPress: () => setEmptyInputBannerVisable(false),
+                    onPress: () => setEmptyInputBannerVisible(false),
                   },
                 ]}
               >
@@ -529,7 +529,7 @@ export default function Input({
                 {/* Leave Drill Dialog */}
                 <Portal>
                   <Dialog
-                    visible={leaveDrillDialogVisable}
+                    visible={leaveDrillDialogVisible}
                     onDismiss={hideLeaveDrillDialog}
                   >
                     <Dialog.Title>Alert</Dialog.Title>
