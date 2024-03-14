@@ -3,11 +3,12 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Image,
   Keyboard,
   Pressable,
+  RefreshControl,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -49,6 +50,16 @@ function Index() {
   }, []);
   const handleSheetChanges = useCallback((index) => {
     //console.log("handleSheetChanges", index);
+  }, []);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      router.replace("content/team/");
+      setRefreshing(false);
+    }, 500);
   }, []);
 
   if (userIsLoading) return <Loading />;
@@ -93,6 +104,12 @@ function Index() {
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
                 stickyHeaderIndices={[3]}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
               >
                 <View style={{ alignItems: "center" }}>
                   <Image
