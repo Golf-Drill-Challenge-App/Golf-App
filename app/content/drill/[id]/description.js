@@ -11,9 +11,9 @@ import {
 import { Button, Text } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 
+import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import ErrorComponent from "../../../../components/errorComponent";
-import { useDrillInfo } from "../../../../hooks/useDrillInfo";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];
