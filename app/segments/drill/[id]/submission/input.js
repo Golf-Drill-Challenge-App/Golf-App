@@ -34,6 +34,8 @@ import Description from "./modals/description";
  * Firebase Upload
  ***************************************/
 
+//TODO: Implement function to upload the outputData to the attempts collection
+
 /***************************************
  * AttemptShots Generation
  ***************************************/
@@ -416,7 +418,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 <Appbar.Action
                   icon="information-outline"
                   onPress={() => {
-                    descriptionModalRef.current?.present();
+                    descriptionModalRef.current ?.present();
                   }}
                   color={"#F24E1E"}
                 />
@@ -466,7 +468,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                      inputValue={inputValues[displayedShot] ?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
@@ -571,7 +573,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <Text
                     style={{ color: "#F3572A" }}
                     onPress={() => {
-                      navModalRef.current?.present();
+                      navModalRef.current ?.present();
                     }}
                   >
                     View all shots
