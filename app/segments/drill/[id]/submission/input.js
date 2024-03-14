@@ -543,42 +543,41 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
+
+                {/* Navigation */}
+                <View style={styles.navigationContainer}>
+                  <Text
+                    onPress={() => {
+                      const newInputValues = Array.from(
+                        { length: attemptShots.length },
+                        () => ({}),
+                      );
+                      for (let i = 0; i < attemptShots.length; i++) {
+                        drillInfo.inputs.forEach((item) => {
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() * attemptShots[displayedShot].target,
+                          ).toString();
+                        });
+                      }
+                      setInputValues(newInputValues);
+                      setDisplayedShot(attemptShots.length - 1);
+                      setCurrentShot(attemptShots.length - 1);
+                    }}
+                  >
+                    Fill in all inputs
+                  </Text>
+                  {buttonDisplayHandler()}
+
+                  <Text
+                    style={{ color: "#F3572A" }}
+                    onPress={() => {
+                      navModalRef.current?.present();
+                    }}
+                  >
+                    View all shots
+                  </Text>
+                </View>
               </KeyboardAwareScrollView>
-
-              {/* Navigation */}
-
-              <View style={styles.navigationContainer}>
-                <Text
-                  onPress={() => {
-                    const newInputValues = Array.from(
-                      { length: attemptShots.length },
-                      () => ({}),
-                    );
-                    for (let i = 0; i < attemptShots.length; i++) {
-                      drillInfo.inputs.forEach((item) => {
-                        newInputValues[i][item.id] = Math.floor(
-                          Math.random() * attemptShots[displayedShot].target,
-                        ).toString();
-                      });
-                    }
-                    setInputValues(newInputValues);
-                    setDisplayedShot(attemptShots.length - 1);
-                    setCurrentShot(attemptShots.length - 1);
-                  }}
-                >
-                  Fill in all inputs
-                </Text>
-                {buttonDisplayHandler()}
-
-                <Text
-                  style={{ color: "#F3572A" }}
-                  onPress={() => {
-                    navModalRef.current?.present();
-                  }}
-                >
-                  View all shots
-                </Text>
-              </View>
             </BottomSheetModalProvider>
           </View>
         </SafeAreaView>
