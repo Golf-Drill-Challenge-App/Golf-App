@@ -179,34 +179,31 @@ function Result(props) {
             <Text style={styles.sectionTitle}>Drill Results</Text>
 
             {display()}
-
-            <ScrollView>
-              {submission["shots"].map((shot) => (
-                <ShotAccordion
-                  key={shot["sid"]}
-                  shot={shot}
-                  drillInfo={props.drill}
-                  total={numTrunc(submission["shots"].length)}
-                />
-              ))}
-            </ScrollView>
-            <Link
-              href={{
-                pathname: `/content/drill/${drillId}`,
-              }}
-              asChild
-            >
-              <Button
-                style={styles.restartButton}
-                mode="contained"
-                buttonColor="#F24E1E"
-                textColor="white"
-              >
-                Restart Drill
-              </Button>
-            </Link>
+            {submission["shots"].map((shot) => (
+              <ShotAccordion
+                key={shot["sid"]}
+                shot={shot}
+                drillInfo={props.drill}
+                total={numTrunc(submission["shots"].length)}
+              />
+            ))}
           </ScrollView>
         </SafeAreaView>
+        <Link
+          href={{
+            pathname: `/content/drill/${drillId}`,
+          }}
+          asChild
+        >
+          <Button
+            style={styles.restartButton}
+            mode="contained"
+            buttonColor="#F24E1E"
+            textColor="white"
+          >
+            Restart Drill
+          </Button>
+        </Link>
       </PaperProvider>
     </>
   );
@@ -282,8 +279,10 @@ const styles = StyleSheet.create({
   },
 
   restartButton: {
-    marginTop: 15,
-    marginBottom: 45,
-    alignItems: "center",
+    margin: 10,
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
   },
 });
