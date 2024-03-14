@@ -101,7 +101,8 @@ function Index(props) {
     // console.log("handleSheetChanges", index);
   }, []);
 
-  const [name, setName] = useState("");
+  const [currentName, setCurrentName] = useState("");
+  const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -122,11 +123,19 @@ function Index(props) {
     // Check if userData has been loaded and it contains the name property
     if (userData && userData.name) {
       // Update the name state only if it hasn't been set yet
-      if (!name) {
-        setName(userData.name);
+      if (!currentName) {
+        setCurrentName(userData.name);
       }
     }
-  }, [userData, name]); // Watch for changes in userData and name
+  }, [userData, currentName]); // Watch for changes in userData and name
+
+  useEffect(() => {
+    if (currentName) {
+      if (!newName) {
+        setNewName(currentName);
+      }
+    }
+  }, [currentName, newName]); // Watch for changes in userData and name
 
   useEffect(() => {
     if (userEmail) {
@@ -134,8 +143,8 @@ function Index(props) {
     }
   }, [userEmail]); // Watch for changes in userEmail
 
-  const handleNameChange = (text) => {
-    setName(text);
+  const handleNewNameChange = (text) => {
+    setNewName(text);
   };
 
   const handleEmailChange = (text) => {
@@ -160,10 +169,11 @@ function Index(props) {
   };
 
   const handleUpdate = async () => {
-    if (name && name !== userData.name) {     // check if they request to update their name to a new one
+    if (newName && newName !== currentName) {     // check if they request to update their name to a new one
       await updateDoc(doc(db, "teams", "1", "users", userId), {
-        name: name,
+        name: newName,
       });
+      setCurrentName(newName);
       bottomSheetModalRef.current.close();
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true);     // Show success snackbar
@@ -277,7 +287,7 @@ function Index(props) {
         <BottomSheetModalProvider>
           <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.profileContainer}>
-              <ProfileCard user={userData} />
+              <ProfileCard user={{ ...userData, name: currentName }} />
             </View>
 
             <Text style={styles.heading}>Drill History</Text>
@@ -329,8 +339,8 @@ function Index(props) {
 
                 <TextInput
                   style={styles.input}
-                  value={name}
-                  onChangeText={handleNameChange}
+                  value={newName}
+                  onChangeText={handleNewNameChange}
                   placeholder="Enter your name"
                 />
                 <TextInput
