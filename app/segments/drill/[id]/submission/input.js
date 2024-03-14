@@ -451,7 +451,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     {drillInfo.requirements.map((item, id) => (
                       <DrillTarget
                         key={id}
-                        drillTitle={drillInfo.drillType}
+                        prompt={item.prompt}
                         distanceMeasure={item.distanceMeasure}
                         target={attemptShots[displayedShot].target}
                       />

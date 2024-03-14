@@ -1,23 +1,10 @@
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
-export default function DrillTarget({ drillTitle, distanceMeasure, target }) {
-  const getInstructionDisplay = (drill) => {
-    switch (drill) {
-      case "20 Shot Challenge":
-        return "Target";
-      case "Line Test":
-        return "Club";
-      default:
-        return "Instruction";
-    }
-  };
-
+export default function DrillTarget({ prompt, distanceMeasure, target }) {
   return (
     <View style={styles.item}>
-      <Text style={styles.description}>
-        {getInstructionDisplay(drillTitle)}
-      </Text>
+      <Text style={styles.description}>{prompt}</Text>
       <Text style={styles.target}>
         {target} {distanceMeasure}
       </Text>
