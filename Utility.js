@@ -31,6 +31,17 @@ export function numTrunc(value) {
   else return parseFloat(value.toFixed(3));
 }
 
+export function getUnique(array, field) {
+  const uniqueMap = new Map();
+  array.forEach((element) => {
+    const keyValue = element[field];
+    if (!uniqueMap.has(keyValue)) {
+      uniqueMap.set(keyValue, element);
+    }
+  });
+  return Array.from(uniqueMap.values());
+}
+
 export function calculateAverageProxToHole(drillSubmissions) {
   const userAverages = [];
   drillSubmissions.forEach((submission) => {
