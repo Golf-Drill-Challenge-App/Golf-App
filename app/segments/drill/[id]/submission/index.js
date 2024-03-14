@@ -6,7 +6,7 @@ import Loading from "~/components/loading";
 import Input from "./input";
 import Result from "./result";
 
-import { useDrillInfo } from "../../../../../hooks/useDrillInfo";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
