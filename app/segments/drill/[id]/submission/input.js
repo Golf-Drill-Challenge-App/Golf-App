@@ -27,7 +27,12 @@ import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
+import { currentAuthContext } from "~/context/Auth";
 import Description from "./modals/description";
+
+/***************************************
+ * Firebase Upload
+ ***************************************/
 
 /***************************************
  * AttemptShots Generation
@@ -102,7 +107,14 @@ function calculateCarryDiff(target, carry) {
 }
 
 //Function to create and format output data
-function createOutputData(inputValues, attemptShots, did, outputs, aggOutputs) {
+function createOutputData(
+  inputValues,
+  attemptShots,
+  uid,
+  did,
+  outputs,
+  aggOutputs,
+) {
   //initialize total values
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
@@ -197,10 +209,6 @@ function createOutputData(inputValues, attemptShots, did, outputs, aggOutputs) {
   //get the time stamp
   const timeStamp = Date.now();
 
-  //get uid
-  //TODO: figure out how to get this information
-  const uid = "c0nEyjaOMhItMQTLMY0X"; //temporary until we can get this from params
-
   //create the outputData object
   const outputData = {
     time: timeStamp,
@@ -250,17 +258,16 @@ function createOutputData(inputValues, attemptShots, did, outputs, aggOutputs) {
   };
 }
 
-export default function Input({
-  drillInfo,
-  // attemptInfo,
-  setToggleResult,
-  setOutputData,
-}) {
+export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
 
   const numInputs = drillInfo.inputs.length;
 
   const navigation = useNavigation();
+
+  const auth = currentAuthContext();
+
+  console.log("Uid: ", auth["currentUserId"]);
 
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
@@ -299,8 +306,6 @@ export default function Input({
   /***** Leave drill Dialog Stuff *****/
 
   const [leaveDrillDialogVisible, setLeaveDrillDialogVisible] = useState(false);
-
-  const showLeaveDrillDialog = () => setLeaveDrillDialogVisible(true);
   const hideLeaveDrillDialog = () => setLeaveDrillDialogVisible(false);
 
   /***** Empty Input Banner Stuff *****/
@@ -324,15 +329,16 @@ export default function Input({
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={() => {
-            setOutputData(
-              createOutputData(
-                inputValues,
-                attemptShots,
-                did,
-                drillInfo.outputs,
-                drillInfo.aggOutputs,
-              ),
+            let outputData = createOutputData(
+              inputValues,
+              attemptShots,
+              auth["currentUserId"],
+              did,
+              drillInfo.outputs,
+              drillInfo.aggOutputs,
             );
+
+            setOutputData(outputData);
             //send the output data to the database here
             setToggleResult(true);
           }}
@@ -395,6 +401,7 @@ export default function Input({
     }
   };
 
+  //Loading until an attempt is generated
   if (attemptShots.length === 0) {
     console.log("Loading");
     return <Loading />;
@@ -412,7 +419,7 @@ export default function Input({
               >
                 <Appbar.Action
                   icon="close"
-                  onPress={showLeaveDrillDialog}
+                  onPress={() => setLeaveDrillDialogVisible(true)}
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
