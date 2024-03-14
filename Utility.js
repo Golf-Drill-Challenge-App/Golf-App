@@ -31,6 +31,10 @@ export function numTrunc(value) {
   else return parseFloat(value.toFixed(3));
 }
 
+export function refToID(ref) {
+  return ref["_key"] ? ref["_key"]["path"]["segments"].at(-1) : "bad ref";
+}
+
 export function getUnique(array, field) {
   const uniqueMap = new Map();
   array.forEach((element) => {
