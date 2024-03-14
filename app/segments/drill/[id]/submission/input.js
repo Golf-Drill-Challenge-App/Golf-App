@@ -4,7 +4,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -267,51 +267,38 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const auth = currentAuthContext();
 
-  console.log("Uid: ", auth["currentUserId"]);
-
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
     Array.from({ length: drillInfo.reps }, () => ({})),
   );
 
-  const [attemptShots, setattemptShots] = useState([]);
+  const [attemptShots, setattemptShots] = useState([]); //a useState hook to hold the requirements of each shot
 
-  const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot index
+  const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
   const { id: did } = useLocalSearchParams();
 
-  /***** Navigation Bottom Sheet stuff *****/
-  const navigationBottomSheetModalRef = useRef(null);
-
   const snapPoints = useMemo(() => ["50%", "90%"], []);
 
-  // callbacks
-  const handlePresentNavigationModalPress = useCallback(() => {
-    navigationBottomSheetModalRef.current?.present();
-  }, []);
-  const handleNavigationSheetChanges = useCallback((index) => {}, []);
+  /***** Navigation Bottom Sheet stuff *****/
+  const navModalRef = useRef(null);
 
   /***** Description Bottom Sheet Stuff *****/
 
-  const descriptionBottomSheetModalRef = useRef(null);
-
-  // callbacks
-  const handlePresentDesciptionModalPress = useCallback(() => {
-    descriptionBottomSheetModalRef.current?.present();
-  }, []);
-  const handleDesciptionSheetChanges = useCallback((index) => {}, []);
+  const descriptionModalRef = useRef(null);
 
   /***** Leave drill Dialog Stuff *****/
 
-  const [leaveDrillDialogVisible, setLeaveDrillDialogVisible] = useState(false);
-  const hideLeaveDrillDialog = () => setLeaveDrillDialogVisible(false);
+  const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
+  const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
   /***** Empty Input Banner Stuff *****/
 
   const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
 
+  //useEffectHook to set the attempts shot requirements
   useEffect(() => {
     setattemptShots(getShotInfo(drillInfo));
   }, []);
@@ -419,7 +406,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               >
                 <Appbar.Action
                   icon="close"
-                  onPress={() => setLeaveDrillDialogVisible(true)}
+                  onPress={() => setLeaveDialogVisible(true)}
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
@@ -428,7 +415,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 />
                 <Appbar.Action
                   icon="information-outline"
-                  onPress={handlePresentDesciptionModalPress}
+                  onPress={() => {
+                    descriptionModalRef.current?.present();
+                  }}
                   color={"#F24E1E"}
                 />
               </Appbar.Header>
@@ -489,10 +478,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetModal
-                  ref={navigationBottomSheetModalRef}
+                  ref={navModalRef}
                   index={1}
                   snapPoints={snapPoints}
-                  onChange={handleNavigationSheetChanges}
                 >
                   <BottomSheetScrollView>
                     <View style={styles.bottomSheetContentContainer}>
@@ -503,7 +491,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                             key={id}
                             onPress={() => {
                               setDisplayedShot(id);
-                              navigationBottomSheetModalRef.current.close();
+                              navModalRef.current.close();
                             }}
                             width={"100%"}
                             alignItems={"center"}
@@ -523,10 +511,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
                 {/* Description Bottom Sheet */}
                 <BottomSheetModal
-                  ref={descriptionBottomSheetModalRef}
+                  ref={descriptionModalRef}
                   index={1}
                   snapPoints={snapPoints}
-                  onChange={handleDesciptionSheetChanges}
                 >
                   <BottomSheetScrollView>
                     <Description />
@@ -536,8 +523,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/* Leave Drill Dialog */}
                 <Portal>
                   <Dialog
-                    visible={leaveDrillDialogVisible}
-                    onDismiss={hideLeaveDrillDialog}
+                    visible={leaveDialogVisible}
+                    onDismiss={hideLeaveDialog}
                   >
                     <Dialog.Title>Alert</Dialog.Title>
                     <Dialog.Content>
@@ -546,13 +533,13 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     <Dialog.Actions>
                       <Button
                         onPress={() => {
-                          hideLeaveDrillDialog();
+                          hideLeaveDialog();
                           navigation.goBack();
                         }}
                       >
                         Leave Drill
                       </Button>
-                      <Button onPress={hideLeaveDrillDialog}>Cancel</Button>
+                      <Button onPress={hideLeaveDialog}>Cancel</Button>
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
@@ -585,7 +572,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
                 <Text
                   style={{ color: "#F3572A" }}
-                  onPress={handlePresentNavigationModalPress}
+                  onPress={() => {
+                    navModalRef.current?.present();
+                  }}
                 >
                   View all shots
                 </Text>
