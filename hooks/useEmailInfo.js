@@ -8,7 +8,7 @@ export const useEmailInfo = (userId) => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: userId ? ["user", userId] : null,
+    queryKey: ["userEmail", userId],
     queryFn: async () => {
       if (userId) {
         const querySnapshot = await getDoc(doc(db, "users", userId));

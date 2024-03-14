@@ -7,9 +7,7 @@ export const useUserInfo = (userId) => {
   const { currentTeamId } = currentAuthContext();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: userId
-      ? ["user", currentTeamId, userId]
-      : ["users", currentTeamId],
+    queryKey: ["user", { currentTeamId, userId }],
     queryFn: async () => {
       if (userId) {
         const querySnapshot = await getDoc(

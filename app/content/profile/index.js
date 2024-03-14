@@ -3,6 +3,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -10,7 +11,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Pressable,
@@ -23,12 +24,12 @@ import {
 } from "react-native";
 import {
   Appbar,
+  Button,
   Dialog,
   PaperProvider,
+  Paragraph,
   Portal,
   Snackbar,
-  Paragraph,
-  Button,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
@@ -61,18 +62,6 @@ function Index(props) {
     userEmailIsLoading: userEmailIsLoading,
   } = useEmailInfo(userId);
 
-  async function handleSignOut() {
-    signoutFireBase(auth)
-      .then(() => {
-        // Sign-out successful.
-      })
-      .catch((e) => {
-        alert(e);
-        console.log(e);
-      });
-    signOut();
-  }
-
   const {
     data: attempts,
     error: attemptsError,
@@ -88,20 +77,13 @@ function Index(props) {
   // ref
   const bottomSheetModalRef = useRef(null);
 
+  const queryClient = useQueryClient();
+
   // variables
   const initialSnapPoints = useMemo(() => [355, 455, 730], []);
   const expandedSnapPoints = useMemo(() => [460, 570, 860], []); // Adjusted snap points for expanded content
   const [snapPoints, setSnapPoints] = useState(initialSnapPoints);
 
-  // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index) => {
-    // console.log("handleSheetChanges", index);
-  }, []);
-
-  const [currentName, setCurrentName] = useState("");
   const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -115,90 +97,83 @@ function Index(props) {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
 
-  const handleSnackbarDismiss = () => {
-    setSnackbarVisible(false); // Dismiss snackbar
-  };
+  useEffect(() => {
+    setNewName(userData ? userData.name : "");
+    setEmail(userEmail);
+  }, [userData, userEmail]);
 
   useEffect(() => {
-    // Check if userData has been loaded and it contains the name property
-    if (userData && userData.name) {
-      // Update the name state only if it hasn't been set yet
-      if (!currentName) {
-        setCurrentName(userData.name);
-      }
-    }
-  }, [userData, currentName]); // Watch for changes in userData and name
+    setSnapPoints(
+      passwordInputVisible ? expandedSnapPoints : initialSnapPoints,
+    );
+  }, [passwordInputVisible]);
 
-  useEffect(() => {
-    if (currentName) {
-      if (!newName) {
-        setNewName(currentName);
-      }
-    }
-  }, [currentName, newName]); // Watch for changes in userData and name
+  if (
+    userIsLoading ||
+    drillInfoIsLoading ||
+    attemptsIsLoading ||
+    userEmailIsLoading
+  ) {
+    return <Loading />;
+  }
 
-  useEffect(() => {
-    if (userEmail) {
-      setEmail(userEmail); // Set email once userEmail is available
-    }
-  }, [userEmail]); // Watch for changes in userEmail
-
-  const handleNewNameChange = (text) => {
-    setNewName(text);
-  };
-
-  const handleEmailChange = (text) => {
-    setEmail(text);
-  };
+  if (userError || drillInfoError || attemptsError || userEmailError) {
+    return (
+      <ErrorComponent
+        message={[userError, drillInfoError, attemptsError, userEmailError]}
+      />
+    );
+  }
 
   const handleImageClick = () => {
     console.log("TODO: implement and open an image upload modal!");
   };
 
-  const showChangePasswordField = () => {
-    setPasswordInputVisible(!passwordInputVisible); // Toggle password input field visibility
+  async function handleSignOut() {
+    signoutFireBase(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((e) => {
+        alert(e);
+        console.log(e);
+      });
+    signOut();
+  }
 
-    // Adjust snap points based on password input visibility
-    if (passwordInputVisible) {
-      setSnapPoints(initialSnapPoints);
-      setCurrentPassword(""); // Clear password fields
-      setNewPassword("");
-    } else {
-      setSnapPoints(expandedSnapPoints);
-    }
+  const resetForm = () => {
+    setNewName(userData.name);
+    setCurrentPassword("");
+    setNewPassword("");
+  };
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
   };
 
   const handleUpdate = async () => {
-    if (newName && newName !== currentName) {     // check if they request to update their name to a new one
+    if (newName && newName !== userData.name) {
+      // check if they request to update their name to a new one
       await updateDoc(doc(db, "teams", "1", "users", userId), {
         name: newName,
       });
-      setCurrentName(newName);
+      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       bottomSheetModalRef.current.close();
       setSnackbarMessage("Name field updated successfully");
-      setSnackbarVisible(true);     // Show success snackbar
+      setSnackbarVisible(true); // Show success snackbar
     }
 
     if (email) {
       // TODO: Decide whether we want to allow a user update their email
     }
 
-    if (passwordInputVisible) {
-      //if password change field is open and they press update
-      if (!currentPassword && !newPassword) {
-        setDialogTitle("Error");
-        setDialogMessage("Please provide current and new passwords");
-        setDialogVisible(true);
-      } else if (!currentPassword) {
-        setDialogTitle("Error");
-        setDialogMessage("Please provide the current password");
-        setDialogVisible(true);
-      } else if (!newPassword) {
-        setDialogTitle("Error");
-        setDialogMessage("Please provide the new password");
-        setDialogVisible(true);
+    if (passwordInputVisible && (currentPassword || newPassword)) {
+      if (!currentPassword || !newPassword) {
+        showDialog("Error", "Please fill out all the fields");
       } else {
-        // attemp updating the password
+        // attempt updating the password
         try {
           // re-authenticate the user and check if the provided current password is valid
           const userCredential = await signInWithEmailAndPassword(
@@ -206,7 +181,6 @@ function Index(props) {
             userEmail,
             currentPassword,
           );
-          // console.log("signed in:", userCredential.user);
 
           // once re-authenticated, update the password
           updatePassword(userCredential.user, newPassword)
@@ -221,30 +195,18 @@ function Index(props) {
             .catch((error) => {
               // Update failed
               console.log("password update error:", error.message);
-              setDialogTitle("New password is too short");
-              setDialogMessage("Provided new password must be at least 6 characters long!");
-              setDialogVisible(true);
-              console.log(e.message);
+              showDialog(
+                "New password is too short",
+                "Provided new password must be at least 6 characters long!",
+              );
             });
         } catch (e) {
-          setDialogTitle("Error");
-          setDialogMessage("Provided current password is invalid!");
-          setDialogVisible(true);
+          showDialog("Error", e.message);
           console.log(e.message);
         }
       }
     }
   };
-
-  if (userIsLoading || drillInfoIsLoading || attemptsIsLoading) {
-    return <Loading />;
-  }
-
-  if (userError || drillInfoError || attemptsError) {
-    return (
-      <ErrorComponent message={[userError, drillInfoError, attemptsError]} />
-    );
-  }
 
   const uniqueDrills = getUnique(attempts, "did");
 
@@ -252,7 +214,7 @@ function Index(props) {
     <PaperProvider>
       <Snackbar
         visible={snackbarVisible}
-        onDismiss={handleSnackbarDismiss}
+        onDismiss={() => setSnackbarVisible(false)}
         duration={4000} // Duration in milliseconds for how long the snackbar is shown
       >
         {snackbarMessage}
@@ -279,7 +241,7 @@ function Index(props) {
           <Appbar.Action
             icon="cog"
             color={"#F24E1E"}
-            onPress={handlePresentModalPress}
+            onPress={() => bottomSheetModalRef.current?.present()}
             style={{ marginRight: 7 }}
           />
         </Appbar.Header>
@@ -287,7 +249,7 @@ function Index(props) {
         <BottomSheetModalProvider>
           <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.profileContainer}>
-              <ProfileCard user={{ ...userData, name: currentName }} />
+              <ProfileCard user={userData} />
             </View>
 
             <Text style={styles.heading}>Drill History</Text>
@@ -311,47 +273,53 @@ function Index(props) {
               ref={bottomSheetModalRef}
               index={1}
               snapPoints={snapPoints}
-              onChange={handleSheetChanges}
             >
               <View style={styles.modalContent}>
                 {/* Close Button */}
                 <Pressable
-                  onPress={() => bottomSheetModalRef.current.close()}
+                  onPress={() => {
+                    bottomSheetModalRef.current.close();
+                    resetForm();
+                    setPasswordInputVisible(false);
+                  }}
                   style={styles.closeButton}
                 >
                   <Text style={styles.closeButtonText}>Close</Text>
                 </Pressable>
 
                 {/* Profile Picture */}
-                <View style={styles.profilePictureContainer}>
-                  <TouchableOpacity onPress={handleImageClick}>
+                <TouchableOpacity onPress={handleImageClick}>
+                  <View style={styles.profilePictureContainer}>
                     <Image
                       source={{ uri: userData.pfp }}
                       style={styles.profilePicture}
                     />
-                  </TouchableOpacity>
-                  <View style={styles.penIconContainer}>
-                    <TouchableOpacity onPress={handleImageClick}>
+                    <View style={styles.penIconContainer}>
                       <MaterialIcons name="edit" size={24} color="black" />
-                    </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
 
                 <TextInput
                   style={styles.input}
                   value={newName}
-                  onChangeText={handleNewNameChange}
+                  onChangeText={(text) => setNewName(text)}
                   placeholder="Enter your name"
                 />
                 <TextInput
                   style={styles.input}
                   value={email}
-                  onChangeText={handleEmailChange}
+                  onChangeText={(text) => setEmail(text)}
                   placeholder="Enter your email"
                 />
 
                 {/* Change Password Button */}
-                <Pressable onPress={showChangePasswordField}>
+                <Pressable
+                  onPress={() => {
+                    resetForm();
+                    setPasswordInputVisible(!passwordInputVisible);
+                  }}
+                >
                   <Text style={styles.changePasswordButton}>
                     Change Password
                   </Text>
