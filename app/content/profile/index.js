@@ -5,6 +5,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -68,6 +69,16 @@ function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      router.replace("content/profile/");
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   // ref
   const bottomSheetModalRef = useRef(null);

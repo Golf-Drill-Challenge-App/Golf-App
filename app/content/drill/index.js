@@ -16,6 +16,16 @@ export default function Index() {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      router.replace("content/drill/");
+      setRefreshing(false);
+    }, 500);
+  }, []);
+
   if (drillInfoIsLoading) {
     return <Loading />;
   }
