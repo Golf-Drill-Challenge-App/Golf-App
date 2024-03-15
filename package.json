@@ -1,27 +1,56 @@
 {
   "name": "golfapp",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
+    "test": "cross-env NODE_ENV=test expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "pretty": "prettier --write .",
+    "python": "./venv/bin/python",
+    "firestore": "firebase emulators:start --only firestore"
   },
   "dependencies": {
+    "@expo/ngrok": "^4.1.0",
+    "@expo/webpack-config": "^19.0.0",
+    "@gorhom/bottom-sheet": "^4",
+    "@react-native-async-storage/async-storage": "^1.22.3",
+    "@tanstack/react-query": "^5.24.1",
+    "babel-plugin-root-import": "^6.6.0",
+    "cross-env": "^7.0.3",
+    "d3-scale": "^4.0.2",
+    "d3-shape": "^3.2.0",
     "expo": "~49.0.15",
-    "expo-status-bar": "~1.6.0",
-    "react": "18.2.0",
-    "react-native": "0.72.6",
-    "react-native-svg-charts": "^5.4.0",
-    "expo-router": "^2.0.0",
-    "react-native-safe-area-context": "4.6.3",
-    "react-native-screens": "~3.22.0",
+    "expo-constants": "~14.4.2",
+    "expo-font": "~11.4.0",
     "expo-linking": "~5.0.2",
-    "expo-constants": "~14.4.2"
+    "expo-router": "^2.0.0",
+    "expo-status-bar": "~1.6.0",
+    "firebase": "^10.8.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.72.6",
+    "react-native-dropdown-picker": "^5.4.6",
+    "react-native-gesture-handler": "~2.12.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-paper": "^5.12.1",
+    "react-native-reanimated": "~3.3.0",
+    "react-native-reanimated-carousel": "^3.5.1",
+    "react-native-safe-area-context": "^4.8.2",
+    "react-native-scatter-chart": "^1.0.9",
+    "react-native-screens": "~3.22.0",
+    "react-native-svg": "^13.9.0",
+    "react-native-svg-charts": "^5.4.0",
+    "react-native-web": "~0.19.6",
+    "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@tanstack/eslint-plugin-query": "^5.20.1",
+    "prettier": "3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4"
   },
   "private": true
 }

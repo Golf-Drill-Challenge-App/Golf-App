@@ -2,3 +2,5 @@
 /.idea/
 /.expo/
 .DS_Store
+/.vs
+/venv
