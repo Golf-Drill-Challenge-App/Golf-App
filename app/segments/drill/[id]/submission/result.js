@@ -1,3 +1,4 @@
+import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -5,109 +6,205 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { Button, Icon } from "react-native-paper";
+import { Appbar, Button, Icon, PaperProvider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ScatterChart from "react-native-scatter-chart";
 import ShotAccordion from "~/components/shotAccordion";
-import drillData from "~/drill_data.json";
 import { numTrunc } from "~/Utility";
 
 function Result(props) {
-  const submission =
-    drillData["teams"]["1"]["users"]["1"]["history"]["SpvYyY94HaulVH2zmVyM"][0];
-  const dots = submission["shots"].map((value, index) => [
-    value["sideLanding"],
-    value["carryDiff"],
-  ]);
+  const submission = props.submission.outputData;
+  const navigation = useNavigation();
+  const drillId = useLocalSearchParams()["id"];
+
+  const display = () => {
+    switch (props.drill.drillType) {
+      case "20 Shot Challenge":
+        return (
+          <>
+            <View style={styles.dataSection}>
+              <Text style={styles.dataTitle}>Strokes Gained</Text>
+              <View style={styles.dataRow}>
+                <Text style={styles.dataLabel}>Total: </Text>
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["strokesGained"])}
+                </Text>
+              </View>
+              <View style={styles.dataRow}>
+                <Text style={styles.dataLabel}>Average: </Text>
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["strokesGainedAverage"])}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.dataSection}>
+              <Text style={styles.dataTitle}>Average Differences</Text>
+              <View style={styles.dataRow}>
+                <Icon source={"arrow-up-down"} />
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["carryDiffAverage"])}
+                </Text>
+              </View>
+              <View style={styles.dataRow}>
+                <Icon source={"arrow-left-right"} />
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["sideLandingAverage"])}
+                </Text>
+              </View>
+              <View style={styles.dataRow}>
+                <Icon source={"flag"} />
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["proxHoleAverage"])}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.chartSection}>
+              <Text style={styles.sectionTitle}>Shot Tendency</Text>
+              <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
+                <ScatterChart
+                  style={styles.chart}
+                  backgroundColor="#ffffff"
+                  data={[
+                    {
+                      color: "blue",
+                      unit: "%",
+                      values: dots,
+                    },
+                  ]}
+                  horizontalLinesAt={[0]}
+                  verticalLinesAt={[0]}
+                  minY={-10}
+                  maxY={10}
+                  minX={-35}
+                  maxX={35}
+                  chartWidth={width * 0.8}
+                />
+              </View>
+            </View>
+          </>
+        );
+      case "Line Test":
+        return (
+          <>
+            <View style={styles.dataSection}>
+              <Text style={styles.dataTitle}>Side Landing</Text>
+              <View style={styles.dataRow}>
+                <Text style={styles.dataLabel}>Total: </Text>
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["sideLandingTotal"])}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.dataSection}>
+              <Text style={styles.dataTitle}>Average Differences</Text>
+              <View style={styles.dataRow}>
+                <Icon source={"arrow-left-right"} />
+                <Text style={styles.dataValue}>
+                  {numTrunc(submission["sideLandingAverage"])}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.chartSection}>
+              <Text style={styles.sectionTitle}>Shot Tendency</Text>
+              <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
+                <ScatterChart
+                  style={styles.chart}
+                  backgroundColor="#ffffff"
+                  data={[
+                    {
+                      color: "blue",
+                      unit: "%",
+                      values: dots,
+                    },
+                  ]}
+                  horizontalLinesAt={[0]}
+                  verticalLinesAt={[0]}
+                  minY={-10}
+                  maxY={10}
+                  minX={-35}
+                  maxX={35}
+                  chartWidth={width * 0.8}
+                />
+              </View>
+            </View>
+          </>
+        );
+      default:
+        console.log("Results page not found");
+        break;
+    }
+  };
+
+  const getDots = () => {
+    switch (props.drill.drillType) {
+      case "20 Shot Challenge":
+        return submission["shots"].map((value, index) => [
+          value["sideLanding"],
+          value["carryDiff"],
+        ]);
+
+      case "Line Test":
+        return submission["shots"].map((value, index) => [
+          value["sideLanding"],
+          0,
+        ]);
+
+      default:
+        console.log("Dots not set up for this drill");
+        break;
+    }
+  };
+
+  const dots = getDots();
+
   const { width } = useWindowDimensions();
 
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.sectionTitle}>Drill Results</Text>
-
-        <View style={styles.dataSection}>
-          <Text style={styles.dataTitle}>Strokes Gained</Text>
-          <View style={styles.dataRow}>
-            <Text style={styles.dataLabel}>Total: </Text>
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["strokesGained"])}
-            </Text>
-          </View>
-          <View style={styles.dataRow}>
-            <Text style={styles.dataLabel}>Average: </Text>
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["strokesGainedAverage"])}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.dataSection}>
-          <Text style={styles.dataTitle}>Average Differences</Text>
-          <View style={styles.dataRow}>
-            <Icon source={"arrow-up-down"} />
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["carryDiffAverage"])}
-            </Text>
-          </View>
-          <View style={styles.dataRow}>
-            <Icon source={"arrow-left-right"} />
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["sideLandingAverage"])}
-            </Text>
-          </View>
-          <View style={styles.dataRow}>
-            <Icon source={"flag"} />
-            <Text style={styles.dataValue}>
-              {numTrunc(submission["proxHoleAverage"])}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.chartSection}>
-          <Text style={styles.sectionTitle}>Shot Tendency</Text>
-          <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
-            <ScatterChart
-              style={styles.chart}
-              backgroundColor="#ffffff"
-              data={[
-                {
-                  color: "blue",
-                  unit: "%",
-                  values: dots,
-                },
-              ]}
-              horizontalLinesAt={[0]}
-              verticalLinesAt={[0]}
-              minY={-10}
-              maxY={10}
-              minX={-35}
-              maxX={35}
-              chartWidth={width * 0.8}
+      <PaperProvider>
+        <SafeAreaView>
+          <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+            <Appbar.Action
+              icon="close"
+              onPress={navigation.goBack}
+              color={"#F24E1E"}
             />
-          </View>
-        </View>
+            <Appbar.Content title={props.drill.drillType} />
+          </Appbar.Header>
 
-        <ScrollView>
-          {submission["shots"].map((shot) => (
-            <ShotAccordion
-              key={shot["sid"]}
-              shot={shot}
-              drillInfo={
-                drillData["teams"]["1"]["drills"]["SpvYyY94HaulVH2zmVyM"]
-              }
-              total={numTrunc(submission["shots"].length)}
-            />
-          ))}
-        </ScrollView>
-      </ScrollView>
-      <Button
-        style={styles.restartButton}
-        mode="contained"
-        buttonColor="#F24E1E"
-        textColor="white"
-      >
-        Restart Drill
-      </Button>
+          <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.sectionTitle}>Drill Results</Text>
+
+            {display()}
+            {submission["shots"].map((shot) => (
+              <ShotAccordion
+                key={shot["sid"]}
+                shot={shot}
+                drillInfo={props.drill}
+                total={numTrunc(submission["shots"].length)}
+              />
+            ))}
+          </ScrollView>
+        </SafeAreaView>
+        <Link
+          href={{
+            pathname: `/content/drill/${drillId}`,
+          }}
+          asChild
+        >
+          <Button
+            style={styles.restartButton}
+            mode="contained"
+            buttonColor="#F24E1E"
+            textColor="white"
+          >
+            Restart Drill
+          </Button>
+        </Link>
+      </PaperProvider>
     </>
   );
 }
@@ -183,6 +280,9 @@ const styles = StyleSheet.create({
 
   restartButton: {
     margin: 10,
-    alignItems: "center",
+    position: "absolute",
+    bottom: 10,
+    left: 0,
+    right: 0,
   },
 });

@@ -11,9 +11,9 @@ import {
 import { Button, Text } from "react-native-paper";
 import Carousel from "react-native-reanimated-carousel";
 
+import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import ErrorComponent from "../../../../components/errorComponent";
-import { useDrillInfo } from "../../../../hooks/useDrillInfo";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];
@@ -78,37 +78,69 @@ export default function Description() {
   if (drillInfoError) return <ErrorComponent error={error.message} />;
 
   return (
-    <View
-      style={{ margin: 10, position: "relative", height: windowHeight - 150 }}
-    >
-      <ScrollView>
-        <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
-          Description
-        </Text>
-        <Text variant="bodySmall">{drillInfo["description"]}</Text>
-        <View style={{ marginTop: 10 }}>
+    <>
+      <View
+        style={{ margin: 10, position: "relative", height: windowHeight - 150 }}
+      >
+        <ScrollView>
+          <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
+            Description
+          </Text>
+          <Text variant="bodySmall">{drillInfo["description"]}</Text>
+          <View style={{ marginTop: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+              }}
+            >
+              {images.map((image, index) => (
+                <TouchableOpacity key={index} onPress={() => openModal(index)}>
+                  <Image
+                    style={{
+                      width: windowWidth / 3 - 10,
+                      height: windowWidth / 3 - 10,
+                      marginBottom: 15,
+                    }}
+                    source={image}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </ScrollView>
+
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
           <View
             style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
+              flex: 1,
+              backgroundColor: "black",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {images.map((image, index) => (
-              <TouchableOpacity key={index} onPress={() => openModal(index)}>
-                <Image
-                  style={{
-                    width: windowWidth / 3 - 10,
-                    height: windowWidth / 3 - 10,
-                    marginBottom: 15,
-                  }}
-                  source={image}
-                />
-              </TouchableOpacity>
-            ))}
+            <TouchableOpacity
+              style={{
+                padding: 20,
+                position: "absolute",
+                top: 20,
+                left: 20,
+                zIndex: 10,
+              }}
+              onPress={closeModal}
+            >
+              <Text style={{ color: "white", fontSize: 18 }}>Close</Text>
+            </TouchableOpacity>
+            {loadCarousel()}
           </View>
-        </View>
-      </ScrollView>
+        </Modal>
+      </View>
       <Link
         href={{
           pathname: `/segments/drill/${drillId}/submission`,
@@ -130,36 +162,6 @@ export default function Description() {
           Start Drill
         </Button>
       </Link>
-
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "black",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              padding: 20,
-              position: "absolute",
-              top: 20,
-              left: 20,
-              zIndex: 10,
-            }}
-            onPress={closeModal}
-          >
-            <Text style={{ color: "white", fontSize: 18 }}>Close</Text>
-          </TouchableOpacity>
-          {loadCarousel()}
-        </View>
-      </Modal>
-    </View>
+    </>
   );
 }

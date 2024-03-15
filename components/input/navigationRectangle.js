@@ -1,25 +1,29 @@
 import { StyleSheet, View } from "react-native";
 import { Icon, Text } from "react-native-paper";
 
-export default function NavigationRectange({
-  inputs,
-  target,
+import { getIconByKey } from "~/Utility";
+
+export default function NavigationRectangle({
+  drillInfo,
+  attemptShots,
   inputValues,
   shotIndex,
 }) {
   return (
     <View style={styles.container}>
       <View style={styles.rowContainer}>
-        <Text>Shot {shotIndex}/20</Text>
         <Text>
-          {target[0].description}: {target[0].value}
-          {target[0].distanceMeasure}
+          Shot {shotIndex}/{attemptShots.length}
+        </Text>
+        <Text>
+          Target: {attemptShots[shotIndex - 1].target}
+          {drillInfo.requirements[0].distanceMeasure}
         </Text>
       </View>
       <View style={styles.rowContainer}>
-        {inputs.map((item, id) => (
+        {drillInfo.inputs.map((item, id) => (
           <View style={styles.horizontalContainer} key={id}>
-            <Icon source={item.icon} />
+            <Icon source={getIconByKey(item.id)} />
             <Text>
               {inputValues[item.id]} {item.distanceMeasure}
             </Text>
