@@ -1,8 +1,10 @@
 import { Link, useNavigation } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
+import { useCallback, useState } from "react";
+import { RefreshControl, ScrollView, StyleSheet } from "react-native";
 import { Appbar, List, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { router } from "expo-router";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -15,6 +17,16 @@ export default function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      router.replace("content/drill/");
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   if (drillInfoIsLoading) {
     return <Loading />;
@@ -31,7 +43,12 @@ export default function Index() {
           <Appbar.Content title="Drills" />
         </Appbar.Header>
 
-        <ScrollView contentContainerStyle={styles.scrollView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           <List.Section>
             {Object.values(drillInfo).map((drill) => (
               <Link

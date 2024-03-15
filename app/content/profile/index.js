@@ -4,6 +4,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -11,10 +12,11 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -73,6 +75,16 @@ function Index(props) {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      router.replace("content/profile/");
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -247,7 +259,12 @@ function Index(props) {
         </Appbar.Header>
 
         <BottomSheetModalProvider>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             <View style={styles.profileContainer}>
               <ProfileCard user={userData} />
             </View>
