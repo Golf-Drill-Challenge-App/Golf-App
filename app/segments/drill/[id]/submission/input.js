@@ -54,12 +54,6 @@ async function uploadAttempt(outputData) {
     alert(e);
     console.log(e);
   }
-
-  const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
-
-  const uploadData = { ...outputData, id: newAttemptRef };
-
-  await setDoc(newAttemptRef, uploadData);
 }
 
 /***************************************
@@ -444,7 +438,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 <Appbar.Action
                   icon="information-outline"
                   onPress={() => {
-                    descriptionModalRef.current?.present();
+                    descriptionModalRef.current ?.present();
                   }}
                   color={"#F24E1E"}
                 />
@@ -494,7 +488,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                      inputValue={inputValues[displayedShot] ?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
@@ -599,7 +593,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <Text
                     style={{ color: "#F3572A" }}
                     onPress={() => {
-                      navModalRef.current?.present();
+                      navModalRef.current ?.present();
                     }}
                   >
                     View all shots
