@@ -4,6 +4,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -28,6 +29,7 @@ import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
 
 /***************************************
@@ -35,6 +37,30 @@ import Description from "./modals/description";
  ***************************************/
 
 //TODO: Implement function to upload the outputData to the attempts collection
+
+async function uploadAttempt(outputData) {
+  try {
+    //create new document
+    const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+
+    console.log("New Attempt Ref: ", newAttemptRef);
+    //add id of new document into the data
+    const uploadData = { ...outputData, id: newAttemptRef };
+
+    console.log("Upload Data: ", uploadData);
+    //upload the data
+    await setDoc(newAttemptRef, uploadData);
+  } catch (e) {
+    alert(e);
+    console.log(e);
+  }
+
+  const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+
+  const uploadData = { ...outputData, id: newAttemptRef };
+
+  await setDoc(newAttemptRef, uploadData);
+}
 
 /***************************************
  * AttemptShots Generation
@@ -328,7 +354,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             );
 
             setOutputData(outputData);
-            //send the output data to the database here
+            uploadAttempt(outputData);
             setToggleResult(true);
           }}
         >
