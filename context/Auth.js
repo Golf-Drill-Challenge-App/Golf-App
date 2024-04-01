@@ -45,15 +45,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
     onAuthStateChanged(auth, (currentUserId) => {
+      // keep this log outside if statement to confirm e.g. logout of test user
       console.log("user changed");
-      if (currentUserId) {
-        setCurrentUserId(currentUserId.uid ?? "Error (uid)");
+
+      // prevent "persistent login" of regular user login from conflicting with test user
+      if (!process.env.EXPO_PUBLIC_TEST_UID) {
+        if (currentUserId) {
+          setCurrentUserId(currentUserId.uid ?? "Error (uid)");
+        }
       }
     });
 
     // yarn test
     // If you sign out, reload app to sign back in as test user
-    // Moved outside of useEffect to avoid race condition with logout
+    // Moved outside of onAuthChanged to avoid race condition with logout
     if (process.env.EXPO_PUBLIC_TEST_UID) {
       setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
     }
