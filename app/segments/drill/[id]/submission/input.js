@@ -36,20 +36,22 @@ import Description from "./modals/description";
  * Firebase Upload
  ***************************************/
 
-//TODO: Implement function to upload the outputData to the attempts collection
-
+//A function to upload the outputData to the "attempts" collection
 async function uploadAttempt(outputData) {
   try {
     //create new document
     const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
 
-    console.log("New Attempt Ref: ", newAttemptRef);
-    //add id of new document into the data
-    const uploadData = { ...outputData, id: newAttemptRef };
+    //Newly created doc Id. Useful for finding upload data in testing.
+    console.log("New Attempt Ref ID: ", newAttemptRef.id);
 
-    console.log("Upload Data: ", uploadData);
+    //add id of new document into the data
+    const uploadData = { ...outputData, id: newAttemptRef.id };
+
     //upload the data
     await setDoc(newAttemptRef, uploadData);
+
+    console.log("Document successfully uploaded!");
   } catch (e) {
     alert(e);
     console.log(e);
@@ -438,7 +440,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 <Appbar.Action
                   icon="information-outline"
                   onPress={() => {
-                    descriptionModalRef.current ?.present();
+                    descriptionModalRef.current?.present();
                   }}
                   color={"#F24E1E"}
                 />
@@ -488,7 +490,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[displayedShot] ?.[item.id] || ""}
+                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
@@ -593,7 +595,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <Text
                     style={{ color: "#F3572A" }}
                     onPress={() => {
-                      navModalRef.current ?.present();
+                      navModalRef.current?.present();
                     }}
                   >
                     View all shots
