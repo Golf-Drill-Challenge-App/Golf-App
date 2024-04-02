@@ -68,8 +68,6 @@ export default function Leaderboard() {
     (a, b) => a[mainOutputAttempt] - b[mainOutputAttempt],
   );
 
-  // console.log(orderedLeaderboard[0]);
-
   return (
     <ScrollView>
       <List.Section style={{ marginLeft: 20 }}>
