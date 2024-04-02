@@ -49,9 +49,9 @@ async function uploadAttempt(outputData) {
     const uploadData = { ...outputData, id: newAttemptRef.id };
 
     //upload the data
-    await setDoc(newAttemptRef, uploadData);
-
-    console.log("Document successfully uploaded!");
+    await setDoc(newAttemptRef, uploadData).then(() => {
+      console.log("Document successfully uploaded!");
+    });
   } catch (e) {
     alert(e);
     console.log(e);
