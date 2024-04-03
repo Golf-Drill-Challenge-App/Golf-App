@@ -76,8 +76,15 @@ Info below subject to change
 
 ### Login Bypass
 
-- Press the "Test Login" button on the SignIn page
-- NOTE: Current implementation does not have persistent storage for the test user, if you reload or restart the server you need to press the "Test Login" button again (assuming you wanted to stay signed in as test user)
+- `yarn test`
+  - Bypass login for testing purposes, will log you in as a dummy user "John Doe"
+  - If you logged out of app, reload / restart app to automatically log back in as dummy user
+  - Optional arguments:
+    - `--tunnel`
+      - For WiFi tunneling as described above
+    - `--ios` or `--android`
+      - For running app on iOS or Android emulator
+    - Note that arguments can be combined, e.g. `yarn test --android --tunnel`
 
 ### Formatting Script
 

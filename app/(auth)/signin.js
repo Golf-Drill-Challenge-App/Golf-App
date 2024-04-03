@@ -16,7 +16,6 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
@@ -25,7 +24,6 @@ const INPUT_WIDTH = 200;
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setCurrentUserId } = currentAuthContext();
 
   async function handleSignIn() {
     try {
@@ -35,20 +33,6 @@ export default function SignIn() {
         password,
       );
       console.log(userCredential.user);
-    } catch (e) {
-      alert(e);
-      console.log(e);
-    }
-  }
-
-  async function handleTestSignIn() {
-    try {
-      // Check the env var exists just in case.
-      // I put the test uid in an .env file to make it easier to change if we ever need to call it elsewhere, otherwise
-      // this could be hardcoded.
-      if (process.env.EXPO_PUBLIC_TEST_UID) {
-        setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
-      }
     } catch (e) {
       alert(e);
       console.log(e);
@@ -126,15 +110,6 @@ export default function SignIn() {
             >
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
-
-            <Pressable
-              style={styles.button}
-              onPress={handleTestSignIn}
-              backgroundColor={"#F24E1E"}
-            >
-              <Text style={styles.buttonText}>Test Login</Text>
-            </Pressable>
-
             <Pressable style={styles.button} backgroundColor={"#F24E1E"}>
               <Link asChild href={"/signup"}>
                 <Text style={styles.buttonText}>Sign Up</Text>
