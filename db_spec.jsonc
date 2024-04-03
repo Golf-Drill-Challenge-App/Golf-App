@@ -115,7 +115,7 @@
         },
       },
       "best_attempts": { //collection of did
-        "732489": { //did, collection of uid
+        "732489": { //did, document of uid
             "2": { //uid, document, contains a map item
             "strokesGained": "1237486", //attempt id that contains the "best" score for this field
             "proxHole": "1237486"
