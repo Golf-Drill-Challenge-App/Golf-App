@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
+import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import { currentAuthContext } from "../context/Auth";
 
 export const useLeaderboard = ({ drillId = null }) => {
   const { currentTeamId } = currentAuthContext();

@@ -5,11 +5,12 @@ import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import { currentAuthContext } from "~/context/Auth";
+import { updateLeaderboard } from "~/hooks/updateLeaderboard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { currentAuthContext } from "../../../../context/Auth";
-import { useLeaderboard } from "../../../../hooks/useLeaderboard";
 
 export default function Leaderboard() {
   const { currentTeamId } = currentAuthContext();
@@ -18,7 +19,7 @@ export default function Leaderboard() {
   const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
     useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user
   const [customMainOutputAttempt, setCustomMainOutputAttempt] = useState("did"); //What is the custom mainOutputAttempt in case defaultMainOutputAttempt is false
-  const [manualAttempt, setManualAttempt] = useState(false); //whether the user has manually set the mainOutputAttempt
+  const [manualAttemptCalc, setManualAttemptCalc] = useState(false); //whether the attempt is manually calculated or grabbed from precalculated leaderboard
 
   const {
     data: userInfo,
@@ -33,19 +34,21 @@ export default function Leaderboard() {
   } = useDrillInfo(drillId);
 
   const {
-    data: leaderboard,
+    data: preCalcLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
   } = useLeaderboard({ drillId });
 
   useEffect(() => {
-    setManualAttempt(
+    setManualAttemptCalc(
       !drillIsLoading && // so that mainOutputAttempt is calculated
         !leaderboardIsLoading && //leaderboard must've finished loading
-        (!leaderboard || //and not exist
-          leaderboard[Object.keys(leaderboard)[0]][mainOutputAttempt]), //or exist but does not have the required field
+        (!preCalcLeaderboard || //and not exist
+          preCalcLeaderboard[Object.keys(preCalcLeaderboard)[0]][
+            mainOutputAttempt
+          ] === undefined), //or exist but does not have the required field
     );
-  }, [drillIsLoading, leaderboardIsLoading, leaderboard]);
+  }, [drillIsLoading, leaderboardIsLoading, preCalcLeaderboard]);
 
   // console.log("enabled: ", manualAttempt);
 
@@ -55,7 +58,7 @@ export default function Leaderboard() {
     error: attemptError,
   } = useAttempts({
     drillId,
-    enabled: manualAttempt,
+    enabled: manualAttemptCalc,
   });
 
   if (
@@ -79,57 +82,75 @@ export default function Leaderboard() {
     ? drillInfo["mainOutputAttempt"]
     : customMainOutputAttempt;
 
-  const drillLeaderboardAttempts = leaderboard || {};
-  if (!leaderboard && attempts) {
+  const leaderboardAttempts = preCalcLeaderboard || {};
+  if (!preCalcLeaderboard && attempts) {
     //just in case...
     for (const id in attempts) {
       const entry = attempts[id];
+
+      const lowerIsBetter =
+        drillInfo["aggOutputs"][mainOutputAttempt]["lowerIsBetter"];
       // If this uid has not been seen before or the current score is higher, store it
       if (
-        !drillLeaderboardAttempts[entry.uid] ||
-        drillLeaderboardAttempts[entry.uid][mainOutputAttempt] <
-          entry[mainOutputAttempt]
+        !leaderboardAttempts[entry.uid] ||
+        (lowerIsBetter &&
+          leaderboardAttempts[entry.uid][mainOutputAttempt]["value"] <
+            entry[mainOutputAttempt]) ||
+        (!lowerIsBetter &&
+          leaderboardAttempts[entry.uid][mainOutputAttempt]["value"] >
+            entry[mainOutputAttempt])
       ) {
-        drillLeaderboardAttempts[entry.uid] = entry;
+        leaderboardAttempts[entry.uid] = {
+          [mainOutputAttempt]: {
+            value: entry[mainOutputAttempt],
+            id: entry.id,
+          },
+        };
       }
     }
 
-    console.log("drillLeaderboardAttempts: ", drillLeaderboardAttempts);
-
-    // updateLeaderboard({
-    //   currentTeamId,
-    //   drillId,
-    //   value: drillLeaderboardAttempts,
-    // });
+    updateLeaderboard({
+      currentTeamId,
+      drillId,
+      value: leaderboardAttempts,
+    });
   }
 
-  const orderedLeaderboard = Object.values(drillLeaderboardAttempts).sort(
-    (a, b) => a[mainOutputAttempt] - b[mainOutputAttempt],
+  console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
+
+  const orderedLeaderboard = Object.keys(leaderboardAttempts).sort(
+    //only sort the userId
+    (a, b) =>
+      leaderboardAttempts[a][mainOutputAttempt]["value"] -
+      leaderboardAttempts[b][mainOutputAttempt]["value"],
   );
 
   return (
     <ScrollView>
       <List.Section style={{ marginLeft: 20 }}>
-        {orderedLeaderboard.map((attempt) => (
-          <Link
-            key={attempt["uid"]}
-            href={{
-              pathname: `${currentPath}/attempts/${attempt["id"]}`,
-            }}
-            asChild
-          >
-            <List.Item
-              title={userInfo[attempt["uid"]]["name"]}
-              left={() => <Avatar.Text size={24} label="XD" />}
-              right={() => (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text>{numTrunc(attempt[mainOutputAttempt])} ft</Text>
-                  <Icon source="chevron-right" />
-                </View>
-              )}
-            />
-          </Link>
-        ))}
+        {orderedLeaderboard.map((userId) => {
+          const attempt = leaderboardAttempts[userId][mainOutputAttempt];
+          return (
+            <Link
+              key={userId}
+              href={{
+                pathname: `${currentPath}/attempts/${attempt["id"]}`,
+              }}
+              asChild
+            >
+              <List.Item
+                title={userInfo[userId]["name"]}
+                left={() => <Avatar.Text size={24} label="XD" />}
+                right={() => (
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text>{numTrunc(attempt["value"])} ft</Text>
+                    <Icon source="chevron-right" />
+                  </View>
+                )}
+              />
+            </Link>
+          );
+        })}
       </List.Section>
     </ScrollView>
   );
