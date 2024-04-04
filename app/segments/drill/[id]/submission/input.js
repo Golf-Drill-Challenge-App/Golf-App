@@ -4,6 +4,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -28,13 +29,34 @@ import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
 
 /***************************************
  * Firebase Upload
  ***************************************/
 
-//TODO: Implement function to upload the outputData to the attempts collection
+//A function to upload the outputData to the "attempts" collection
+async function uploadAttempt(outputData) {
+  try {
+    //create new document
+    const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+
+    //Newly created doc Id. Useful for finding upload data in testing.
+    console.log("New Attempt Ref ID: ", newAttemptRef.id);
+
+    //add id of new document into the data
+    const uploadData = { ...outputData, id: newAttemptRef.id };
+
+    //upload the data
+    await setDoc(newAttemptRef, uploadData).then(() => {
+      console.log("Document successfully uploaded!");
+    });
+  } catch (e) {
+    alert(e);
+    console.log(e);
+  }
+}
 
 /***************************************
  * AttemptShots Generation
@@ -115,7 +137,7 @@ function createOutputData(
   uid,
   did,
   outputs,
-  aggOutputs,
+  aggOutputsObj,
 ) {
   //initialize total values
   let strokesGainedTotal = 0;
@@ -219,6 +241,7 @@ function createOutputData(
     shots: outputShotData,
   };
 
+  const aggOutputs = Object.keys(aggOutputsObj);
   //Generate the aggOutputs for output data
   for (let i = 0; i < aggOutputs.length; i++) {
     const aggOutput = aggOutputs[i];
@@ -255,9 +278,7 @@ function createOutputData(
     }
   }
 
-  return {
-    outputData,
-  };
+  return outputData;
 }
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
@@ -328,7 +349,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             );
 
             setOutputData(outputData);
-            //send the output data to the database here
+            uploadAttempt(outputData);
             setToggleResult(true);
           }}
         >

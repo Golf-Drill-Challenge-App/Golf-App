@@ -13,7 +13,7 @@ import ShotAccordion from "~/components/shotAccordion";
 import { numTrunc } from "~/Utility";
 
 function Result(props) {
-  const submission = props.submission.outputData;
+  const submission = props.submission;
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
 
