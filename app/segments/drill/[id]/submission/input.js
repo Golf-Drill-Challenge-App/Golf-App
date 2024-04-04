@@ -282,6 +282,22 @@ function createOutputData(
   return outputData;
 }
 
+//A function to validate inputs are all numbers
+function validateInputs(inputs) {
+  const inputKeys = Object.keys(inputs);
+
+  for (let i = 0; i < inputKeys.length; i++) {
+    const inputKey = inputKeys[i];
+
+    //check if input is not a number
+    if (isNaN(inputs[inputKey])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
 
@@ -321,6 +337,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   /***** Empty Input Banner Stuff *****/
 
   const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
+
+  /***** Invalid Input Banner Stuff *****/
+
+  const [invalidInputBannerVisible, setInvalidInputBannerVisible] =
+    useState(false);
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
@@ -402,13 +423,29 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //Function to handle "Next shot" button click
   const handleNextShotButtonClick = () => {
+    //close previous Banners
+    setEmptyInputBannerVisible(false);
+    setInvalidInputBannerVisible(false);
+
+    // Check if any inputs are empty
+    const inputValuesForShot = inputValues[displayedShot];
+    const isEmptyInput = Object.values(inputValuesForShot).some(
+      (value) => value === "",
+    );
+
     //Check if all inputs have been filled in
-    if (Object.keys(inputValues[displayedShot]).length === numInputs) {
+    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
+      setEmptyInputBannerVisible(true);
+    } else if (isEmptyInput) {
+      setEmptyInputBannerVisible(true);
+    }
+    //check inputs are all numbers
+    else if (!validateInputs(inputValues[displayedShot])) {
+      setInvalidInputBannerVisible(true);
+    } else {
       setEmptyInputBannerVisible(false);
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
-    } else {
-      setEmptyInputBannerVisible(true);
     }
   };
 
@@ -457,6 +494,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 ]}
               >
                 Error! All input fields must be filled!
+              </Banner>
+
+              <Banner
+                visible={invalidInputBannerVisible}
+                actions={[
+                  {
+                    label: "Dismiss",
+                    onPress: () => setInvalidInputBannerVisible(false),
+                  },
+                ]}
+              >
+                Error! Input fields must only be numbers!
               </Banner>
 
               <KeyboardAwareScrollView>
