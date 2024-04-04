@@ -51,12 +51,15 @@ async function uploadAttempt(outputData) {
     //upload the data
     await setDoc(newAttemptRef, uploadData).then(() => {
       console.log("Document successfully uploaded!");
+      //TODO: Call function to check for leaderboard update
     });
   } catch (e) {
     alert(e);
     console.log(e);
   }
 }
+
+//TODO: Create a function to check leaderboard and update if needed
 
 /***************************************
  * AttemptShots Generation
