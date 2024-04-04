@@ -241,9 +241,8 @@ function createOutputData(
     shots: outputShotData,
   };
 
-  const aggOutputs = Object.keys(aggOutputsObj);
   //Generate the aggOutputs for output data
-  const aggOutputsArr = Object.keys(aggOutputs);
+  const aggOutputsArr = Object.keys(aggOutputsObj);
   for (let i = 0; i < aggOutputsArr.length; i++) {
     const aggOutput = aggOutputsArr[i];
 
