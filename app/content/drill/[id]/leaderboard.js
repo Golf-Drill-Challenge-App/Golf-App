@@ -143,7 +143,7 @@ export default function Leaderboard() {
                 left={() => <Avatar.Text size={24} label="XD" />}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text>{numTrunc(attempt["value"])} ft</Text>
+                    <Text>{numTrunc(attempt["value"], true)} ft</Text>
                     <Icon source="chevron-right" />
                   </View>
                 )}
