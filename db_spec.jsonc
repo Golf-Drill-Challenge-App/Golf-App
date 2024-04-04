@@ -114,6 +114,23 @@
           ],
         },
       },
+      "best_attempts": {
+        //collection of did
+        "732489": {
+          //document of did, uid is the key
+          "2": {
+            //uid, document, contains a map item
+            "strokesGained": {
+              "value": "1237486", //the best value
+              "id": "567432", //attempt id that contains the "best" score for this field
+            },
+            "proxHole": {
+              "value": "1237486",
+              "id": "567432",
+            },
+          },
+        },
+      },
       "drills": [
         {
           "did": "732489", // drillInfo id
@@ -162,6 +179,13 @@
             "expectedPutts",
             "strokesGained",
           ], //all data that will be stored in a shot
+          "aggOutputs": {
+            "strokesGained": { "lowerIsBetter": true },
+            "strokesGainedAverage": { "lowerIsBetter": true },
+            "carryDiffAverage": { "lowerIsBetter": false },
+            "sideLandingAverage": { "lowerIsBetter": false },
+            "proxHoleAverage": { "lowerIsBetter": false },
+          }, //all data that will be stored in an attempt
           "mainOutputAttempt": "sideLandingAverage", // stat to be used for the barChart in statistics. This is the main data for attempt level data
           "mainOutputShot": "sideLanding", // stat to be used for the big number in shotAccordion. This is the main data for shot level data
           "reps": 20,

@@ -243,8 +243,9 @@ function createOutputData(
 
   const aggOutputs = Object.keys(aggOutputsObj);
   //Generate the aggOutputs for output data
-  for (let i = 0; i < aggOutputs.length; i++) {
-    const aggOutput = aggOutputs[i];
+  const aggOutputsArr = Object.keys(aggOutputs);
+  for (let i = 0; i < aggOutputsArr.length; i++) {
+    const aggOutput = aggOutputsArr[i];
 
     switch (aggOutput) {
       case "carryDiffAverage":

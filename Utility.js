@@ -25,10 +25,13 @@ export function formatDate(unixTimestamp) {
   return `${month} ${day}, ${year}`;
 }
 
-export function numTrunc(value) {
+export function numTrunc(value, pad = false) {
   if (value === undefined) return "aaaaaaa";
   else if (value.toFixed === undefined) return value;
-  else return parseFloat(value.toFixed(3));
+  else {
+    const truncedValue = value.toFixed(3);
+    return pad ? truncedValue : parseFloat(truncedValue);
+  }
 }
 
 export function refToID(ref) {

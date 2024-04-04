@@ -58,7 +58,7 @@ function Result() {
           <Text style={styles.sectionTitle}>Drill Results</Text>
 
           {Object.keys(drillInfo).length > 0 &&
-            drillInfo["aggOutputs"].map((output) => (
+            Object.keys(drillInfo["aggOutputs"]).map((output) => (
               <View
                 style={{
                   flexDirection: "row",
