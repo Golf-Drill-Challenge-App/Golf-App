@@ -46,17 +46,20 @@ export const AuthProvider = ({ children }) => {
     //if this code is not in here, it'll run for infinite times
     onAuthStateChanged(auth, (currentUserId) => {
       console.log("user changed");
-      if (currentUserId) {
-        setCurrentUserId(currentUserId.uid ?? "Error (uid)");
+
+      // test user login (yarn test)
+      // If you sign out, reload app to sign back in as test user
+      if (process.env.EXPO_PUBLIC_TEST_UID) {
+        setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
+      }
+
+      // regular user login
+      else {
+        if (currentUserId) {
+          setCurrentUserId(currentUserId.uid ?? "Error (uid)");
+        }
       }
     });
-
-    // yarn test
-    // If you sign out, reload app to sign back in as test user
-    // Moved outside of useEffect to avoid race condition with logout
-    if (process.env.EXPO_PUBLIC_TEST_UID) {
-      setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
-    }
   }, []);
   return (
     <AuthContext.Provider
