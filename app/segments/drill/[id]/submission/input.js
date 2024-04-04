@@ -416,6 +416,22 @@ function validateInputs(inputs) {
   return true;
 }
 
+//A function to validate inputs are all numbers
+function validateInputs(inputs) {
+  const inputKeys = Object.keys(inputs);
+
+  for (let i = 0; i < inputKeys.length; i++) {
+    const inputKey = inputKeys[i];
+
+    //check if input is not a number
+    if (isNaN(inputs[inputKey])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
@@ -459,6 +475,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   /***** Empty Input Banner Stuff *****/
 
   const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
+
+  /***** Invalid Input Banner Stuff *****/
+
+  const [invalidInputBannerVisible, setInvalidInputBannerVisible] =
+    useState(false);
 
   /***** Invalid Input Banner Stuff *****/
 
@@ -542,24 +563,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       (value) => value === "",
     );
 
-    //Check if all inputs have been filled in
-    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
-      setEmptyInputBannerVisible(true);
-    } else if (isEmptyInput) {
-      setEmptyInputBannerVisible(true);
-    }
-    //check inputs are all numbers
-    else if (!validateInputs(inputValues[displayedShot])) {
-      setInvalidInputBannerVisible(true);
-    } else {
-      setEmptyInputBannerVisible(false);
-      setDisplayedShot(displayedShot + 1);
-      setCurrentShot(currentShot + 1);
-    }
-  };
-
-  //Function to handle "Next shot" button click
-  const handleSubmitButtonClick = () => {
     //close previous Banners
     setEmptyInputBannerVisible(false);
     setInvalidInputBannerVisible(false);
@@ -575,6 +578,23 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       setEmptyInputBannerVisible(true);
     } else if (isEmptyInput) {
       setEmptyInputBannerVisible(true);
+    }
+    //check inputs are all numbers
+    else if (!validateInputs(inputValues[displayedShot])) {
+      setInvalidInputBannerVisible(true);
+    } else {
+    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
+      setEmptyInputBannerVisible(true);
+    } else if (isEmptyInput) {
+      setEmptyInputBannerVisible(true);
+    }
+    //check inputs are all numbers
+    else if (!validateInputs(inputValues[displayedShot])) {
+      setInvalidInputBannerVisible(true);
+    } else {
+      setEmptyInputBannerVisible(false);
+      setDisplayedShot(displayedShot + 1);
+      setCurrentShot(currentShot + 1);
     }
     //check inputs are all numbers
     else if (!validateInputs(inputValues[displayedShot])) {
@@ -644,6 +664,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 ]}
               >
                 Error! All input fields must be filled!
+              </Banner>
+
+              <Banner
+                visible={invalidInputBannerVisible}
+                actions={[
+                  {
+                    label: "Dismiss",
+                    onPress: () => setInvalidInputBannerVisible(false),
+                  },
+                ]}
+              >
+                Error! Input fields must only be numbers!
               </Banner>
 
               <Banner
