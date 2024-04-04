@@ -458,11 +458,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
   const hideInvalidDialog = () => setInvalidDialogVisible(false);
 
-  /***** Invalid Input Banner Stuff *****/
-
-  const [invalidInputBannerVisible, setInvalidInputBannerVisible] =
-    useState(false);
-
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
     setattemptShots(getShotInfo(drillInfo));
@@ -599,18 +594,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
               </Appbar.Header>
-
-              <Banner
-                visible={invalidInputBannerVisible}
-                actions={[
-                  {
-                    label: "Dismiss",
-                    onPress: () => setInvalidInputBannerVisible(false),
-                  },
-                ]}
-              >
-                Error! Input fields must only be numbers!
-              </Banner>
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
