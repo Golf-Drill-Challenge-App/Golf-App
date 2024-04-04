@@ -137,7 +137,7 @@ function createOutputData(
   uid,
   did,
   outputs,
-  aggOutputs,
+  aggOutputsObj,
 ) {
   //initialize total values
   let strokesGainedTotal = 0;
@@ -241,6 +241,7 @@ function createOutputData(
     shots: outputShotData,
   };
 
+  const aggOutputs = Object.keys(aggOutputsObj);
   //Generate the aggOutputs for output data
   for (let i = 0; i < aggOutputs.length; i++) {
     const aggOutput = aggOutputs[i];
@@ -277,9 +278,7 @@ function createOutputData(
     }
   }
 
-  return {
-    outputData,
-  };
+  return outputData;
 }
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
