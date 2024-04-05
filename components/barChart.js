@@ -1,6 +1,6 @@
 import * as scale from "d3-scale";
 import * as shape from "d3-shape";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -19,14 +19,12 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
     return <Text>No attempts have been made yet.</Text>;
   }
-  const drillDataSorted = drillData.sort((a, b) => a.time - b.time);
-  const data = drillDataSorted.map(
-    (value) => value[drillInfo["mainOutputAttempt"]],
-  );
+  const data = useMemo(() => {
+    return drillData
+      .sort((a, b) => a.time - b.time)
+      .map((value) => value[drillInfo["mainOutputAttempt"]]);
+  }, [drillData, drillInfo]);
 
-  console.log("drillDataSorted", drillData);
-
-  const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
   const [movingAvgRangeValues] = useState([
     { label: "3", value: 3 },
@@ -38,11 +36,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     useState(false);
 
   const { width } = useWindowDimensions();
-  const fill = "rgb(134, 65, 244)";
   const [selected, setSelected] = useState(0);
-  const scrollViewRef = useRef();
-
-  const dateString = formatDate(drillDataSorted[selected]["time"]);
 
   const barWidth = 50;
 
@@ -94,20 +88,19 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     .y((d) => scaleY(d))(movingAvgData);
 
   const handleScroll = function (event) {
-    setScrollPosition(event.nativeEvent.contentOffset.x);
     setSelected(selectedBar(event.nativeEvent.contentOffset.x));
   };
 
-  const MovingAvgPath = function MovingAvgPath({ line }) {
-    return (
-      <Path
-        d={line}
-        stroke={"rgba(134, 65, 244, 1)"}
-        fill={"none"}
-        strokeWidth={2}
+  const shotAccordionList = useMemo(() => {
+    return drillData[selected]["shots"].map((shot) => (
+      <ShotAccordion
+        key={shot["sid"]}
+        shot={shot}
+        drillInfo={drillInfo}
+        total={drillData[selected]["shots"].length}
       />
-    );
-  };
+    ));
+  }, [drillData, drillInfo, selected]);
 
   const styles = StyleSheet.create({
     movingAvgContainer: {
@@ -137,10 +130,6 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       borderRadius: 4,
       paddingHorizontal: 10,
     },
-    chartSection: {
-      marginTop: 20,
-      marginBottom: 20,
-    },
     yAxis: {
       position: "absolute",
       top: 0,
@@ -149,9 +138,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       left: 0,
       height: chartHeight,
       zIndex: 5,
-      backgroundColor: "#F4F4F4", // Set background color
+      backgroundColor: "#F2F2F2", // Set background color
       paddingHorizontal: 5, // Add padding
-      borderRadius: 10, // Add border radius for rounded corners
     },
     middleLine: {
       position: "absolute",
@@ -192,7 +180,6 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       color: "#333", // Adjust text color
     },
   });
-
   return (
     <ScrollView>
       <View style={styles.movingAvgContainer}>
@@ -212,13 +199,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       <View style={styles.chartSection}>
         <YAxis
           data={data}
-          svg={{
-            fill: "grey",
-            fontSize: 12,
-            stroke: "#666", // Set stroke color for grid lines
-          }}
           style={styles.yAxis}
-          contentInset={{ top: 10, bottom: 10 }} // Adjust content inset
           numberOfTicks={10} // Adjust number of ticks as needed
           formatLabel={(value) => `${value}`} // Format label as needed
         />
@@ -226,15 +207,15 @@ export default function BarChartScreen({ drillData, drillInfo }) {
         <ScrollView
           horizontal={true}
           onScroll={handleScroll}
-          scrollEventThrottle={64}
-          ref={scrollViewRef}
+          scrollEventThrottle={128}
           style={styles.scrollViewContainer}
+          removeClippedSubviews={true}
         >
           <View style={styles.chartContainer}>
             <BarChart
               style={styles.barChart}
               data={processedData}
-              svg={{ fill }}
+              svg={{ fill: "rgb(134, 65, 244)" }}
               contentInset={{
                 left: halfScreenCompensation,
                 right: halfScreenCompensation,
@@ -256,7 +237,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       <View style={styles.bottomContainer}>
         <View style={styles.bottomTextContainer}>
           <Text style={{ ...styles.bottomText, width: "30%" }}>
-            {dateString}
+            {formatDate(drillData[selected]["time"])}
           </Text>
           <Text
             style={{ ...styles.bottomText, width: "40%", textAlign: "center" }}
@@ -270,15 +251,19 @@ export default function BarChartScreen({ drillData, drillInfo }) {
           </Text>
         </View>
 
-        {drillDataSorted[selected]["shots"].map((shot) => (
-          <ShotAccordion
-            key={shot["sid"]}
-            shot={shot}
-            drillInfo={drillInfo}
-            total={drillDataSorted[selected]["shots"].length}
-          />
-        ))}
+        {shotAccordionList}
       </View>
     </ScrollView>
   );
 }
+
+const MovingAvgPath = ({ line }) => {
+  return (
+    <Path
+      d={line}
+      stroke={"rgba(134, 65, 244, 1)"}
+      fill={"none"}
+      strokeWidth={2}
+    />
+  );
+};
