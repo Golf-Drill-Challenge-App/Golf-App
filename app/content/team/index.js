@@ -33,10 +33,6 @@ function Index() {
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
-  //console.log("Found: ", foundUsers);
-
-  console.log("Found: ", foundUsers);
-
   // ref
   const bottomSheetModalRef = useRef(null);
 

@@ -21,6 +21,8 @@ export default function Result() {
 }
 
 const styles = StyleSheet.create({
-  fontSize: 18,
-  fontWeight: "bold",
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });
