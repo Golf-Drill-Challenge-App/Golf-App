@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PaperProvider, Text, Avatar, Button, Card, Appbar } from "react-native-paper";
 import { TouchableOpacity } from 'react-native';
-import { FlatList, StyleSheet, ScrollView } from 'react-native';
+import { FlatList, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { View } from 'react-native';
 import { useNavigation, router } from 'expo-router';
@@ -18,10 +18,14 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 
+import { useQueryClient } from '@tanstack/react-query';
+
 
 const DrillList = () => {
-  const { currentUserId } = currentAuthContext();
+  const queryClient = useQueryClient();
+  const { currentUserId, currentTeamId } = currentAuthContext();
   const userId = currentUserId ?? null;
+  const teamId = currentTeamId ?? null;
 
   console.log("USER ID IN PLAN", userId)
 
@@ -38,6 +42,18 @@ const DrillList = () => {
   } = useUserInfo(userId);
 
   const [assigned_data, setAssignedData] = useState([]);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    const refresh = async () => {
+      setRefreshing(true);
+      await queryClient.invalidateQueries(["user", { teamId, userId }]);
+      setRefreshing(false);
+    };
+
+    refresh();
+  }, [teamId, userId, queryClient]);
 
 
   console.log("USER DATA", userData);
@@ -71,6 +87,9 @@ const DrillList = () => {
     <Loading />
   ) : (
     <FlatList
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       data={sortedDates}
       keyExtractor={(date) => date}
       renderItem={({ item: date }) => (
