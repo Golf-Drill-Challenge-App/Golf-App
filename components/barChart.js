@@ -24,6 +24,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     (value) => value[drillInfo["mainOutputAttempt"]],
   );
 
+  console.log("drillDataSorted", drillData);
+
   const [_, setScrollPosition] = useState(0);
   const [movingAvgRange, setMovingAvgRange] = useState(5);
   const [movingAvgRangeValues] = useState([
@@ -60,34 +62,11 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     return data.map((value, index) => ({
       value: value,
       index: index,
-      pass: index + 1 >= movingAvgRange,
-      movingAvg:
-        index + 1 >= movingAvgRange
-          ? data
-              .slice(index - movingAvgRange + 1, index + 1)
-              .reduce((a, b) => a + b, 0) / movingAvgRange
-          : null,
-      slice: data.slice(index - movingAvgRange + 1, index + 1),
-      reduce: data
-        .slice(index - movingAvgRange + 1, index + 1)
-        .reduce((a, b) => a + b, 0),
       svg: {
         fill: value > 0 ? "green" : "red",
       },
     }));
-  }, [data, movingAvgRange, barWidth]);
-
-  const transparentData = data.map((value, index) => ({
-    value: value > 0 ? Math.max(...data) : Math.min(...data),
-    index: index,
-    svg: {
-      fill: "transparent",
-      onPress: () => {
-        setSelected(index);
-        scrollViewRef.current.scrollTo({ x: index * barWidth, animated: true });
-      },
-    },
-  }));
+  }, [data]);
 
   const movingAvgData = data.map((value, index) =>
     index + 1 >= movingAvgRange
