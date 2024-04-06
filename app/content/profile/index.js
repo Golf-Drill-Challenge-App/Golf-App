@@ -77,8 +77,8 @@ function Index() {
     setTimeout(() => {
       queryClient.invalidateQueries({
         queryKey: ["user", { userId }],
-        queryKey: ["userEmail", { userId }],
-        queryKey: ["attempts", { userId }],
+        queryKey: ["userEmail", userId],
+        queryKey: ["attempts", currentTeamId, { userId }],
       });
       setRefreshing(false);
     }, 500);
