@@ -5,7 +5,6 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
-import { router } from "expo-router";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -43,6 +42,7 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 function Index() {
   const { signOut } = currentAuthContext();
   const { currentUserId } = currentAuthContext();
+  const { currentTeamId } = currentAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
 
@@ -75,14 +75,17 @@ function Index() {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      router.replace("content/profile/");
+      queryClient.invalidateQueries({
+        queryKey: ["user", { userId }],
+        queryKey: ["userEmail", { userId }],
+        queryKey: ["attempts", { userId }],
+      });
       setRefreshing(false);
     }, 500);
   }, []);
 
   // ref
   const bottomSheetModalRef = useRef(null);
-
   const queryClient = useQueryClient();
 
   // variables
@@ -184,7 +187,7 @@ function Index() {
   const handleUpdate = async () => {
     if (newName && newName !== userData.name) {
       // check if they request to update their name to a new one
-      await updateDoc(doc(db, "teams", "1", "users", userId), {
+      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         name: newName,
       });
       queryClient.invalidateQueries({ queryKey: ["user", { userId }] });

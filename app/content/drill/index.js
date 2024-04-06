@@ -5,10 +5,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
+  const { currentTeamId } = currentAuthContext();
 
   const {
     data: drillInfo,
@@ -21,7 +24,9 @@ export default function Index() {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      router.replace("content/drill/");
+      queryClient.invalidateQueries({
+        queryKey: ["drillInfo", { currentTeamId, drillId }],
+      });
       setRefreshing(false);
     }, 500);
   }, []);

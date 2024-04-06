@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
@@ -15,6 +16,8 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
+
   const {
     data: userData,
     userError: userError,
@@ -38,6 +41,18 @@ function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["attempts", currentTeamId, { userId, drillId }],
+      });
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   if (
     userIsLoading ||
