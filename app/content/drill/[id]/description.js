@@ -17,6 +17,9 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];
+  const assignedDrill = useLocalSearchParams()["assigned"];
+
+  console.log("WAS IT ASSIGNED2", assignedDrill)
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -144,6 +147,7 @@ export default function Description() {
       <Link
         href={{
           pathname: `/segments/drill/${drillId}/submission`,
+          params: { assigned: assignedDrill },
         }}
         asChild
       >

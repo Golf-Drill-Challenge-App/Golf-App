@@ -4,7 +4,7 @@ import {
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -31,13 +31,58 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
+import { useQueryClient } from '@tanstack/react-query';
 
 /***************************************
  * Firebase Upload
  ***************************************/
 
 //A function to upload the outputData to the "attempts" collection
-async function uploadAttempt(outputData) {
+
+async function completeAssigned(userId, teamId, assigned, queryClient) {
+
+  console.log("WAS IT ASIGNED 5 and ID", assigned, userId)
+
+  const userRef = doc(db, "teams", "1", "users", userId)
+
+  const getDocument = async () => {
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+
+      const assignedData = docSnap.data()["assigned_data"];
+      const updatedAssignedData = assignedData.map((item, index) => {
+        if (item.assigned_time === assigned) {
+          return { ...item, completed: true };
+        }
+        return item;
+      });
+
+      console.log("DOCUMENT DATA INSIDE", updatedAssignedData[0].completed);
+
+      try {
+        await updateDoc(userRef, { assigned_data: updatedAssignedData });
+        console.log("Document updated successfully!");
+        queryClient.invalidateQueries(["user", { teamId, userId }]);
+      } catch (error) {
+        console.error("Error updating document:", error);
+      }
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+  getDocument();
+
+}
+
+
+async function uploadAttempt(outputData, userId, teamId, assigned, queryClient) {
+
+  console.log("WAS IT ASIGNED 4 and ID", assigned, userId)
+
+
   try {
     //create new document
     const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
@@ -51,7 +96,11 @@ async function uploadAttempt(outputData) {
     //upload the data
     await setDoc(newAttemptRef, uploadData).then(() => {
       console.log("Document successfully uploaded!");
-    });
+      completeAssigned(userId, teamId, assigned, queryClient);
+    })
+      .catch((error) => {
+        console.error("Error uploading document: ", error);
+      });
   } catch (e) {
     alert(e);
     console.log(e);
@@ -284,6 +333,8 @@ function createOutputData(
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
+  const { id, assigned } = useLocalSearchParams();
+  const queryClient = useQueryClient();
 
   const numInputs = drillInfo.inputs.length;
 
@@ -350,7 +401,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             );
 
             setOutputData(outputData);
-            uploadAttempt(outputData);
+            uploadAttempt(outputData, auth["currentUserId"], auth["currentTeamId"], assigned, queryClient);
             setToggleResult(true);
           }}
         >
