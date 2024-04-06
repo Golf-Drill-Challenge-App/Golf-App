@@ -39,9 +39,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 //A function to upload the outputData to the "attempts" collection
 
-async function completeAssigned(userId, teamId, assigned, queryClient) {
+async function completeAssigned(userId, teamId, assigned_time, id, queryClient) {
 
-  console.log("WAS IT ASIGNED 5 and ID", assigned, userId)
+  console.log("WAS IT ASIGNED 5 and ID", assigned_time, userId)
 
   const userRef = doc(db, "teams", "1", "users", userId)
 
@@ -53,7 +53,7 @@ async function completeAssigned(userId, teamId, assigned, queryClient) {
 
       const assignedData = docSnap.data()["assigned_data"];
       const updatedAssignedData = assignedData.map((item, index) => {
-        if (item.assigned_time === assigned) {
+        if (item.assigned_time === assigned_time && item.drill === id) {
           return { ...item, completed: true };
         }
         return item;
@@ -78,9 +78,9 @@ async function completeAssigned(userId, teamId, assigned, queryClient) {
 }
 
 
-async function uploadAttempt(outputData, userId, teamId, assigned, queryClient) {
+async function uploadAttempt(outputData, userId, teamId, assigned_time, id, queryClient) {
 
-  console.log("WAS IT ASIGNED 4 and ID", assigned, userId)
+  console.log("WAS IT ASIGNED 4 and ID", assigned_time, userId)
 
 
   try {
@@ -96,7 +96,9 @@ async function uploadAttempt(outputData, userId, teamId, assigned, queryClient) 
     //upload the data
     await setDoc(newAttemptRef, uploadData).then(() => {
       console.log("Document successfully uploaded!");
-      completeAssigned(userId, teamId, assigned, queryClient);
+      if (assigned_time) {
+        completeAssigned(userId, teamId, assigned_time, id, queryClient);
+      }
     })
       .catch((error) => {
         console.error("Error uploading document: ", error);
@@ -332,7 +334,10 @@ function createOutputData(
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
-  const { id, assigned } = useLocalSearchParams();
+  const { id, assigned_time } = useLocalSearchParams();
+
+
+  console.log("ID AND THE ASSIGNED TIME", id, assigned_time)
   const queryClient = useQueryClient();
 
   const numInputs = drillInfo.inputs.length;
@@ -400,7 +405,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             );
 
             setOutputData(outputData);
-            uploadAttempt(outputData, auth["currentUserId"], auth["currentTeamId"], assigned, queryClient);
+            uploadAttempt(outputData, auth["currentUserId"], auth["currentTeamId"], assigned_time, id, queryClient);
             setToggleResult(true);
           }}
         >

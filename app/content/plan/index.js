@@ -102,7 +102,7 @@ const DrillList = () => {
               disabled={drill.completed}
               onPress={() => {
 
-                router.push({ pathname: `content/drill/${drill.drill}`, params: { id: `${drill.drill}`, assigned: drill.assigned_time } });
+                router.push({ pathname: `content/drill/${drill.drill}`, params: { id: `${drill.drill}`, assigned_time: drill.assigned_time } });
               }}
             >
               <View key={drill.assigned_time} style={{ marginLeft: 20, marginRight: 20 }}>

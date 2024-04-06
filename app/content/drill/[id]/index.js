@@ -16,9 +16,9 @@ export default function Index() {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
 
-  const assignedDrill = useLocalSearchParams()["assigned"];
+  const assigned_time = useLocalSearchParams()["assigned_time"];
 
-  console.log("WAS IT ASSIGNED", assignedDrill)
+  console.log("WAS IT ASSIGNED", assigned_time)
   const {
     data: drillInfo,
     error: drillInfoError,
