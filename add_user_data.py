@@ -9,17 +9,17 @@ db = firestore.client()
 
 # Define the assigned_data array
 assigned_data = [
-    {"drill": "YtCsaxzscFScnpZYmnKI", "assigned_time": "1710522958", "completed": False},
-    {"drill": "YtCsaxzscFScnpZYmnKI", "assigned_time": "1710464940", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710464941", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710292142", "completed": True},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710292143", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710292144", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710205745", "completed": True},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710205746", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710032940", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710032941", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1710012940", "completed": False},
+    {"drill": "YtCsaxzscFScnpZYmnKI", "assigned_time": "1712531660", "completed": False},
+    {"drill": "YtCsaxzscFScnpZYmnKI", "assigned_time": "1712531560", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712531460", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712531360", "completed": True},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712531260", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712470455", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712470355", "completed": True},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712470255", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712384055", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1709709255", "completed": False},
+    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1709622855", "completed": False},
 ]
 
 # Get a reference to the user collection

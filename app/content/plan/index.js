@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { PaperProvider, Text, Avatar, Button, Card, Appbar } from "react-native-paper";
+import { PaperProvider, Text, Avatar, Button, Card, Appbar, List } from "react-native-paper";
 import { TouchableOpacity } from 'react-native';
 import { FlatList, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -85,27 +85,36 @@ const DrillList = () => {
   // Render the list of drills
   return userIsLoading || drillInfoIsLoading ? (
     <Loading />
+  ) : sortedDates.length === 0 ? (
+    <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
+      No drills assigned
+    </Text>
   ) : (
     <FlatList
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       data={sortedDates}
-      keyExtractor={(date) => date}
+      keyExtractor={(item, index) => item}
       renderItem={({ item: date }) => (
         <View>
-          <Text style={{ fontSize: 30, fontWeight: 'bold', textAlign: 'center' }}>
-            {date === today ? 'Today' : date}
+          <Text
+            style={{ fontSize: 25, fontWeight: "bold", textAlign: "center", marginTop: 10 }}
+          >
+            {date === today ? "Today" : date}
           </Text>
           {groupedData[date].map((drill) => (
             <TouchableOpacity
+              key={`${drill.assigned_time}-${drill.drill}`}
               disabled={drill.completed}
               onPress={() => {
-
-                router.push({ pathname: `content/drill/${drill.drill}`, params: { id: `${drill.drill}`, assigned_time: drill.assigned_time } });
+                router.push({
+                  pathname: `content/drill/${drill.drill}`,
+                  params: { id: `${drill.drill}`, assigned_time: drill.assigned_time },
+                });
               }}
             >
-              <View key={drill.assigned_time} style={{ marginLeft: 20, marginRight: 20 }}>
+              <View key={`${drill.assigned_time}-${drill.drill}`} style={{ marginLeft: 20, marginRight: 20 }}>
                 <View
                   style={{
                     borderWidth: 1,
@@ -113,17 +122,18 @@ const DrillList = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    height: 50,
-                    backgroundColor: `${!drill.completed ? '#fff' : 'green'}`,
-                    borderRadius: 50,
+                    height: 80, // Increased height for better squircle shape
+                    backgroundColor: `${!drill.completed ? '#fff' : '#89E894'}`,
+                    borderRadius: 20, // Decreased borderRadius for more squircle shape
                     marginBottom: 10,
                     paddingLeft: 30,
                     paddingRight: 30,
-                    flexDirection: 'row',
+                    paddingTop: 10, // Increased paddingTop for better squircle shape
+                    paddingBottom: 10, // Increased paddingBottom for better squircle shape
                   }}
                 >
                   <Text style={{ fontSize: 20 }}>{drillInfo[drill.drill]["drillType"]}</Text>
-                  <Text style={{ fontSize: 20 }}>{drillInfo[drill.drill]["spec"]}</Text>
+                  <Text style={{ fontSize: 17, fontStyle: 'italic' }}>{drillInfo[drill.drill]["spec"]}</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -144,49 +154,39 @@ const convertTimestampToDate = (timestamp) => {
 
 
 
+const CoachView = () => {
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo();
 
+  const [expanded, setExpanded] = React.useState(true);
+
+  const handlePress = () => setExpanded(!expanded);
+  if (drillInfoIsLoading) {
+    return <Loading />;
+  }
+  return (
+    <List.Section >
+      <List.Accordion
+        title="Select Drills"
+        left={props => <List.Icon {...props} icon="folder" />}>
+        {drillInfo && Object.values(drillInfo).map((drill) => (<List.Item title={drill.drillType} />))}
+
+      </List.Accordion>
+
+
+    </List.Section>
+  );
+};
 
 
 export default function Index() {
-  const d = doc(db, "teams", "1", "drills", "SpvYyY94HaulVH2zmVyM")
-  //getDoc(d).then(value => console.log(value.data()));
-
-  const [cardDataTest, setCardDataTest] = React.useState([])
-  useEffect(() => {
-    let drillList = [];
-    let promiseList = [];
-    /*Object.values(assigned_data).forEach((data) => {
-      data.drill = getDoc(doc(db, "teams", "1", "drills", data.drill)).then(drillData => (
-        drillData.data()
-      ))
-    });
-    console.log("DRILL LIST", drillList)
-    Object.values(assigned_data).forEach((data) => {
-      console.log("DATA", data)
-      drillList.push(data.drill);
-    });*/
-
-    /* assigned_data.drills.forEach(did => {
-       promiseList.push(
-         getDoc(doc(db, "teams", "1", "drills", did)).then(drillData => (
-           drillData.data()
-         ))
-       );
- 
-     });
- 
-     Promise.all(promiseList).then(values => {
-       values.forEach((data) => {
-         console.log("DRILL DATA", data);
-         drillList.push(data);
-       });
-       setCardDataTest(drillList);
-     });*/
-  }, []);
-  console.log("TEST CARD DATA", cardDataTest)
-  console.log(formatDate(1710292140))
+  const { data: userInfo, userIsLoading, userError } = useUserInfo();
 
 
+  console.log("USER INFO IN PLAN BEGGINING", userInfo)
   return (
     <PaperProvider>
       <SafeAreaView
@@ -195,10 +195,10 @@ export default function Index() {
       >
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
 
-          <Appbar.Content title={"Plan"} titleStyle={{ fontWeight: 'bold' }} />
+          <Appbar.Content title={"Assigned Drills"} titleStyle={{}} />
         </Appbar.Header>
 
-        <DrillList></DrillList>
+        <DrillList />
 
       </SafeAreaView>
     </PaperProvider>
