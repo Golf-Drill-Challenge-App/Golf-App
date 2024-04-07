@@ -8,6 +8,7 @@ import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
+import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
@@ -17,6 +18,7 @@ function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
   const queryClient = useQueryClient();
+  const { currentTeamId } = currentAuthContext();
 
   const {
     data: userData,
@@ -48,7 +50,7 @@ function Index() {
     setRefreshing(true);
     setTimeout(() => {
       queryClient.invalidateQueries({
-        queryKey: ["attempts", currentTeamId, { userId, drillId }],
+        queryKey: ["attempts", currentTeamId, { userId }],
       });
       setRefreshing(false);
     }, 500);

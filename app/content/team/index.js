@@ -19,7 +19,12 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { currentUserId } = currentAuthContext();
-  const { data: userInfo, userIsLoading, userError } = useUserInfo();
+  const {
+    data: userInfo,
+    userIsLoading,
+    userError,
+    userIsRefetching,
+  } = useUserInfo();
 
   const [searchQuery, setSearchQuery] = useState("");
 

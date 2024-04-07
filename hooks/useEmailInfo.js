@@ -7,6 +7,7 @@ export const useEmailInfo = (userId) => {
     data: userEmail,
     error,
     isLoading,
+    isRefetching,
   } = useQuery({
     queryKey: ["userEmail", userId],
     queryFn: async () => {
@@ -23,5 +24,6 @@ export const useEmailInfo = (userId) => {
     userEmail,
     userEmailError: error,
     userEmailIsLoading: isLoading,
+    userEmailIsRefetching: isRefetching,
   };
 };

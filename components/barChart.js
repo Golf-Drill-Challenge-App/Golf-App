@@ -76,7 +76,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState(0);
 
-  const barWidth = 50;
+  const barWidth = 10; // temporary for android testing, remove before merge
 
   const halfScreenCompensation = width / 2 - barWidth / 2;
   const chartWidth = halfScreenCompensation * 2 + data.length * barWidth;

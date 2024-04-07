@@ -5,29 +5,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const navigation = useNavigation();
   const queryClient = useQueryClient();
-  const { currentTeamId } = currentAuthContext();
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
+    isRefetching: drillInfoIsRefetching,
   } = useDrillInfo();
 
-  const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
     setTimeout(() => {
       queryClient.invalidateQueries({
-        queryKey: ["drillInfo", { currentTeamId, drillId }],
+        queryKey: ["drillInfo"],
       });
-      setRefreshing(false);
     }, 500);
   }, []);
 

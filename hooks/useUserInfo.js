@@ -6,7 +6,7 @@ import { db } from "~/firebaseConfig";
 export const useUserInfo = (userId) => {
   const { currentTeamId } = currentAuthContext();
 
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading, isRefetching } = useQuery({
     queryKey: ["user", { currentTeamId, userId }],
     queryFn: async () => {
       if (userId) {
@@ -31,5 +31,6 @@ export const useUserInfo = (userId) => {
     data,
     userError: error,
     userIsLoading: isLoading,
+    userIsRefetching: isRefetching,
   };
 };

@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,25 +21,27 @@ export default function Stat() {
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
-    drillInfoError,
+    error: drillInfoError,
+    isRefetching: drillInfoIsRefetching,
   } = useDrillInfo(drillId);
 
   const {
     data: drillAttempts,
     isLoading: drillAttemptsIsLoading,
     error: drillAttemptsError,
+    isRefetching: drillAttemptsIsRefetching,
   } = useAttempts({ drillId, userId });
 
-  const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      queryClient.invalidateQueries({
-        queryKey: ["attempts", currentTeamId, { userId, drillId }],
-      });
-      setRefreshing(false);
-    }, 500);
+    queryClient.invalidateQueries({
+      queryKey: [
+        "attempts",
+        currentTeamId,
+        { userId, drillId },
+        "drillInfo",
+        { drillId },
+      ],
+    });
   }, []);
 
   if (drillInfoIsLoading || drillAttemptsIsLoading) {
@@ -64,7 +66,10 @@ export default function Stat() {
         </Appbar.Header>
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl
+              refreshing={drillAttemptsIsRefetching || drillInfoIsRefetching}
+              onRefresh={onRefresh}
+            />
           }
         >
           <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
