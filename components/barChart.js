@@ -169,11 +169,11 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     },
     yAxis: {
       position: "absolute",
-      top: 0,
+      top: -9.2,
       width: 35,
       bottom: 0,
       left: 0,
-      height: chartHeight,
+      height: chartHeight * 1.10,
       zIndex: 5,
       backgroundColor: "#F2F2F2", // Set background color
       paddingHorizontal: 5, // Add padding
