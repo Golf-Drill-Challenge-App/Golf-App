@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { RefreshControl, ScrollView } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,32 +16,34 @@ export default function Stat() {
   const { user: userId, id: drillId } = useLocalSearchParams();
   const queryClient = useQueryClient();
   const { currentTeamId } = currentAuthContext();
-  console.log(currentTeamId);
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-    isRefetching: drillInfoIsRefetching,
   } = useDrillInfo(drillId);
 
   const {
     data: drillAttempts,
     error: drillAttemptsError,
     isLoading: drillAttemptsIsLoading,
-    isRefetching: drillAttemptsIsRefetching,
   } = useAttempts({ drillId, userId });
 
+  const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
-    queryClient.invalidateQueries({
-      queryKey: [
-        "attempts",
-        currentTeamId,
-        { drillId, userId },
-        "drillInfo",
-        { drillId },
-      ],
-    });
+    setRefreshing(true);
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          query.queryKey[0] === "drillInfo" ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].userId === userId &&
+            query.queryKey[2].drillId === drillId),
+      });
+      setRefreshing(false);
+    }, 500);
   }, []);
 
   if (drillInfoIsLoading || drillAttemptsIsLoading) {
@@ -64,12 +66,13 @@ export default function Stat() {
           />
           <Appbar.Content title={"Statistics"} />
         </Appbar.Header>
+
         <ScrollView
+          // might be awkward to put a scrollview here since barchart component has a scrollview too, but needed a custom
+          // refresh control and query invalidation as each chart instance needs different data
+          // TODO: maybe remove barchart component's scrollview?
           refreshControl={
-            <RefreshControl
-              refreshing={drillAttemptsIsRefetching || drillInfoIsRefetching}
-              onRefresh={onRefresh}
-            />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
           <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />

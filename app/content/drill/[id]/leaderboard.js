@@ -1,6 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
-import { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
@@ -15,6 +16,7 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 export default function Leaderboard() {
   const { currentTeamId } = currentAuthContext();
   const drillId = useLocalSearchParams()["id"];
+  const queryClient = useQueryClient();
   const currentPath = usePathname();
   const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
     useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user
@@ -63,6 +65,27 @@ export default function Leaderboard() {
     drillId,
     enabled: manualAttemptCalc,
   });
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          query.queryKey[0] === "user" ||
+          (query.queryKey[0] === "drillInfo" &&
+            query.queryKey[1] === drillId) ||
+          (query.queryKey[0] === "best_attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].drillId === drillId) ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].drillId === drillId),
+      });
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   if (
     userIsLoading ||
@@ -133,7 +156,11 @@ export default function Leaderboard() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];

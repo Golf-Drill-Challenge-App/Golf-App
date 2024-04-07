@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocalSearchParams } from "expo-router";
 import { Button } from "react-native-paper";
 
@@ -15,6 +16,17 @@ export default function Description() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo(drillId);
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["drillInfo"],
+      });
+      setRefreshing(false);
+    }, 500);
+  }, []);
 
   if (drillInfoIsLoading) return <Loading />;
 

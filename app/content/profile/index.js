@@ -41,8 +41,7 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { signOut } = currentAuthContext();
-  const { currentUserId } = currentAuthContext();
-  const { currentTeamId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = currentAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
 
@@ -50,37 +49,42 @@ function Index() {
     data: userData,
     userError: userError,
     userIsLoading: userIsLoading,
-    userIsRefetching: userIsRefetching,
   } = useUserInfo(userId);
 
   const {
     userEmail: userEmail,
     userEmailError: userEmailError,
     userEmailIsLoading: userEmailIsLoading,
-    userEmailIsRefetching: userEmailIsRefetching,
   } = useEmailInfo(userId);
 
   const {
     data: attempts,
     error: attemptsError,
     isLoading: attemptsIsLoading,
-    isRefetching: attemptsIsRefetching,
   } = useAttempts({ userId });
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-    isRefetching: drillInfoIsRefetching,
   } = useDrillInfo();
 
+  const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
-    queryClient.invalidateQueries({
-      queryKey: ["user", { userId }],
-      queryKey: ["userEmail", userId],
-      queryKey: ["attempts", currentTeamId, { userId }],
-      queryKey: ["drillInfo"],
-    });
+    setRefreshing(true);
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
+          (query.queryKey[0] === "userEmail" && query.queryKey[1] === userId) ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].userId === userId) ||
+          query.queryKey[0] === "drillInfo",
+      });
+      setRefreshing(false);
+    }, 500);
   }, []);
 
   // ref

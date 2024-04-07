@@ -15,14 +15,16 @@ export default function Index() {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-    isRefetching: drillInfoIsRefetching,
   } = useDrillInfo();
 
+  const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
+    setRefreshing(true);
     setTimeout(() => {
       queryClient.invalidateQueries({
         queryKey: ["drillInfo"],
       });
+      setRefreshing(false);
     }, 500);
   }, []);
 
