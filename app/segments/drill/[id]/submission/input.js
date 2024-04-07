@@ -419,13 +419,13 @@ function invalidateOnSubmit(queryClient, did, currentTeamId, currentUserId) {
     predicate: (query) =>
       query.queryKey[0] === "user" ||
       (query.queryKey[0] === "drillInfo" && query.queryKey[1] === did) ||
-      (query.queryKey[0] === "best_attempts" &&
+      (query.queryKey[0] === "best_attempts" && // not sure the leaderboard updates correctly
         query.queryKey[1] === currentTeamId &&
         query.queryKey[2].drillId === did) ||
       (query.queryKey[0] === "attempts" &&
         query.queryKey[1] === currentTeamId &&
-        (query.queryKey[2].drillId === did ||
-          query.queryKey[2].userId === currentUserId)),
+        (query.queryKey[2].drillId === did || // stats pages
+          query.queryKey[2].userId === currentUserId)), // for profile index (list of drill types)
   });
 }
 
