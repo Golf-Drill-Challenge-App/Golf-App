@@ -122,14 +122,14 @@ const DrillList = () => {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     width: '100%',
-                    height: 80, // Increased height for better squircle shape
+                    height: 65,
                     backgroundColor: `${!drill.completed ? '#fff' : '#89E894'}`,
-                    borderRadius: 20, // Decreased borderRadius for more squircle shape
+                    borderRadius: 20,
                     marginBottom: 10,
                     paddingLeft: 30,
                     paddingRight: 30,
-                    paddingTop: 10, // Increased paddingTop for better squircle shape
-                    paddingBottom: 10, // Increased paddingBottom for better squircle shape
+                    paddingTop: 5,
+                    paddingBottom: 5,
                   }}
                 >
                   <Text style={{ fontSize: 20 }}>{drillInfo[drill.drill]["drillType"]}</Text>
