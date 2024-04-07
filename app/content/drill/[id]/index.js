@@ -48,7 +48,7 @@ export default function Index() {
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={drillInfo["drillType"]} />
+          <Appbar.Content title={drillInfo["title"]} />
         </Appbar.Header>
 
         {/* Tab system */}

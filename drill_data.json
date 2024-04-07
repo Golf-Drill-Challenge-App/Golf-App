@@ -68374,7 +68374,8 @@
       "drills": {
         "SpvYyY94HaulVH2zmVyM": {
           "did": "SpvYyY94HaulVH2zmVyM",
-          "drillType": "20 Shot Challenge",
+          "title": "20 Shot Challenge",
+          "drillType": "20ShotChallenge",
           "spec": "50ft - 150ft",
           "shotType": "app",
           "requirements": [
@@ -68402,7 +68403,8 @@
         },
         "YtCsaxzscFScnpZYmnKI": {
           "did": "YtCsaxzscFScnpZYmnKI",
-          "drillType": "Line Test",
+          "title": "Line Test",
+          "drillType": "lineTest",
           "spec": "7 – PW",
           "shotType": "app",
           "requirements": [

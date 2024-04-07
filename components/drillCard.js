@@ -7,7 +7,7 @@ function DrillCard(props) {
     <Link href={props.hrefString} asChild>
       <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.cardContent}>
-          <Text style={styles.drillType}>{props.drill["drillType"]}</Text>
+          <Text style={styles.title}>{props.drill["title"]}</Text>
           <View style={styles.specContainer}>
             <Text style={styles.specText}>{props.drill["spec"]}</Text>
             <Text style={styles.inputText}>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  drillType: {
+  title: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
