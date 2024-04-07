@@ -103,6 +103,16 @@ async function uploadAttempt(
     await setDoc(newAttemptRef, uploadData)
       .then(() => {
         console.log("Document successfully uploaded!");
+
+        // invalidate cache after successful upload
+        // TODO: Move this into wherever the update leaderboard hook is?
+        invalidateOnSubmit(
+          queryClient,
+          id,
+          currentUserId,
+          currentTeamId,
+        );
+
         //TODO: Call function to check for leaderboard update
 
         //Check if drill was assigned
@@ -401,6 +411,22 @@ function checkEmptyInputs(inputs) {
 //A function to validate inputs are all numbers
 function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
+}
+
+function invalidateOnSubmit(queryClient, did, currentTeamId, currentUserId) {
+  queryClient.invalidateQueries({
+    // used predicate as it seemed to be the best method to invalidate multiple query keys
+    predicate: (query) =>
+      query.queryKey[0] === "user" ||
+      (query.queryKey[0] === "drillInfo" && query.queryKey[1] === did) ||
+      (query.queryKey[0] === "best_attempts" &&
+        query.queryKey[1] === currentTeamId &&
+        query.queryKey[2].drillId === did) ||
+      (query.queryKey[0] === "attempts" &&
+        query.queryKey[1] === currentTeamId &&
+        (query.queryKey[2].drillId === did ||
+          query.queryKey[2].userId === currentUserId)),
+  });
 }
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {

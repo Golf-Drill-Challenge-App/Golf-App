@@ -14,7 +14,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 export default function Stat() {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
-  const { userId, currentTeamId } = currentAuthContext();
+  const { currentUserId: userId, currentTeamId } = currentAuthContext();
   const queryClient = useQueryClient();
 
   const {
