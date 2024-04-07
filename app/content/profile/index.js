@@ -157,10 +157,6 @@ function Index(props) {
       setSnackbarVisible(true); // Show success snackbar
     }
 
-    if (email) {
-      // TODO: Decide whether we want to allow a user update their email
-    }
-
     if (passwordInputVisible && (currentPassword || newPassword)) {
       if (!currentPassword || !newPassword) {
         showDialog("Error", "Please fill out all the fields");
@@ -294,18 +290,18 @@ function Index(props) {
                 </View>
               </TouchableOpacity>
 
-              <TextInput
-                style={styles.input}
-                value={newName}
-                onChangeText={(text) => setNewName(text)}
-                placeholder="Enter your name"
-              />
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                placeholder="Enter your email"
-              />
+                {/* Display Email */}
+                <View style={styles.emailContainer}>
+                  <Text style={styles.emailText}>{email}</Text>
+                </View>
+
+                {/* Display name update input field */}
+                <TextInput
+                  style={styles.input}
+                  value={newName}
+                  onChangeText={(text) => setNewName(text)}
+                  placeholder="Update your name"
+                />
 
               {/* Change Password Button */}
               <Pressable
@@ -419,6 +415,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#d6d6d6",
     justifyContent: "center",
     alignItems: "center",
+  },
+  emailContainer: {
+    alignItems: 'center',
+    marginBottom: 15
+  },
+  emailText: {
+    color: 'gray',
+    fontSize: 14, // Adjust as needed
   },
   input: {
     borderBottomWidth: 1,
