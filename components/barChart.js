@@ -52,55 +52,72 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     );
   };
 
-  const processedData = useMemo(() => {
-    return data.map((value, index) => ({
-      value: value,
-      index: index,
-      svg: {
-        fill: value > 0 ? "green" : "red",
-      },
-    }));
-  }, [data]);
+  const processedData = useMemo(
+    () =>
+      data.map((value, index) => ({
+        value: value,
+        index: index,
+        svg: {
+          fill: value > 0 ? "green" : "red",
+        },
+      })),
+    [data],
+  );
 
-  const movingAvgData = data.map((value, index) =>
-    index + 1 >= movingAvgRange
-      ? data
-          .slice(index - movingAvgRange + 1, index + 1)
-          .reduce((a, b) => a + b, 0) / movingAvgRange
-      : 0,
+  const movingAvgData = useMemo(
+    () =>
+      data.map((value, index) =>
+        index + 1 >= movingAvgRange
+          ? data
+              .slice(index - movingAvgRange + 1, index + 1)
+              .reduce((a, b) => a + b, 0) / movingAvgRange
+          : 0,
+      ),
+    [data, movingAvgRange],
   );
 
   // Calculate scales
-  const scaleY = scale
-    .scaleLinear()
-    .domain([Math.min(...data), Math.max(...data)]) // Adjust scale based on your data
-    .range([chartHeight, 0]);
+  const scaleY = useMemo(
+    () =>
+      scale
+        .scaleLinear()
+        .domain([Math.min(...data), Math.max(...data)]) // Adjust scale based on your data
+        .range([chartHeight, 0]),
+    [data, chartHeight],
+  );
 
-  const line = shape
-    .line()
-    .x(
-      (_, index) =>
-        halfScreenCompensation +
-        barWidth / 2 +
-        index *
-          ((chartWidth - 2 * halfScreenCompensation) / movingAvgData.length),
-    )
-    .y((d) => scaleY(d))(movingAvgData);
+  const line = useMemo(
+    () =>
+      shape
+        .line()
+        .x(
+          (_, index) =>
+            halfScreenCompensation +
+            barWidth / 2 +
+            index *
+              ((chartWidth - 2 * halfScreenCompensation) /
+                movingAvgData.length),
+        )
+        .y((d) => scaleY(d))(movingAvgData),
+    [halfScreenCompensation, barWidth, chartWidth, movingAvgData, scaleY],
+  );
 
   const handleScroll = function (event) {
     setSelected(selectedBar(event.nativeEvent.contentOffset.x));
   };
 
-  const shotAccordionList = useMemo(() => {
-    return drillData[selected]["shots"].map((shot) => (
-      <ShotAccordion
-        key={shot["sid"]}
-        shot={shot}
-        drillInfo={drillInfo}
-        total={drillData[selected]["shots"].length}
-      />
-    ));
-  }, [drillData, drillInfo, selected]);
+  const shotAccordionList = useMemo(
+    () =>
+      drillData[selected]["shots"].map((shot) => (
+        <ShotAccordion
+          key={shot["sid"]}
+          shot={shot}
+          drillInfo={drillInfo}
+          total={drillData[selected]["shots"].length}
+        />
+      )),
+    [drillData, drillInfo, selected],
+  );
 
   const styles = StyleSheet.create({
     movingAvgContainer: {
