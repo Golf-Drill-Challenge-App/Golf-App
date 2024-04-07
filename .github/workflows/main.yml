@@ -14,4 +14,4 @@ jobs:
       - name: Install Prettier
         run: yarn add prettier --dev
       - name: Check code formatting
-        run: yarn pretty --check
+        run: yarn pretty:check
