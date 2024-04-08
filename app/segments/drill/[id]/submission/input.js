@@ -39,9 +39,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 //A function to upload the outputData to the "attempts" collection
 
-async function completeAssigned(userId, teamId, assigned_time, id, queryClient) {
+async function completeAssigned(userId, teamId, assignedTime, drillId, attemptRefId, queryClient) {
 
-  console.log("WAS IT ASIGNED 5 and ID", assigned_time, userId)
+  console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId)
 
   const userRef = doc(db, "teams", "1", "users", userId)
 
@@ -52,11 +52,11 @@ async function completeAssigned(userId, teamId, assigned_time, id, queryClient) 
       console.log("Document data:", docSnap.data());
 
       const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((item, index) => {
-        if (item.assigned_time === assigned_time && item.drill === id) {
-          return { ...item, completed: true };
+      const updatedAssignedData = assignedData.map((assignment, index) => {
+        if (assignment.assignedTime === assignedTime && assignment.drillId === drillId) {
+          return { ...assignment, completed: true, attemptRefId: attemptRefId };
         }
-        return item;
+        return assignment;
       });
 
       console.log("DOCUMENT DATA INSIDE", updatedAssignedData[0].completed);
@@ -78,9 +78,9 @@ async function completeAssigned(userId, teamId, assigned_time, id, queryClient) 
 }
 
 
-async function uploadAttempt(outputData, userId, teamId, assigned_time, id, queryClient) {
+async function uploadAttempt(outputData, userId, teamId, assignedTime, drillId, queryClient) {
 
-  console.log("WAS IT ASIGNED 4 and ID", assigned_time, userId)
+  console.log("WAS IT ASIGNED 4 and ID", assignedTime, userId)
 
 
   try {
@@ -96,8 +96,8 @@ async function uploadAttempt(outputData, userId, teamId, assigned_time, id, quer
     //upload the data
     await setDoc(newAttemptRef, uploadData).then(() => {
       console.log("Document successfully uploaded!");
-      if (assigned_time) {
-        completeAssigned(userId, teamId, assigned_time, id, queryClient);
+      if (assignedTime) {
+        completeAssigned(userId, teamId, assignedTime, drillId, newAttemptRef.id, queryClient);
       }
     })
       .catch((error) => {
@@ -334,17 +334,17 @@ function createOutputData(
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
-  const { id, assigned_time } = useLocalSearchParams();
+  const { id, assignedTime } = useLocalSearchParams();
 
 
-  console.log("ID AND THE ASSIGNED TIME", id, assigned_time)
+  console.log("ID AND THE ASSIGNED TIME", id, assignedTime)
   const queryClient = useQueryClient();
 
   const numInputs = drillInfo.inputs.length;
 
   const navigation = useNavigation();
 
-  const auth = currentAuthContext();
+  const { currentUserId, currentTeamId } = currentAuthContext();
 
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
@@ -398,14 +398,14 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             let outputData = createOutputData(
               inputValues,
               attemptShots,
-              auth["currentUserId"],
+              currentUserId,
               did,
               drillInfo.outputs,
               drillInfo.aggOutputs,
             );
 
             setOutputData(outputData);
-            uploadAttempt(outputData, auth["currentUserId"], auth["currentTeamId"], assigned_time, id, queryClient);
+            uploadAttempt(outputData, currentUserId, currentTeamId, assignedTime, id, queryClient);
             setToggleResult(true);
           }}
         >

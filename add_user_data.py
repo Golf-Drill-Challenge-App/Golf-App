@@ -9,17 +9,17 @@ db = firestore.client()
 
 # Define the assigned_data array
 assigned_data = [
-    {"drill": "YtCsaxzscFScnpZYmnKI", "assigned_time": "1712531660", "completed": False},
-    {"drill": "YtCsaxzscFScnpZYmnKI", "assigned_time": "1712531560", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712531460", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712531360", "completed": True},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712531260", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712470455", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712470355", "completed": True},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712470255", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1712384055", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1709709255", "completed": False},
-    {"drill": "SpvYyY94HaulVH2zmVyM", "assigned_time": "1709622855", "completed": False},
+    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712600157", "completed": False},
+    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712531560", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531460", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531360", "completed": True},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531260", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470455", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470355", "completed": True},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470255", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712384055", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1709709255", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1709622855", "completed": False},
 ]
 
 # Get a reference to the user collection

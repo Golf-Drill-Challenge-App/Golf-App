@@ -9,7 +9,7 @@ import Result from "./result";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
-  const { id, assigned_time } = useLocalSearchParams();
+  const { id, assignedTime } = useLocalSearchParams();
 
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);

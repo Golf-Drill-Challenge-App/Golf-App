@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PaperProvider, Text, Avatar, Button, Card, Appbar, List } from "react-native-paper";
 import { TouchableOpacity } from 'react-native';
-import { FlatList, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { FlatList, StyleSheet, ScrollView, RefreshControl, SectionList } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { View } from 'react-native';
 import { useNavigation, router } from 'expo-router';
@@ -22,12 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 
 const DrillList = () => {
-  const queryClient = useQueryClient();
   const { currentUserId, currentTeamId } = currentAuthContext();
-  const userId = currentUserId ?? null;
-  const teamId = currentTeamId ?? null;
-
-  console.log("USER ID IN PLAN", userId)
 
   const {
     data: drillInfo,
@@ -36,110 +31,117 @@ const DrillList = () => {
   } = useDrillInfo();
 
   const {
-    data: userData,
-    userError: userError,
+    data: userInfo,
+    userError: userInfoError,
     userIsLoading: userIsLoading,
-  } = useUserInfo(userId);
+  } = useUserInfo(currentUserId);
 
-  const [assigned_data, setAssignedData] = useState([]);
+  const queryClient = useQueryClient();
 
+  const [assignedData, setAssignedData] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     const refresh = async () => {
       setRefreshing(true);
-      await queryClient.invalidateQueries(["user", { teamId, userId }]);
+      await queryClient.invalidateQueries(["user", { teamId: currentTeamId, userId: currentUserId }]);
       setRefreshing(false);
     };
-
     refresh();
-  }, [teamId, userId, queryClient]);
+  }, [currentTeamId, currentUserId, queryClient]);
 
-
-  console.log("USER DATA", userData);
+  console.log("USER DATA", userInfo);
 
   // Set the assigned_data state when the user data is loaded
   useEffect(() => {
-    if (!userIsLoading && userData && userData.assigned_data) {
-      setAssignedData(userData.assigned_data);
+    if (!userIsLoading && userInfo && userInfo.assigned_data) {
+      setAssignedData(userInfo.assigned_data);
     }
-  }, [userIsLoading, userData]);
+  }, [userIsLoading, userInfo]);
 
+  if (userIsLoading || drillInfoIsLoading) { return <Loading /> }
+
+
+  const today = convertTimestampToDate(Date.now() / 1000);
   // Group the assigned drills by date
-  const groupedData = assigned_data.reduce((acc, curr) => {
-    const date = convertTimestampToDate(curr.assigned_time);
-    if (!acc[date]) {
-      acc[date] = [];
+  const groupedData = assignedData.reduce((acc, curr) => {
+    const date = convertTimestampToDate(curr.assignedTime);
+    const dateKey = date === today ? "Today" : date;
+
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
     }
-    acc[date].push(curr);
+    if (curr.completed) {
+      acc[dateKey].push(curr);
+    }
+    else {
+      acc[dateKey].unshift(curr);
+    }
+
     return acc;
   }, {});
 
   // Sort the dates in descending order
   const sortedDates = Object.keys(groupedData).sort((a, b) => new Date(b) - new Date(a));
-  const today = convertTimestampToDate(Date.now() / 1000);
 
-  // Update the completed property of the clicked drill
 
 
   // Render the list of drills
-  return userIsLoading || drillInfoIsLoading ? (
-    <Loading />
-  ) : sortedDates.length === 0 ? (
+  return sortedDates.length === 0 ? (
     <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
       No drills assigned
     </Text>
   ) : (
-    <FlatList
+    <SectionList
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      data={sortedDates}
-      keyExtractor={(item, index) => item}
-      renderItem={({ item: date }) => (
-        <View>
-          <Text
-            style={{ fontSize: 25, fontWeight: "bold", textAlign: "center", marginTop: 10 }}
-          >
-            {date === today ? "Today" : date}
-          </Text>
-          {groupedData[date].map((drill) => (
-            <TouchableOpacity
-              key={`${drill.assigned_time}-${drill.drill}`}
-              disabled={drill.completed}
-              onPress={() => {
-                router.push({
-                  pathname: `content/drill/${drill.drill}`,
-                  params: { id: `${drill.drill}`, assigned_time: drill.assigned_time },
-                });
+      sections={sortedDates.map((date) => ({
+        title: date,
+        data: groupedData[date],
+      }))}
+      keyExtractor={(item, index) => `${item.assignedTime}-${item.drillId}`}
+      renderItem={({ item: assignment }) => (
+        <TouchableOpacity
+          key={`${assignment.assignedTime}-${assignment.drillId}`}
+          disabled={assignment.completed}
+          onPress={() => {
+            router.push({
+              pathname: `content/drill/${assignment.drillId}`,
+              params: { id: `${assignment.drillId}`, assignedTime: assignment.assignedTime },
+            });
+          }}
+        >
+          <View style={{ marginLeft: 20, marginRight: 20 }}>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: 'rgba(0,0,0,0.2)',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                height: 65,
+                backgroundColor: `${!assignment.completed ? '#fff' : '#89E894'}`,
+                borderRadius: 20,
+                marginBottom: 10,
+                paddingLeft: 30,
+                paddingRight: 30,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}
             >
-              <View key={`${drill.assigned_time}-${drill.drill}`} style={{ marginLeft: 20, marginRight: 20 }}>
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderColor: 'rgba(0,0,0,0.2)',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    height: 65,
-                    backgroundColor: `${!drill.completed ? '#fff' : '#89E894'}`,
-                    borderRadius: 20,
-                    marginBottom: 10,
-                    paddingLeft: 30,
-                    paddingRight: 30,
-                    paddingTop: 5,
-                    paddingBottom: 5,
-                  }}
-                >
-                  <Text style={{ fontSize: 20 }}>{drillInfo[drill.drill]["drillType"]}</Text>
-                  <Text style={{ fontSize: 17, fontStyle: 'italic' }}>{drillInfo[drill.drill]["spec"]}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+              <Text style={{ fontSize: 20 }}>{drillInfo[assignment.drillId]["prettyDrillType"]}</Text>
+              <Text style={{ fontSize: 17, fontStyle: 'italic' }}>{drillInfo[assignment.drillId]["subType"]}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
       )}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text style={{ fontSize: 25, fontWeight: "bold", textAlign: "center", marginTop: 10 }}>
+          {title}
+        </Text>
+      )}
+      stickySectionHeadersEnabled={false}
     />
   );
 };
