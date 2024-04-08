@@ -32,6 +32,7 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
+import { getDrillTitle } from "~/Utility"
 
 /***************************************
  * Firebase Upload
