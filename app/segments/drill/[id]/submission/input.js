@@ -3,8 +3,9 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { collection, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -31,7 +32,6 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
-import { useQueryClient } from '@tanstack/react-query';
 
 /***************************************
  * Firebase Upload
@@ -39,11 +39,17 @@ import { useQueryClient } from '@tanstack/react-query';
 
 //A function to upload the outputData to the "attempts" collection
 
-async function completeAssigned(userId, teamId, assignedTime, drillId, attemptRefId, queryClient) {
+async function completeAssigned(
+  userId,
+  teamId,
+  assignedTime,
+  drillId,
+  attemptRefId,
+  queryClient,
+) {
+  console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId);
 
-  console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId)
-
-  const userRef = doc(db, "teams", "1", "users", userId)
+  const userRef = doc(db, "teams", "1", "users", userId);
 
   const getDocument = async () => {
     const docSnap = await getDoc(userRef);
@@ -53,7 +59,10 @@ async function completeAssigned(userId, teamId, assignedTime, drillId, attemptRe
 
       const assignedData = docSnap.data()["assigned_data"];
       const updatedAssignedData = assignedData.map((assignment, index) => {
-        if (assignment.assignedTime === assignedTime && assignment.drillId === drillId) {
+        if (
+          assignment.assignedTime === assignedTime &&
+          assignment.drillId === drillId
+        ) {
           return { ...assignment, completed: true, attemptRefId: attemptRefId };
         }
         return assignment;
@@ -74,14 +83,17 @@ async function completeAssigned(userId, teamId, assignedTime, drillId, attemptRe
   };
 
   getDocument();
-
 }
 
-
-async function uploadAttempt(outputData, userId, teamId, assignedTime, drillId, queryClient) {
-
-  console.log("WAS IT ASIGNED 4 and ID", assignedTime, userId)
-
+async function uploadAttempt(
+  outputData,
+  userId,
+  teamId,
+  assignedTime,
+  drillId,
+  queryClient,
+) {
+  console.log("WAS IT ASIGNED 4 and ID", assignedTime, userId);
 
   try {
     //create new document
@@ -94,12 +106,20 @@ async function uploadAttempt(outputData, userId, teamId, assignedTime, drillId, 
     const uploadData = { ...outputData, id: newAttemptRef.id };
 
     //upload the data
-    await setDoc(newAttemptRef, uploadData).then(() => {
-      console.log("Document successfully uploaded!");
-      if (assignedTime) {
-        completeAssigned(userId, teamId, assignedTime, drillId, newAttemptRef.id, queryClient);
-      }
-    })
+    await setDoc(newAttemptRef, uploadData)
+      .then(() => {
+        console.log("Document successfully uploaded!");
+        if (assignedTime) {
+          completeAssigned(
+            userId,
+            teamId,
+            assignedTime,
+            drillId,
+            newAttemptRef.id,
+            queryClient,
+          );
+        }
+      })
       .catch((error) => {
         console.error("Error uploading document: ", error);
       });
@@ -336,8 +356,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
 
-
-  console.log("ID AND THE ASSIGNED TIME", id, assignedTime)
+  console.log("ID AND THE ASSIGNED TIME", id, assignedTime);
   const queryClient = useQueryClient();
 
   const numInputs = drillInfo.inputs.length;
@@ -405,7 +424,14 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             );
 
             setOutputData(outputData);
-            uploadAttempt(outputData, currentUserId, currentTeamId, assignedTime, id, queryClient);
+            uploadAttempt(
+              outputData,
+              currentUserId,
+              currentTeamId,
+              assignedTime,
+              id,
+              queryClient,
+            );
             setToggleResult(true);
           }}
         >
