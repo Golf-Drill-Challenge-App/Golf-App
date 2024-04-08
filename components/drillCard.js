@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getDrillTitle } from "~/Utility"
 
 function DrillCard(props) {
   console.log(props);
@@ -7,15 +8,14 @@ function DrillCard(props) {
     <Link href={props.hrefString} asChild>
       <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.cardContent}>
-          <Text style={styles.title}>{props.drill["title"]}</Text>
+          <Text style={styles.title}>{getDrillTitle(props.drill)}</Text>
           <View style={styles.specContainer}>
-            <Text style={styles.specText}>{props.drill["spec"]}</Text>
             <Text style={styles.inputText}>
               {props.drill["inputs"]
                 .map((input) => {
                   let retVal = "";
-                  switch (input) {
-                    case "distance":
+                  switch (input.id) {
+                    case "carry":
                       retVal = "↑";
                       break;
                     case "sideLanding":
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     marginVertical: 5,
-    padding: 10,
+    padding: 15,
     backgroundColor: "#fff",
   },
   cardContent: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#333",
   },

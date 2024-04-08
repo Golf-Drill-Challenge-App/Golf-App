@@ -169,3 +169,7 @@ export function getIconByKey(key) {
   const iconObject = icons.find((icon) => icon[key]);
   return iconObject ? iconObject[key] : null;
 }
+
+export const getDrillTitle = (drill) => {
+    return `${drill.prettyDrillType} | ${drill.subType}`;
+}

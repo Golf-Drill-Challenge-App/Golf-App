@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { getDrillTitle } from "~/Utility"
 
 export default function Index() {
   const navigation = useNavigation();
@@ -27,8 +28,8 @@ export default function Index() {
   const drills = Object.values(drillInfo);
 
   drills.sort((a, b) => {
-    const titleA = a.title.toUpperCase();
-    const titleB = b.title.toUpperCase();
+    const titleA = getDrillTitle(a).toUpperCase();
+    const titleB = getDrillTitle(b).toUpperCase();
     if (titleA < titleB) {
       return -1;
     }
@@ -57,7 +58,7 @@ export default function Index() {
                 style={{ paddingVertical: 8 }}
               >
                 <List.Item
-                  title={drill.title}
+                  title={getDrillTitle(drill)}
                   description={drill.description}
                   titleStyle={styles.title}
                   descriptionStyle={styles.description}

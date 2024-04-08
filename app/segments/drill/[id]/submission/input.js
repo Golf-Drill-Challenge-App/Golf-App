@@ -32,6 +32,7 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
+import { getDrillTitle } from "~/Utility"
 
 /***************************************
  * Firebase Upload
@@ -515,7 +516,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
-                  title={drillInfo.drillTitle}
+                  title={getDrillTitle(drillInfo)}
                   titleStyle={styles.title}
                 />
                 <Appbar.Action

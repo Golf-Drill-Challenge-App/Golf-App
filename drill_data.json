@@ -68374,8 +68374,9 @@
       "drills": {
         "SpvYyY94HaulVH2zmVyM": {
           "did": "SpvYyY94HaulVH2zmVyM",
-          "title": "20 Shot Challenge",
           "drillType": "20ShotChallenge",
+          "prettyDrillType": "20 Shot Challenge",
+          "subType": "Red Zone",
           "spec": "50ft - 150ft",
           "shotType": "app",
           "requirements": [
@@ -68387,7 +68388,7 @@
             }
           ],
           "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
-          "inputs": ["distance", "sideLanding"],
+          "inputs": [ "distance", "sideLanding" ],
           "outputs": [
             "target",
             "carry",
@@ -68403,8 +68404,9 @@
         },
         "YtCsaxzscFScnpZYmnKI": {
           "did": "YtCsaxzscFScnpZYmnKI",
-          "title": "Line Test",
           "drillType": "lineTest",
+          "prettyDrillType": "Line Test",
+          "subType": "7 - PW",
           "spec": "7 – PW",
           "shotType": "app",
           "requirements": [
@@ -68436,8 +68438,8 @@
             }
           ],
           "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
-          "inputs": ["sideLanding"],
-          "outputs": ["target", "sideLanding"],
+          "inputs": [ "sideLanding" ],
+          "outputs": [ "target", "sideLanding" ],
           "mainOutputAttempt": "sideLandingAverage",
           "mainOutputShot": "sideLanding",
           "reps": 20

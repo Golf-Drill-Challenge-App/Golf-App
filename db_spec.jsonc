@@ -168,7 +168,8 @@
               ],
             },
           ],
-          "title": "20 Shot Challenge",
+          "prettyDrillType": "20 Shot Challenge",
+          "subType": "Red Zone",
           "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
           "inputs": ["distance", "sideLanding"],
           "outputs": [
