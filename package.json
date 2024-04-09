@@ -9,6 +9,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "pretty": "prettier --write .",
+    "pretty:check": "prettier --check .",
     "python": "./venv/bin/python",
     "firestore": "firebase emulators:start --only firestore"
   },

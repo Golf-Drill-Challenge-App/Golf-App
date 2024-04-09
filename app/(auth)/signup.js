@@ -52,6 +52,7 @@ export default function SignUp() {
         // hardcoded "player" role for now, add role selection to profile settings in future PR
         role: "player",
         uid: userRef,
+        assigned_data: [],
       });
 
       setCurrentUserId(userCredential.user.uid);
