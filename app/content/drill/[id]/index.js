@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
+import { Appbar, PaperProvider, SegmentedButtons, Text } from "react-native-paper";
+import { View } from "react-native";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
@@ -42,14 +43,21 @@ export default function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+        <Appbar.Header statusBarHeight={0} style={{ padding: 0, backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {
               navigation.goBack();
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={getCombinedDrillTitle(drillInfo)} />
+          <Appbar.Content 
+            title={
+              <View>
+                <Text styles={{ fontSize: 20, fontWeight: "bold", }} variant="titleLarge">{drillInfo.prettyDrillType}</Text>
+                <Text styles={{ fontSize: 20, fontWeight: "bold", }} variant="titleLarge">{drillInfo.subType}</Text>
+              </View>
+            }
+          />
         </Appbar.Header>
 
         {/* Tab system */}

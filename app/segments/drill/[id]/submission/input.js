@@ -543,9 +543,13 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   onPress={() => setLeaveDialogVisible(true)}
                   color={"#F24E1E"}
                 />
-                <Appbar.Content
-                  title={getCombinedDrillTitle(drillInfo)}
-                  titleStyle={styles.title}
+                <Appbar.Content 
+                  title={
+                    <View>
+                      <Text style={styles.title} variant="titleLarge">{drillInfo.prettyDrillType}</Text>
+                      <Text style={styles.title} variant="titleLarge">{drillInfo.subType}</Text>
+                    </View>
+                  }
                 />
                 <Appbar.Action
                   icon="information-outline"
