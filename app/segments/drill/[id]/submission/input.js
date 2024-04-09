@@ -160,9 +160,7 @@ function fillClubTargets(drillInfo) {
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
-      target: [
-        drillInfo.requirements[0].items[i],
-      ],
+      target: [drillInfo.requirements[0].items[i]],
     });
   }
   return shots;
@@ -181,9 +179,7 @@ function fillRandomShotTargets(drillInfo) {
     var baseline = lookUpBaselineStrokesGained(target);
     shots.push({
       shotNum: i + 1,
-      target: [
-        target,
-      ],
+      target: [target],
       baseline: baseline,
     });
   }
@@ -196,8 +192,8 @@ function fillPuttTargets(drillInfo) {
   for (var i = 0; i < drillInfo.reps; i++) {
     var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
     let target = [];
-    for(var j = 0; j < drillInfo.requirements.length; j++) {
-      target.push(drillInfo.requirements[j].items[i])
+    for (var j = 0; j < drillInfo.requirements.length; j++) {
+      target.push(drillInfo.requirements[j].items[i]);
     }
     shots.push({
       shotNum: i + 1,
