@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "~/components/header";
 import ResultScreen from "~/components/resultScreen";
@@ -9,6 +9,7 @@ function Result(props) {
   const submission = props.submission;
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
+  const assignedTime = useLocalSearchParams()["assignedTime"];
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
@@ -21,6 +22,19 @@ function Result(props) {
         <Header drillInfo={props.drill} />
       </Appbar.Header>
       <ResultScreen drillId={drillId} attemptData={submission} />
+      <Button
+        style={{
+          margin: 10,
+        }}
+        mode="contained"
+        buttonColor="#F24E1E"
+        textColor="white"
+        onPress={() => {
+          props.setToggleResult(false);
+        }}
+      >
+        Restart Drill
+      </Button>
     </SafeAreaView>
   );
 }
