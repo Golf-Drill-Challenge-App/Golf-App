@@ -109,6 +109,9 @@ async function uploadAttempt(
     await setDoc(newAttemptRef, uploadData)
       .then(() => {
         console.log("Document successfully uploaded!");
+        //TODO: Call function to check for leaderboard update
+
+        //Check if drill was assigned
         if (assignedTime) {
           completeAssigned(
             userId,
@@ -123,10 +126,6 @@ async function uploadAttempt(
       .catch((error) => {
         console.error("Error uploading document: ", error);
       });
-    await setDoc(newAttemptRef, uploadData).then(() => {
-      console.log("Document successfully uploaded!");
-      //TODO: Call function to check for leaderboard update
-    });
   } catch (e) {
     alert(e);
     console.log(e);
