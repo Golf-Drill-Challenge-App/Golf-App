@@ -91,7 +91,7 @@ function ShotAccordion(props) {
             }}
           >
             <Text style={{ width: "30%", paddingRight: 2 }}>
-              <Text style={styles.boldText}>Shot: {props.shot["sid"] + 1}/</Text>
+              <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
               {props.total}
             </Text>
             <Text style={{ width: "40%", textAlign: "center", padding: 2 }}>
