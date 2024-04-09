@@ -137,11 +137,7 @@ function getShotInfo(drillInfo) {
   let shots = [];
   switch (drillInfo.requirements[0].type) {
     case "random":
-      shots = fillRandomShotTargets(
-        drillInfo.requirements[0].min,
-        drillInfo.requirements[0].max,
-        drillInfo,
-      );
+      shots = fillRandomShotTargets(drillInfo);
       break;
     case "sequence":
       shots = fillClubTargets(drillInfo);
@@ -220,7 +216,7 @@ function fillPuttTargets(drillInfo) {
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
-  return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding * 3, 2));
+  return Math.sqrt(2 * Math.pow(carryDiff * 3, 2));
 }
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
