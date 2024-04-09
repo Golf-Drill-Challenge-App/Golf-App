@@ -245,6 +245,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
           data={data}
           style={styles.yAxis}
           formatLabel={(value) => `${value}`} // Format label as needed
+          numberOfTicks={7}
         />
         <View style={styles.middleLine} />
         <ScrollView
@@ -267,6 +268,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
               yAccessor={({ item }) => item.value}
               pointerEvents={"none"}
               key={page} //force barchart to re-render
+              numberOfTicks={7}
             >
               <Grid />
               <MovingAvgPath
