@@ -12,7 +12,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Appbar,
-  Banner,
   Button,
   Dialog,
   PaperProvider,
@@ -407,14 +406,13 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
   const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
-  /***** Empty Input Banner Stuff *****/
+  /***** Empty Input Dialog Stuff *****/
+  const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
+  const hideEmptyDialog = () => setEmptyDialogVisible(false);
 
-  const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
-
-  /***** Invalid Input Banner Stuff *****/
-
-  const [invalidInputBannerVisible, setInvalidInputBannerVisible] =
-    useState(false);
+  /***** Invalid Input dialog Stuff *****/
+  const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
+  const hideInvalidDialog = () => setInvalidDialogVisible(false);
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
@@ -483,20 +481,16 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //Function to handle "Next shot" button click
   const handleButtonClick = () => {
-    //close previous Banners
-    setEmptyInputBannerVisible(false);
-    setInvalidInputBannerVisible(false);
-
     //Check if all inputs have been filled in
     if (
       Object.keys(inputValues[displayedShot]).length != numInputs ||
       checkEmptyInputs(inputValues[displayedShot])
     ) {
-      setEmptyInputBannerVisible(true);
+      setEmptyDialogVisible(true);
     }
     //check inputs are all numbers
     else if (validateInputs(inputValues[displayedShot])) {
-      setInvalidInputBannerVisible(true);
+      setInvalidDialogVisible(true);
     }
     //check for submit button
     else if (
@@ -523,8 +517,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       );
       setToggleResult(true);
     } else {
-      setEmptyInputBannerVisible(false);
-      setInvalidInputBannerVisible(false);
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
     }
@@ -563,31 +555,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
               </Appbar.Header>
-              {/* Empty Input Banner */}
-
-              <Banner
-                visible={emptyInputBannerVisible}
-                actions={[
-                  {
-                    label: "Dismiss",
-                    onPress: () => setEmptyInputBannerVisible(false),
-                  },
-                ]}
-              >
-                Error! All input fields must be filled!
-              </Banner>
-
-              <Banner
-                visible={invalidInputBannerVisible}
-                actions={[
-                  {
-                    label: "Dismiss",
-                    onPress: () => setInvalidInputBannerVisible(false),
-                  },
-                ]}
-              >
-                Error! Input fields must only be numbers!
-              </Banner>
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
@@ -695,6 +662,42 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                         Leave Drill
                       </Button>
                       <Button onPress={hideLeaveDialog}>Cancel</Button>
+                    </Dialog.Actions>
+                  </Dialog>
+                </Portal>
+
+                {/* Error Dialog: Empty Input*/}
+                <Portal>
+                  <Dialog
+                    visible={emptyDialogVisible}
+                    onDismiss={hideEmptyDialog}
+                  >
+                    <Dialog.Title>Error!</Dialog.Title>
+                    <Dialog.Content>
+                      <Text variant="bodyMedium">
+                        All inputs must be filled.
+                      </Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                      <Button onPress={hideEmptyDialog}>Dismiss</Button>
+                    </Dialog.Actions>
+                  </Dialog>
+                </Portal>
+
+                {/* Error Dialog: Invalid Input*/}
+                <Portal>
+                  <Dialog
+                    visible={invalidDialogVisible}
+                    onDismiss={hideInvalidDialog}
+                  >
+                    <Dialog.Title>Error!</Dialog.Title>
+                    <Dialog.Content>
+                      <Text variant="bodyMedium">
+                        All inputs must be numbers.
+                      </Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                      <Button onPress={hideInvalidDialog}>Dismiss</Button>
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
