@@ -173,7 +173,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       width: 35,
       bottom: 0,
       left: 0,
-      height: chartHeight * 1.10,
+      height: chartHeight * 1.1,
       zIndex: 5,
       backgroundColor: "#F2F2F2", // Set background color
       paddingHorizontal: 5, // Add padding

@@ -11,9 +11,11 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
+  Keyboard,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -71,10 +73,8 @@ function Index(props) {
 
   const queryClient = useQueryClient();
 
-  // variables
-  const initialSnapPoints = useMemo(() => [355, 455, 730], []);
-  const expandedSnapPoints = useMemo(() => [460, 570, 860], []); // Adjusted snap points for expanded content
-  const [snapPoints, setSnapPoints] = useState(initialSnapPoints);
+  const [snapPoints, setSnapPoints] = useState(["60%"]);
+  const [isTyping, setIsTyping] = useState(false);
 
   const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
@@ -90,14 +90,35 @@ function Index(props) {
   const [dialogMessage, setDialogMessage] = useState("");
 
   useEffect(() => {
+    setSnapPoints([passwordInputVisible ? "70%" : "57%"]);
+  }, [passwordInputVisible]);
+
+  useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
   }, [userData, userEmail]);
 
   useEffect(() => {
-    setSnapPoints(
-      passwordInputVisible ? expandedSnapPoints : initialSnapPoints,
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        passwordInputVisible ? setSnapPoints(["93%"]) : setSnapPoints(["83%"]);
+        setIsTyping(true);
+      },
     );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setSnapPoints([passwordInputVisible ? "70%" : "57%"]);
+        setIsTyping(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, [passwordInputVisible]);
 
   if (
@@ -153,6 +174,7 @@ function Index(props) {
       });
       queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       bottomSheetModalRef.current.close();
+      setPasswordInputVisible(false);
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true); // Show success snackbar
     }
@@ -177,6 +199,7 @@ function Index(props) {
               setCurrentPassword(""); // Clear password fields
               setNewPassword("");
               bottomSheetModalRef.current.close();
+              setPasswordInputVisible(false);
               setSnackbarMessage("Password updated successfully");
               setSnackbarVisible(true); // Show success snackbar
             })
@@ -208,21 +231,6 @@ function Index(props) {
         {snackbarMessage}
       </Snackbar>
 
-      {/* <Portal>
-        <Dialog
-          visible={dialogVisible}
-          onDismiss={() => setDialogVisible(false)}
-        >
-          <Dialog.Title>{dialogTitle}</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{dialogMessage}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={() => setDialogVisible(false)}>OK</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal> */}
-
       <DialogComponent
         title={dialogTitle}
         content={dialogMessage}
@@ -245,7 +253,7 @@ function Index(props) {
 
         <BottomSheetModalProvider>
           <View style={styles.profileContainer}>
-            <ProfileCard user={userData} />
+            <ProfileCard user={userData} email={userEmail} />
           </View>
 
           <Text style={styles.heading}>Drill History</Text>
@@ -261,7 +269,7 @@ function Index(props) {
 
           <BottomSheetModal
             ref={bottomSheetModalRef}
-            index={1}
+            index={0}
             snapPoints={snapPoints}
           >
             <View style={styles.modalContent}>
@@ -290,18 +298,18 @@ function Index(props) {
                 </View>
               </TouchableOpacity>
 
-                {/* Display Email */}
-                <View style={styles.emailContainer}>
-                  <Text style={styles.emailText}>{email}</Text>
-                </View>
+              {/* Display Email */}
+              <View style={styles.emailContainer}>
+                <Text style={styles.emailText}>{email}</Text>
+              </View>
 
-                {/* Display name update input field */}
-                <TextInput
-                  style={styles.input}
-                  value={newName}
-                  onChangeText={(text) => setNewName(text)}
-                  placeholder="Update your name"
-                />
+              {/* Display Name Update input field */}
+              <TextInput
+                style={styles.input}
+                value={newName}
+                onChangeText={(text) => setNewName(text)}
+                placeholder="Update your name"
+              />
 
               {/* Change Password Button */}
               <Pressable
@@ -365,10 +373,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginLeft: 4,
   },
-  scrollViewContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
   noDrillsText: {
     marginTop: 20,
     fontSize: 16,
@@ -377,7 +381,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "#FFF",
-    padding: 30, // Increase padding for more spacing
+    paddingHorizontal: 30, // Increase padding for more spacing
+    paddingVertical: Platform.OS === "android" ? 10 : 30, // Less vertical padding on Android?
     alignItems: "center",
   },
   closeButton: {
@@ -417,11 +422,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   emailContainer: {
-    alignItems: 'center',
-    marginBottom: 15
+    alignItems: "center",
+    marginBottom: 15,
   },
   emailText: {
-    color: 'gray',
+    color: "gray",
     fontSize: 14, // Adjust as needed
   },
   input: {
