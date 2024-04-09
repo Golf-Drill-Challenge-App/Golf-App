@@ -1,7 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
 import * as scale from "d3-scale";
 import * as shape from "d3-shape";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -22,11 +24,34 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
     return <Text>No attempts have been made yet.</Text>;
   }
+
+  const queryClient = useQueryClient();
+
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    console.log("heeeere");
+    console.log(drillData);
+    setTimeout(() => {
+      queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          (query.queryKey[0] === "drillInfo" &&
+            query.queryKey[1] === drillData[0].did) ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].userId === drillData[0].uid &&
+            query.queryKey[2].drillId === drillData[0].did),
+      });
+      setRefreshing(false);
+    }, 500);
+  }, []);
+
   const scrollViewRef = useRef();
 
   const [page, setPage] = useState(0);
 
-  const { currentTeamId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = currentAuthContext();
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: false });
@@ -219,7 +244,11 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     },
   });
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.movingAvgContainer}>
         <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
 

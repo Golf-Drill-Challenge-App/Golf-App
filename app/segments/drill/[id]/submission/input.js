@@ -418,7 +418,7 @@ function invalidateOnSubmit(queryClient, did, currentTeamId, currentUserId) {
     // used predicate as it seemed to be the best method to invalidate multiple query keys
     predicate: (query) =>
       query.queryKey[0] === "user" ||
-      (query.queryKey[0] === "drillInfo" && query.queryKey[1] === did) ||
+      query.queryKey[0] === "drillInfo" ||
       (query.queryKey[0] === "best_attempts" && // not sure the leaderboard updates correctly
         query.queryKey[1] === currentTeamId &&
         query.queryKey[2].drillId === did) ||
