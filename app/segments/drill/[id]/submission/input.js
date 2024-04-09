@@ -435,6 +435,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     setattemptShots(getShotInfo(drillInfo));
   }, []);
 
+  console.log("attemptShots", attemptShots);
+
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
