@@ -32,7 +32,6 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import Description from "./modals/description";
-import { getDrillTitle } from "~/Utility"
 
 /***************************************
  * Firebase Upload
@@ -224,13 +223,7 @@ function calculateCarryDiff(target, carry) {
 }
 
 //Function to create and format output data
-function createOutputData(
-  drillInfo,
-  inputValues,
-  attemptShots,
-  uid,
-  did,
-) {
+function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   //initialize total values
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
@@ -317,7 +310,7 @@ function createOutputData(
               console.log("Shot type does not exist.");
               break;
           }
-          
+
           strokesGainedTotal += shot.strokesGained;
           break;
 
@@ -472,7 +465,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               queryClient,
             );
             setToggleResult(true);
-
           }}
         >
           Submit Drill
@@ -708,7 +700,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       for (let i = 0; i < attemptShots.length; i++) {
                         drillInfo.inputs.forEach((item) => {
                           newInputValues[i][item.id] = Math.floor(
-                            Math.random() * attemptShots[displayedShot].target[0],
+                            Math.random() *
+                              attemptShots[displayedShot].target[0],
                           ).toString();
                         });
                       }
