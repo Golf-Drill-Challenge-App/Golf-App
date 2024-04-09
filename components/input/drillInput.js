@@ -29,6 +29,7 @@ export default function DrillInput({
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
       </View>
+      <Text style={styles.helper}>(Negative is Left, Positive is Right)</Text>
     </View>
   );
 }
@@ -43,12 +44,17 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 20,
-    fontWeight: "bold", //temporary until I get the fonts to work
+    fontWeight: "bold",
     marginBottom: 10,
   },
   distance: {
     fontSize: 40,
-    fontWeight: "200", //temporary until I get the fonts to work
+    fontWeight: "200",
     marginLeft: 10,
+  },
+  helper: {
+    fontSize: 12,
+    fontWeight: "200",
+    marginBottom: 10,
   },
 });
