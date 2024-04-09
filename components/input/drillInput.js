@@ -4,6 +4,7 @@ import { Icon, Text, TextInput } from "react-native-paper";
 export default function DrillInput({
   icon,
   prompt,
+  helperText,
   distanceMeasure,
   inputValue,
   onInputChange,
@@ -29,7 +30,7 @@ export default function DrillInput({
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
       </View>
-      <Text style={styles.helper}>(Negative is Left, Positive is Right)</Text>
+      <Text style={styles.helper}>{helperText}</Text>
     </View>
   );
 }
@@ -55,6 +56,5 @@ const styles = StyleSheet.create({
   helper: {
     fontSize: 12,
     fontWeight: "200",
-    marginBottom: 10,
   },
 });
