@@ -164,7 +164,9 @@ function fillClubTargets(drillInfo) {
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
-      target: drillInfo.requirements[0].items[i],
+      target: [
+        drillInfo.requirements[0].items[i],
+      ],
     });
   }
   return shots;
@@ -183,7 +185,9 @@ function fillRandomShotTargets(drillInfo) {
     var baseline = lookUpBaselineStrokesGained(target);
     shots.push({
       shotNum: i + 1,
-      target: target,
+      target: [
+        target,
+      ],
       baseline: baseline,
     });
   }
@@ -425,6 +429,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   useEffect(() => {
     setattemptShots(getShotInfo(drillInfo));
   }, []);
+
+  console.log("attemptShots", attemptShots);
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
