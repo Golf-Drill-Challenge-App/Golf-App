@@ -15,6 +15,8 @@ import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
 import { Button } from "react-native-paper";
 import ShotAccordion from "~/components/shotAccordion";
+import { currentAuthContext } from "../context/Auth";
+import { removeAttempt } from "../hooks/removeAttempt";
 
 export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
@@ -23,6 +25,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   const scrollViewRef = useRef();
 
   const [page, setPage] = useState(0);
+
+  const { currentTeamId } = currentAuthContext();
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: false });
@@ -41,9 +45,22 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
   const slicedDrillData = sortedDrillData.slice(startIndex, endIndex);
 
-  const data = slicedDrillData.map(
-    (value) => value[drillInfo["mainOutputAttempt"]],
-  );
+  const data = slicedDrillData.map((value) => {
+    if (isNaN(value[drillInfo["mainOutputAttempt"]])) {
+      //the terminator
+      removeAttempt({ currentTeamId, attemptId: value["id"] }).then(() => {
+        console.log(
+          "terminated attempt: ",
+          value["id"],
+          " due to illegal value",
+        );
+      });
+      return 0;
+    }
+    return value[drillInfo["mainOutputAttempt"]];
+  });
+
+  console.log("data: ", data);
 
   const [movingAvgRange, setMovingAvgRange] = useState(5);
   const [movingAvgRangeValues] = useState([
@@ -246,6 +263,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
           style={styles.yAxis}
           formatLabel={(value) => `${value}`} // Format label as needed
           numberOfTicks={7}
+          min={Math.min(...data, 0)}
+          contentInset={{ bottom: 5 }}
         />
         <View style={styles.middleLine} />
         <ScrollView
@@ -264,11 +283,13 @@ export default function BarChartScreen({ drillData, drillInfo }) {
               contentInset={{
                 left: halfScreenCompensation,
                 right: halfScreenCompensation,
+                bottom: 5,
               }}
               yAccessor={({ item }) => item.value}
               pointerEvents={"none"}
               key={page} //force barchart to re-render
               numberOfTicks={7}
+              yMin={Math.min(...data, 0)}
             >
               <Grid />
               <MovingAvgPath
