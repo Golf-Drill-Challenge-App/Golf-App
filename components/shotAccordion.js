@@ -15,9 +15,11 @@ function DataField(field, value) {
   let title = {
     target: "Target",
     sideLanding: "Side Landing",
-    proxHole: "Proximity to hole",
+    proxHole: "Proximity to Hole",
     baseline: "Baseline SG",
-    expectedPutts: "Expected putts",
+    expectedPutts: "Expected Putts",
+    strokesTaken: "Strokes Taken",
+    break: "Break",
   };
   switch (field) {
     case "carry": //compound
@@ -49,6 +51,10 @@ function DataField(field, value) {
       );
     case "strokesGained": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={numTrunc(value)} />;
+    case "strokesTaken": //just round to 3 decimals
+      return <Row key={field} name={title[field]} value={value} />;
+    case "break": //just round to 3 decimals
+      return <Row key={field} name={title[field]} value={value} />;
     default:
       return (
         <Row
@@ -85,7 +91,7 @@ function ShotAccordion(props) {
             }}
           >
             <Text style={{ width: "30%", paddingRight: 2 }}>
-              <Text style={styles.boldText}>Shot: {props.shot["sid"] + 1}/</Text>
+              <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
               {props.total}
             </Text>
             <Text style={{ width: "40%", textAlign: "center", padding: 2 }}>
@@ -118,6 +124,10 @@ function ShotAccordion(props) {
                   target: props.shot["target"],
                   carryDiff: props.shot["carryDiff"],
                 });
+              case "strokesTaken":
+                return DataField(field, props.shot["strokes"]);
+              case "break":
+                return DataField(field, props.shot["break"]);
               case "strokesGained":
               case "carryDiff":
                 return null;

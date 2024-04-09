@@ -199,15 +199,17 @@ function fillPuttTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
+    let target = [];
+    for(var j = 0; j < drillInfo.requirements.length; j++) {
+      target.push(drillInfo.requirements[j].items[i])
+    }
     shots.push({
       shotNum: i + 1,
-      target: [
-        drillInfo.requirements[0].items[i],
-        drillInfo.requirements[1].items[i],
-      ],
       baseline: baseline,
+      target: target,
     });
   }
+
   return shots;
 }
 
@@ -249,6 +251,14 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "carry":
           shot.carry = inputValues[j].carry;
+          break;
+
+        case "strokesTaken":
+          shot.strokes = inputValues[j].strokes;
+          break;
+
+        case "break":
+          shot.break = attemptShots[j].target[1];
           break;
 
         case "sideLanding":
@@ -299,7 +309,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
               break;
             case "putt":
               shot.strokesGained =
-                attemptShots.baseline - inputValues[j].strokes;
+                attemptShots[j].baseline - inputValues[j].strokes;
               break;
             default:
               console.log("Shot type does not exist.");
@@ -430,8 +440,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     setattemptShots(getShotInfo(drillInfo));
   }, []);
 
-  console.log("attemptShots", attemptShots);
-
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
@@ -452,7 +460,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               currentUserId,
               did,
             );
-
             setOutputData(outputData);
             uploadAttempt(
               outputData,
