@@ -63,7 +63,6 @@ export default function Description() {
 
   const hasImages = !!images.length;
 
-
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
 
