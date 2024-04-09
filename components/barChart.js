@@ -17,7 +17,7 @@ import ShotAccordion from "~/components/shotAccordion";
 
 export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
-    return <Text>Loading...</Text>;
+    return <Text>No attempts have been made yet.</Text>;
   }
   const drillDataSorted = drillData.sort((a, b) => a.time - b.time);
   const data = drillDataSorted.map(

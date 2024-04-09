@@ -39,11 +39,14 @@ export default function Leaderboard() {
     error: leaderboardError,
   } = useLeaderboard({ drillId });
 
+  const preCalcLeaderboardExists =
+    preCalcLeaderboard && Object.keys(preCalcLeaderboard).length > 0;
+
   useEffect(() => {
     setManualAttemptCalc(
       !drillIsLoading && // so that mainOutputAttempt is calculated
         !leaderboardIsLoading && //leaderboard must've finished loading
-        (!preCalcLeaderboard || //and not exist
+        (!preCalcLeaderboardExists || //and not exist
           preCalcLeaderboard[Object.keys(preCalcLeaderboard)[0]][
             mainOutputAttempt
           ] === undefined), //or exist but does not have the required field
@@ -83,7 +86,7 @@ export default function Leaderboard() {
     : customMainOutputAttempt;
 
   const leaderboardAttempts = preCalcLeaderboard || {};
-  if (!preCalcLeaderboard && attempts) {
+  if (!preCalcLeaderboardExists && attempts) {
     //just in case...
     for (const id in attempts) {
       const entry = attempts[id];
@@ -125,6 +128,10 @@ export default function Leaderboard() {
       leaderboardAttempts[b][mainOutputAttempt]["value"],
   );
 
+  if (orderedLeaderboard.length < 1) {
+    return <Text>No attempts have been made yet.</Text>;
+  }
+
   return (
     <ScrollView>
       <List.Section style={{ marginLeft: 20 }}>
@@ -139,7 +146,7 @@ export default function Leaderboard() {
               asChild
             >
               <List.Item
-                title={userInfo[userId]["name"]}
+                title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
                 left={() => <Avatar.Text size={24} label="XD" />}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
