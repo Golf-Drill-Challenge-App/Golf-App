@@ -400,36 +400,14 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   return outputData;
 }
 
-//A function to validate inputs are all numbers
-function validateInputs(inputs) {
-  const inputKeys = Object.keys(inputs);
-
-  for (let i = 0; i < inputKeys.length; i++) {
-    const inputKey = inputKeys[i];
-
-    //check if input is not a number
-    if (isNaN(inputs[inputKey])) {
-      return false;
-    }
-  }
-
-  return true;
+//A function to validate inputs are not empty
+function checkEmptyInputs(inputs) {
+  return Object.values(inputs).some((value) => value === "");
 }
 
 //A function to validate inputs are all numbers
 function validateInputs(inputs) {
-  const inputKeys = Object.keys(inputs);
-
-  for (let i = 0; i < inputKeys.length; i++) {
-    const inputKey = inputKeys[i];
-
-    //check if input is not a number
-    if (isNaN(inputs[inputKey])) {
-      return false;
-    }
-  }
-
-  return true;
+  return Object.values(inputs).some((input) => isNaN(input));
 }
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
@@ -503,7 +481,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
-          onPress={handleSubmitButtonClick}
+          onPress={handleButtonClick}
         >
           Submit Drill
         </Button>
@@ -532,7 +510,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
         style={styles.button}
         labelStyle={styles.buttonText}
         mode="contained-tonal"
-        onPress={handleNextShotButtonClick}
+        onPress={handleButtonClick}
       >
         Next Shot
       </Button>
@@ -552,117 +530,51 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   };
 
   //Function to handle "Next shot" button click
-  const handleNextShotButtonClick = () => {
+  const handleButtonClick = () => {
     //close previous Banners
     setEmptyInputBannerVisible(false);
     setInvalidInputBannerVisible(false);
-
-    // Check if any inputs are empty
-    const inputValuesForShot = inputValues[displayedShot];
-    const isEmptyInput = Object.values(inputValuesForShot).some(
-      (value) => value === "",
-    );
-
-    //close previous Banners
-    setEmptyInputBannerVisible(false);
-    setInvalidInputBannerVisible(false);
-
-    // Check if any inputs are empty
-    const inputValuesForShot = inputValues[displayedShot];
-    const isEmptyInput = Object.values(inputValuesForShot).some(
-      (value) => value === "",
-    );
 
     //Check if all inputs have been filled in
-    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
-      setEmptyInputBannerVisible(true);
-    } else if (isEmptyInput) {
-      setEmptyInputBannerVisible(true);
-    }
-    //check inputs are all numbers
-    else if (!validateInputs(inputValues[displayedShot])) {
-      setInvalidInputBannerVisible(true);
-    } else {
-    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
-      setEmptyInputBannerVisible(true);
-    } else if (isEmptyInput) {
+    if (
+      Object.keys(inputValues[displayedShot]).length != numInputs ||
+      checkEmptyInputs(inputValues[displayedShot])
+    ) {
       setEmptyInputBannerVisible(true);
     }
     //check inputs are all numbers
-    else if (!validateInputs(inputValues[displayedShot])) {
+    else if (validateInputs(inputValues[displayedShot])) {
       setInvalidInputBannerVisible(true);
+    }
+    //check for submit button
+    else if (
+      currentShot == drillInfo.reps - 1 &&
+      displayedShot == drillInfo.reps - 1
+    ) {
+      let outputData = createOutputData(
+        inputValues,
+        attemptShots,
+        currentUserId,
+        did,
+        drillInfo.outputs,
+        drillInfo.aggOutputs,
+      );
+
+      setOutputData(outputData);
+      uploadAttempt(
+        outputData,
+        currentUserId,
+        currentTeamId,
+        assignedTime,
+        id,
+        queryClient,
+      );
+      setToggleResult(true);
     } else {
       setEmptyInputBannerVisible(false);
+      setInvalidInputBannerVisible(false);
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
-    }
-    //check inputs are all numbers
-    else if (!validateInputs(inputValues[displayedShot])) {
-      setInvalidInputBannerVisible(true);
-    } else {
-      let outputData = createOutputData(
-        inputValues,
-        attemptShots,
-        currentUserId,
-        did,
-        drillInfo.outputs,
-        drillInfo.aggOutputs,
-      );
-
-      setOutputData(outputData);
-      uploadAttempt(
-        outputData,
-        currentUserId,
-        currentTeamId,
-        assignedTime,
-        id,
-        queryClient,
-      );
-      setToggleResult(true);
-    }
-  };
-
-  //Function to handle "Next shot" button click
-  const handleSubmitButtonClick = () => {
-    //close previous Banners
-    setEmptyInputBannerVisible(false);
-    setInvalidInputBannerVisible(false);
-
-    // Check if any inputs are empty
-    const inputValuesForShot = inputValues[displayedShot];
-    const isEmptyInput = Object.values(inputValuesForShot).some(
-      (value) => value === "",
-    );
-
-    //Check if all inputs have been filled in
-    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
-      setEmptyInputBannerVisible(true);
-    } else if (isEmptyInput) {
-      setEmptyInputBannerVisible(true);
-    }
-    //check inputs are all numbers
-    else if (!validateInputs(inputValues[displayedShot])) {
-      setInvalidInputBannerVisible(true);
-    } else {
-      let outputData = createOutputData(
-        inputValues,
-        attemptShots,
-        currentUserId,
-        did,
-        drillInfo.outputs,
-        drillInfo.aggOutputs,
-      );
-
-      setOutputData(outputData);
-      uploadAttempt(
-        outputData,
-        currentUserId,
-        currentTeamId,
-        assignedTime,
-        id,
-        queryClient,
-      );
-      setToggleResult(true);
     }
   };
 
