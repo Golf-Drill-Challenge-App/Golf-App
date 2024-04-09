@@ -21,6 +21,7 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
+  getCombinedDrillTitle,
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
@@ -134,43 +135,41 @@ async function uploadAttempt(
  ***************************************/
 function getShotInfo(drillInfo) {
   let shots = [];
-  for (let i = 0; i < drillInfo.requirements.length; i++) {
-    switch (drillInfo.requirements[i].type) {
-      case "random":
-        shots = fillRandomShotTargets(
-          drillInfo.requirements[i].min,
-          drillInfo.requirements[i].max,
-          drillInfo,
-        );
-        break;
-      case "sequence":
-        shots = fillClubTargets(i, drillInfo);
-        break;
-      default:
-        console.log("Shots not found");
-        shots = [];
-        break;
-    }
+  switch (drillInfo.requirements[0].type) {
+    case "random":
+      shots = fillRandomShotTargets(drillInfo);
+      break;
+    case "sequence":
+      shots = fillClubTargets(drillInfo);
+      break;
+    case "putt":
+      shots = fillPuttTargets(drillInfo);
+      break;
+    default:
+      console.log("Shots not found");
+      shots = [];
+      break;
   }
+
   return shots;
 }
 
 //Helper function for the sequence drill type
-function fillClubTargets(idx, drillInfo) {
+function fillClubTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
-      target: drillInfo.requirements[idx].items[i],
+      target: drillInfo.requirements[0].items[i],
     });
   }
   return shots;
 }
 
 //Helper function for the random drill type
-function fillRandomShotTargets(min, max, drillInfo) {
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
+function fillRandomShotTargets(drillInfo) {
+  const minCeiled = Math.ceil(drillInfo.requirements[0].min);
+  const maxFloored = Math.floor(drillInfo.requirements[0].max);
   let shots = [];
 
   for (var i = 0; i < drillInfo.reps; i++) {
@@ -187,6 +186,23 @@ function fillRandomShotTargets(min, max, drillInfo) {
   return shots;
 }
 
+//Helper function for the putt drill type
+function fillPuttTargets(drillInfo) {
+  let shots = [];
+  for (var i = 0; i < drillInfo.reps; i++) {
+    var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
+    shots.push({
+      shotNum: i + 1,
+      target: [
+        drillInfo.requirements[0].items[i],
+        drillInfo.requirements[1].items[i],
+      ],
+      baseline: baseline,
+    });
+  }
+  return shots;
+}
+
 /***************************************
  * Output Data Generation
  ***************************************/
@@ -194,7 +210,7 @@ function fillRandomShotTargets(min, max, drillInfo) {
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
-  return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
+  return Math.sqrt(2 * Math.pow(carryDiff * 3, 2));
 }
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
@@ -202,14 +218,7 @@ function calculateCarryDiff(target, carry) {
 }
 
 //Function to create and format output data
-function createOutputData(
-  inputValues,
-  attemptShots,
-  uid,
-  did,
-  outputs,
-  aggOutputsObj,
-) {
+function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   //initialize total values
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
@@ -222,12 +231,12 @@ function createOutputData(
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
     let shot = {};
-    for (let i = 0; i < outputs.length; i++) {
-      const output = outputs[i];
+    for (let i = 0; i < drillInfo.outputs.length; i++) {
+      const output = drillInfo.outputs[i];
 
       switch (output) {
         case "target":
-          shot.target = attemptShots[j].target;
+          shot.target = attemptShots[j].target[0];
           break;
 
         case "carry":
@@ -267,16 +276,28 @@ function createOutputData(
           break;
 
         case "strokesGained":
-          shot.strokesGained =
-            attemptShots[j].baseline -
-            lookUpExpectedPutts(
-              calculateProxHole(
-                attemptShots[j].target,
-                inputValues[j].carry,
-                inputValues[j].sideLanding,
-              ),
-            );
-          -1;
+          switch (drillInfo.shotType) {
+            case "app":
+              shot.strokesGained =
+                attemptShots[j].baseline -
+                lookUpExpectedPutts(
+                  calculateProxHole(
+                    attemptShots[j].target,
+                    inputValues[j].carry,
+                    inputValues[j].sideLanding,
+                  ),
+                );
+              -1;
+              break;
+            case "putt":
+              shot.strokesGained =
+                attemptShots.baseline - inputValues[j].strokes;
+              break;
+            default:
+              console.log("Shot type does not exist.");
+              break;
+          }
+
           strokesGainedTotal += shot.strokesGained;
           break;
 
@@ -313,7 +334,7 @@ function createOutputData(
   };
 
   //Generate the aggOutputs for output data
-  const aggOutputsArr = Object.keys(aggOutputsObj);
+  const aggOutputsArr = Object.keys(drillInfo.aggOutputs);
   for (let i = 0; i < aggOutputsArr.length; i++) {
     const aggOutput = aggOutputsArr[i];
 
@@ -415,12 +436,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
           mode="contained-tonal"
           onPress={() => {
             let outputData = createOutputData(
+              drillInfo,
               inputValues,
               attemptShots,
               currentUserId,
               did,
-              drillInfo.outputs,
-              drillInfo.aggOutputs,
             );
 
             setOutputData(outputData);
@@ -515,7 +535,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
-                  title={drillInfo.drillTitle}
+                  title={getCombinedDrillTitle(drillInfo)}
                   titleStyle={styles.title}
                 />
                 <Appbar.Action
@@ -558,7 +578,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                         key={id}
                         prompt={item.prompt}
                         distanceMeasure={item.distanceMeasure}
-                        target={attemptShots[displayedShot].target}
+                        target={attemptShots[displayedShot].target[id]}
                       />
                     ))}
                   </View>
@@ -660,7 +680,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       for (let i = 0; i < attemptShots.length; i++) {
                         drillInfo.inputs.forEach((item) => {
                           newInputValues[i][item.id] = Math.floor(
-                            Math.random() * attemptShots[displayedShot].target,
+                            Math.random() *
+                              attemptShots[displayedShot].target[0],
                           ).toString();
                         });
                       }

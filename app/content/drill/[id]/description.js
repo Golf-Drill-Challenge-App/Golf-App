@@ -59,13 +59,9 @@ export default function Description() {
     );
   };
 
-  const images = [
-    require("~/assets/drill-description-image.jpg"),
-    require("~/assets/adaptive-icon.png"),
-    require("~/assets/icon.png"),
-    require("~/assets/splash.png"),
-    require("~/assets/favicon.png"),
-  ];
+  const images = [];
+
+  const hasImages = !!images.length;
 
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
@@ -90,28 +86,33 @@ export default function Description() {
             Description
           </Text>
           <Text variant="bodySmall">{drillInfo["description"]}</Text>
-          <View style={{ marginTop: 10 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-              }}
-            >
-              {images.map((image, index) => (
-                <TouchableOpacity key={index} onPress={() => openModal(index)}>
-                  <Image
-                    style={{
-                      width: windowWidth / 3 - 10,
-                      height: windowWidth / 3 - 10,
-                      marginBottom: 15,
-                    }}
-                    source={image}
-                  />
-                </TouchableOpacity>
-              ))}
+          {hasImages && (
+            <View style={{ marginTop: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                {images.map((image, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => openModal(index)}
+                  >
+                    <Image
+                      style={{
+                        width: windowWidth / 3 - 10,
+                        height: windowWidth / 3 - 10,
+                        marginBottom: 15,
+                      }}
+                      source={image}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
+          )}
         </ScrollView>
 
         <Modal

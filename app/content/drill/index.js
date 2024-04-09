@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { getCombinedDrillTitle } from "~/Utility";
 
 export default function Index() {
   const navigation = useNavigation();
@@ -24,6 +25,20 @@ export default function Index() {
     return <ErrorComponent message={drillInfoError} />;
   }
 
+  const drills = Object.values(drillInfo);
+
+  drills.sort((a, b) => {
+    const titleA = getCombinedDrillTitle(a).toUpperCase();
+    const titleB = getCombinedDrillTitle(b).toUpperCase();
+    if (titleA < titleB) {
+      return -1;
+    }
+    if (titleA > titleB) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <PaperProvider>
       <SafeAreaView>
@@ -33,7 +48,7 @@ export default function Index() {
 
         <ScrollView contentContainerStyle={styles.scrollView}>
           <List.Section>
-            {Object.values(drillInfo).map((drill) => (
+            {Object.values(drills).map((drill) => (
               <Link
                 key={drill.did}
                 href={{
@@ -43,7 +58,7 @@ export default function Index() {
                 style={{ paddingVertical: 8 }}
               >
                 <List.Item
-                  title={drill.drillType}
+                  title={getCombinedDrillTitle(drill)}
                   description={drill.description}
                   titleStyle={styles.title}
                   descriptionStyle={styles.description}

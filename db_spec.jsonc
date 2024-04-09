@@ -134,7 +134,7 @@
       "drills": [
         {
           "did": "732489", // drillInfo id
-          "drillType": "20 Shot Challenge", // e.g. "20 shot challenge", "putting challenge", "line test"
+          "drillType": "20ShotChallenge", // e.g. "20 shot challenge", "putting challenge", "line test"
           "spec": "50ft - 150ft", // this is just a string shown to the user. TODO: Add numeric fields for random distance ranges
           "shotType": "arg", // e.g. "arg", "putt", "ott", "app"
           "requirements": [
@@ -168,6 +168,8 @@
               ],
             },
           ],
+          "prettyDrillType": "20 Shot Challenge",
+          "subType": "Red Zone",
           "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
           "inputs": ["distance", "sideLanding"],
           "outputs": [
