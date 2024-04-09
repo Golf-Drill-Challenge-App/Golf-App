@@ -258,12 +258,12 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "proxHole":
           shot.proxHole = calculateProxHole(
-            attemptShots[j].target,
+            attemptShots[j].target[0],
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
           proxHoleTotal += calculateProxHole(
-            attemptShots[j].target,
+            attemptShots[j].target[0],
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
@@ -276,7 +276,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
             calculateProxHole(
-              attemptShots[j].target,
+              attemptShots[j].target[0],
               inputValues[j].carry,
               inputValues[j].sideLanding,
             ),
@@ -290,7 +290,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                 attemptShots[j].baseline -
                 lookUpExpectedPutts(
                   calculateProxHole(
-                    attemptShots[j].target,
+                    attemptShots[j].target[0],
                     inputValues[j].carry,
                     inputValues[j].sideLanding,
                   ),
@@ -311,7 +311,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
-            attemptShots[j].target,
+            attemptShots[j].target[0],
             inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
