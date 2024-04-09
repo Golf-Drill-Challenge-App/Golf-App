@@ -622,6 +622,50 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     }
   };
 
+  //Function to handle "Next shot" button click
+  const handleSubmitButtonClick = () => {
+    //close previous Banners
+    setEmptyInputBannerVisible(false);
+    setInvalidInputBannerVisible(false);
+
+    // Check if any inputs are empty
+    const inputValuesForShot = inputValues[displayedShot];
+    const isEmptyInput = Object.values(inputValuesForShot).some(
+      (value) => value === "",
+    );
+
+    //Check if all inputs have been filled in
+    if (Object.keys(inputValues[displayedShot]).length != numInputs) {
+      setEmptyInputBannerVisible(true);
+    } else if (isEmptyInput) {
+      setEmptyInputBannerVisible(true);
+    }
+    //check inputs are all numbers
+    else if (!validateInputs(inputValues[displayedShot])) {
+      setInvalidInputBannerVisible(true);
+    } else {
+      let outputData = createOutputData(
+        inputValues,
+        attemptShots,
+        currentUserId,
+        did,
+        drillInfo.outputs,
+        drillInfo.aggOutputs,
+      );
+
+      setOutputData(outputData);
+      uploadAttempt(
+        outputData,
+        currentUserId,
+        currentTeamId,
+        assignedTime,
+        id,
+        queryClient,
+      );
+      setToggleResult(true);
+    }
+  };
+
   //Loading until an attempt is generated
   if (attemptShots.length === 0) {
     console.log("Loading");
