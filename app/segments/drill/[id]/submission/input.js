@@ -44,7 +44,7 @@ async function completeAssigned(
   teamId,
   assignedTime,
   drillId,
-  attemptRefId,
+  attemptId,
   queryClient,
 ) {
   console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId);
@@ -63,7 +63,7 @@ async function completeAssigned(
           assignment.assignedTime === assignedTime &&
           assignment.drillId === drillId
         ) {
-          return { ...assignment, completed: true, attemptRefId: attemptRefId };
+          return { ...assignment, completed: true, attemptId: attemptId };
         }
         return assignment;
       });
