@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { getDrillTitle } from "~/Utility";
+import { getCombinedDrillTitle } from "~/Utility";
 
 function DrillCard(props) {
   console.log(props);
@@ -8,7 +8,7 @@ function DrillCard(props) {
     <Link href={props.hrefString} asChild>
       <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.cardContent}>
-          <Text style={styles.title}>{getDrillTitle(props.drill)}</Text>
+          <Text style={styles.title}>{getCombinedDrillTitle(props.drill)}</Text>
           <View style={styles.specContainer}>
             <Text style={styles.inputText}>
               {props.drill["inputs"]

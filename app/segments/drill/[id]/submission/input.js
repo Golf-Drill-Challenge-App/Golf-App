@@ -21,7 +21,7 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  getDrillTitle,
+  getCombinedDrillTitle,
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
@@ -137,11 +137,7 @@ function getShotInfo(drillInfo) {
   let shots = [];
   switch (drillInfo.requirements[0].type) {
     case "random":
-      shots = fillRandomShotTargets(
-        drillInfo.requirements[0].min,
-        drillInfo.requirements[0].max,
-        drillInfo,
-      );
+      shots = fillRandomShotTargets(drillInfo);
       break;
     case "sequence":
       shots = fillClubTargets(drillInfo);
@@ -171,9 +167,9 @@ function fillClubTargets(drillInfo) {
 }
 
 //Helper function for the random drill type
-function fillRandomShotTargets(min, max, drillInfo) {
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
+function fillRandomShotTargets(drillInfo) {
+  const minCeiled = Math.ceil(drillInfo.requirements[0].min);
+  const maxFloored = Math.floor(drillInfo.requirements[0].max);
   let shots = [];
 
   for (var i = 0; i < drillInfo.reps; i++) {
@@ -214,7 +210,7 @@ function fillPuttTargets(drillInfo) {
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
-  return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding * 3, 2));
+  return Math.sqrt(2 * Math.pow(carryDiff * 3, 2));
 }
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
@@ -539,7 +535,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
-                  title={getDrillTitle(drillInfo)}
+                  title={getCombinedDrillTitle(drillInfo)}
                   titleStyle={styles.title}
                 />
                 <Appbar.Action

@@ -174,6 +174,6 @@ export function getIconByKey(key) {
   return iconObject ? iconObject[key] : null;
 }
 
-export const getDrillTitle = (drill) => {
-  return `${drill.prettyDrillType} | ${drill.subType}`;
+export const getCombinedDrillTitle = (drillInfo) => {
+  return `${drillInfo.prettyDrillType} | ${drillInfo.subType}`;
 };

@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { getDrillTitle } from "~/Utility";
+import { getCombinedDrillTitle } from "~/Utility";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
@@ -49,7 +49,7 @@ export default function Index() {
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={getDrillTitle(drillInfo)} />
+          <Appbar.Content title={getCombinedDrillTitle(drillInfo)} />
         </Appbar.Header>
 
         {/* Tab system */}
