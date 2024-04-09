@@ -1,6 +1,6 @@
 import * as scale from "d3-scale";
 import * as shape from "d3-shape";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -13,17 +13,37 @@ import { Path } from "react-native-svg";
 import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
+import { Button } from "react-native-paper";
 import ShotAccordion from "~/components/shotAccordion";
 
 export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
     return <Text>No attempts have been made yet.</Text>;
   }
-  const data = useMemo(() => {
-    return drillData
-      .sort((a, b) => a.time - b.time)
-      .map((value) => value[drillInfo["mainOutputAttempt"]]);
-  }, [drillData, drillInfo]);
+  const scrollViewRef = useRef();
+
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    scrollViewRef.current.scrollToEnd({ animated: false });
+  }, [page]);
+
+  const sortedDrillData = useMemo(
+    () => drillData.sort((a, b) => a.time - b.time),
+    [drillData],
+  );
+
+  const itemsPerPage = 300;
+
+  const endIndex = sortedDrillData.length - page * itemsPerPage;
+  const startIndex = Math.max(endIndex - itemsPerPage, 0);
+  const totalPages = Math.ceil(sortedDrillData.length / itemsPerPage);
+
+  const slicedDrillData = sortedDrillData.slice(startIndex, endIndex);
+
+  const data = slicedDrillData.map(
+    (value) => value[drillInfo["mainOutputAttempt"]],
+  );
 
   const [movingAvgRange, setMovingAvgRange] = useState(5);
   const [movingAvgRangeValues] = useState([
@@ -52,55 +72,38 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     );
   };
 
-  const processedData = useMemo(
-    () =>
-      data.map((value, index) => ({
-        value: value,
-        index: index,
-        svg: {
-          fill: value > 0 ? "green" : "red",
-        },
-      })),
-    [data],
-  );
+  const processedData = data.map((value, index) => ({
+    value: value,
+    index: index,
+    svg: {
+      fill: value > 0 ? "green" : "red",
+    },
+  }));
 
-  const movingAvgData = useMemo(
-    () =>
-      data.map((value, index) =>
-        index + 1 >= movingAvgRange
-          ? data
-              .slice(index - movingAvgRange + 1, index + 1)
-              .reduce((a, b) => a + b, 0) / movingAvgRange
-          : 0,
-      ),
-    [data, movingAvgRange],
+  const movingAvgData = data.map((value, index) =>
+    index + 1 >= movingAvgRange
+      ? data
+          .slice(index - movingAvgRange + 1, index + 1)
+          .reduce((a, b) => a + b, 0) / movingAvgRange
+      : 0,
   );
 
   // Calculate scales
-  const scaleY = useMemo(
-    () =>
-      scale
-        .scaleLinear()
-        .domain([Math.min(...data), Math.max(...data)]) // Adjust scale based on your data
-        .range([chartHeight, 0]),
-    [data, chartHeight],
-  );
+  const scaleY = scale
+    .scaleLinear()
+    .domain([Math.min(...data), Math.max(...data)]) // Adjust scale based on your data
+    .range([chartHeight, 0]);
 
-  const line = useMemo(
-    () =>
-      shape
-        .line()
-        .x(
-          (_, index) =>
-            halfScreenCompensation +
-            barWidth / 2 +
-            index *
-              ((chartWidth - 2 * halfScreenCompensation) /
-                movingAvgData.length),
-        )
-        .y((d) => scaleY(d))(movingAvgData),
-    [halfScreenCompensation, barWidth, chartWidth, movingAvgData, scaleY],
-  );
+  const line = shape
+    .line()
+    .x(
+      (_, index) =>
+        halfScreenCompensation +
+        barWidth / 2 +
+        index *
+          ((chartWidth - 2 * halfScreenCompensation) / movingAvgData.length),
+    )
+    .y((d) => scaleY(d))(movingAvgData);
 
   const handleScroll = function (event) {
     setSelected(selectedBar(event.nativeEvent.contentOffset.x));
@@ -108,15 +111,15 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
   const shotAccordionList = useMemo(
     () =>
-      drillData[selected]["shots"].map((shot) => (
+      sortedDrillData[selected]["shots"].map((shot) => (
         <ShotAccordion
           key={shot["sid"]}
           shot={shot}
           drillInfo={drillInfo}
-          total={drillData[selected]["shots"].length}
+          total={sortedDrillData[selected]["shots"].length}
         />
       )),
-    [drillData, drillInfo, selected],
+    [sortedDrillData, drillInfo, selected],
   );
 
   const styles = StyleSheet.create({
@@ -212,16 +215,40 @@ export default function BarChartScreen({ drillData, drillInfo }) {
           style={styles.dropdown}
         />
       </View>
+      <Text>
+        {formatDate(sortedDrillData[startIndex]["time"])} -{" "}
+        {formatDate(sortedDrillData[endIndex - 1]["time"])}
+      </Text>
+      <View>
+        <Button
+          onPress={() => {
+            setPage(page + 1);
+          }}
+          disabled={page === totalPages - 1}
+          //Previous attempts chronologically
+        >
+          Prev
+        </Button>
+        <Button
+          onPress={() => {
+            setPage(page - 1);
+          }}
+          disabled={page === 0}
+          //Next attempts chronologically
+        >
+          Next
+        </Button>
+      </View>
 
       <View style={styles.chartSection}>
         <YAxis
           data={data}
           style={styles.yAxis}
-          numberOfTicks={10} // Adjust number of ticks as needed
           formatLabel={(value) => `${value}`} // Format label as needed
         />
         <View style={styles.middleLine} />
         <ScrollView
+          ref={scrollViewRef}
           horizontal={true}
           onScroll={handleScroll}
           scrollEventThrottle={128}
@@ -239,8 +266,9 @@ export default function BarChartScreen({ drillData, drillInfo }) {
               }}
               yAccessor={({ item }) => item.value}
               pointerEvents={"none"}
+              key={page} //force barchart to re-render
             >
-              <Grid pointerEvents={"none"} />
+              <Grid />
               <MovingAvgPath
                 line={line}
                 pointerEvents={"none"}
@@ -254,7 +282,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       <View style={styles.bottomContainer}>
         <View style={styles.bottomTextContainer}>
           <Text style={{ ...styles.bottomText, width: "30%" }}>
-            {formatDate(drillData[selected]["time"])}
+            {formatDate(sortedDrillData[selected]["time"])}
           </Text>
           <Text
             style={{ ...styles.bottomText, width: "40%", textAlign: "center" }}
