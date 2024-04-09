@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ResultScreen from "~/components/resultScreen";
-import { getDrillTitle } from "~/Utility"
+import { getDrillTitle } from "~/Utility";
 
 function Result(props) {
   const submission = props.submission;

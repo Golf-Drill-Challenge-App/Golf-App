@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { getDrillTitle } from "~/Utility"
+import { getDrillTitle } from "~/Utility";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");

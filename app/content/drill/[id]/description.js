@@ -59,9 +59,7 @@ export default function Description() {
     );
   };
 
-  const images = [
-   
-  ];
+  const images = [];
 
   const hasImages = !!images.length;
 
@@ -88,7 +86,7 @@ export default function Description() {
             Description
           </Text>
           <Text variant="bodySmall">{drillInfo["description"]}</Text>
-          {hasImages && 
+          {hasImages && (
             <View style={{ marginTop: 10 }}>
               <View
                 style={{
@@ -98,7 +96,10 @@ export default function Description() {
                 }}
               >
                 {images.map((image, index) => (
-                  <TouchableOpacity key={index} onPress={() => openModal(index)}>
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => openModal(index)}
+                  >
                     <Image
                       style={{
                         width: windowWidth / 3 - 10,
@@ -111,7 +112,7 @@ export default function Description() {
                 ))}
               </View>
             </View>
-          }
+          )}
         </ScrollView>
 
         <Modal

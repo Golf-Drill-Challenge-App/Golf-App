@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { getDrillTitle } from "~/Utility"
+import { getDrillTitle } from "~/Utility";
 
 function DrillCard(props) {
   console.log(props);

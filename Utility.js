@@ -164,7 +164,11 @@ export function lookUpExpectedPutts(proxHole) {
 }
 
 export function getIconByKey(key) {
-  const icons = [{ carry: "arrow-up" }, { sideLanding: "arrow-left-right" }, { strokes: "golf-tee" }];
+  const icons = [
+    { carry: "arrow-up" },
+    { sideLanding: "arrow-left-right" },
+    { strokes: "golf-tee" },
+  ];
 
   const iconObject = icons.find((icon) => icon[key]);
   return iconObject ? iconObject[key] : null;
@@ -172,4 +176,4 @@ export function getIconByKey(key) {
 
 export const getDrillTitle = (drill) => {
   return `${drill.prettyDrillType} | ${drill.subType}`;
-}
+};
