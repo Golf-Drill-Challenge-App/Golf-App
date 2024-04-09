@@ -663,6 +663,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       key={id}
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
+                      helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
                       inputValue={inputValues[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
