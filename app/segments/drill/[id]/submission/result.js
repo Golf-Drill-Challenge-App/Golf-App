@@ -17,11 +17,21 @@ function Result(props) {
           onPress={navigation.goBack}
           color={"#F24E1E"}
         />
-        <Appbar.Content 
+        <Appbar.Content
           title={
             <View>
-              <Text styles={{ fontSize: 20, fontWeight: "bold", }} variant="titleLarge">{props.drill.prettyDrillType}</Text>
-              <Text styles={{ fontSize: 20, fontWeight: "bold", }} variant="titleLarge">{props.drill.subType}</Text>
+              <Text
+                styles={{ fontSize: 20, fontWeight: "bold" }}
+                variant="titleLarge"
+              >
+                {props.drill.prettyDrillType}
+              </Text>
+              <Text
+                styles={{ fontSize: 20, fontWeight: "bold" }}
+                variant="titleLarge"
+              >
+                {props.drill.subType}
+              </Text>
             </View>
           }
         />

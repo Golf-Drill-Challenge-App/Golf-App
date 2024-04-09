@@ -21,7 +21,6 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  getCombinedDrillTitle,
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
@@ -543,11 +542,15 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   onPress={() => setLeaveDialogVisible(true)}
                   color={"#F24E1E"}
                 />
-                <Appbar.Content 
+                <Appbar.Content
                   title={
                     <View>
-                      <Text style={styles.title} variant="titleLarge">{drillInfo.prettyDrillType}</Text>
-                      <Text style={styles.title} variant="titleLarge">{drillInfo.subType}</Text>
+                      <Text style={styles.title} variant="titleLarge">
+                        {drillInfo.prettyDrillType}
+                      </Text>
+                      <Text style={styles.title} variant="titleLarge">
+                        {drillInfo.subType}
+                      </Text>
                     </View>
                   }
                 />

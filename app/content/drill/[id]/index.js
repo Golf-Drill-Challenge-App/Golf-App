@@ -1,7 +1,12 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons, Text } from "react-native-paper";
 import { View } from "react-native";
+import {
+  Appbar,
+  PaperProvider,
+  SegmentedButtons,
+  Text,
+} from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
@@ -11,7 +16,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { getCombinedDrillTitle } from "~/Utility";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
@@ -43,18 +47,31 @@ export default function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ padding: 0, backgroundColor: "FFF" }}>
+        <Appbar.Header
+          statusBarHeight={0}
+          style={{ padding: 0, backgroundColor: "FFF" }}
+        >
           <Appbar.BackAction
             onPress={() => {
               navigation.goBack();
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content 
+          <Appbar.Content
             title={
               <View>
-                <Text styles={{ fontSize: 20, fontWeight: "bold", }} variant="titleLarge">{drillInfo.prettyDrillType}</Text>
-                <Text styles={{ fontSize: 20, fontWeight: "bold", }} variant="titleLarge">{drillInfo.subType}</Text>
+                <Text
+                  styles={{ fontSize: 20, fontWeight: "bold" }}
+                  variant="titleLarge"
+                >
+                  {drillInfo.prettyDrillType}
+                </Text>
+                <Text
+                  styles={{ fontSize: 20, fontWeight: "bold" }}
+                  variant="titleLarge"
+                >
+                  {drillInfo.subType}
+                </Text>
               </View>
             }
           />
