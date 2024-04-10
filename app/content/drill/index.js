@@ -81,6 +81,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   scrollView: {
     paddingHorizontal: 16,
+    paddingBottom: 50,
   },
   title: {
     fontSize: 18,
