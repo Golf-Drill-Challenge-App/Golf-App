@@ -119,7 +119,7 @@ export default function Leaderboard() {
     });
   }
 
-  console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
+  // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
 
   const orderedLeaderboard = Object.keys(leaderboardAttempts).sort(
     //only sort the userId

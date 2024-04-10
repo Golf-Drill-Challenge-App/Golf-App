@@ -22,7 +22,7 @@ export default function Index() {
   const navigation = useNavigation();
   const { id: drillId, assignedTime: assignedTime } = useLocalSearchParams();
 
-  console.log("WAS IT ASSIGNED", assignedTime);
+  // console.log("WAS IT ASSIGNED", assignedTime);
   const {
     data: drillInfo,
     error: drillInfoError,

@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getCombinedDrillTitle } from "~/Utility";
 
 function DrillCard(props) {
-  console.log(props);
+  // console.log(props);
   return (
     <Link href={props.hrefString} asChild>
       <TouchableOpacity style={styles.cardContainer}>

@@ -2,7 +2,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getUnique, refToID } from "~/Utility";
+import { getUnique } from "~/Utility";
 import DrillCard from "~/components/drillCard";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -72,7 +72,7 @@ function Index(props) {
                   drill={drillInfo[drillId]}
                   hrefString={
                     "/content/team/users/" +
-                    refToID(userData.uid) +
+                    userData["uid"] +
                     "/drills/" +
                     drillId
                   }

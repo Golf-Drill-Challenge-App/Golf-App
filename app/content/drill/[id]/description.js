@@ -19,7 +19,7 @@ export default function Description() {
   const drillId = useLocalSearchParams()["id"];
   const assignedTime = useLocalSearchParams()["assignedTime"];
 
-  console.log("WAS IT ASSIGNED2", assignedTime);
+  // console.log("WAS IT ASSIGNED2", assignedTime);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);

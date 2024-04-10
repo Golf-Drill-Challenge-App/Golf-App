@@ -34,10 +34,6 @@ export function numTrunc(value, pad = false) {
   }
 }
 
-export function refToID(ref) {
-  return ref["_key"] ? ref["_key"]["path"]["segments"].at(-1) : "bad ref";
-}
-
 export function getUnique(array, field) {
   const uniqueMap = new Map();
   array.forEach((element) => {
