@@ -25,6 +25,7 @@ import {
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import Header from "~/components/header";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
@@ -159,7 +160,9 @@ function fillClubTargets(drillInfo) {
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
-      target: [drillInfo.requirements[0].items[i]],
+      items: {
+        [drillInfo.requirements[0].name]: drillInfo.requirements[0].items[i],
+      },
     });
   }
   return shots;
@@ -178,7 +181,9 @@ function fillRandomShotTargets(drillInfo) {
     var baseline = lookUpBaselineStrokesGained(target);
     shots.push({
       shotNum: i + 1,
-      target: [target],
+      items: {
+        [drillInfo.requirements[0].name]: target,
+      },
       baseline: baseline,
     });
   }
@@ -190,14 +195,16 @@ function fillPuttTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
-    let target = [];
+    let target = {};
     for (var j = 0; j < drillInfo.requirements.length; j++) {
-      target.push(drillInfo.requirements[j].items[i]);
+      target = Object.assign(target, {
+        [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i],
+      });
     }
     shots.push({
       shotNum: i + 1,
       baseline: baseline,
-      target: target,
+      items: target,
     });
   }
 
@@ -237,19 +244,23 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
       switch (output) {
         case "target":
-          shot.target = attemptShots[j].target[0];
+          shot.target = attemptShots[j].items.target;
+          break;
+
+        case "club":
+          shot.club = attemptShots[j].items.club;
           break;
 
         case "carry":
           shot.carry = inputValues[j].carry;
           break;
 
-        case "strokesTaken":
+        case "strokes":
           shot.strokes = inputValues[j].strokes;
           break;
 
         case "break":
-          shot.break = attemptShots[j].target[1];
+          shot.break = attemptShots[j].items.break;
           break;
 
         case "sideLanding":
@@ -259,12 +270,12 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "proxHole":
           shot.proxHole = calculateProxHole(
-            attemptShots[j].target[0],
+            attemptShots[j].items.target,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
           proxHoleTotal += calculateProxHole(
-            attemptShots[j].target[0],
+            attemptShots[j].items.target,
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
@@ -277,7 +288,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
             calculateProxHole(
-              attemptShots[j].target[0],
+              attemptShots[j].items.target,
               inputValues[j].carry,
               inputValues[j].sideLanding,
             ),
@@ -291,7 +302,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                 attemptShots[j].baseline -
                 lookUpExpectedPutts(
                   calculateProxHole(
-                    attemptShots[j].target[0],
+                    attemptShots[j].items.target,
                     inputValues[j].carry,
                     inputValues[j].sideLanding,
                   ),
@@ -312,7 +323,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
-            attemptShots[j].target[0],
+            attemptShots[j].items.target,
             inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
@@ -330,6 +341,8 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
     //push the shot into the array
     outputShotData.push(shot);
   }
+
+  console.log("outputShotData", outputShotData);
 
   //get the time stamp
   const timeStamp = Date.now();
@@ -542,18 +555,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   onPress={() => setLeaveDialogVisible(true)}
                   color={"#F24E1E"}
                 />
-                <Appbar.Content
-                  title={
-                    <View>
-                      <Text style={styles.title} variant="titleLarge">
-                        {drillInfo.prettyDrillType}
-                      </Text>
-                      <Text style={styles.title} variant="titleLarge">
-                        {drillInfo.subType}
-                      </Text>
-                    </View>
-                  }
-                />
+                <Header drillInfo={drillInfo} />
                 <Appbar.Action
                   icon="information-outline"
                   onPress={() => {
@@ -594,7 +596,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                         key={id}
                         prompt={item.prompt}
                         distanceMeasure={item.distanceMeasure}
-                        target={attemptShots[displayedShot].target[id]}
+                        target={attemptShots[displayedShot].items[item.name]}
                       />
                     ))}
                   </View>
@@ -695,10 +697,26 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       );
                       for (let i = 0; i < attemptShots.length; i++) {
                         drillInfo.inputs.forEach((item) => {
-                          newInputValues[i][item.id] = Math.floor(
-                            Math.random() *
-                              attemptShots[displayedShot].target[0],
-                          ).toString();
+                          switch (item.id) {
+                            case "carry":
+                              newInputValues[i][item.id] = Math.floor(
+                                Math.random() *
+                                  attemptShots[displayedShot].items["target"] +
+                                  attemptShots[displayedShot].items["target"] /
+                                    2,
+                              ).toString();
+                              break;
+                            case "sideLanding":
+                              newInputValues[i][item.id] = Math.floor(
+                                Math.random() * 21 - 10,
+                              ).toString();
+                              break;
+                            case "strokes":
+                              newInputValues[i][item.id] = Math.floor(
+                                Math.random() * 2 + 1,
+                              ).toString();
+                              break;
+                          }
                         });
                       }
                       setInputValues(newInputValues);
@@ -769,7 +787,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+  },
+  subTitle: {
+    fontSize: 12,
   },
   shotNumber: {
     fontSize: 32,

@@ -18,7 +18,7 @@ function DataField(field, value) {
     proxHole: "Proximity to Hole",
     baseline: "Baseline SG",
     expectedPutts: "Expected Putts",
-    strokesTaken: "Strokes Taken",
+    strokes: "Strokes",
     break: "Break",
   };
   switch (field) {
@@ -51,7 +51,7 @@ function DataField(field, value) {
       );
     case "strokesGained": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={numTrunc(value)} />;
-    case "strokesTaken": //just round to 3 decimals
+    case "strokes": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={value} />;
     case "break": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={value} />;
@@ -96,7 +96,8 @@ function ShotAccordion(props) {
             </Text>
             <Text style={{ width: "40%", textAlign: "center", padding: 2 }}>
               <Text style={styles.boldText}>Target:</Text>{" "}
-              {props.shot["target"]} yd
+              {props.shot[props.drillInfo.requirements[0].name]}{" "}
+              {props.drillInfo.requirements[0].distanceMeasure}
             </Text>
             <Text style={{ width: "30%", textAlign: "right", paddingLeft: 2 }}>
               <Text style={styles.boldText}>SG:</Text>{" "}
