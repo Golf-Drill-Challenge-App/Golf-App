@@ -32,7 +32,7 @@ export default function SignIn() {
         email,
         password,
       );
-      console.log(userCredential.user);
+      // console.log(userCredential.user);
     } catch (e) {
       alert(e);
       console.log(e);

@@ -1,6 +1,12 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
+import { View } from "react-native";
+import {
+  Appbar,
+  PaperProvider,
+  SegmentedButtons,
+  Text,
+} from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
@@ -10,14 +16,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { getCombinedDrillTitle } from "~/Utility";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
   const navigation = useNavigation();
   const { id: drillId, assignedTime: assignedTime } = useLocalSearchParams();
 
-  console.log("WAS IT ASSIGNED", assignedTime);
+  // console.log("WAS IT ASSIGNED", assignedTime);
   const {
     data: drillInfo,
     error: drillInfoError,
@@ -42,21 +47,40 @@ export default function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
+        <Appbar.Header
+          statusBarHeight={0}
+          style={{ padding: 0, backgroundColor: "FFF" }}
+        >
           <Appbar.BackAction
             onPress={() => {
               navigation.goBack();
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content title={getCombinedDrillTitle(drillInfo)} />
+          <Appbar.Content
+            title={
+              <View>
+                <Text
+                  styles={{ fontSize: 20, fontWeight: "bold" }}
+                  variant="titleLarge"
+                >
+                  {drillInfo.prettyDrillType}
+                </Text>
+                <Text
+                  styles={{ fontSize: 20, fontWeight: "bold" }}
+                  variant="titleLarge"
+                >
+                  {drillInfo.subType}
+                </Text>
+              </View>
+            }
+          />
         </Appbar.Header>
-
         {/* Tab system */}
-
         <SegmentedButtons
           value={value}
           onValueChange={setValue}
+          style={{ marginLeft: 10, marginRight: 10 }}
           buttons={[
             {
               value: "description",
@@ -72,7 +96,6 @@ export default function Index() {
             },
           ]}
         />
-
         {tabComponent()}
       </SafeAreaView>
     </PaperProvider>

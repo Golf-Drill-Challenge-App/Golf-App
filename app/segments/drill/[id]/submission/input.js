@@ -21,7 +21,6 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  getCombinedDrillTitle,
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
@@ -160,7 +159,7 @@ function fillClubTargets(drillInfo) {
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
-      target: drillInfo.requirements[0].items[i],
+      target: [drillInfo.requirements[0].items[i]],
     });
   }
   return shots;
@@ -179,7 +178,7 @@ function fillRandomShotTargets(drillInfo) {
     var baseline = lookUpBaselineStrokesGained(target);
     shots.push({
       shotNum: i + 1,
-      target: target,
+      target: [target],
       baseline: baseline,
     });
   }
@@ -191,15 +190,17 @@ function fillPuttTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
+    let target = [];
+    for (var j = 0; j < drillInfo.requirements.length; j++) {
+      target.push(drillInfo.requirements[j].items[i]);
+    }
     shots.push({
       shotNum: i + 1,
-      target: [
-        drillInfo.requirements[0].items[i],
-        drillInfo.requirements[1].items[i],
-      ],
       baseline: baseline,
+      target: target,
     });
   }
+
   return shots;
 }
 
@@ -243,6 +244,14 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
           shot.carry = inputValues[j].carry;
           break;
 
+        case "strokesTaken":
+          shot.strokes = inputValues[j].strokes;
+          break;
+
+        case "break":
+          shot.break = attemptShots[j].target[1];
+          break;
+
         case "sideLanding":
           shot.sideLanding = Number(inputValues[j].sideLanding);
           sideLandingTotal += Number(inputValues[j].sideLanding);
@@ -250,12 +259,12 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "proxHole":
           shot.proxHole = calculateProxHole(
-            attemptShots[j].target,
+            attemptShots[j].target[0],
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
           proxHoleTotal += calculateProxHole(
-            attemptShots[j].target,
+            attemptShots[j].target[0],
             inputValues[j].carry,
             inputValues[j].sideLanding,
           );
@@ -268,7 +277,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
         case "expectedPutts":
           shot.expectedPutts = lookUpExpectedPutts(
             calculateProxHole(
-              attemptShots[j].target,
+              attemptShots[j].target[0],
               inputValues[j].carry,
               inputValues[j].sideLanding,
             ),
@@ -282,7 +291,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                 attemptShots[j].baseline -
                 lookUpExpectedPutts(
                   calculateProxHole(
-                    attemptShots[j].target,
+                    attemptShots[j].target[0],
                     inputValues[j].carry,
                     inputValues[j].sideLanding,
                   ),
@@ -291,7 +300,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
               break;
             case "putt":
               shot.strokesGained =
-                attemptShots.baseline - inputValues[j].strokes;
+                attemptShots[j].baseline - inputValues[j].strokes;
               break;
             default:
               console.log("Shot type does not exist.");
@@ -303,7 +312,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
-            attemptShots[j].target,
+            attemptShots[j].target[0],
             inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
@@ -442,7 +451,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               currentUserId,
               did,
             );
-
             setOutputData(outputData);
             uploadAttempt(
               outputData,
@@ -535,8 +543,16 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
                 <Appbar.Content
-                  title={getCombinedDrillTitle(drillInfo)}
-                  titleStyle={styles.title}
+                  title={
+                    <View>
+                      <Text style={styles.title} variant="titleLarge">
+                        {drillInfo.prettyDrillType}
+                      </Text>
+                      <Text style={styles.title} variant="titleLarge">
+                        {drillInfo.subType}
+                      </Text>
+                    </View>
+                  }
                 />
                 <Appbar.Action
                   icon="information-outline"

@@ -24,9 +24,11 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
+  const { currentUserId } = currentAuthContext();
   const { data: userInfo, userIsLoading, userError } = useUserInfo();
 
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -50,11 +52,45 @@ function Index() {
   if (userIsLoading) return <Loading />;
 
   if (userError) return <ErrorComponent message={userError.message} />;
+  console.log("userInfo: ", currentUserId);
+  const foundUsers = Object.values(userInfo)
+    .filter((user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+    .sort((user1, user2) => {
+      // Assign priorities based on conditions
+      const getPriority = (user) => {
+        if (user["uid"] === currentUserId) {
+          return 0; // Highest priority
+        } else if (user.role === "owner") {
+          return 1;
+        } else if (user.role === "player") {
+          return 2;
+        } else if (user.role === "coach") {
+          return 3;
+        } else {
+          return 4; // Fallback
+        }
+      };
 
-  const foundUsers = Object.values(userInfo).filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+      const priority1 = getPriority(user1);
+      const priority2 = getPriority(user2);
 
+      // First, compare by priority
+      if (priority1 !== priority2) {
+        return priority1 - priority2;
+      }
+
+      // If priorities are the same, then sort alphabetically by name
+      return user1.name.localeCompare(user2.name);
+    });
+
+  const roleColor = (user) =>
+    user["uid"] === currentUserId
+      ? "#F24F1D"
+      : user.role === "owner"
+        ? "#3366ff"
+        : "#222";
   return (
     <PaperProvider>
       <SafeAreaView
@@ -174,14 +210,10 @@ function Index() {
 
                 <List.Section>
                   {foundUsers.map((user, i) => {
-                    const userid =
-                      user.uid["_key"] !== undefined
-                        ? user.uid["_key"]["path"]["segments"].at(-1)
-                        : "awefr";
-                    //console.log("userid: ", userid);
+                    const userId = user["uid"];
                     return (
                       <List.Item
-                        key={userid}
+                        key={userId}
                         title={user.name}
                         left={() => (
                           <Avatar.Image
@@ -199,12 +231,18 @@ function Index() {
                               height: 16,
                             }}
                           >
-                            <Text>{user.role}</Text>
+                            <Text
+                              style={{
+                                color: roleColor(user),
+                              }}
+                            >
+                              {userId === currentUserId ? "Me!" : user.role}
+                            </Text>
                             <Icon source="chevron-right" />
                           </View>
                         )}
                         onPress={() =>
-                          router.push(`content/team/users/${userid}`)
+                          router.push(`content/team/users/${userId}`)
                         }
                       />
                     );

@@ -57,7 +57,7 @@ export default function SignUp() {
 
       setCurrentUserId(userCredential.user.uid);
 
-      console.log(userCredential.user);
+      // console.log(userCredential.user);
     } catch (e) {
       alert(e);
       console.log(e);

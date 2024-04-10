@@ -67,14 +67,14 @@ export const AuthProvider = ({ children }) => {
         currentUserId: currentUserId,
         setCurrentUserId: (uidvar) => {
           setCurrentUserId(uidvar ?? "Error (uid)");
-          console.log(currentUserId);
+          // console.log(currentUserId);
         },
         // setCurrentUserId({ name: "Test", email: "test@example.com", type: type }),
         signOut: () => setCurrentUserId(null),
         currentTeamId,
         setCurrentTeamId: (tidvar) => {
           setCurrentTeamId(tidvar ?? "Error (tid)");
-          console.log(currentTeamId);
+          // console.log(currentTeamId);
         },
       }}
     >
