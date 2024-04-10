@@ -58,7 +58,7 @@ function RefreshInvalidate(currentTeamId, userId) {
       setRefreshing(false);
     };
     refresh();
-  }, [queryClient, currentTeamId, userId]);
+  }, [queryClient]);
   return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
 }
 

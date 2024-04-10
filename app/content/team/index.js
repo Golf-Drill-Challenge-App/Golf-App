@@ -34,6 +34,7 @@ function RefreshInvalidate() {
 function Index() {
   const { currentUserId } = currentAuthContext();
   const { data: userInfo, userIsLoading, userError } = useUserInfo();
+  const { currentUserId } = currentAuthContext();
 
   const [searchQuery, setSearchQuery] = useState("");
 

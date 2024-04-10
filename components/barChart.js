@@ -20,7 +20,7 @@ import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "../context/Auth";
 import { removeAttempt } from "../hooks/removeAttempt";
 
-function RefreshInvalidate(currentTeamId, drillData) {
+function RefreshInvalidate({ currentTeamId, drillData }) {
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
   const onRefresh = useCallback(() => {
