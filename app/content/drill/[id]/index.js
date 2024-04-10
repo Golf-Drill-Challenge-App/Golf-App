@@ -76,12 +76,11 @@ export default function Index() {
             }
           />
         </Appbar.Header>
-
         {/* Tab system */}
-
         <SegmentedButtons
           value={value}
           onValueChange={setValue}
+          style={{ marginLeft: 10, marginRight: 10 }}
           buttons={[
             {
               value: "description",
@@ -97,7 +96,6 @@ export default function Index() {
             },
           ]}
         />
-
         {tabComponent()}
       </SafeAreaView>
     </PaperProvider>
