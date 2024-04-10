@@ -73,6 +73,7 @@ function Index(props) {
 
   const queryClient = useQueryClient();
 
+  // variables
   const [snapPoints, setSnapPoints] = useState(["60%"]);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -90,13 +91,13 @@ function Index(props) {
   const [dialogMessage, setDialogMessage] = useState("");
 
   useEffect(() => {
-    setSnapPoints([passwordInputVisible ? "70%" : "57%"]);
-  }, [passwordInputVisible]);
-
-  useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
   }, [userData, userEmail]);
+
+  useEffect(() => {
+    setSnapPoints([passwordInputVisible ? "70%" : "57%"]);
+  }, [passwordInputVisible]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -174,7 +175,6 @@ function Index(props) {
       });
       queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       bottomSheetModalRef.current.close();
-      setPasswordInputVisible(false);
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true); // Show success snackbar
     }
@@ -303,7 +303,7 @@ function Index(props) {
                 <Text style={styles.emailText}>{email}</Text>
               </View>
 
-              {/* Display Name Update input field */}
+              {/* Name Update input field */}
               <TextInput
                 style={styles.input}
                 value={newName}
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 5,
-    marginLeft: 4,
+    marginLeft: 17,
   },
   noDrillsText: {
     marginTop: 20,
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "#FFF",
     paddingHorizontal: 30, // Increase padding for more spacing
-    paddingVertical: Platform.OS === "android" ? 10 : 30, // Less vertical padding on Android?
+    paddingVertical: Platform.OS === "android" ? 10 : 30,
     alignItems: "center",
   },
   closeButton: {

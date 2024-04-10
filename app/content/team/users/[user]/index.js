@@ -75,7 +75,7 @@ function Index(props) {
           <ProfileCard user={userData} email={userEmail} />
         </View>
 
-        <Text style={styles.heading}>Drills</Text>
+        <Text style={styles.heading}>Drill History</Text>
 
         {uniqueDrills.length > 0 ? (
           <DrillList
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 5,
-    marginLeft: 4,
+    marginLeft: 17,
   },
   scrollViewContent: {
     paddingHorizontal: 20,
