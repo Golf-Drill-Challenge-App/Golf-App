@@ -1,12 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { View } from "react-native";
-import {
-  Appbar,
-  PaperProvider,
-  SegmentedButtons,
-  Text,
-} from "react-native-paper";
+import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
@@ -14,6 +8,7 @@ import Stat from "./statistics";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
@@ -57,24 +52,7 @@ export default function Index() {
             }}
             color={"#F24E1E"}
           />
-          <Appbar.Content
-            title={
-              <View>
-                <Text
-                  styles={{ fontSize: 20, fontWeight: "bold" }}
-                  variant="titleLarge"
-                >
-                  {drillInfo.prettyDrillType}
-                </Text>
-                <Text
-                  styles={{ fontSize: 20, fontWeight: "bold" }}
-                  variant="titleLarge"
-                >
-                  {drillInfo.subType}
-                </Text>
-              </View>
-            }
-          />
+          <Header drillInfo={drillInfo} />
         </Appbar.Header>
         {/* Tab system */}
         <SegmentedButtons

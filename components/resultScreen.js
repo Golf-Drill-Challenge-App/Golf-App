@@ -49,8 +49,6 @@ export default function ResultScreen({
     attempt = attemptData;
   }
 
-  console.log("attempt: ", attempt);
-
   let dots = [];
   if (
     drillInfo["outputs"].includes("sideLanding") &&
@@ -61,6 +59,8 @@ export default function ResultScreen({
       value["carryDiff"],
     ]);
   }
+
+  console.log("attempt[shots]", attempt["shots"]);
 
   return (
     <>

@@ -18,7 +18,7 @@ function DataField(field, value) {
     proxHole: "Proximity to Hole",
     baseline: "Baseline SG",
     expectedPutts: "Expected Putts",
-    strokesTaken: "Strokes Taken",
+    strokes: "Strokes",
     break: "Break",
   };
   switch (field) {
@@ -51,7 +51,7 @@ function DataField(field, value) {
       );
     case "strokesGained": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={numTrunc(value)} />;
-    case "strokesTaken": //just round to 3 decimals
+    case "strokes": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={value} />;
     case "break": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={value} />;
@@ -90,27 +90,19 @@ function ShotAccordion(props) {
               width: "100%",
             }}
           >
-            <View
-              style={{ width: "33%", paddingRight: 2, alignItems: "center" }}
-            >
-              <Text style={styles.boldText}>Shot</Text>
-              <Text>
-                <Text style={styles.boldText}>{props.shot["sid"]}/</Text>
-                {props.total}
-              </Text>
-            </View>
-            <View style={{ width: "33%", alignItems: "center", padding: 2 }}>
-              <Text style={styles.boldText}>Target</Text>
-              <Text>{props.shot["target"]} yd</Text>
-            </View>
-            <View
-              style={{ width: "34%", alignItems: "center", paddingLeft: 2 }}
-            >
-              <Text style={styles.boldText}>SG</Text>
-              <Text>
-                {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
-              </Text>
-            </View>
+            <Text style={{ width: "30%", paddingRight: 2 }}>
+              <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
+              {props.total}
+            </Text>
+            <Text style={{ width: "40%", textAlign: "center", padding: 2 }}>
+              <Text style={styles.boldText}>Target:</Text>{" "}
+              {props.shot[props.drillInfo.requirements[0].name]}{" "}
+              {props.drillInfo.requirements[0].distanceMeasure}
+            </Text>
+            <Text style={{ width: "30%", textAlign: "right", paddingLeft: 2 }}>
+              <Text style={styles.boldText}>SG:</Text>{" "}
+              {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
+            </Text>
           </View>
         }
         style={{

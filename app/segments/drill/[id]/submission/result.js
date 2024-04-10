@@ -1,7 +1,8 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { Appbar, Text } from "react-native-paper";
+import { StyleSheet } from "react-native";
+import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "~/components/header";
 import ResultScreen from "~/components/resultScreen";
 
 function Result(props) {
@@ -17,24 +18,7 @@ function Result(props) {
           onPress={navigation.goBack}
           color={"#F24E1E"}
         />
-        <Appbar.Content
-          title={
-            <View>
-              <Text
-                styles={{ fontSize: 20, fontWeight: "bold" }}
-                variant="titleLarge"
-              >
-                {props.drill.prettyDrillType}
-              </Text>
-              <Text
-                styles={{ fontSize: 20, fontWeight: "bold" }}
-                variant="titleLarge"
-              >
-                {props.drill.subType}
-              </Text>
-            </View>
-          }
-        />
+        <Header drillInfo={props.drill} />
       </Appbar.Header>
       <ResultScreen drillId={drillId} attemptData={submission} />
     </SafeAreaView>
