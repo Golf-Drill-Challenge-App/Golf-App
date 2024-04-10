@@ -14,6 +14,28 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
+function RefreshInvalidate(currentTeamId, userId) {
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const refresh = async () => {
+      await queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].userId === userId) ||
+          query.queryKey[0] === "drillInfo",
+      });
+      setRefreshing(false);
+    };
+    refresh();
+  }, [queryClient, currentTeamId, userId]);
+  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
+}
+
 function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
@@ -42,23 +64,6 @@ function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
-
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      queryClient.invalidateQueries({
-        // used predicate as it seemed to be the best method to invalidate multiple query keys
-        predicate: (query) =>
-          (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
-          (query.queryKey[0] === "attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].userId === userId) ||
-          query.queryKey[0] === "drillInfo",
-      });
-      setRefreshing(false);
-    }, 500);
-  }, []);
 
   if (
     userIsLoading ||

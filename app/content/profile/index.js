@@ -39,6 +39,29 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
+function RefreshInvalidate(currentTeamId, userId) {
+  const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const refresh = async () => {
+      await queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
+          (query.queryKey[0] === "userEmail" && query.queryKey[1] === userId) ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].userId === userId) ||
+          query.queryKey[0] === "drillInfo",
+      });
+      setRefreshing(false);
+    };
+    refresh();
+  }, [queryClient, currentTeamId, userId]);
+  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
+}
+
 function Index() {
   const { signOut } = currentAuthContext();
   const { currentUserId, currentTeamId } = currentAuthContext();
@@ -69,27 +92,9 @@ function Index() {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      queryClient.invalidateQueries({
-        // used predicate as it seemed to be the best method to invalidate multiple query keys
-        predicate: (query) =>
-          (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
-          (query.queryKey[0] === "userEmail" && query.queryKey[1] === userId) ||
-          (query.queryKey[0] === "attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].userId === userId) ||
-          query.queryKey[0] === "drillInfo",
-      });
-      setRefreshing(false);
-    }, 500);
-  }, []);
-
   // ref
   const bottomSheetModalRef = useRef(null);
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient(); // also called here for updating name
 
   // variables
   const [snapPoints, setSnapPoints] = useState(["60%", "60%"]);

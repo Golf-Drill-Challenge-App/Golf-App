@@ -17,6 +17,20 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
+function RefreshInvalidate() {
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const refresh = async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
+      setRefreshing(false);
+    };
+    refresh();
+  }, [queryClient]);
+  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
+}
+
 function Index() {
   const { currentUserId } = currentAuthContext();
   const { data: userInfo, userIsLoading, userError } = useUserInfo();

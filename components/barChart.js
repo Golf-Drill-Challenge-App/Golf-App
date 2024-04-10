@@ -20,20 +20,13 @@ import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "../context/Auth";
 import { removeAttempt } from "../hooks/removeAttempt";
 
-export default function BarChartScreen({ drillData, drillInfo }) {
-  if (drillData.length === 0) {
-    return <Text>No attempts have been made yet.</Text>;
-  }
-
-  const queryClient = useQueryClient();
-
+function RefreshInvalidate(currentTeamId, drillData) {
   const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    console.log("heeeere");
-    console.log(drillData);
-    setTimeout(() => {
-      queryClient.invalidateQueries({
+    const refresh = async () => {
+      await queryClient.invalidateQueries({
         // used predicate as it seemed to be the best method to invalidate multiple query keys
         predicate: (query) =>
           (query.queryKey[0] === "drillInfo" &&
@@ -44,14 +37,22 @@ export default function BarChartScreen({ drillData, drillInfo }) {
             query.queryKey[2].drillId === drillData[0].did),
       });
       setRefreshing(false);
-    }, 500);
-  }, []);
+    };
+    refresh();
+  }, [queryClient, currentTeamId, drillData]);
+  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
+}
+
+export default function BarChartScreen({ drillData, drillInfo }) {
+  if (drillData.length === 0) {
+    return <Text>No attempts have been made yet.</Text>;
+  }
 
   const scrollViewRef = useRef();
 
   const [page, setPage] = useState(0);
 
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentTeamId } = currentAuthContext();
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: false });
@@ -246,7 +247,10 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   return (
     <ScrollView
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshInvalidate
+          currentTeamId={currentTeamId}
+          drillData={drillData}
+        />
       }
     >
       <View style={styles.movingAvgContainer}>

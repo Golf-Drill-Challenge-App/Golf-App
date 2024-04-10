@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   RefreshControl,
   SectionList,
@@ -18,6 +18,29 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { formatDate } from "../../../Utility";
 
+function RefreshInvalidate(currentTeamId, currentUserId) {
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const refresh = async () => {
+      await queryClient.invalidateQueries({
+        // used predicate as it seemed to be the best method to invalidate multiple query keys
+        predicate: (query) =>
+          (query.queryKey[0] === "user" &&
+            query.queryKey[1] === currentUserId) ||
+          (query.queryKey[0] === "attempts" &&
+            query.queryKey[1] === currentTeamId &&
+            query.queryKey[2].userId === userId) ||
+          query.queryKey[0] === "drillInfo",
+      });
+      setRefreshing(false);
+    };
+    refresh();
+  }, [queryClient, currentTeamId, currentUserId]);
+  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
+}
+
 const DrillList = () => {
   const { currentUserId, currentTeamId } = currentAuthContext();
 
@@ -33,22 +56,7 @@ const DrillList = () => {
     userIsLoading: userIsLoading,
   } = useUserInfo(currentUserId);
 
-  const queryClient = useQueryClient();
-
   const [assignedData, setAssignedData] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    const refresh = async () => {
-      setRefreshing(true);
-      await queryClient.invalidateQueries([
-        "user",
-        { teamId: currentTeamId, userId: currentUserId },
-      ]);
-      setRefreshing(false);
-    };
-    refresh();
-  }, [currentTeamId, currentUserId, queryClient]);
 
   console.log("USER DATA", userInfo);
 
@@ -94,7 +102,10 @@ const DrillList = () => {
   ) : (
     <SectionList
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshInvalidate
+          currentTeamId={currentTeamId}
+          currentUserId={currentTeamId}
+        />
       }
       sections={sortedDates.map((date) => ({
         title: date,
@@ -176,7 +187,7 @@ const CoachView = () => {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = useState(true);
 
   const handlePress = () => setExpanded(!expanded);
   if (drillInfoIsLoading) {

@@ -9,24 +9,12 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const navigation = useNavigation();
-  const queryClient = useQueryClient();
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
-
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      queryClient.invalidateQueries({
-        queryKey: ["drillInfo"],
-      });
-      setRefreshing(false);
-    }, 500);
-  }, []);
 
   if (drillInfoIsLoading) {
     return <Loading />;

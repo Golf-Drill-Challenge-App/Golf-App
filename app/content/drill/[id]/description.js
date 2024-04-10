@@ -7,6 +7,22 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
+function RefreshInvalidate() {
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const refresh = async () => {
+      queryClient.invalidateQueries({
+        queryKey: ["drillInfo"],
+      });
+      setRefreshing(false);
+    };
+    refresh();
+  }, [queryClient]);
+  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
+}
+
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];
   const assignedTime = useLocalSearchParams()["assignedTime"];
@@ -16,17 +32,6 @@ export default function Description() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo(drillId);
-
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      queryClient.invalidateQueries({
-        queryKey: ["drillInfo"],
-      });
-      setRefreshing(false);
-    }, 500);
-  }, []);
 
   if (drillInfoIsLoading) return <Loading />;
 
