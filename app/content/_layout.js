@@ -10,6 +10,7 @@ export default () => {
           tabBarIcon: ({ color, size }) => {
             return <Icon name="collage" size={size} color={color} />;
           },
+          tabBarHideOnKeyboard: true,
           headerShown: false,
         }}
       />
@@ -19,6 +20,7 @@ export default () => {
           tabBarIcon: ({ color, size }) => {
             return <Icon name="golf" size={size} color={color} />;
           },
+          tabBarHideOnKeyboard: true,
           headerShown: false,
         }}
       />
@@ -30,6 +32,7 @@ export default () => {
               <Icon name="account-group-outline" size={size} color={color} />
             );
           },
+          tabBarHideOnKeyboard: true,
           headerShown: false,
         }}
       />
@@ -39,6 +42,7 @@ export default () => {
           tabBarIcon: ({ color, size }) => {
             return <Icon name="account-circle" size={size} color={color} />;
           },
+          tabBarHideOnKeyboard: true,
           headerShown: false,
         }}
       />
