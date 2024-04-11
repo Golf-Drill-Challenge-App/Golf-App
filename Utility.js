@@ -34,15 +34,17 @@ export function numTrunc(value, pad = false) {
   }
 }
 
-export function getUnique(array, field) {
-  const uniqueMap = new Map();
+export function getUnique(array, field, drills) {
+  const unique = [];
   array.forEach((element) => {
     const keyValue = element[field];
-    if (!uniqueMap.has(keyValue)) {
-      uniqueMap.set(keyValue, element);
+    const drill = drills.find((item) => item.did === keyValue)
+    const idx = unique.findIndex(item => item.did === keyValue);
+    if (idx === -1) {
+      unique.push(drill);
     }
   });
-  return Array.from(uniqueMap.values());
+  return unique;
 }
 
 export function calculateAverageProxToHole(drillSubmissions) {

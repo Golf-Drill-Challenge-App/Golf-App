@@ -3,12 +3,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getCombinedDrillTitle } from "~/Utility";
 
 function DrillCard(props) {
-  // console.log(props);
   return (
     <Link href={props.hrefString} asChild>
       <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.cardContent}>
-          <Text style={styles.title}>{getCombinedDrillTitle(props.drill)}</Text>
+          <Text style={styles.title}>{props.drill.subType}</Text>
           <View style={styles.specContainer}>
             <Text style={styles.inputText}>
               {props.drill["inputs"]
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold",
     color: "#333",
   },
   specContainer: {

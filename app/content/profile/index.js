@@ -15,7 +15,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -33,7 +32,7 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
-import DrillCard from "~/components/drillCard";
+import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
@@ -208,7 +207,7 @@ function Index(props) {
     }
   };
 
-  const uniqueDrills = getUnique(attempts, "did");
+  const uniqueDrills = getUnique(attempts, "did", Object.values(drillInfo));
 
   return (
     <PaperProvider>
@@ -247,119 +246,108 @@ function Index(props) {
         </Appbar.Header>
 
         <BottomSheetModalProvider>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <View style={styles.profileContainer}>
-              <ProfileCard user={userData} />
-            </View>
+          <View style={styles.profileContainer}>
+            <ProfileCard user={userData} />
+          </View>
 
-            <Text style={styles.heading}>Drill History</Text>
+          <Text style={styles.heading}>Drill History</Text>
 
-            {uniqueDrills.length > 0 ? (
-              uniqueDrills.map((drill) => {
-                const drillId = drill["did"];
-                return (
-                  <DrillCard
-                    drill={drillInfo[drillId]}
-                    hrefString={"content/profile/drills/" + drillId}
-                    key={drillId}
+          {uniqueDrills.length > 0 ? (
+            <DrillList drillData={uniqueDrills} href={"content/profile/drills/"} />
+          ) : (
+            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+          )}
+
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            snapPoints={snapPoints}
+          >
+            <View style={styles.modalContent}>
+              {/* Close Button */}
+              <Pressable
+                onPress={() => {
+                  bottomSheetModalRef.current.close();
+                  resetForm();
+                  setPasswordInputVisible(false);
+                }}
+                style={styles.closeButton}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </Pressable>
+
+              {/* Profile Picture */}
+              <TouchableOpacity onPress={handleImageClick}>
+                <View style={styles.profilePictureContainer}>
+                  <Image
+                    source={{ uri: userData.pfp }}
+                    style={styles.profilePicture}
                   />
-                );
-              })
-            ) : (
-              <Text style={styles.noDrillsText}>No drills attempted yet</Text>
-            )}
-
-            <BottomSheetModal
-              ref={bottomSheetModalRef}
-              index={1}
-              snapPoints={snapPoints}
-            >
-              <View style={styles.modalContent}>
-                {/* Close Button */}
-                <Pressable
-                  onPress={() => {
-                    bottomSheetModalRef.current.close();
-                    resetForm();
-                    setPasswordInputVisible(false);
-                  }}
-                  style={styles.closeButton}
-                >
-                  <Text style={styles.closeButtonText}>Close</Text>
-                </Pressable>
-
-                {/* Profile Picture */}
-                <TouchableOpacity onPress={handleImageClick}>
-                  <View style={styles.profilePictureContainer}>
-                    <Image
-                      source={{ uri: userData.pfp }}
-                      style={styles.profilePicture}
-                    />
-                    <View style={styles.penIconContainer}>
-                      <MaterialIcons name="edit" size={24} color="black" />
-                    </View>
+                  <View style={styles.penIconContainer}>
+                    <MaterialIcons name="edit" size={24} color="black" />
                   </View>
-                </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
 
-                <TextInput
-                  style={styles.input}
-                  value={newName}
-                  onChangeText={(text) => setNewName(text)}
-                  placeholder="Enter your name"
-                />
-                <TextInput
-                  style={styles.input}
-                  value={email}
-                  onChangeText={(text) => setEmail(text)}
-                  placeholder="Enter your email"
-                />
+              <TextInput
+                style={styles.input}
+                value={newName}
+                onChangeText={(text) => setNewName(text)}
+                placeholder="Enter your name"
+              />
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholder="Enter your email"
+              />
 
-                {/* Change Password Button */}
-                <Pressable
-                  onPress={() => {
-                    resetForm();
-                    setPasswordInputVisible(!passwordInputVisible);
-                  }}
-                >
-                  <Text style={styles.changePasswordButton}>
-                    Change Password
-                  </Text>
-                </Pressable>
+              {/* Change Password Button */}
+              <Pressable
+                onPress={() => {
+                  resetForm();
+                  setPasswordInputVisible(!passwordInputVisible);
+                }}
+              >
+                <Text style={styles.changePasswordButton}>
+                  Change Password
+                </Text>
+              </Pressable>
 
-                {/* Password Input Field */}
-                {passwordInputVisible && (
-                  <>
-                    <TextInput
-                      style={styles.input}
-                      value={currentPassword}
-                      onChangeText={setCurrentPassword}
-                      placeholder="Enter your current password"
-                      secureTextEntry={true}
-                    />
-                    <TextInput
-                      style={styles.input}
-                      value={newPassword}
-                      onChangeText={setNewPassword}
-                      placeholder="Enter your new password"
-                      secureTextEntry={true}
-                    />
-                  </>
-                )}
+              {/* Password Input Field */}
+              {passwordInputVisible && (
+                <>
+                  <TextInput
+                    style={styles.input}
+                    value={currentPassword}
+                    onChangeText={setCurrentPassword}
+                    placeholder="Enter your current password"
+                    secureTextEntry={true}
+                  />
+                  <TextInput
+                    style={styles.input}
+                    value={newPassword}
+                    onChangeText={setNewPassword}
+                    placeholder="Enter your new password"
+                    secureTextEntry={true}
+                  />
+                </>
+              )}
 
-                {/* Save Button */}
-                <TouchableOpacity
-                  style={styles.saveChangesButton}
-                  onPress={handleUpdate}
-                >
-                  <Text style={styles.saveChangesButtonText}>Update</Text>
-                </TouchableOpacity>
+              {/* Save Button */}
+              <TouchableOpacity
+                style={styles.saveChangesButton}
+                onPress={handleUpdate}
+              >
+                <Text style={styles.saveChangesButtonText}>Update</Text>
+              </TouchableOpacity>
 
-                {/* Sign Out Button */}
-                <Pressable onPress={handleSignOut}>
-                  <Text style={styles.signOutButton}>Sign Out</Text>
-                </Pressable>
-              </View>
-            </BottomSheetModal>
-          </ScrollView>
+              {/* Sign Out Button */}
+              <Pressable onPress={handleSignOut}>
+                <Text style={styles.signOutButton}>Sign Out</Text>
+              </Pressable>
+            </View>
+          </BottomSheetModal>
         </BottomSheetModalProvider>
       </SafeAreaView>
     </PaperProvider>
