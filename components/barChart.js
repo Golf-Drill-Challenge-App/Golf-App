@@ -1,6 +1,6 @@
 import * as scale from "d3-scale";
 import * as shape from "d3-shape";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
