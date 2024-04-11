@@ -38,8 +38,8 @@ export function getUnique(array, field, drills) {
   const unique = [];
   array.forEach((element) => {
     const keyValue = element[field];
-    const drill = drills.find((item) => item.did === keyValue)
-    const idx = unique.findIndex(item => item.did === keyValue);
+    const drill = drills.find((item) => item.did === keyValue);
+    const idx = unique.findIndex((item) => item.did === keyValue);
     if (idx === -1) {
       unique.push(drill);
     }

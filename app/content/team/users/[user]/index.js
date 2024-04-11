@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
@@ -64,7 +64,10 @@ function Index(props) {
         <Text style={styles.heading}>Drills</Text>
 
         {uniqueDrills.length > 0 ? (
-          <DrillList drillData={uniqueDrills} href={"/content/team/users/" + userData["uid"] + "/drills/"  } />
+          <DrillList
+            drillData={uniqueDrills}
+            href={"/content/team/users/" + userData["uid"] + "/drills/"}
+          />
         ) : (
           <Text style={styles.noDrillsText}>No drills attempted yet</Text>
         )}

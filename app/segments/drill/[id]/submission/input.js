@@ -25,6 +25,7 @@ import {
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import DrillDescription from "~/components/drillDescription";
 import Header from "~/components/header";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
@@ -32,7 +33,6 @@ import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import DrillDescription from "~/components/drillDescription";
 
 /***************************************
  * Firebase Upload

@@ -1,17 +1,8 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import {
-  Dimensions,
-  Image,
-  Modal,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button } from "react-native-paper";
 
-import ErrorComponent from "~/components/errorComponent";
 import DrillDescription from "~/components/drillDescription";
+import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 

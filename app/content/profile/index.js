@@ -253,7 +253,10 @@ function Index(props) {
           <Text style={styles.heading}>Drill History</Text>
 
           {uniqueDrills.length > 0 ? (
-            <DrillList drillData={uniqueDrills} href={"content/profile/drills/"} />
+            <DrillList
+              drillData={uniqueDrills}
+              href={"content/profile/drills/"}
+            />
           ) : (
             <Text style={styles.noDrillsText}>No drills attempted yet</Text>
           )}
@@ -309,9 +312,7 @@ function Index(props) {
                   setPasswordInputVisible(!passwordInputVisible);
                 }}
               >
-                <Text style={styles.changePasswordButton}>
-                  Change Password
-                </Text>
+                <Text style={styles.changePasswordButton}>Change Password</Text>
               </Pressable>
 
               {/* Password Input Field */}

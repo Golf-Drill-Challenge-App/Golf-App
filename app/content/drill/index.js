@@ -3,9 +3,9 @@ import { StyleSheet } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import DrillList from "~/components/drillList";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
@@ -32,7 +32,10 @@ export default function Index() {
           <Appbar.Content title="Drills" />
         </Appbar.Header>
 
-        <DrillList drillData={Object.values(drillInfo)} href={"content/drill/"} />
+        <DrillList
+          drillData={Object.values(drillInfo)}
+          href={"content/drill/"}
+        />
       </SafeAreaView>
     </PaperProvider>
   );
