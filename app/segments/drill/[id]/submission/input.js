@@ -658,6 +658,12 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     </Dialog.Content>
                     <Dialog.Actions>
                       <Button
+                        onPress={hideLeaveDialog}
+                        labelStyle={{ color: "#F24E1E" }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
                         style={{ backgroundColor: "#F24E1E" }}
                         labelStyle={{ color: "white" }}
                         onPress={() => {
@@ -666,12 +672,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                         }}
                       >
                         Leave Drill
-                      </Button>
-                      <Button
-                        onPress={hideLeaveDialog}
-                        labelStyle={{ color: "#F24E1E" }}
-                      >
-                        Cancel
                       </Button>
                     </Dialog.Actions>
                   </Dialog>
