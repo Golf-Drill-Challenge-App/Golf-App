@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import {
+  BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
@@ -271,6 +272,7 @@ function Index(props) {
             ref={bottomSheetModalRef}
             index={0}
             snapPoints={snapPoints}
+            backdropComponent={BottomSheetBackdrop}
           >
             <View style={styles.modalContent}>
               {/* Close Button */}
@@ -391,7 +393,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   closeButtonText: {
-    color: "red",
+    color: "#F24D1F",
     fontSize: 17,
     marginLeft: 10,
     marginTop: -10,
@@ -456,7 +458,7 @@ const styles = StyleSheet.create({
     marginBottom: 20, // Increase margin bottom for more spacing
   },
   signOutButton: {
-    color: "red",
+    color: "#F24D1F",
     fontSize: 16,
   },
 });

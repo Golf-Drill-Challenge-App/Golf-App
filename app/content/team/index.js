@@ -1,16 +1,6 @@
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import React, { useCallback, useMemo, useRef } from "react";
-import {
-  Image,
-  Keyboard,
-  Pressable,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Appbar,
@@ -111,145 +101,98 @@ function Index() {
               style={{ backgroundColor: "FFF" }}
             >
               <Appbar.Content title={"Team"} />
-              <Appbar.Action
-                icon="cog"
-                color={"#F24E1E"}
-                onPress={handlePresentModalPress}
-                style={{ marginRight: 7 }}
-              />
             </Appbar.Header>
-            <BottomSheetModalProvider>
-              <KeyboardAwareScrollView
-                style={{ marginLeft: 20 }}
-                // allows opening links from search results without closing keyboard first
-                keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={false}
-                stickyHeaderIndices={[3]}
-              >
-                <View style={{ alignItems: "center" }}>
-                  <Image
-                    source={{
-                      uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-                      resizeMode: "contain",
-                      width: 131,
-                      height: 75,
-                    }}
-                    style={{ marginTop: 0 }}
-                  />
+            <KeyboardAwareScrollView
+              style={{ marginLeft: 20 }}
+              // allows opening links from search results without closing keyboard first
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              stickyHeaderIndices={[3]}
+            >
+              <View style={{ alignItems: "center" }}>
+                <Image
+                  source={{
+                    uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+                    resizeMode: "contain",
+                    width: 131,
+                    height: 75,
+                  }}
+                  style={{ marginTop: 0 }}
+                />
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <Text style={{ marginTop: 0, fontSize: 30, marginRight: 0 }}>
+                    OSU Golf Team
+                  </Text>
                 </View>
-                <View style={{ alignItems: "center" }}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <Text
-                      style={{ marginTop: 0, fontSize: 30, marginRight: 0 }}
-                    >
-                      OSU Golf Team
-                    </Text>
+              </View>
 
-                    <BottomSheetModal
-                      ref={bottomSheetModalRef}
-                      index={1}
-                      snapPoints={snapPoints}
-                      onChange={handleSheetChanges}
-                    >
-                      <View>
-                        <Pressable
-                          onPress={() => {
-                            bottomSheetModalRef.current.close();
+              <Text style={{ textAlign: "center", marginBottom: 20 }}>
+                {Object.keys(userInfo).length} members
+              </Text>
+              <View
+                style={{
+                  // default react native background color or something, so stuff scrolling behind this is less jank
+                  backgroundColor: "#f2f2f2",
+                  paddingBottom: 10,
+                  paddingTop: 10,
+                }}
+              >
+                <Searchbar
+                  onChangeText={onChangeSearch}
+                  value={searchQuery}
+                  style={{ paddingLeft: 20, paddingRight: 20 }}
+                  placeholder="Search team members"
+                />
+              </View>
+
+              <List.Section>
+                {foundUsers.map((user, i) => {
+                  const userId = user["uid"];
+                  return (
+                    <List.Item
+                      key={userId}
+                      title={user.name}
+                      left={() => (
+                        <Avatar.Image
+                          size={24}
+                          source={{
+                            uri: user.pfp,
                           }}
-                          //width={"100%"}
-                          //alignItems={"center"}
+                        />
+                      )}
+                      right={() => (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            height: 16,
+                          }}
                         >
                           <Text
                             style={{
-                              textAlign: "left",
-                              marginLeft: 5,
-                              fontSize: 15,
-                              color: "red",
+                              color: roleColor(user),
                             }}
                           >
-                            Cancel
+                            {userId === currentUserId ? "Me!" : user.role}
                           </Text>
-                        </Pressable>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            fontSize: 20,
-                            marginTop: 0,
-                          }}
-                        >
-                          Team Settings
-                        </Text>
-                      </View>
-                    </BottomSheetModal>
-                  </View>
-                </View>
-
-                <Text style={{ textAlign: "center", marginBottom: 20 }}>
-                  {Object.keys(userInfo).length} members
-                </Text>
-                <View
-                  style={{
-                    // default react native background color or something, so stuff scrolling behind this is less jank
-                    backgroundColor: "#f2f2f2",
-                    paddingBottom: 10,
-                    paddingTop: 10,
-                  }}
-                >
-                  <Searchbar
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
-                    style={{ paddingLeft: 20, paddingRight: 20 }}
-                    placeholder="Search team members"
-                  />
-                </View>
-
-                <List.Section>
-                  {foundUsers.map((user, i) => {
-                    const userId = user["uid"];
-                    return (
-                      <List.Item
-                        key={userId}
-                        title={user.name}
-                        left={() => (
-                          <Avatar.Image
-                            size={24}
-                            source={{
-                              uri: user.pfp,
-                            }}
-                          />
-                        )}
-                        right={() => (
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              height: 16,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                color: roleColor(user),
-                              }}
-                            >
-                              {userId === currentUserId ? "Me!" : user.role}
-                            </Text>
-                            <Icon source="chevron-right" />
-                          </View>
-                        )}
-                        onPress={() =>
-                          router.push(`content/team/users/${userId}`)
-                        }
-                      />
-                    );
-                  })}
-                </List.Section>
-              </KeyboardAwareScrollView>
-            </BottomSheetModalProvider>
+                          <Icon source="chevron-right" />
+                        </View>
+                      )}
+                      onPress={() =>
+                        router.push(`content/team/users/${userId}`)
+                      }
+                    />
+                  );
+                })}
+              </List.Section>
+            </KeyboardAwareScrollView>
           </>
         </TouchableWithoutFeedback>
       </SafeAreaView>

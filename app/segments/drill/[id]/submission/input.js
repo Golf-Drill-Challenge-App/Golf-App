@@ -1,4 +1,5 @@
 import {
+  BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
@@ -632,6 +633,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   ref={navModalRef}
                   index={1}
                   snapPoints={snapPoints}
+                  backdropComponent={BottomSheetBackdrop}
                 >
                   <BottomSheetScrollView>
                     <View style={styles.bottomSheetContentContainer}>
@@ -665,6 +667,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   ref={descriptionModalRef}
                   index={1}
                   snapPoints={snapPoints}
+                  backdropComponent={BottomSheetBackdrop}
                 >
                   <BottomSheetScrollView>
                     <DrillDescription drillData={drillInfo} />
@@ -783,7 +786,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "95%",
-    height: 52,
     backgroundColor: "#F24E1E",
     marginBottom: 20,
     justifyContent: "center",
