@@ -7,20 +7,18 @@ export default function DrillList(props) {
   const drills = [];
   Object.values(props.drillData).forEach((drill) => {
     if (drills.length !== 0) {
-      const idx = drills.findIndex(
-        (item) => item.title === drill.prettyDrillType,
-      );
+      const idx = drills.findIndex((item) => item.title === drill.drillType);
       if (idx !== -1) {
         drills[idx].data.push(drill);
       } else {
         drills.push({
-          title: drill.prettyDrillType,
+          title: drill.drillType,
           data: [drill],
         });
       }
     } else {
       drills.push({
-        title: drill.prettyDrillType,
+        title: drill.drillType,
         data: [drill],
       });
     }
@@ -39,7 +37,7 @@ export default function DrillList(props) {
   });
 
   function getDrillIndexByTitle(title) {
-    return props.drillData.findIndex((item) => item.prettyDrillType === title);
+    return props.drillData.findIndex((item) => item.drillType === title);
   }
 
   return (

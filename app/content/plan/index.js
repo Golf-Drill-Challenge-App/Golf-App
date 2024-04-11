@@ -134,7 +134,7 @@ const DrillList = () => {
               }}
             >
               <Text style={{ fontSize: 20 }}>
-                {drillInfo[assignment.drillId]["prettyDrillType"]}
+                {drillInfo[assignment.drillId]["drillType"]}
               </Text>
               <Text style={{ fontSize: 17, fontStyle: "italic" }}>
                 {drillInfo[assignment.drillId]["subType"]}
