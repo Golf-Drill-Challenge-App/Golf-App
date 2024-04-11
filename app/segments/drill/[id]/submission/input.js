@@ -704,13 +704,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <Dialog
                     visible={leaveDialogVisible}
                     onDismiss={hideLeaveDialog}
+                    style={{ backgroundColor: "white" }}
                   >
-                    <Dialog.Title>Alert</Dialog.Title>
+                    <Dialog.Title style={{ fontWeight: "bold" }}>
+                      Alert
+                    </Dialog.Title>
                     <Dialog.Content>
                       <Text variant="bodyMedium">All inputs will be lost.</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
                       <Button
+                        style={{ backgroundColor: "#F24E1E" }}
+                        labelStyle={{ color: "white" }}
                         onPress={() => {
                           hideLeaveDialog();
                           navigation.goBack();
@@ -718,7 +723,12 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       >
                         Leave Drill
                       </Button>
-                      <Button onPress={hideLeaveDialog}>Cancel</Button>
+                      <Button
+                        onPress={hideLeaveDialog}
+                        labelStyle={{ color: "#F24E1E" }}
+                      >
+                        Cancel
+                      </Button>
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
