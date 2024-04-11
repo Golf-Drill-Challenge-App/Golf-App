@@ -467,13 +467,14 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     setattemptShots(getShotInfo(drillInfo));
   }, []);
 
+  //Varible to store if Submit button is active
+  const submitVisible =
+    currentShot == drillInfo.reps - 1 && displayedShot == drillInfo.reps - 1;
+
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
-    if (
-      currentShot == drillInfo.reps - 1 &&
-      displayedShot == drillInfo.reps - 1
-    ) {
+    if (submitVisible) {
       return (
         <Button
           style={styles.button}
@@ -541,10 +542,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       setInvalidDialogVisible(true);
     }
     //check for submit button
-    else if (
-      currentShot == drillInfo.reps - 1 &&
-      displayedShot == drillInfo.reps - 1
-    ) {
+    else if (submitVisible) {
       let outputData = createOutputData(
         inputValues,
         attemptShots,
