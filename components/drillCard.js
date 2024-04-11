@@ -10,27 +10,7 @@ function DrillCard(props) {
           <Text style={styles.title}>{props.drill.subType}</Text>
           <View style={styles.specContainer}>
             <Text style={styles.inputText}>
-              {props.drill["inputs"]
-                .map((input) => {
-                  let retVal = "";
-                  switch (input.id) {
-                    case "carry":
-                      retVal = "↑";
-                      break;
-                    case "sideLanding":
-                      retVal = "↔︎";
-                      break;
-                    case "strokes":
-                      retVal = "#";
-                      break;
-                    default:
-                      retVal = "?";
-                  }
-                  return retVal;
-                })
-                .join(" ") +
-                " x" +
-                props.drill["reps"]}
+              {"x" + props.drill["reps"]}
             </Text>
           </View>
         </View>

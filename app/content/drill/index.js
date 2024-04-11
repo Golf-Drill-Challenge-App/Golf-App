@@ -32,7 +32,7 @@ export default function Index() {
           <Appbar.Content title="Drills" />
         </Appbar.Header>
 
-        <DrillList drillData={drillInfo} href={"content/drill/"} />
+        <DrillList drillData={Object.values(drillInfo)} href={"content/drill/"} />
       </SafeAreaView>
     </PaperProvider>
   );

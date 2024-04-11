@@ -1,4 +1,4 @@
-import { SectionList, Text } from "react-native";
+﻿import { SectionList, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 
 import DrillCard from "~/components/drillCard"
@@ -30,6 +30,22 @@ export default function DrillList(props) {
     }
   });
 
+  drills.sort((a, b) => {
+    const titleA = a.title;
+    const titleB = b.title;
+    if (titleA < titleB) {
+      return -1;
+    }
+    if (titleA > titleB) {
+      return 1;
+    }
+    return 0;
+  });
+
+  function getDrillIndexByTitle(title) {
+    return props.drillData.findIndex(item => item.prettyDrillType === title);
+  }
+
   return (
     <SectionList
       style={{ paddingHorizontal: 20, paddingBottom: 50 }}
@@ -42,10 +58,30 @@ export default function DrillList(props) {
         />
       )}
       renderSectionHeader={({section: {title}}) => (
-        <>
-          <Text style={{ fontSize: 16, fontWeight: "bold", paddingVertical: 5 }}>{title}</Text>
+        <View style={{ flex: 1, flexDirection: "row", paddingVertical: 5 }}>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>
+          <Text style={{ color: "#666", paddingHorizontal: 5 }}>
+            {props.drillData[getDrillIndexByTitle(title)].inputs
+              .map((input) => {
+                let retVal = "";
+                switch (input.id) {
+                  case "carry":
+                    retVal = "↑";
+                    break;
+                  case "sideLanding":
+                    retVal = "↔︎";
+                    break;
+                  case "strokes":
+                    retVal = "#";
+                    break;
+                  default:
+                    retVal = "?";
+                  }
+                return retVal;
+              })}
+          </Text>
           <Divider bold={true} />
-        </>
+        </View>
       )}
     />
   )
