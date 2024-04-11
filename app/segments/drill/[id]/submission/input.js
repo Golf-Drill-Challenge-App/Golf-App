@@ -24,6 +24,7 @@ import {
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import ErrorDialog from "~/components/input/ErrorDialog";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
@@ -406,7 +407,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
   const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
-  /***** Empty Input Dialog Stuff *****/
+  /***** Empty Input dialog Stuff *****/
   const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
   const hideEmptyDialog = () => setEmptyDialogVisible(false);
 
@@ -667,40 +668,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 </Portal>
 
                 {/* Error Dialog: Empty Input*/}
-                <Portal>
-                  <Dialog
-                    visible={emptyDialogVisible}
-                    onDismiss={hideEmptyDialog}
-                  >
-                    <Dialog.Title>Error!</Dialog.Title>
-                    <Dialog.Content>
-                      <Text variant="bodyMedium">
-                        All inputs must be filled.
-                      </Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                      <Button onPress={hideEmptyDialog}>Dismiss</Button>
-                    </Dialog.Actions>
-                  </Dialog>
-                </Portal>
+                <ErrorDialog
+                  content="All inputs must be filled."
+                  visible={emptyDialogVisible}
+                  onHide={hideEmptyDialog}
+                />
 
                 {/* Error Dialog: Invalid Input*/}
-                <Portal>
-                  <Dialog
-                    visible={invalidDialogVisible}
-                    onDismiss={hideInvalidDialog}
-                  >
-                    <Dialog.Title>Error!</Dialog.Title>
-                    <Dialog.Content>
-                      <Text variant="bodyMedium">
-                        All inputs must be numbers.
-                      </Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                      <Button onPress={hideInvalidDialog}>Dismiss</Button>
-                    </Dialog.Actions>
-                  </Dialog>
-                </Portal>
+                <ErrorDialog
+                  content="All inputs must be numbers."
+                  visible={invalidDialogVisible}
+                  onHide={hideInvalidDialog}
+                />
 
                 {/* Navigation */}
                 <View style={styles.navigationContainer}>
