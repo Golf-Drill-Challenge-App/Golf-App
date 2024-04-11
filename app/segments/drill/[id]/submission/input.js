@@ -449,7 +449,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
   const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
-  /***** Empty Input Dialog Stuff *****/
+  /***** Empty Input dialog Stuff *****/
   const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
   const hideEmptyDialog = () => setEmptyDialogVisible(false);
 
