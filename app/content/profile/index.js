@@ -39,13 +39,27 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-function RefreshInvalidate(currentTeamId, userId) {
+function RefreshInvalidate({ queryKeys }) {
+  //console.log("GERONIMOOOO")
+  //console.log(currentTeamId)
+  //console.log(userId)
+  console.log("JOHNNYYYYY");
+  console.log(queryKeys);
+  // console.log(Object.keys(queryKeys))
+  for (let i = 0; i < Object.keys(queryKeys).length; i++) {
+    console.log(Object.keys(queryKeys)[i]);
+    if (typeof Object.values(queryKeys)[i] === "object") {
+      console.log(Object.values(Object.values(queryKeys)[i]));
+    } else {
+      console.log(Object.values(queryKeys)[i]);
+    }
+  }
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     const refresh = async () => {
-      await queryClient.invalidateQueries({
+      /*await queryClient.invalidateQueries({
         // used predicate as it seemed to be the best method to invalidate multiple query keys
         predicate: (query) =>
           (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
@@ -54,11 +68,11 @@ function RefreshInvalidate(currentTeamId, userId) {
             query.queryKey[1] === currentTeamId &&
             query.queryKey[2].userId === userId) ||
           query.queryKey[0] === "drillInfo",
-      });
+      });*/
       setRefreshing(false);
     };
     refresh();
-  }, [queryClient, currentTeamId, userId]);
+  }, [queryClient]);
   return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
 }
 
