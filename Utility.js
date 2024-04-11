@@ -36,13 +36,9 @@ export function numTrunc(value, pad = false) {
 
 export function getUnique(array, field, drills) {
   const unique = [];
-  array.forEach((element) => {
-    const keyValue = element[field];
-    const drill = drills.find((item) => item.did === keyValue);
-    const idx = unique.findIndex((item) => item.did === keyValue);
-    if (idx === -1) {
-      unique.push(drill);
-    }
+  drills.forEach((drillInfo) => {
+    const idx = array.findIndex((item) => item["did"] === drillInfo["did"]);
+    if (idx >= 0) unique.push(drills[idx]);
   });
   return unique;
 }
