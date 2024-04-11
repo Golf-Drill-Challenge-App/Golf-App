@@ -7,7 +7,7 @@ function Header({ drillInfo }) {
       title={
         <View style={{ width: "100%" }}>
           <Text style={{ fontSize: 20 }} variant="titleLarge">
-            {drillInfo.prettyDrillType}
+            {drillInfo.drillType}
           </Text>
           <Text style={{ fontSize: 12 }}>{drillInfo.subType}</Text>
         </View>

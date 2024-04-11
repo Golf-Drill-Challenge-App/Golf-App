@@ -1,9 +1,9 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
-import DrillCard from "~/components/drillCard";
+import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
@@ -42,7 +42,7 @@ function Index(props) {
     );
   }
 
-  const uniqueDrills = getUnique(attempts, "did");
+  const uniqueDrills = getUnique(attempts, "did", Object.values(drillInfo));
 
   return (
     <PaperProvider>
@@ -57,33 +57,20 @@ function Index(props) {
           <Appbar.Content title={userData["name"] + "'s Profile"} />
         </Appbar.Header>
 
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
-          <View style={styles.profileContainer}>
-            <ProfileCard user={userData} />
-          </View>
+        <View style={styles.profileContainer}>
+          <ProfileCard user={userData} />
+        </View>
 
-          <Text style={styles.heading}>Drills</Text>
+        <Text style={styles.heading}>Drills</Text>
 
-          {uniqueDrills.length > 0 ? (
-            uniqueDrills.map((drill) => {
-              const drillId = drill["did"];
-              return (
-                <DrillCard
-                  drill={drillInfo[drillId]}
-                  hrefString={
-                    "/content/team/users/" +
-                    userData["uid"] +
-                    "/drills/" +
-                    drillId
-                  }
-                  key={drillId}
-                />
-              );
-            })
-          ) : (
-            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
-          )}
-        </ScrollView>
+        {uniqueDrills.length > 0 ? (
+          <DrillList
+            drillData={uniqueDrills}
+            href={"/content/team/users/" + userData["uid"] + "/drills/"}
+          />
+        ) : (
+          <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+        )}
       </SafeAreaView>
     </PaperProvider>
   );

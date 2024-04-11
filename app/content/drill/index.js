@@ -1,12 +1,12 @@
-import { Link, useNavigation } from "expo-router";
-import { ScrollView, StyleSheet } from "react-native";
-import { Appbar, List, PaperProvider } from "react-native-paper";
+import { useNavigation } from "expo-router";
+import { StyleSheet } from "react-native";
+import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { getCombinedDrillTitle } from "~/Utility";
 
 export default function Index() {
   const navigation = useNavigation();
@@ -25,20 +25,6 @@ export default function Index() {
     return <ErrorComponent message={drillInfoError} />;
   }
 
-  const drills = Object.values(drillInfo);
-
-  drills.sort((a, b) => {
-    const titleA = getCombinedDrillTitle(a).toUpperCase();
-    const titleB = getCombinedDrillTitle(b).toUpperCase();
-    if (titleA < titleB) {
-      return -1;
-    }
-    if (titleA > titleB) {
-      return 1;
-    }
-    return 0;
-  });
-
   return (
     <PaperProvider>
       <SafeAreaView>
@@ -46,33 +32,10 @@ export default function Index() {
           <Appbar.Content title="Drills" />
         </Appbar.Header>
 
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <List.Section>
-            {Object.values(drills).map((drill) => (
-              <Link
-                key={drill.did}
-                href={{
-                  pathname: `/content/drill/${drill.did}`,
-                  params: { id: drill.did },
-                }}
-                style={{ paddingVertical: 8 }}
-              >
-                <List.Item
-                  title={getCombinedDrillTitle(drill)}
-                  description={drill.description}
-                  titleStyle={styles.title}
-                  descriptionStyle={styles.description}
-                  left={() => (
-                    <List.Icon
-                      icon="file-document-outline" /*TODO: pick a better icon*/
-                    />
-                  )}
-                  style={styles.item}
-                />
-              </Link>
-            ))}
-          </List.Section>
-        </ScrollView>
+        <DrillList
+          drillData={Object.values(drillInfo)}
+          href={"content/drill/"}
+        />
       </SafeAreaView>
     </PaperProvider>
   );

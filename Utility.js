@@ -34,15 +34,13 @@ export function numTrunc(value, pad = false) {
   }
 }
 
-export function getUnique(array, field) {
-  const uniqueMap = new Map();
-  array.forEach((element) => {
-    const keyValue = element[field];
-    if (!uniqueMap.has(keyValue)) {
-      uniqueMap.set(keyValue, element);
-    }
+export function getUnique(array, field, drills) {
+  const unique = [];
+  drills.forEach((drillInfo) => {
+    const idx = array.findIndex((item) => item["did"] === drillInfo["did"]);
+    if (idx >= 0) unique.push(drills[idx]);
   });
-  return Array.from(uniqueMap.values());
+  return unique;
 }
 
 export function calculateAverageProxToHole(drillSubmissions) {

@@ -25,6 +25,7 @@ import {
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import DrillDescription from "~/components/drillDescription";
 import Header from "~/components/header";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
@@ -32,7 +33,6 @@ import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import Description from "./modals/description";
 
 /***************************************
  * Firebase Upload
@@ -421,7 +421,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const { id: did } = useLocalSearchParams();
 
-  const snapPoints = useMemo(() => ["50%", "90%"], []);
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -659,7 +659,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   snapPoints={snapPoints}
                 >
                   <BottomSheetScrollView>
-                    <Description />
+                    <DrillDescription drillData={drillInfo} />
                   </BottomSheetScrollView>
                 </BottomSheetModal>
 
