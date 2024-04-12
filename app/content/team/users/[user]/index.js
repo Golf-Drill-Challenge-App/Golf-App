@@ -70,7 +70,7 @@ function Index() {
 
   return (
     <PaperProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {

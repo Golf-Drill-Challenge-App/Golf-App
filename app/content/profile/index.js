@@ -254,7 +254,7 @@ function Index() {
         buttonsFunctions={[() => setDialogVisible(false)]}
       />
 
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.Content title={"Personal Profile"} />
           <Appbar.Action
