@@ -26,7 +26,13 @@ export default function Index() {
 
   const display = () => {
     if (toggleResult == true) {
-      return <Result submission={outputData} drill={drillInfo} />;
+      return (
+        <Result
+          submission={outputData}
+          drill={drillInfo}
+          setToggleResult={setToggleResult}
+        />
+      );
     } else {
       return (
         <Input
