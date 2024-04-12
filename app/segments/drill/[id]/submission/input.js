@@ -342,7 +342,6 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
     //add the sid to the shot
     shot.sid = j + 1;
-    shot.sid = j + 1;
 
     //push the shot into the array
     outputShotData.push(shot);
