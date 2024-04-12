@@ -31,8 +31,6 @@ import { db } from "~/firebaseConfig";
  * Firebase Upload
  ***************************************/
 
-//A function to upload the outputData to the "attempts" collection
-
 async function completeAssigned(
   userId,
   teamId,
@@ -79,6 +77,7 @@ async function completeAssigned(
   getDocument();
 }
 
+//A function to upload the outputData to the "attempts" collection
 async function uploadAttempt(
   outputData,
   userId,
