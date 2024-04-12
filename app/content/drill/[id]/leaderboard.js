@@ -141,7 +141,7 @@ export default function Leaderboard() {
 
   return (
     <ScrollView
-      refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
+      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId) => {

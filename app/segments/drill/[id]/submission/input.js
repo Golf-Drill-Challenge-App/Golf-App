@@ -413,6 +413,8 @@ function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
 }
 
+// TODO: Maybe refactor this to a hook / combo with new refreshInvalidate component (if other button actions etc need to
+// invalidate multiple queries at once)
 function invalidateOnSubmit(queryClient, did, currentTeamId, currentUserId) {
   queryClient.invalidateQueries({
     // used predicate as it seemed to be the best method to invalidate multiple query keys
@@ -558,12 +560,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     //check for submit button
     else if (submitVisible) {
       let outputData = createOutputData(
+        drillInfo,
         inputValues,
         attemptShots,
         currentUserId,
         did,
-        drillInfo.outputs,
-        drillInfo.aggOutputs,
       );
 
       setOutputData(outputData);

@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { RefreshControl } from "react-native";
 
 // extra props reason: https://stackoverflow.com/questions/69659094/react-native-custom-refreshcontrol-component-doesnt-work-in-flatlist-on-android
-function RefreshInvalidate({ queryKeys, ...props }) {
+function RefreshInvalidate({ invalidateKeys, ...props }) {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
@@ -13,7 +13,10 @@ function RefreshInvalidate({ queryKeys, ...props }) {
         // used predicate as it seemed to be the best method to invalidate multiple query keys
         predicate: (query) => {
           for (let i = 0; i < query.queryKey.length; i++) {
-            if (queryKeys[i] && queryKeys[i][0] === query.queryKey[0]) {
+            if (
+              invalidateKeys[i] &&
+              invalidateKeys[i][0] === query.queryKey[0]
+            ) {
               function checkLists(firstList, secondList) {
                 // Check each item in the first list
                 for (let item of firstList) {
@@ -53,10 +56,10 @@ function RefreshInvalidate({ queryKeys, ...props }) {
                 }
                 return true;
               }
-              console.log(queryKeys[i]);
+              console.log(invalidateKeys[i]);
               console.log(query.queryKey);
-              console.log(checkLists(queryKeys[i], query.queryKey));
-              return checkLists(queryKeys[i], query.queryKey);
+              console.log(checkLists(invalidateKeys[i], query.queryKey));
+              return checkLists(invalidateKeys[i], query.queryKey);
             }
           }
         },

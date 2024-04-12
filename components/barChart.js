@@ -232,7 +232,7 @@ export default function BarChartScreen({ drillData, drillInfo }) {
 
   return (
     <ScrollView
-      refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
+      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
       <View style={styles.movingAvgContainer}>
         <Text style={styles.movingAvgLabel}>Moving Avg.</Text>

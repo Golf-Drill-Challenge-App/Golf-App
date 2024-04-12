@@ -27,7 +27,7 @@ export default function Description() {
   return (
     <>
       <ScrollView
-        refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
+        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
       >
         <DrillDescription drillData={drillInfo} />
       </ScrollView>

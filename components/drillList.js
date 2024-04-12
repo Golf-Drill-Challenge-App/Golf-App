@@ -81,7 +81,7 @@ export default function DrillList({ drillData, href, children }) {
           <Divider bold={true} />
         </View>
       )}
-      refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
+      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     />
   );
 }
