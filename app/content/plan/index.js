@@ -1,10 +1,11 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { SectionList, TouchableOpacity, View } from "react-native";
+import { ScrollView, SectionList, TouchableOpacity, View } from "react-native";
 import { Appbar, List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -25,6 +26,9 @@ const DrillList = () => {
     userError: userInfoError,
     userIsLoading: userIsLoading,
   } = useUserInfo(currentUserId);
+
+  const userId = currentUserId;
+  const invalidateKeys = [["user", { userId }], ["drillInfo"]];
 
   const [assignedData, setAssignedData] = useState([]);
 
@@ -66,9 +70,16 @@ const DrillList = () => {
 
   // Render the list of drills
   return sortedDates.length === 0 ? (
-    <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
-      No drills assigned
-    </Text>
+    <ScrollView
+      refreshControl={
+        // handle updating cache for another user list of drills
+        <RefreshInvalidate invalidateKeys={invalidateKeys} />
+      }
+    >
+      <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
+        No drills assigned
+      </Text>
+    </ScrollView>
   ) : (
     <SectionList
       sections={sortedDates.map((date) => ({
