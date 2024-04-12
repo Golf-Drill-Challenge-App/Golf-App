@@ -25,6 +25,7 @@ import {
   lookUpExpectedPutts,
 } from "~/Utility";
 import DrillDescription from "~/components/drillDescription";
+import Header from "~/components/header";
 import ErrorDialog from "~/components/input/ErrorDialog";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
