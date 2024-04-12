@@ -113,6 +113,9 @@ async function uploadAttempt(
         //TODO: Call function to check for leaderboard update
 
         //Check if drill was assigned
+        //TODO: Call function to check for leaderboard update
+
+        //Check if drill was assigned
         if (assignedTime) {
           completeAssigned(
             userId,
@@ -342,6 +345,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
     //add the sid to the shot
     shot.sid = j + 1;
+    shot.sid = j + 1;
 
     //push the shot into the array
     outputShotData.push(shot);
@@ -410,6 +414,16 @@ function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
 }
 
+//A function to validate inputs are not empty
+function checkEmptyInputs(inputs) {
+  return Object.values(inputs).some((value) => value === "");
+}
+
+//A function to validate inputs are all numbers
+function validateInputs(inputs) {
+  return Object.values(inputs).some((input) => isNaN(input));
+}
+
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
@@ -458,11 +472,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
   const hideInvalidDialog = () => setInvalidDialogVisible(false);
 
-  /***** Invalid Input Banner Stuff *****/
-
-  const [invalidInputBannerVisible, setInvalidInputBannerVisible] =
-    useState(false);
-
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
     setattemptShots(getShotInfo(drillInfo));
@@ -472,15 +481,21 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const submitVisible =
     currentShot == drillInfo.reps - 1 && displayedShot == drillInfo.reps - 1;
 
+  //Varible to store if Submit button is active
+  const submitVisible =
+    currentShot == drillInfo.reps - 1 && displayedShot == drillInfo.reps - 1;
+
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
+    if (submitVisible) {
     if (submitVisible) {
       return (
         <Button
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
+          onPress={handleButtonClick}
           onPress={handleButtonClick}
         >
           Submit Drill
@@ -511,6 +526,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
         labelStyle={styles.buttonText}
         mode="contained-tonal"
         onPress={handleButtonClick}
+        onPress={handleButtonClick}
       >
         Next Shot
       </Button>
@@ -531,7 +547,40 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //Function to handle "Next shot" button click
   const handleButtonClick = () => {
+  const handleButtonClick = () => {
     //Check if all inputs have been filled in
+    if (
+      Object.keys(inputValues[displayedShot]).length != numInputs ||
+      checkEmptyInputs(inputValues[displayedShot])
+    ) {
+      setEmptyDialogVisible(true);
+    }
+    //check inputs are all numbers
+    else if (validateInputs(inputValues[displayedShot])) {
+      setInvalidDialogVisible(true);
+    }
+    //check for submit button
+    else if (submitVisible) {
+      let outputData = createOutputData(
+        inputValues,
+        attemptShots,
+        currentUserId,
+        did,
+        drillInfo.outputs,
+        drillInfo.aggOutputs,
+      );
+
+      setOutputData(outputData);
+      uploadAttempt(
+        outputData,
+        currentUserId,
+        currentTeamId,
+        assignedTime,
+        id,
+        queryClient,
+      );
+      setToggleResult(true);
+    } else {
     if (
       Object.keys(inputValues[displayedShot]).length != numInputs ||
       checkEmptyInputs(inputValues[displayedShot])
@@ -600,18 +649,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 />
               </Appbar.Header>
 
-              <Banner
-                visible={invalidInputBannerVisible}
-                actions={[
-                  {
-                    label: "Dismiss",
-                    onPress: () => setInvalidInputBannerVisible(false),
-                  },
-                ]}
-              >
-                Error! Input fields must only be numbers!
-              </Banner>
-
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
                 <View style={styles.shotNumContainer}>
@@ -642,6 +679,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       key={id}
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
+                      helperText={item.helperText}
                       helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
                       inputValue={inputValues[displayedShot]?.[item.id] || ""}
@@ -704,7 +742,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     visible={leaveDialogVisible}
                     onDismiss={hideLeaveDialog}
                     style={{ backgroundColor: "white" }}
+                    style={{ backgroundColor: "white" }}
                   >
+                    <Dialog.Title style={{ fontWeight: "bold" }}>
+                      Alert
+                    </Dialog.Title>
                     <Dialog.Title style={{ fontWeight: "bold" }}>
                       Alert
                     </Dialog.Title>
@@ -713,6 +755,14 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     </Dialog.Content>
                     <Dialog.Actions>
                       <Button
+                        onPress={hideLeaveDialog}
+                        labelStyle={{ color: "#F24E1E" }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        style={{ backgroundColor: "#F24E1E" }}
+                        labelStyle={{ color: "white" }}
                         onPress={hideLeaveDialog}
                         labelStyle={{ color: "#F24E1E" }}
                       >
@@ -731,6 +781,20 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     </Dialog.Actions>
                   </Dialog>
                 </Portal>
+
+                {/* Error Dialog: Empty Input*/}
+                <ErrorDialog
+                  content="All inputs must be filled."
+                  visible={emptyDialogVisible}
+                  onHide={hideEmptyDialog}
+                />
+
+                {/* Error Dialog: Invalid Input*/}
+                <ErrorDialog
+                  content="All inputs must be numbers."
+                  visible={invalidDialogVisible}
+                  onHide={hideInvalidDialog}
+                />
 
                 {/* Error Dialog: Empty Input*/}
                 <ErrorDialog
