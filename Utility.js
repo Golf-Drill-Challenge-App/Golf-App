@@ -34,11 +34,11 @@ export function numTrunc(value, pad = false) {
   }
 }
 
-export function getUnique(array, field, drills) {
+export function getUnique(array, drills) {
   const unique = [];
   drills.forEach((drillInfo) => {
     const idx = array.findIndex((item) => item["did"] === drillInfo["did"]);
-    if (idx >= 0) unique.push(drills[idx]);
+    if (idx >= 0) unique.push(drillInfo);
   });
   return unique;
 }

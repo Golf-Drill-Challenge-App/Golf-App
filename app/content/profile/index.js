@@ -200,7 +200,7 @@ function Index(props) {
     }
   };
 
-  const uniqueDrills = getUnique(attempts, "did", Object.values(drillInfo));
+  const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
 
   return (
     <PaperProvider>
