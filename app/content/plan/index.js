@@ -142,6 +142,10 @@ const DrillList = () => {
         </Text>
       )}
       stickySectionHeadersEnabled={false}
+      refreshControl={
+        // handle updating cache for another user list of drills
+        <RefreshInvalidate invalidateKeys={invalidateKeys} />
+      }
     />
   );
 };

@@ -40,8 +40,6 @@ function RefreshInvalidate(currentTeamId, userId) {
 function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
-  const queryClient = useQueryClient();
-  const { currentTeamId } = currentAuthContext();
   const {
     data: userData,
     userError: userError,
