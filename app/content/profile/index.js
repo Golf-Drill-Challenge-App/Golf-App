@@ -39,7 +39,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-function Index(props) {
+function Index() {
   const { signOut } = currentAuthContext();
   const { currentUserId } = currentAuthContext();
   const userId = currentUserId ?? null;
@@ -75,7 +75,7 @@ function Index(props) {
   const queryClient = useQueryClient();
 
   // variables
-  const [snapPoints, setSnapPoints] = useState(["60%"]);
+  const [snapPoints, setSnapPoints] = useState(["60%", "60%"]);
   const [isTyping, setIsTyping] = useState(false);
 
   const [newName, setNewName] = useState("");
@@ -97,14 +97,16 @@ function Index(props) {
   }, [userData, userEmail]);
 
   useEffect(() => {
-    setSnapPoints([passwordInputVisible ? "70%" : "57%"]);
+    setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
   }, [passwordInputVisible]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => {
-        passwordInputVisible ? setSnapPoints(["93%"]) : setSnapPoints(["83%"]);
+        passwordInputVisible
+          ? setSnapPoints(["45%", "93%"])
+          : setSnapPoints(["40%", "83%"]);
         setIsTyping(true);
       },
     );
@@ -112,7 +114,7 @@ function Index(props) {
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
-        setSnapPoints([passwordInputVisible ? "70%" : "57%"]);
+        setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
         setIsTyping(false);
       },
     );
@@ -222,6 +224,17 @@ function Index(props) {
 
   const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
 
+  const profileHeader = (
+    <>
+      <View style={styles.profileContainer}>
+        <ProfileCard user={userData} email={userEmail} />
+      </View>
+      <View>
+        <Text style={styles.heading}>Drill History</Text>
+      </View>
+    </>
+  );
+
   return (
     <PaperProvider>
       <Snackbar
@@ -253,24 +266,23 @@ function Index(props) {
         </Appbar.Header>
 
         <BottomSheetModalProvider>
-          <View style={styles.profileContainer}>
-            <ProfileCard user={userData} email={userEmail} />
-          </View>
-
-          <Text style={styles.heading}>Drill History</Text>
-
           {uniqueDrills.length > 0 ? (
             <DrillList
               drillData={uniqueDrills}
               href={"content/profile/drills/"}
-            />
+            >
+              {profileHeader}
+            </DrillList>
           ) : (
-            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            <>
+              {profileHeader}
+              <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            </>
           )}
 
           <BottomSheetModal
             ref={bottomSheetModalRef}
-            index={0}
+            index={1}
             snapPoints={snapPoints}
             backdropComponent={BottomSheetBackdrop}
           >
@@ -369,11 +381,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   heading: {
+    textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 5,
-    marginLeft: 17,
   },
   noDrillsText: {
     marginTop: 20,
