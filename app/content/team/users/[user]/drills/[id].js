@@ -23,8 +23,6 @@ export default function Stat() {
     isLoading: drillAttemptsIsLoading,
   } = useAttempts({ drillId, userId });
 
-  console.log(drillAttempts);
-
   if (drillInfoIsLoading || drillAttemptsIsLoading) {
     return <Loading />;
   }
