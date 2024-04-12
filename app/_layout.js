@@ -9,7 +9,7 @@ import { AuthProvider } from "~/context/Auth";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      gcTime: 1000 * 60 * 60 * 1, // 1 hour
     },
   },
 });
@@ -24,8 +24,8 @@ export default function RootLayoutNav() {
       client={queryClient}
       persistOptions={{
         persister: asyncStoragePersister,
-        maxAge: 1000 * 60 * 60 * 24,
-      }} // 24 hours
+        maxAge: 1000 * 60 * 60 * 1,
+      }} // 14 hour
     >
       <AuthProvider>
         <Stack

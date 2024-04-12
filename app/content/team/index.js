@@ -14,22 +14,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
-
-function RefreshInvalidate() {
-  const [refreshing, setRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    const refresh = async () => {
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
-      setRefreshing(false);
-    };
-    refresh();
-  }, [queryClient]);
-  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
-}
 
 function Index() {
   const { currentUserId } = currentAuthContext();
@@ -50,7 +37,7 @@ function Index() {
     .sort((user1, user2) => {
       // Assign priorities based on conditions
       const getPriority = (user) => {
-        if (user["uid"] === currentUserId) {
+        if (user.uid === currentUserId) {
           return 0; // Highest priority
         } else if (user.role === "owner") {
           return 1;
@@ -76,11 +63,12 @@ function Index() {
     });
 
   const roleColor = (user) =>
-    user["uid"] === currentUserId
+    user.uid === currentUserId
       ? "#F24F1D"
       : user.role === "owner"
         ? "#3366ff"
         : "#222";
+
   return (
     <PaperProvider>
       <SafeAreaView

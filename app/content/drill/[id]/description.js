@@ -1,27 +1,12 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocalSearchParams } from "expo-router";
+import { ScrollView } from "react-native";
 import { Button } from "react-native-paper";
-
 import DrillDescription from "~/components/drillDescription";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 
-function RefreshInvalidate() {
-  const [refreshing, setRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    const refresh = async () => {
-      queryClient.invalidateQueries({
-        queryKey: ["drillInfo"],
-      });
-      setRefreshing(false);
-    };
-    refresh();
-  }, [queryClient]);
-  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
-}
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];
@@ -37,9 +22,15 @@ export default function Description() {
 
   if (drillInfoError) return <ErrorComponent error={error.message} />;
 
+  const invalidateKeys = [["drillInfo", { drillId }]];
+
   return (
     <>
-      <DrillDescription drillData={drillInfo} />
+      <ScrollView
+        refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
+      >
+        <DrillDescription drillData={drillInfo} />
+      </ScrollView>
       <Link
         href={{
           pathname: `/segments/drill/${drillId}/submission`,

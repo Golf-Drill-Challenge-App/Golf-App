@@ -1,43 +1,17 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
 import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { updateLeaderboard } from "~/hooks/updateLeaderboard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
-
-function RefreshInvalidate(currentTeamId, drillId) {
-  const [refreshing, setRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    const refresh = async () => {
-      await queryClient.invalidateQueries({
-        // used predicate as it seemed to be the best method to invalidate multiple query keys
-        predicate: (query) =>
-          query.queryKey[0] === "user" ||
-          (query.queryKey[0] === "drillInfo" &&
-            query.queryKey[1] === drillId) ||
-          (query.queryKey[0] === "best_attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].drillId === drillId) ||
-          (query.queryKey[0] === "attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].drillId === drillId),
-      });
-      setRefreshing(false);
-    };
-    refresh();
-  }, [queryClient, currentTeamId, drillId]);
-  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
-}
 
 export default function Leaderboard() {
   const { currentTeamId } = currentAuthContext();
@@ -65,6 +39,12 @@ export default function Leaderboard() {
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
   } = useLeaderboard({ drillId });
+
+  const invalidateKeys = [
+    ["userInfo"],
+    ["drillInfo", { drillId }],
+    ["best_attempts", drillId],
+  ];
 
   const preCalcLeaderboardExists =
     preCalcLeaderboard && Object.keys(preCalcLeaderboard).length > 0;
@@ -161,9 +141,7 @@ export default function Leaderboard() {
 
   return (
     <ScrollView
-      refreshControl={
-        <RefreshInvalidate currentTeamId={currentTeamId} drillId={drillId} />
-      }
+      refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
     >
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId) => {

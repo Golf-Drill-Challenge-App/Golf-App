@@ -12,12 +12,13 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
   Keyboard,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -32,6 +33,7 @@ import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
@@ -334,6 +336,7 @@ function Index() {
           {uniqueDrills.length > 0 ? (
             <DrillList
               drillData={uniqueDrills}
+              userId={userId}
               href={"content/profile/drills/"}
             >
               {profileHeader}

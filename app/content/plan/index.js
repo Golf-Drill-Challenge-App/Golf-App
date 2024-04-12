@@ -1,11 +1,6 @@
 import { router } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import {
-  RefreshControl,
-  SectionList,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { SectionList, TouchableOpacity, View } from "react-native";
 import { Appbar, List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,32 +9,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-import { useQueryClient } from "@tanstack/react-query";
-
 import { formatDate } from "../../../Utility";
-
-function RefreshInvalidate(currentTeamId, currentUserId) {
-  const [refreshing, setRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    const refresh = async () => {
-      await queryClient.invalidateQueries({
-        // used predicate as it seemed to be the best method to invalidate multiple query keys
-        predicate: (query) =>
-          (query.queryKey[0] === "user" &&
-            query.queryKey[1] === currentUserId) ||
-          (query.queryKey[0] === "attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].userId === userId) ||
-          query.queryKey[0] === "drillInfo",
-      });
-      setRefreshing(false);
-    };
-    refresh();
-  }, [queryClient, currentTeamId, currentUserId]);
-  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
-}
 
 const DrillList = () => {
   const { currentUserId, currentTeamId } = currentAuthContext();
@@ -101,12 +71,6 @@ const DrillList = () => {
     </Text>
   ) : (
     <SectionList
-      refreshControl={
-        <RefreshInvalidate
-          currentTeamId={currentTeamId}
-          currentUserId={currentTeamId}
-        />
-      }
       sections={sortedDates.map((date) => ({
         title: date,
         data: groupedData[date],

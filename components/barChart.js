@@ -1,9 +1,7 @@
-import { useQueryClient } from "@tanstack/react-query";
 import * as scale from "d3-scale";
 import * as shape from "d3-shape";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,37 +14,24 @@ import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
 import { Button } from "react-native-paper";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "../context/Auth";
 import { removeAttempt } from "../hooks/removeAttempt";
-
-function RefreshInvalidate({ currentTeamId, drillData }) {
-  const [refreshing, setRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    const refresh = async () => {
-      await queryClient.invalidateQueries({
-        // used predicate as it seemed to be the best method to invalidate multiple query keys
-        predicate: (query) =>
-          (query.queryKey[0] === "drillInfo" &&
-            query.queryKey[1] === drillData[0].did) ||
-          (query.queryKey[0] === "attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].userId === drillData[0].uid &&
-            query.queryKey[2].drillId === drillData[0].did),
-      });
-      setRefreshing(false);
-    };
-    refresh();
-  }, [queryClient, currentTeamId, drillData]);
-  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
-}
 
 export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
     return <Text>No attempts have been made yet.</Text>;
   }
+
+  // presumably you can't access another user's drill stats page except through team tab, which handles invalidating
+  // cache for a new drill submission type for another user
+  const drillId = drillData[0].did;
+  const userId = drillData[0].uid;
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["attempts", { userId, drillId }],
+  ];
 
   const scrollViewRef = useRef();
 
@@ -244,14 +229,10 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       color: "#333", // Adjust text color
     },
   });
+
   return (
     <ScrollView
-      refreshControl={
-        <RefreshInvalidate
-          currentTeamId={currentTeamId}
-          drillData={drillData}
-        />
-      }
+      refreshControl={<RefreshInvalidate queryKeys={invalidateKeys} />}
     >
       <View style={styles.movingAvgContainer}>
         <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
