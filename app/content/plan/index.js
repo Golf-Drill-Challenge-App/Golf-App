@@ -48,7 +48,7 @@ const DrillList = () => {
   const today = formatDate(Date.now());
   // Group the assigned drills by date
   const groupedData = assignedData.reduce((acc, curr) => {
-    const date = formatDate(curr.assignedTime * 1000);
+    const date = formatDate(curr.assignedTime);
     const dateKey = date === today ? "Today" : date;
 
     if (!acc[dateKey]) {

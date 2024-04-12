@@ -16,6 +16,8 @@ export function formatDate(unixTimestamp) {
     "Nov",
     "Dec",
   ];
+  if (typeof unixTimestamp === "string")
+    unixTimestamp = parseInt(unixTimestamp, 10);
   const date = new Date(unixTimestamp);
 
   const year = date.getFullYear();
