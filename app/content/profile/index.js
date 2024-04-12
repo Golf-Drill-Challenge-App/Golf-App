@@ -40,22 +40,6 @@ import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function RefreshInvalidate({ queryKeys }) {
-  //console.log("GERONIMOOOO")
-  //console.log(currentTeamId)
-  //console.log(userId)
-  // console.log("JOHNNYYYYY");
-  // console.log(queryKeys);
-  // console.log(Object.keys(queryKeys))
-  /*
-  for (let i = 0; i < Object.keys(queryKeys).length; i++) {
-    //console.log(Object.keys(queryKeys)[i]);
-    if (typeof Object.values(queryKeys)[i] === "object") {
-      //console.log(Object.values(Object.values(queryKeys)[i]));
-    } else {
-      //console.log(Object.values(queryKeys)[i]);
-    }
-  }
-  */
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
@@ -64,146 +48,56 @@ function RefreshInvalidate({ queryKeys }) {
       await queryClient.invalidateQueries({
         // used predicate as it seemed to be the best method to invalidate multiple query keys
         predicate: (query) => {
-          console.log("\nhere")
-          //console.log(query.queryKey)
-          //console.log(queryKeys)
           for (let i = 0; i < query.queryKey.length; i++) {
-            //console.log(queryKeys[i])
-            //console.log(i)
-            //console.log(query.queryKey[i])
             if (queryKeys[i] && queryKeys[i][0] === query.queryKey[0]) {
               function checkLists(firstList, secondList) {
                 // Check each item in the first list
                 for (let item of firstList) {
-                    if (typeof item === 'string') {
-                        // If item is a string, check if it exists in the second list
-                        if (!secondList.includes(item)) {
-                            return false;
-                        }
-                    } else if (typeof item === 'object') {
-                        // If item is an object, check if it exists as a subset in the second list
-                        let found = false;
-                        for (let obj of secondList) {
-                            if (isObjectSubset(item, obj)) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            return false;
-                        }
+                  if (typeof item === "string") {
+                    // If item is a string, check if it exists in the second list
+                    if (!secondList.includes(item)) {
+                      return false;
                     }
+                  } else if (typeof item === "object") {
+                    // If item is an object, check if it exists as a subset in the second list
+                    let found = false;
+                    for (let obj of secondList) {
+                      if (isObjectSubset(item, obj)) {
+                        found = true;
+                        break;
+                      }
+                    }
+                    if (!found) {
+                      return false;
+                    }
+                  }
                 }
                 return true;
-            }
-            
-            function isObjectSubset(subset, superset) {
-              // Check if superset is an object
-              if (typeof superset !== 'object' || superset === null) {
+              }
+
+              function isObjectSubset(subset, superset) {
+                // Check if superset is an object
+                if (typeof superset !== "object" || superset === null) {
                   return false;
-              }
-              
-              // Check if each key-value pair in the subset exists in the superset
-              for (let key in subset) {
+                }
+
+                // Check if each key-value pair in the subset exists in the superset
+                for (let key in subset) {
                   if (!(key in superset && superset[key] === subset[key])) {
-                      return false;
+                    return false;
                   }
+                }
+                return true;
               }
-              return true;
-          }
-            console.log(queryKeys[i])
-            console.log(query.queryKey)
-            //const firstList = ["attempts", "1", {"userId": "Oo6vMXo5I0P6aWMZD9j5zQVkCwx2"}];
-            //const secondList = ["attempts", "1", {"attemptId": null, "drillId": "SpvYyY94HaulVH2zmVyM", "userId": "Oo6vMXo5I0P6aWMZD9j5zQVkCwx2"}];
-            console.log(checkLists(queryKeys[i], query.queryKey));
-            return checkLists(queryKeys[i], query.queryKey)
-            
-              /*
-              console.log(queryKeys[i])
-              console.log(query.queryKey)
-              let queryKeyFlat = []
-              for (let j = 0; j < queryKeys[i].length;  j++) {
-                if (typeof(queryKeys[i][j]) === "object") {
-                  queryKeyFlat.push(...Object.values(queryKeys[i][j]))
-                } else{
-                  queryKeyFlat.push(queryKeys[i][j])
-                }
-              }
-              //console.log(queryKeyFlat)
-              let queryQueryKeyFlat = []
-              for (let k = 0; k < query.queryKey.length;  k++) {
-                if (typeof(query.queryKey[k]) === "object") {
-                  let testArr = [...Object.values(query.queryKey[k])]
-                  for (let i=0; i<testArr.length; i++) {
-                    if (testArr[i]) {
-                      queryQueryKeyFlat.push(testArr[i])
-                    }
-                  }
-                } else if (query.queryKey[k]) {
-                  queryQueryKeyFlat.push(query.queryKey[k])
-                }
-              }
-              // console.log(queryQueryKeyFlat)
-              const isSubset = (array1, array2) =>
-              array2.every((element) => array1.includes(element));
-              // console.log(isSubset(queryKeyFlat, queryQueryKeyFlat))
-              */
-              /*
-              function isBigEnough(element, index, array) {
-                if (typeof(element) === "object"){
-                  for (let k = 0; k < element.length; k++) {
-                    let inputKey = Object.keys(element)[k]
-                    if(queryKeys[i][j][inputKey]===query.queryKey[i][inputKey]) {
-                      // console.log(queryKeys[i][j])
-                    }
-                  }
-                }
-                else if (typeof(queryKeys[i][j]) === "string") {
-                  if (queryKeys[i][j] === query.queryKey[i]) {
-                    //console.log(query.queryKey[i])
-                  }
-                }
-              }
-              */
-              /*
-              for (let j = 0; j < queryKeys[i].length; j++) {
-                //console.log(queryKeys[i][j])
-                if (typeof(queryKeys[i][j]) === "object"){
-                  for (let k = 0; k < Object.keys(queryKeys[i][j]).length; k++) {
-                    let inputKey = Object.keys(queryKeys[i][j])[k]
-                    if(queryKeys[i][j][inputKey]===query.queryKey[i][inputKey]) {
-                      // console.log(queryKeys[i][j])
-                    }
-                  }
-                }
-                else if (typeof(queryKeys[i][j]) === "string") {
-                  if (queryKeys[i][j] === query.queryKey[i]) {
-                    //console.log(query.queryKey[i])
-                  }
-                }
-              }
-              */
+              console.log(queryKeys[i]);
+              console.log(query.queryKey);
+              console.log(checkLists(queryKeys[i], query.queryKey));
+              return checkLists(queryKeys[i], query.queryKey);
             }
           }
-          // for (let i = 0; i< query.queryKey.length; i++) {
-           // console.log(query.queryKey[i])
-          //}
-          // console.log('\nhmm')
-          // console.log(query.queryKey)
-          /*
-          for (let i = 0; i < query.queryKey.length; i++) {
-            //console.log("\nyuhh")
-            //console.log(query.queryKey[i])
-            // console.log(Object.keys(queryKeys)[i]);
-            if (typeof query.queryKey[i] === "object") {
-              // console.log(Object.values(query.queryKey[i]));
-            } else {
-              //console.log(query.queryKey[i]);
-            }
-          }*/
-        }
-      })
-      console.log("hellooo")
+        },
+      });
+      console.log("hellooo");
       setRefreshing(false);
     };
     refresh();
