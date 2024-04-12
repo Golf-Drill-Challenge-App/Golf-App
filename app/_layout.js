@@ -25,7 +25,7 @@ export default function RootLayoutNav() {
       persistOptions={{
         persister: asyncStoragePersister,
         maxAge: 1000 * 60 * 60 * 1,
-      }} // 14 hour
+      }} // 1 hour
     >
       <AuthProvider>
         <Stack
