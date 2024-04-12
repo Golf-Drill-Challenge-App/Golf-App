@@ -6,10 +6,11 @@ import Loading from "~/components/loading";
 import Input from "./input";
 import Result from "./result";
 
+import ErrorComponent from "~/components/errorComponent";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
-  const { id, assignedTime } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
 
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
@@ -25,7 +26,7 @@ export default function Index() {
   if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
 
   const display = () => {
-    if (toggleResult == true) {
+    if (toggleResult) {
       return (
         <Result
           submission={outputData}

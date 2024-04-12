@@ -50,7 +50,7 @@ async function completeAssigned(
       console.log("Document data:", docSnap.data());
 
       const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((assignment, index) => {
+      const updatedAssignedData = assignedData.map((assignment) => {
         if (
           assignment.assignedTime === assignedTime &&
           assignment.drillId === drillId
@@ -144,7 +144,6 @@ function getShotInfo(drillInfo) {
       break;
     default:
       console.log("Shots not found");
-      shots = [];
       break;
   }
 
@@ -215,7 +214,7 @@ function fillPuttTargets(drillInfo) {
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
-  return Math.sqrt(2 * Math.pow(carryDiff * 3, 2));
+  return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
@@ -456,7 +455,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //Varible to store if Submit button is active
   const submitVisible =
-    currentShot == drillInfo.reps - 1 && displayedShot == drillInfo.reps - 1;
+    currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1;
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
@@ -519,7 +518,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const handleButtonClick = () => {
     //Check if all inputs have been filled in
     if (
-      Object.keys(inputValues[displayedShot]).length != numInputs ||
+      Object.keys(inputValues[displayedShot]).length !== numInputs ||
       checkEmptyInputs(inputValues[displayedShot])
     ) {
       setEmptyDialogVisible(true);

@@ -20,7 +20,7 @@ export default function DialogComponent({
   const Buttons = buttons.map((item, index) => {
     let style;
     let labelStyle;
-    if (index == 0) {
+    if (index === 0) {
       style = {};
       labelStyle = { color: "#F24E1E" };
     } else {
