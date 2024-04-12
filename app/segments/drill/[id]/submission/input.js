@@ -10,21 +10,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Appbar,
-  Banner,
-  Button,
-  Dialog,
-  PaperProvider,
-  Portal,
-  Text,
-} from "react-native-paper";
+import { Appbar, Button, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import DrillDescription from "~/components/drillDescription";
 import Header from "~/components/header";
 import DrillInput from "~/components/input/drillInput";
@@ -37,8 +30,6 @@ import { db } from "~/firebaseConfig";
 /***************************************
  * Firebase Upload
  ***************************************/
-
-//A function to upload the outputData to the "attempts" collection
 
 async function completeAssigned(
   userId,
@@ -59,7 +50,7 @@ async function completeAssigned(
       console.log("Document data:", docSnap.data());
 
       const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((assignment, index) => {
+      const updatedAssignedData = assignedData.map((assignment) => {
         if (
           assignment.assignedTime === assignedTime &&
           assignment.drillId === drillId
@@ -86,6 +77,7 @@ async function completeAssigned(
   getDocument();
 }
 
+//A function to upload the outputData to the "attempts" collection
 async function uploadAttempt(
   outputData,
   userId,
@@ -110,6 +102,9 @@ async function uploadAttempt(
     await setDoc(newAttemptRef, uploadData)
       .then(() => {
         console.log("Document successfully uploaded!");
+        //TODO: Call function to check for leaderboard update
+
+        //Check if drill was assigned
         if (assignedTime) {
           completeAssigned(
             userId,
@@ -130,6 +125,8 @@ async function uploadAttempt(
   }
 }
 
+//TODO: Create a function to check leaderboard and update if needed
+
 /***************************************
  * AttemptShots Generation
  ***************************************/
@@ -147,7 +144,6 @@ function getShotInfo(drillInfo) {
       break;
     default:
       console.log("Shots not found");
-      shots = [];
       break;
   }
 
@@ -218,7 +214,7 @@ function fillPuttTargets(drillInfo) {
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
-  return Math.sqrt(2 * Math.pow(carryDiff * 3, 2));
+  return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
@@ -336,7 +332,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
     }
 
     //add the sid to the shot
-    shot.sid = j;
+    shot.sid = j + 1;
 
     //push the shot into the array
     outputShotData.push(shot);
@@ -395,6 +391,16 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   return outputData;
 }
 
+//A function to validate inputs are not empty
+function checkEmptyInputs(inputs) {
+  return Object.values(inputs).some((value) => value === "");
+}
+
+//A function to validate inputs are all numbers
+function validateInputs(inputs) {
+  return Object.values(inputs).some((input) => isNaN(input));
+}
+
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
@@ -431,50 +437,36 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const descriptionModalRef = useRef(null);
 
   /***** Leave drill Dialog Stuff *****/
-
   const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
   const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
-  /***** Empty Input Banner Stuff *****/
+  /***** Empty Input dialog Stuff *****/
+  const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
+  const hideEmptyDialog = () => setEmptyDialogVisible(false);
 
-  const [emptyInputBannerVisible, setEmptyInputBannerVisible] = useState(false);
+  /***** Invalid Input dialog Stuff *****/
+  const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
+  const hideInvalidDialog = () => setInvalidDialogVisible(false);
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
     setattemptShots(getShotInfo(drillInfo));
   }, []);
 
+  //Varible to store if Submit button is active
+  const submitVisible =
+    currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1;
+
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
     //Logic to display "Submit Drill"
-    if (
-      currentShot == drillInfo.reps - 1 &&
-      displayedShot == drillInfo.reps - 1
-    ) {
+    if (submitVisible) {
       return (
         <Button
           style={styles.button}
           labelStyle={styles.buttonText}
           mode="contained-tonal"
-          onPress={() => {
-            let outputData = createOutputData(
-              drillInfo,
-              inputValues,
-              attemptShots,
-              currentUserId,
-              did,
-            );
-            setOutputData(outputData);
-            uploadAttempt(
-              outputData,
-              currentUserId,
-              currentTeamId,
-              assignedTime,
-              id,
-              queryClient,
-            );
-            setToggleResult(true);
-          }}
+          onPress={handleButtonClick}
         >
           Submit Drill
         </Button>
@@ -503,7 +495,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
         style={styles.button}
         labelStyle={styles.buttonText}
         mode="contained-tonal"
-        onPress={handleNextShotButtonClick}
+        onPress={handleButtonClick}
       >
         Next Shot
       </Button>
@@ -523,14 +515,42 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   };
 
   //Function to handle "Next shot" button click
-  const handleNextShotButtonClick = () => {
+  const handleButtonClick = () => {
     //Check if all inputs have been filled in
-    if (Object.keys(inputValues[displayedShot]).length === numInputs) {
-      setEmptyInputBannerVisible(false);
+    if (
+      Object.keys(inputValues[displayedShot]).length !== numInputs ||
+      checkEmptyInputs(inputValues[displayedShot])
+    ) {
+      setEmptyDialogVisible(true);
+    }
+    //check inputs are all numbers
+    else if (validateInputs(inputValues[displayedShot])) {
+      setInvalidDialogVisible(true);
+    }
+    //check for submit button
+    else if (submitVisible) {
+      let outputData = createOutputData(
+        inputValues,
+        attemptShots,
+        currentUserId,
+        did,
+        drillInfo.outputs,
+        drillInfo.aggOutputs,
+      );
+
+      setOutputData(outputData);
+      uploadAttempt(
+        outputData,
+        currentUserId,
+        currentTeamId,
+        assignedTime,
+        id,
+        queryClient,
+      );
+      setToggleResult(true);
+    } else {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
-    } else {
-      setEmptyInputBannerVisible(true);
     }
   };
 
@@ -564,19 +584,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   color={"#F24E1E"}
                 />
               </Appbar.Header>
-              {/* Empty Input Banner */}
-
-              <Banner
-                visible={emptyInputBannerVisible}
-                actions={[
-                  {
-                    label: "Dismiss",
-                    onPress: () => setEmptyInputBannerVisible(false),
-                  },
-                ]}
-              >
-                Error! All input fields must be filled!
-              </Banner>
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
@@ -608,6 +615,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       key={id}
                       icon={getIconByKey(item.id)}
                       prompt={item.prompt}
+                      helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
                       inputValue={inputValues[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
@@ -664,28 +672,40 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 </BottomSheetModal>
 
                 {/* Leave Drill Dialog */}
-                <Portal>
-                  <Dialog
-                    visible={leaveDialogVisible}
-                    onDismiss={hideLeaveDialog}
-                  >
-                    <Dialog.Title>Alert</Dialog.Title>
-                    <Dialog.Content>
-                      <Text variant="bodyMedium">All inputs will be lost.</Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                      <Button
-                        onPress={() => {
-                          hideLeaveDialog();
-                          navigation.goBack();
-                        }}
-                      >
-                        Leave Drill
-                      </Button>
-                      <Button onPress={hideLeaveDialog}>Cancel</Button>
-                    </Dialog.Actions>
-                  </Dialog>
-                </Portal>
+                <DialogComponent
+                  title={"Alert"}
+                  content="All inputs will be lost."
+                  visible={leaveDialogVisible}
+                  onHide={hideLeaveDialog}
+                  buttons={["Cancel", "Leave Drill"]}
+                  buttonsFunctions={[
+                    hideLeaveDialog,
+                    () => {
+                      hideLeaveDialog;
+                      navigation.goBack();
+                    },
+                  ]}
+                />
+
+                {/* Error Dialog: Empty Input*/}
+                <DialogComponent
+                  title={"Error!"}
+                  content="All inputs must be filled."
+                  visible={emptyDialogVisible}
+                  onHide={hideEmptyDialog}
+                  buttons={["Dismiss"]}
+                  buttonsFunctions={[hideEmptyDialog]}
+                />
+
+                {/* Error Dialog: Invalid Input*/}
+                <DialogComponent
+                  title={"Error!"}
+                  content="All inputs must be numbers."
+                  visible={invalidDialogVisible}
+                  onHide={hideInvalidDialog}
+                  buttons={["Dismiss"]}
+                  buttonsFunctions={[hideInvalidDialog]}
+                />
 
                 {/* Navigation */}
                 <View style={styles.navigationContainer}>

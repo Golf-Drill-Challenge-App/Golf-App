@@ -21,17 +21,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  Appbar,
-  Button,
-  Dialog,
-  PaperProvider,
-  Paragraph,
-  Portal,
-  Snackbar,
-} from "react-native-paper";
+import { Appbar, PaperProvider, Snackbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -207,7 +200,7 @@ function Index(props) {
     }
   };
 
-  const uniqueDrills = getUnique(attempts, "did", Object.values(drillInfo));
+  const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
 
   return (
     <PaperProvider>
@@ -219,7 +212,7 @@ function Index(props) {
         {snackbarMessage}
       </Snackbar>
 
-      <Portal>
+      {/* <Portal>
         <Dialog
           visible={dialogVisible}
           onDismiss={() => setDialogVisible(false)}
@@ -232,7 +225,16 @@ function Index(props) {
             <Button onPress={() => setDialogVisible(false)}>OK</Button>
           </Dialog.Actions>
         </Dialog>
-      </Portal>
+      </Portal> */}
+
+      <DialogComponent
+        title={dialogTitle}
+        content={dialogMessage}
+        visible={dialogVisible}
+        onHide={() => setDialogVisible(false)}
+        buttons={["OK"]}
+        buttonsFunctions={[() => setDialogVisible(false)]}
+      />
 
       <SafeAreaView style={{ flex: 1 }}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
