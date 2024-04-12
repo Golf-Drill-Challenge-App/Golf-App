@@ -60,7 +60,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
     return value[drillInfo["mainOutputAttempt"]];
   });
 
-  console.log("data: ", data);
+  const yMin = Math.min(...data, 0); //For when minimum data is larger than 0
+  const yMax = Math.max(...data, 0); //For when maximum data is smaller than 0, like when every input is negative
 
   const [movingAvgRange, setMovingAvgRange] = useState(5);
   const [movingAvgRangeValues] = useState([
@@ -108,8 +109,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   // Calculate scales
   const scaleY = scale
     .scaleLinear()
-    .domain([Math.min(...data), Math.max(...data)]) // Adjust scale based on your data
-    .range([chartHeight, 0]);
+    .domain([yMin, yMax]) // Adjust scale based on your data
+    .range([chartHeight - 5, 0]);
 
   const line = shape
     .line()
@@ -263,7 +264,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
           style={styles.yAxis}
           formatLabel={(value) => `${value}`} // Format label as needed
           numberOfTicks={7}
-          min={Math.min(...data, 0)}
+          min={yMin}
+          max={yMax}
           contentInset={{ bottom: 5 }}
         />
         <View style={styles.middleLine} />
@@ -289,7 +291,8 @@ export default function BarChartScreen({ drillData, drillInfo }) {
               pointerEvents={"none"}
               key={page} //force barchart to re-render
               numberOfTicks={7}
-              yMin={Math.min(...data, 0)}
+              yMin={yMin}
+              yMax={yMax}
             >
               <Grid />
               <MovingAvgPath

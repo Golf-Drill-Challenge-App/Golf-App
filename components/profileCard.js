@@ -5,9 +5,7 @@ function ProfileCard(props) {
     <View style={styles.container}>
       <Image source={{ uri: props.user["pfp"] }} style={styles.profileImage} />
       <Text style={styles.name}>{props.user["name"]}</Text>
-      <Text style={styles.email}>
-        {/* TODO!!! props.user["email"] */ "emailproperty@gmail.com"}
-      </Text>
+      <Text style={styles.email}>{props.email}</Text>
     </View>
   );
 }

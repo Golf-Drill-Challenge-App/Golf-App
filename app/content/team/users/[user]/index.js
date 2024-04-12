@@ -9,6 +9,7 @@ import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index(props) {
@@ -19,6 +20,12 @@ function Index(props) {
     userError: userError,
     userIsLoading: userIsLoading,
   } = useUserInfo(userId);
+
+  const {
+    userEmail: userEmail,
+    userEmailError: userEmailError,
+    userEmailIsLoading: userEmailIsLoading,
+  } = useEmailInfo(userId);
 
   const {
     data: attempts,
@@ -32,13 +39,20 @@ function Index(props) {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
-  if (userIsLoading || drillInfoIsLoading || attemptsIsLoading) {
+  if (
+    userIsLoading ||
+    userEmailIsLoading ||
+    drillInfoIsLoading ||
+    attemptsIsLoading
+  ) {
     return <Loading />;
   }
 
-  if (userError || drillInfoError || attemptsError) {
+  if (userError || userEmailError || drillInfoError || attemptsError) {
     return (
-      <ErrorComponent message={[userError, drillInfoError, attemptsError]} />
+      <ErrorComponent
+        message={[userError, userEmailError, drillInfoError, attemptsError]}
+      />
     );
   }
 
@@ -58,10 +72,10 @@ function Index(props) {
         </Appbar.Header>
 
         <View style={styles.profileContainer}>
-          <ProfileCard user={userData} />
+          <ProfileCard user={userData} email={userEmail} />
         </View>
 
-        <Text style={styles.heading}>Drills</Text>
+        <Text style={styles.heading}>Drill History</Text>
 
         {uniqueDrills.length > 0 ? (
           <DrillList
@@ -86,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 5,
-    marginLeft: 4,
+    marginLeft: 17,
   },
   scrollViewContent: {
     paddingHorizontal: 20,
