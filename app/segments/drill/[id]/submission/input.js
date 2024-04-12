@@ -10,23 +10,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Appbar,
-  Button,
-  Dialog,
-  PaperProvider,
-  Portal,
-  Text,
-} from "react-native-paper";
+import { Appbar, Button, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import DrillDescription from "~/components/drillDescription";
 import Header from "~/components/header";
-import ErrorDialog from "~/components/input/ErrorDialog";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
@@ -681,51 +674,39 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 </BottomSheetModal>
 
                 {/* Leave Drill Dialog */}
-                <Portal>
-                  <Dialog
-                    visible={leaveDialogVisible}
-                    onDismiss={hideLeaveDialog}
-                    style={{ backgroundColor: "white" }}
-                  >
-                    <Dialog.Title style={{ fontWeight: "bold" }}>
-                      Alert
-                    </Dialog.Title>
-                    <Dialog.Content>
-                      <Text variant="bodyMedium">All inputs will be lost.</Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                      <Button
-                        onPress={hideLeaveDialog}
-                        labelStyle={{ color: "#F24E1E" }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        style={{ backgroundColor: "#F24E1E" }}
-                        labelStyle={{ color: "white" }}
-                        onPress={() => {
-                          hideLeaveDialog();
-                          navigation.goBack();
-                        }}
-                      >
-                        Leave Drill
-                      </Button>
-                    </Dialog.Actions>
-                  </Dialog>
-                </Portal>
+                <DialogComponent
+                  title={"Alert"}
+                  content="All inputs will be lost."
+                  visible={leaveDialogVisible}
+                  onHide={hideLeaveDialog}
+                  buttons={["Cancel", "Leave Drill"]}
+                  buttonsFunctions={[
+                    hideLeaveDialog,
+                    () => {
+                      hideLeaveDialog;
+                      navigation.goBack();
+                    },
+                  ]}
+                />
 
                 {/* Error Dialog: Empty Input*/}
-                <ErrorDialog
+                <DialogComponent
+                  title={"Error!"}
                   content="All inputs must be filled."
                   visible={emptyDialogVisible}
                   onHide={hideEmptyDialog}
+                  buttons={["Dismiss"]}
+                  buttonsFunctions={[hideEmptyDialog]}
                 />
 
                 {/* Error Dialog: Invalid Input*/}
-                <ErrorDialog
+                <DialogComponent
+                  title={"Error!"}
                   content="All inputs must be numbers."
                   visible={invalidDialogVisible}
                   onHide={hideInvalidDialog}
+                  buttons={["Dismiss"]}
+                  buttonsFunctions={[hideInvalidDialog]}
                 />
 
                 {/* Navigation */}
