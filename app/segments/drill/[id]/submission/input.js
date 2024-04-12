@@ -347,8 +347,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   console.log("outputShotData", outputShotData);
 
   //get the time stamp
-  // convert from ms to seconds to match db_spec.jsonc
-  const timeStamp = Date.now() / 1000;
+  const timeStamp = Date.now();
 
   //create the outputData object
   const outputData = {

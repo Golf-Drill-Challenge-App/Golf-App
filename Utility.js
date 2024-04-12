@@ -16,7 +16,7 @@ export function formatDate(unixTimestamp) {
     "Nov",
     "Dec",
   ];
-  const date = new Date(unixTimestamp * 1000);
+  const date = new Date(unixTimestamp);
 
   const year = date.getFullYear();
   const month = months[date.getMonth()];

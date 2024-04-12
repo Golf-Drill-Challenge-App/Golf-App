@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
@@ -9,7 +8,6 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
