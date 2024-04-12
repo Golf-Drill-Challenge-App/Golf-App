@@ -730,20 +730,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   onHide={hideInvalidDialog}
                 />
 
-                {/* Error Dialog: Empty Input*/}
-                <ErrorDialog
-                  content="All inputs must be filled."
-                  visible={emptyDialogVisible}
-                  onHide={hideEmptyDialog}
-                />
-
-                {/* Error Dialog: Invalid Input*/}
-                <ErrorDialog
-                  content="All inputs must be numbers."
-                  visible={invalidDialogVisible}
-                  onHide={hideInvalidDialog}
-                />
-
                 {/* Navigation */}
                 <View style={styles.navigationContainer}>
                   <Text
