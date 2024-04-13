@@ -1,5 +1,4 @@
 import { useNavigation } from "expo-router";
-import { StyleSheet } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -40,22 +39,3 @@ export default function Index() {
     </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    paddingHorizontal: 16,
-    paddingBottom: 50,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  description: {
-    fontSize: 14,
-    color: "#555",
-  },
-  item: {
-    borderBottomWidth: 1, // Add bottom border
-    borderBottomColor: "#ccc", // Grey color
-  },
-});
