@@ -34,7 +34,7 @@ const DrillList = () => {
 
   const [assignedData, setAssignedData] = useState([]);
 
-  console.log("USER DATA", userInfo);
+  // console.log("USER DATA", userInfo);
 
   // Set the assigned_data state when the user data is loaded
   useEffect(() => {
@@ -183,7 +183,7 @@ const CoachView = () => {
 export default function Index() {
   const { data: userInfo, userIsLoading, userError } = useUserInfo();
 
-  console.log("USER INFO IN PLAN BEGGINING", userInfo);
+  // console.log("USER INFO IN PLAN BEGGINING", userInfo);
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>

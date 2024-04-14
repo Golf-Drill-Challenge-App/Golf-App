@@ -11,6 +11,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { themeColors } from "../../../../Constants";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
@@ -50,7 +51,7 @@ export default function Index() {
               onPress={() => {
                 navigation.goBack();
               }}
-              color={"#F24E1E"}
+              color={themeColors.accent}
             />
           }
         />

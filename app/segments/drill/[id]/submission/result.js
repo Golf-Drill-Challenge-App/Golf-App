@@ -4,6 +4,7 @@ import { Appbar, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "~/components/header";
 import ResultScreen from "~/components/resultScreen";
+import { themeColors } from "../../../../../Constants";
 
 function Result(props) {
   const submission = props.submission;
@@ -20,7 +21,7 @@ function Result(props) {
           <Appbar.Action
             icon="close"
             onPress={navigation.goBack}
-            color={"#F24E1E"}
+            color={themeColors.accent}
           />
         }
       />
@@ -30,7 +31,7 @@ function Result(props) {
           margin: 10,
         }}
         mode="contained"
-        buttonColor="#F24E1E"
+        buttonColor={themeColors.accent}
         textColor="white"
         onPress={() => {
           props.setToggleResult(false);
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 20,
     padding: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: themeColors.background,
     borderRadius: 10,
     width: "60%",
     alignSelf: "center",

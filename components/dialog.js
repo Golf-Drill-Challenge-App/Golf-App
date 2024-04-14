@@ -1,4 +1,5 @@
 import { Button, Dialog, Portal, Text } from "react-native-paper";
+import { themeColors } from "../Constants";
 
 /**
  * PROPS
@@ -22,9 +23,9 @@ export default function DialogComponent({
     let labelStyle;
     if (index === 0) {
       style = {};
-      labelStyle = { color: "#F24E1E" };
+      labelStyle = { color: themeColors.accent };
     } else {
-      style = { backgroundColor: "#F24E1E" };
+      style = { backgroundColor: themeColors.accent };
       labelStyle = { color: "white" };
     }
 

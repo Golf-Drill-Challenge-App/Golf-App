@@ -12,6 +12,7 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import { themeColors } from "../../../../../Constants";
 import EmptyScreen from "../../../../../components/emptyScreen";
 
 function Index() {
@@ -86,7 +87,7 @@ function Index() {
               onPress={() => {
                 navigation.goBack();
               }}
-              color={"#F24E1E"}
+              color={themeColors.accent}
             />
           }
         />

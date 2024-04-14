@@ -27,6 +27,7 @@ import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { themeColors } from "../../../../../Constants";
 
 /***************************************
  * Firebase Upload
@@ -596,7 +597,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <Appbar.Action
                     icon="close"
                     onPress={() => setLeaveDialogVisible(true)}
-                    color={"#F24E1E"}
+                    color={themeColors.accent}
                   />
                 }
                 postChildren={
@@ -605,7 +606,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     onPress={() => {
                       descriptionModalRef.current?.present();
                     }}
-                    color={"#F24E1E"}
+                    color={themeColors.accent}
                   />
                 }
               />
@@ -776,7 +777,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   {buttonDisplayHandler()}
 
                   <Text
-                    style={{ color: "#F3572A" }}
+                    style={{ color: themeColors.accent }}
                     onPress={() => {
                       navModalRef.current?.present();
                     }}
@@ -810,7 +811,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "95%",
-    backgroundColor: "#F24E1E",
+    backgroundColor: themeColors.accent,
     marginBottom: 20,
     justifyContent: "center",
   },

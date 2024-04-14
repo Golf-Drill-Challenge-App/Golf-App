@@ -15,6 +15,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { currentAuthContext } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
+import { themeColors } from "../../Constants";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
@@ -123,11 +124,14 @@ export default function SignUp() {
             <Pressable
               style={[styles.button]}
               onPress={handleSubmit}
-              backgroundColor={"#F24E1E"}
+              backgroundColor={themeColors.accent}
             >
               <Text style={styles.buttonText}>Submit</Text>
             </Pressable>
-            <Pressable style={[styles.button]} backgroundColor={"#F24E1E"}>
+            <Pressable
+              style={[styles.button]}
+              backgroundColor={themeColors.accent}
+            >
               <Link asChild href={"/signin"}>
                 <Text style={styles.buttonText}>Back to SignIn</Text>
               </Link>

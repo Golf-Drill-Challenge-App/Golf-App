@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { auth } from "~/firebaseConfig";
+import { themeColors } from "../../Constants";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
@@ -106,11 +107,14 @@ export default function SignIn() {
             <Pressable
               style={styles.button}
               onPress={handleSignIn}
-              backgroundColor={"#F24E1E"}
+              backgroundColor={themeColors.accent}
             >
               <Text style={styles.buttonText}>Login</Text>
             </Pressable>
-            <Pressable style={styles.button} backgroundColor={"#F24E1E"}>
+            <Pressable
+              style={styles.button}
+              backgroundColor={themeColors.accent}
+            >
               <Link asChild href={"/signup"}>
                 <Text style={styles.buttonText}>Sign Up</Text>
               </Link>

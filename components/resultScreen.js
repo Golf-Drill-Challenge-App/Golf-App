@@ -13,6 +13,7 @@ import Loading from "~/components/loading";
 import ShotAccordion from "~/components/shotAccordion";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { themeColors } from "../Constants";
 
 export default function ResultScreen({
   drillId = null,
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 20,
     padding: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: themeColors.background,
     borderRadius: 10,
     width: "60%",
     alignSelf: "center",

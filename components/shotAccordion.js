@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
+import { themeColors } from "../Constants";
 
 function Row({ name, value }) {
   return (
@@ -86,7 +87,7 @@ function ShotAccordion(props) {
       <List.Accordion
         theme={{
           colors: {
-            background: "#f5f5f5",
+            background: themeColors.background,
           },
         }}
         title={""}
@@ -121,15 +122,15 @@ function ShotAccordion(props) {
         )}
         right={false}
         style={{
-          backgroundColor: "#f5f5f5",
+          backgroundColor: themeColors.background,
           borderWidth: 1,
-          borderColor: "#ddd",
+          borderColor: themeColors.border,
           borderRadius: 8,
         }}
       >
         <View
           style={{
-            backgroundColor: "#f5f5f5",
+            backgroundColor: themeColors.background,
           }}
         >
           {props.drillInfo["outputs"].map((field) => {
@@ -159,9 +160,9 @@ function ShotAccordion(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: themeColors.background,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: themeColors.border,
     borderRadius: 8,
   },
   titleContainer: {
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: themeColors.border,
   },
   rowName: {
     fontWeight: "bold",

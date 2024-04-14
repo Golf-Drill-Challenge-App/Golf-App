@@ -8,6 +8,7 @@ import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { themeColors } from "../../../../Constants";
 
 export default function Stat() {
   const navigation = useNavigation();
@@ -44,7 +45,7 @@ export default function Stat() {
               onPress={() => {
                 navigation.goBack();
               }}
-              color={"#F24E1E"}
+              color={themeColors.accent}
             />
           }
         />

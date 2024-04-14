@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Icon, Text, TextInput } from "react-native-paper";
+import { themeColors } from "../../Constants";
 
 export default function DrillInput({
   icon,
@@ -25,8 +26,11 @@ export default function DrillInput({
           value={inputValue}
           keyboardType="numeric"
           returnKeyType="done"
-          editable={currentShot == displayedShot}
+          editable={currentShot === displayedShot}
           onChangeText={onInputChange}
+          selectionColor={themeColors.accent}
+          cursorColor={themeColors.accent}
+          activeOutlineColor={themeColors.border}
         />
         <Text style={styles.distance}>{distanceMeasure}</Text>
       </View>

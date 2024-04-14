@@ -17,6 +17,7 @@ import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import { themeColors } from "../../../Constants";
 
 function Index() {
   const { currentUserId } = currentAuthContext();
@@ -29,7 +30,7 @@ function Index() {
   if (userIsLoading) return <Loading />;
 
   if (userError) return <ErrorComponent message={userError.message} />;
-  console.log("userInfo: ", currentUserId);
+  // console.log("userInfo: ", currentUserId);
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -64,7 +65,7 @@ function Index() {
 
   const roleColor = (user) =>
     user["uid"] === currentUserId
-      ? "#F24F1D"
+      ? themeColors.accent
       : user.role === "owner"
         ? "#3366ff"
         : "#222";
@@ -86,7 +87,6 @@ function Index() {
           <>
             <Header title={"Team"} />
             <KeyboardAwareScrollView
-              style={{ marginLeft: 20 }}
               // allows opening links from search results without closing keyboard first
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
@@ -119,24 +119,30 @@ function Index() {
                 </View>
               </View>
 
-              <Text style={{ textAlign: "center", marginBottom: 20 }}>
-                {Object.keys(userInfo).length} members
-              </Text>
-              <View
-                style={{
-                  // default react native background color or something, so stuff scrolling behind this is less jank
-                  backgroundColor: "#f2f2f2",
-                  paddingBottom: 10,
-                  paddingTop: 10,
-                }}
-              >
-                <Searchbar
-                  onChangeText={onChangeSearch}
-                  value={searchQuery}
-                  style={{ paddingLeft: 20, paddingRight: 20 }}
-                  placeholder="Search team members"
-                />
-              </View>
+                <Text style={{ textAlign: "center", marginBottom: 20 }}>
+                  {Object.keys(userInfo).length} members
+                </Text>
+                <View
+                  style={{
+                    // default react native background color or something, so stuff scrolling behind this is less jank
+                    backgroundColor: "#f2f2f2",
+                    paddingBottom: 10,
+                    paddingTop: 10,
+                  }}
+                >
+                  <Searchbar
+                    onChangeText={onChangeSearch}
+                    value={searchQuery}
+                    style={{
+                      marginLeft: 20,
+                      marginRight: 20,
+                      backgroundColor: "#fff",
+                      borderWidth: 1,
+                      borderColor: themeColors.border,
+                    }}
+                    placeholder="Search team members"
+                  />
+                </View>
 
                 <List.Section>
                   {foundUsers.map((user, i) => {
@@ -145,6 +151,9 @@ function Index() {
                       <List.Item
                         key={userId}
                         title={user.name}
+                        style={{
+                          paddingLeft: 20,
+                        }}
                         left={() => (
                           <Avatar.Image
                             size={24}

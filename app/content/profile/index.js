@@ -40,6 +40,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 import EmptyScreen from "../../../components/emptyScreen";
+import { themeColors } from "../../../Constants";
 
 function Index() {
   const { signOut } = currentAuthContext();
@@ -263,7 +264,7 @@ function Index() {
           postChildren={
             <Appbar.Action
               icon="cog"
-              color={"#F24E1E"}
+              color={themeColors.accent}
               onPress={() => bottomSheetModalRef.current?.present()}
               style={{ marginRight: 7 }}
             />
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
     padding: 10, // Increase padding for input fields
   },
   saveChangesButton: {
-    backgroundColor: "#F24E1E",
+    backgroundColor: themeColors.accent,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
