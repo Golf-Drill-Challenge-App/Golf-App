@@ -13,6 +13,7 @@ import Loading from "~/components/loading";
 import ShotAccordion from "~/components/shotAccordion";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { themeColors } from "../Constants";
 
 export default function ResultScreen({
   drillId = null,

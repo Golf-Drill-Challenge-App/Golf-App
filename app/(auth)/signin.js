@@ -18,6 +18,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { themeColors } from "~/Constants";
 import { auth } from "~/firebaseConfig";
+import { themeColors } from "../../Constants";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;

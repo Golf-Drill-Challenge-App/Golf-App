@@ -9,6 +9,7 @@ import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { themeColors } from "../../../../Constants";
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];

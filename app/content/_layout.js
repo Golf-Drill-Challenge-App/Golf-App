@@ -5,11 +5,7 @@ import { themeColors } from "~/Constants";
 
 export default () => {
   return (
-    <Tabs
-      options={{
-        headerShown: false,
-      }}
-    >
+    <Tabs options={{ headerShown: false }}>
       <Tabs.Screen
         name="assignments"
         options={{

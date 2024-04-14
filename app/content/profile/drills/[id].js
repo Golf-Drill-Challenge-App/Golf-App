@@ -1,10 +1,8 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { themeColors } from "~/Constants";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
-import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";

@@ -28,6 +28,7 @@ import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { themeColors } from "../../../../../Constants";
 
 /***************************************
  * Firebase Upload
