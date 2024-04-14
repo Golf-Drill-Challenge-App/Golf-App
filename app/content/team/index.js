@@ -138,47 +138,46 @@ function Index() {
                 />
               </View>
 
-              <List.Section>
-                {foundUsers.map((user, i) => {
-                  const userId = user["uid"];
-                  return (
-                    <List.Item
-                      key={userId}
-                      title={user.name}
-                      left={() => (
-                        <Avatar.Image
-                          size={24}
-                          source={{
-                            uri: user.pfp,
-                          }}
-                        />
-                      )}
-                      right={() => (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            height: 16,
-                          }}
-                        >
-                          <Text
+                <List.Section>
+                  {foundUsers.map((user, i) => {
+                    const userId = user["uid"];
+                    return (
+                      <List.Item
+                        key={userId}
+                        title={user.name}
+                        left={() => (
+                          <Avatar.Image
+                            size={24}
+                            source={{
+                              uri: user.pfp,
+                            }}
+                          />
+                        )}
+                        right={() => (
+                          <View
                             style={{
-                              color: roleColor(user),
+                              flexDirection: "row",
+                              alignItems: "center",
                             }}
                           >
-                            {userId === currentUserId ? "Me!" : user.role}
-                          </Text>
-                          <Icon source="chevron-right" />
-                        </View>
-                      )}
-                      onPress={() =>
-                        router.push(`content/team/users/${userId}`)
-                      }
-                    />
-                  );
-                })}
-              </List.Section>
-            </KeyboardAwareScrollView>
+                            <Text
+                              style={{
+                                color: roleColor(user),
+                              }}
+                            >
+                              {userId === currentUserId ? "Me!" : user.role}
+                            </Text>
+                            <Icon source="chevron-right" />
+                          </View>
+                        )}
+                        onPress={() =>
+                          router.push(`content/team/users/${userId}`)
+                        }
+                      />
+                    );
+                  })}
+                </List.Section>
+              </KeyboardAwareScrollView>
           </>
         </TouchableWithoutFeedback>
       </SafeAreaView>
