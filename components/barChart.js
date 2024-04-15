@@ -295,6 +295,9 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
           scrollEventThrottle={128}
           style={styles.scrollViewContainer}
           removeClippedSubviews={true}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: false })
+          }
         >
           <View style={styles.chartContainer}>
             <BarChart

@@ -91,36 +91,30 @@ function ShotAccordion(props) {
           },
         }}
         title={""}
-        left={(leftProps) => (
+        left={() => (
           <View
             style={{
-              flexGrow: 1,
+              width: "90%",
               flexDirection: "row",
-              // justifyContent: "space-between",
               alignItems: "center",
-              // width: "100%",
-              // borderStyle: "solid",
-              // borderWidth: 1,
-              // borderColor: "#000",
-              marginLeft: 20,
+              paddingLeft: 20,
             }}
           >
-            <Text style={{ flexGrow: 1 }}>
+            <Text style={{ width: "30%" }}>
               <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
               {props.total}
             </Text>
-            <Text style={{ flexGrow: 2 }}>
+            <Text style={{ width: "40%" }}>
               <Text style={styles.boldText}>Target:</Text>{" "}
               {props.shot[props.drillInfo.requirements[0].name]}{" "}
               {props.drillInfo.requirements[0].distanceMeasure}
             </Text>
-            <Text style={{ flexGrow: 1 }}>
+            <Text style={{ width: "30%" }}>
               <Text style={styles.boldText}>SG:</Text>{" "}
               {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
             </Text>
           </View>
         )}
-        right={false}
         style={{
           backgroundColor: themeColors.background,
           borderWidth: 1,
