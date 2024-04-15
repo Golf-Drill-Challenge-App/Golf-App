@@ -13,28 +13,6 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-function RefreshInvalidate(currentTeamId, userId) {
-  const [refreshing, setRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    const refresh = async () => {
-      await queryClient.invalidateQueries({
-        // used predicate as it seemed to be the best method to invalidate multiple query keys
-        predicate: (query) =>
-          (query.queryKey[0] === "user" && query.queryKey[1] === userId) ||
-          (query.queryKey[0] === "attempts" &&
-            query.queryKey[1] === currentTeamId &&
-            query.queryKey[2].userId === userId) ||
-          query.queryKey[0] === "drillInfo",
-      });
-      setRefreshing(false);
-    };
-    refresh();
-  }, [queryClient, currentTeamId, userId]);
-  return <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />;
-}
-
 function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
@@ -91,6 +69,12 @@ function Index() {
     </>
   );
 
+  const invalidateKeys = [
+    ["attempts", { userId }],
+    ["user", { userId }],
+    ["drillInfo"],
+  ];
+
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
@@ -106,14 +90,22 @@ function Index() {
         {uniqueDrills.length > 0 ? (
           <DrillList
             drillData={uniqueDrills}
-            href={"/content/team/users/" + userData["uid"] + "/drills/"}
+            href={"/content/team/users/" + userData.uid + "/drills/"}
+            userId={userData.uid}
           >
             {profileHeader}
           </DrillList>
         ) : (
           <>
             {profileHeader}
-            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            <ScrollView
+              refreshControl={
+                // handle updating cache for another user list of drills
+                <RefreshInvalidate invalidateKeys={invalidateKeys} />
+              }
+            >
+              <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            </ScrollView>
           </>
         )}
       </SafeAreaView>

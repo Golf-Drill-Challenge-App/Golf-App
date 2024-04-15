@@ -21,7 +21,7 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 function Index() {
   const { currentUserId } = currentAuthContext();
   const { data: userInfo, userIsLoading, userError } = useUserInfo();
-
+  const invalidateKeys = [["user"]];
   const [searchQuery, setSearchQuery] = useState("");
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -37,7 +37,7 @@ function Index() {
     .sort((user1, user2) => {
       // Assign priorities based on conditions
       const getPriority = (user) => {
-        if (user.uid === currentUserId) {
+        if (user["uid"] === currentUserId) {
           return 0; // Highest priority
         } else if (user.role === "owner") {
           return 1;
@@ -63,7 +63,7 @@ function Index() {
     });
 
   const roleColor = (user) =>
-    user.uid === currentUserId
+    user["uid"] === currentUserId
       ? "#F24F1D"
       : user.role === "owner"
         ? "#3366ff"
@@ -96,6 +96,9 @@ function Index() {
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               stickyHeaderIndices={[3]}
+              refreshControl={
+                <RefreshInvalidate invalidateKeys={invalidateKeys} />
+              }
             >
               <View style={{ alignItems: "center" }}>
                 <Image
