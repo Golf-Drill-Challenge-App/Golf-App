@@ -13,9 +13,10 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 import { formatDate } from "~/Utility";
 import Header from "~/components/header";
 import EmptyScreen from "../../../components/emptyScreen";
+import ErrorComponent from "../../../components/errorComponent";
 
 const DrillList = () => {
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
 
   const {
     data: drillInfo,
@@ -45,6 +46,10 @@ const DrillList = () => {
 
   if (userIsLoading || drillInfoIsLoading) {
     return <Loading />;
+  }
+
+  if (userInfoError || drillInfoError) {
+    return <ErrorComponent message={[userInfoError, drillInfoError]} />;
   }
 
   const today = formatDate(Date.now());
@@ -143,15 +148,6 @@ const DrillList = () => {
   );
 };
 
-/*
-const convertTimestampToDate = (timestamp) => {
-  const date = new Date(timestamp * 1000);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-*/
 const CoachView = () => {
   const {
     data: drillInfo,
@@ -164,6 +160,9 @@ const CoachView = () => {
   const handlePress = () => setExpanded(!expanded);
   if (drillInfoIsLoading) {
     return <Loading />;
+  }
+  if (drillInfoError) {
+    return <ErrorComponent message={drillInfoError.message} />;
   }
   return (
     <List.Section>
@@ -181,9 +180,6 @@ const CoachView = () => {
 };
 
 export default function Index() {
-  const { data: userInfo, userIsLoading, userError } = useUserInfo();
-
-  // console.log("USER INFO IN PLAN BEGGINING", userInfo);
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>

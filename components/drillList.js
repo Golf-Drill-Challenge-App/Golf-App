@@ -63,7 +63,7 @@ export default function DrillList({ drillData, href, userId, children }) {
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>
           <Text style={{ color: "#666", paddingHorizontal: 5 }}>
             {drillData[getDrillIndexByTitle(title)].inputs.map((input) => {
-              let retVal = "";
+              let retVal;
               switch (input.id) {
                 case "carry":
                   retVal = "↑";

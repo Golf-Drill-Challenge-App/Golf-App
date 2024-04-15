@@ -1,4 +1,3 @@
-import { useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -21,7 +20,6 @@ export default function ResultScreen({
   attemptData = null,
 }) {
   const { width } = useWindowDimensions();
-  const navigation = useNavigation();
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
@@ -55,7 +53,7 @@ export default function ResultScreen({
     drillInfo["outputs"].includes("sideLanding") &&
     drillInfo["outputs"].includes("carryDiff")
   ) {
-    dots = attempt["shots"].map((value, index) => [
+    dots = attempt["shots"].map((value) => [
       value["sideLanding"],
       value["carryDiff"],
     ]);

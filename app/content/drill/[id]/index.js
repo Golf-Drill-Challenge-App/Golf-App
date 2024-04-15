@@ -16,9 +16,8 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 export default function Index() {
   const [value, setValue] = React.useState("description");
   const navigation = useNavigation();
-  const { id: drillId, assignedTime: assignedTime } = useLocalSearchParams();
+  const { id: drillId } = useLocalSearchParams();
 
-  // console.log("WAS IT ASSIGNED", assignedTime);
   const {
     data: drillInfo,
     error: drillInfoError,

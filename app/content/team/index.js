@@ -145,7 +145,7 @@ function Index() {
               </View>
 
               <List.Section>
-                {foundUsers.map((user, i) => {
+                {foundUsers.map((user) => {
                   const userId = user["uid"];
                   return (
                     <List.Item

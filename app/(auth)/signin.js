@@ -28,12 +28,7 @@ export default function SignIn() {
 
   async function handleSignIn() {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      // console.log(userCredential.user);
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (e) {
       alert(e);
       console.log(e);
