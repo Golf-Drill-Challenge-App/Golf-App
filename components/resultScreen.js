@@ -84,6 +84,13 @@ export default function ResultScreen({
     strokesGainedAverage: "Strokes Gained Average",
   }; 
 
+  let distanceMeasure = {
+    carryDiffAverage: " yd",
+    sideLandingAverage: " yd",
+    sideLandingTotal: " yd",
+    proxHoleAverage: " ft",
+  }
+
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
@@ -103,7 +110,7 @@ export default function ResultScreen({
                 key={output}
             >
               <Text>{title[output]}</Text>
-              <Text>{numTrunc(attempt[output])}</Text>
+              <Text>{numTrunc(attempt[output])}{distanceMeasure[output]}</Text>
             </View>
           ))}
         </View>

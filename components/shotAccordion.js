@@ -20,6 +20,7 @@ function DataField(field, value) {
     expectedPutts: "Expected Putts",
     strokes: "Strokes",
     break: "Break",
+    club: "Club",
   };
   switch (field) {
     case "carry": //compound
@@ -38,17 +39,18 @@ function DataField(field, value) {
               width: 200,
             }}
           >
-            <Row name={"(Actual)"} value={numTrunc(value["carry"])} />
-            <Row name={"(Target)"} value={numTrunc(value["target"])} />
-            <Row name={"(Diff)"} value={numTrunc(value["carryDiff"])} />
+            <Row name={"(Actual)"} value={`${numTrunc(value["carry"])} yd`} />
+            <Row name={"(Target)"} value={`${numTrunc(value["target"])} yd`} />
+            <Row name={"(Diff)"} value={`${numTrunc(value["carryDiff"])} yd`} />
           </View>
         </View>
       );
+    case "target":
+      return <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
     case "sideLanding":
+      return <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
     case "proxHole": //has units
-      return (
-        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
-      );
+      return <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
     case "strokesGained": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={numTrunc(value)} />;
     case "strokes": //just round to 3 decimals
