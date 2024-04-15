@@ -82,35 +82,35 @@ export default function ResultScreen({
     sideLandingTotal: "Side Landing Total",
     strokesGained: "Strokes Gained",
     strokesGainedAverage: "Strokes Gained Average",
-  }; 
+  };
 
   let distanceMeasure = {
     carryDiffAverage: " yd",
     sideLandingAverage: " yd",
     sideLandingTotal: " yd",
     proxHoleAverage: " ft",
-  }
+  };
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.sectionTitle}>Aggregate Data</Text>
-        <View 
-          style={{ 
+        <View
+          style={{
             margin: 10,
             backgroundColor: "#f5f5f5",
             borderWidth: 1,
             borderColor: "#ddd",
-            borderRadius: 8, 
+            borderRadius: 8,
           }}
         >
           {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
-            <View
-                style={getStyle(idx)}
-                key={output}
-            >
+            <View style={getStyle(idx)} key={output}>
               <Text>{title[output]}</Text>
-              <Text>{numTrunc(attempt[output])}{distanceMeasure[output]}</Text>
+              <Text>
+                {numTrunc(attempt[output])}
+                {distanceMeasure[output]}
+              </Text>
             </View>
           ))}
         </View>

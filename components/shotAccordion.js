@@ -46,11 +46,17 @@ function DataField(field, value) {
         </View>
       );
     case "target":
-      return <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
+      return (
+        <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
+      );
     case "sideLanding":
-      return <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
+      return (
+        <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
+      );
     case "proxHole": //has units
-      return <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
+      return (
+        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
+      );
     case "strokesGained": //just round to 3 decimals
       return <Row key={field} name={title[field]} value={numTrunc(value)} />;
     case "strokes": //just round to 3 decimals

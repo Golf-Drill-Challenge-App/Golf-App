@@ -308,7 +308,8 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                     inputValues[j].carry,
                     inputValues[j].sideLanding,
                   ),
-                ) - 1;
+                ) -
+                1;
               break;
             case "putt":
               shot.strokesGained =
