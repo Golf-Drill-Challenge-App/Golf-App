@@ -11,12 +11,12 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 export default function Stat() {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
-  const userId = currentAuthContext().currentUserId;
+  const { currentUserId: userId } = currentAuthContext();
 
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
-    drillInfoError,
+    error: drillInfoError,
   } = useDrillInfo(drillId);
 
   const {
@@ -45,7 +45,6 @@ export default function Stat() {
           />
           <Appbar.Content title={"Statistics"} />
         </Appbar.Header>
-
         <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />
       </SafeAreaView>
     </PaperProvider>

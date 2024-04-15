@@ -103,6 +103,11 @@ async function uploadAttempt(
     await setDoc(newAttemptRef, uploadData)
       .then(() => {
         console.log("Document successfully uploaded!");
+
+        // invalidate cache after successful upload
+        // TODO: Move this into wherever the update leaderboard hook is?
+        invalidateOnSubmit(queryClient, drillId, teamId, userId);
+
         //TODO: Call function to check for leaderboard update
 
         //Check if drill was assigned
@@ -402,6 +407,24 @@ function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
 }
 
+// TODO: Maybe refactor this to a hook / combo with new refreshInvalidate component (if other button actions etc need to
+// invalidate multiple queries at once)
+function invalidateOnSubmit(queryClient, drillId, teamId, userId) {
+  queryClient.invalidateQueries({
+    // used predicate as it seemed to be the best method to invalidate multiple query keys
+    predicate: (query) =>
+      query.queryKey[0] === "user" ||
+      query.queryKey[0] === "drillInfo" ||
+      (query.queryKey[0] === "best_attempts" && // not sure the leaderboard updates correctly
+        query.queryKey[1] === teamId &&
+        query.queryKey[2].drillId === drillId) ||
+      (query.queryKey[0] === "attempts" &&
+        query.queryKey[1] === teamId &&
+        (query.queryKey[2].drillId === drillId || // stats pages
+          query.queryKey[2].userId === userId)), // for profile index (list of drill types)
+  });
+}
+
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
@@ -531,12 +554,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     //check for submit button
     else if (submitVisible) {
       let outputData = createOutputData(
+        drillInfo,
         inputValues,
         attemptShots,
         currentUserId,
         did,
-        drillInfo.outputs,
-        drillInfo.aggOutputs,
       );
 
       setOutputData(outputData);

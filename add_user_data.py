@@ -9,17 +9,17 @@ db = firestore.client()
 
 # Define the assigned_data array
 assigned_data = [
-    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712600157", "completed": False},
-    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712531560", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531460", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531360", "completed": True},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531260", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470455", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470355", "completed": True},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470255", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712384055", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1709709255", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1709622855", "completed": False},
+    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712600157000", "completed": False},
+    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712531560000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531460000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531360000", "completed": True},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531260000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470455000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470355000", "completed": True},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470255000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712384055000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1709709255000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1709622855000", "completed": False},
 ]
 
 # Get a reference to the user collection

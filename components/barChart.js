@@ -14,6 +14,7 @@ import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
 import { Button } from "react-native-paper";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "../context/Auth";
 import { removeAttempt } from "../hooks/removeAttempt";
@@ -22,6 +23,16 @@ export default function BarChartScreen({ drillData, drillInfo }) {
   if (drillData.length === 0) {
     return <Text>No attempts have been made yet.</Text>;
   }
+
+  // presumably you can't access another user's drill stats page except through team tab, which handles invalidating
+  // cache for a new drill submission type for another user
+  const drillId = drillData[0].did;
+  const userId = drillData[0].uid;
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["attempts", { userId, drillId }],
+  ];
+
   const scrollViewRef = useRef();
 
   const [page, setPage] = useState(0);
@@ -218,8 +229,11 @@ export default function BarChartScreen({ drillData, drillInfo }) {
       color: "#333", // Adjust text color
     },
   });
+
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+    >
       <View style={styles.movingAvgContainer}>
         <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
 

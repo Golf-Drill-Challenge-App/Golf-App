@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
@@ -7,6 +7,7 @@ import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
@@ -68,6 +69,12 @@ function Index() {
     </>
   );
 
+  const invalidateKeys = [
+    ["attempts", { userId }],
+    ["user", { userId }],
+    ["drillInfo"],
+  ];
+
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
@@ -83,14 +90,22 @@ function Index() {
         {uniqueDrills.length > 0 ? (
           <DrillList
             drillData={uniqueDrills}
-            href={"/content/team/users/" + userData["uid"] + "/drills/"}
+            href={"/content/team/users/" + userData.uid + "/drills/"}
+            userId={userData.uid}
           >
             {profileHeader}
           </DrillList>
         ) : (
           <>
             {profileHeader}
-            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            <ScrollView
+              refreshControl={
+                // handle updating cache for another user list of drills
+                <RefreshInvalidate invalidateKeys={invalidateKeys} />
+              }
+            >
+              <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+            </ScrollView>
           </>
         )}
       </SafeAreaView>

@@ -5,6 +5,7 @@ import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { updateLeaderboard } from "~/hooks/updateLeaderboard";
 import { useAttempts } from "~/hooks/useAttempts";
@@ -38,6 +39,12 @@ export default function Leaderboard() {
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
   } = useLeaderboard({ drillId });
+
+  const invalidateKeys = [
+    ["userInfo"],
+    ["drillInfo", { drillId }],
+    ["best_attempts", drillId],
+  ];
 
   const preCalcLeaderboardExists =
     preCalcLeaderboard && Object.keys(preCalcLeaderboard).length > 0;
@@ -133,7 +140,9 @@ export default function Leaderboard() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+    >
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];

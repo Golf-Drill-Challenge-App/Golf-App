@@ -14,13 +14,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { currentUserId } = currentAuthContext();
   const { data: userInfo, userIsLoading, userError } = useUserInfo();
-
+  const invalidateKeys = [["user"]];
   const [searchQuery, setSearchQuery] = useState("");
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -67,6 +68,7 @@ function Index() {
       : user.role === "owner"
         ? "#3366ff"
         : "#222";
+
   return (
     <PaperProvider>
       <SafeAreaView
@@ -94,6 +96,9 @@ function Index() {
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               stickyHeaderIndices={[3]}
+              refreshControl={
+                <RefreshInvalidate invalidateKeys={invalidateKeys} />
+              }
             >
               <View style={{ alignItems: "center" }}>
                 <Image

@@ -2,9 +2,11 @@
 import { Divider } from "react-native-paper";
 
 import DrillCard from "~/components/drillCard";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 
-export default function DrillList({ drillData, href, children }) {
+export default function DrillList({ drillData, href, userId, children }) {
   const drills = [];
+  const invalidateKeys = [["attempts", { userId }]];
   Object.values(drillData).forEach((drill) => {
     if (drills.length !== 0) {
       const idx = drills.findIndex((item) => item.title === drill.drillType);
@@ -80,6 +82,7 @@ export default function DrillList({ drillData, href, children }) {
           <Divider bold={true} />
         </View>
       )}
+      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     />
   );
 }

@@ -1,13 +1,32 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import { AuthProvider } from "~/context/Auth";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 1, // 1 hour
+    },
+  },
+});
+
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
 
 export default function RootLayoutNav() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister: asyncStoragePersister,
+        maxAge: 1000 * 60 * 60 * 1,
+      }} // 1 hour
+    >
       <AuthProvider>
         <Stack
           screenOptions={{
@@ -19,6 +38,6 @@ export default function RootLayoutNav() {
           <Stack.Screen name="test" />
         </Stack>
       </AuthProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }

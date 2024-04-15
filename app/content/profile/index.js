@@ -18,6 +18,7 @@ import {
   Keyboard,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -32,6 +33,7 @@ import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
@@ -41,7 +43,7 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { signOut } = currentAuthContext();
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = currentAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
 
@@ -71,13 +73,16 @@ function Index() {
 
   // ref
   const bottomSheetModalRef = useRef(null);
-
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient(); // also called here for updating name
 
   // variables
   const [snapPoints, setSnapPoints] = useState(["60%", "60%"]);
-  const [isTyping, setIsTyping] = useState(false);
-
+  const invalidateKeys = [
+    ["user", { userId }],
+    ["attempts", { userId }],
+    ["userEmail", userId],
+    ["drillInfo"],
+  ];
   const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -107,7 +112,6 @@ function Index() {
         passwordInputVisible
           ? setSnapPoints(["45%", "93%"])
           : setSnapPoints(["40%", "83%"]);
-        setIsTyping(true);
       },
     );
 
@@ -115,7 +119,6 @@ function Index() {
       "keyboardDidHide",
       () => {
         setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
-        setIsTyping(false);
       },
     );
 
@@ -173,7 +176,7 @@ function Index() {
   const handleUpdate = async () => {
     if (newName && newName !== userData.name) {
       // check if they request to update their name to a new one
-      await updateDoc(doc(db, "teams", "1", "users", userId), {
+      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         name: newName,
       });
       queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
@@ -270,13 +273,21 @@ function Index() {
             <DrillList
               drillData={uniqueDrills}
               href={"content/profile/drills/"}
+              userId={userId}
             >
               {profileHeader}
             </DrillList>
           ) : (
             <>
               {profileHeader}
-              <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+              <ScrollView
+                refreshControl={
+                  // handle updating cache for logged in user's list of drills
+                  <RefreshInvalidate invalidateKeys={invalidateKeys} />
+                }
+              >
+                <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+              </ScrollView>
             </>
           )}
 

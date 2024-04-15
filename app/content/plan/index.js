@@ -1,20 +1,14 @@
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
-import {
-  RefreshControl,
-  SectionList,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, SectionList, TouchableOpacity, View } from "react-native";
 import { Appbar, List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-
-import { useQueryClient } from "@tanstack/react-query";
 
 import { formatDate } from "../../../Utility";
 
@@ -33,22 +27,10 @@ const DrillList = () => {
     userIsLoading: userIsLoading,
   } = useUserInfo(currentUserId);
 
-  const queryClient = useQueryClient();
+  const userId = currentUserId;
+  const invalidateKeys = [["user", { userId }], ["drillInfo"]];
 
   const [assignedData, setAssignedData] = useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    const refresh = async () => {
-      setRefreshing(true);
-      await queryClient.invalidateQueries([
-        "user",
-        { teamId: currentTeamId, userId: currentUserId },
-      ]);
-      setRefreshing(false);
-    };
-    refresh();
-  }, [currentTeamId, currentUserId, queryClient]);
 
   console.log("USER DATA", userInfo);
 
@@ -63,7 +45,7 @@ const DrillList = () => {
     return <Loading />;
   }
 
-  const today = formatDate(Date.now() / 1000);
+  const today = formatDate(Date.now());
   // Group the assigned drills by date
   const groupedData = assignedData.reduce((acc, curr) => {
     const date = formatDate(curr.assignedTime);
@@ -88,14 +70,18 @@ const DrillList = () => {
 
   // Render the list of drills
   return sortedDates.length === 0 ? (
-    <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
-      No drills assigned
-    </Text>
+    <ScrollView
+      refreshControl={
+        // handle updating cache for another user list of drills
+        <RefreshInvalidate invalidateKeys={invalidateKeys} />
+      }
+    >
+      <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
+        No drills assigned
+      </Text>
+    </ScrollView>
   ) : (
     <SectionList
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
       sections={sortedDates.map((date) => ({
         title: date,
         data: groupedData[date],
@@ -156,6 +142,10 @@ const DrillList = () => {
         </Text>
       )}
       stickySectionHeadersEnabled={false}
+      refreshControl={
+        // handle updating cache for another user list of drills
+        <RefreshInvalidate invalidateKeys={invalidateKeys} />
+      }
     />
   );
 };
@@ -176,7 +166,7 @@ const CoachView = () => {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = useState(true);
 
   const handlePress = () => setExpanded(!expanded);
   if (drillInfoIsLoading) {
