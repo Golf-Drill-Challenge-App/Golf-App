@@ -158,8 +158,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <ScrollView
-      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+    <ScrollView       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
         {title[drillInfo.mainOutputAttempt]}
