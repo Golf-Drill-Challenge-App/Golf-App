@@ -2,7 +2,6 @@ import { StyleSheet, View } from "react-native";
 import { List, Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
-import { themeColors } from "../Constants";
 
 function Row({ name, value }) {
   return (

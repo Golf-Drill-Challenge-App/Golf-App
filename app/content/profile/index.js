@@ -41,7 +41,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { themeColors } from "../../../Constants";
 
 function Index() {
   const { signOut } = currentAuthContext();
