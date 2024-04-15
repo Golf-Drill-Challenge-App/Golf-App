@@ -26,6 +26,7 @@ import {
 } from "react-native";
 import { Appbar, PaperProvider, Snackbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -40,7 +41,6 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 import EmptyScreen from "../../../components/emptyScreen";
-import { themeColors } from "../../../Constants";
 
 function Index() {
   const { signOut } = currentAuthContext();

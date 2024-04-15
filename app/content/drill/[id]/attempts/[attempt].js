@@ -2,8 +2,8 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import Header from "~/components/header";
 import ResultScreen from "~/components/resultScreen";
+import Header from "~/components/header";
 
 export default function Result() {
   const drillId = useLocalSearchParams()["id"];

@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { themeColors } from "../Constants";
+import { themeColors } from "~/Constants";
 
 function DrillCard(props) {
   return (

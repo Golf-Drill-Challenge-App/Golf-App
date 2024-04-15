@@ -1,5 +1,5 @@
 import { Button, Dialog, Portal, Text } from "react-native-paper";
-import { themeColors } from "../Constants";
+import { themeColors } from "~/Constants";
 
 /**
  * PROPS

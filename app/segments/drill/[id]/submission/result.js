@@ -4,7 +4,7 @@ import { Appbar, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "~/components/header";
 import ResultScreen from "~/components/resultScreen";
-import { themeColors } from "../../../../../Constants";
+import { themeColors } from "~/Constants";
 
 function Result(props) {
   const submission = props.submission;

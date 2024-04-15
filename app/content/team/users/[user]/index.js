@@ -2,6 +2,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
@@ -12,7 +13,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { themeColors } from "../../../../../Constants";
 import EmptyScreen from "../../../../../components/emptyScreen";
 
 function Index() {

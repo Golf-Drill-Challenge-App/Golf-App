@@ -1,18 +1,13 @@
 import { Tabs } from "expo-router";
 import { Text } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { themeColors } from "../../Constants";
+import { themeColors } from "~/Constants";
 
 export default () => {
   return (
     <Tabs
       options={{
         headerShown: false,
-        tabBarActiveTintColor: themeColors.accent,
-        tabBarStyle: {
-          paddingLeft: 100, // Left margin
-          // marginRight: 30, // Right margin
-        },
       }}
     >
       <Tabs.Screen

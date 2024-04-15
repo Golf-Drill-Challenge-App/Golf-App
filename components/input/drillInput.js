@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Icon, Text, TextInput } from "react-native-paper";
-import { themeColors } from "../../Constants";
+import { themeColors } from "~/Constants";
 
 export default function DrillInput({
   icon,

@@ -1,8 +1,8 @@
 ﻿import { SectionList, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 
+import { themeColors } from "~/Constants";
 import DrillCard from "~/components/drillCard";
-import { themeColors } from "../Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
 export default function DrillList({ drillData, href, userId, children }) {

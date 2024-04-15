@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { themeColors } from "../Constants";
+import { themeColors } from "~/Constants";
 
 const Loading = () => {
   return (

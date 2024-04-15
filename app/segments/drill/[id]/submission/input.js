@@ -13,6 +13,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import {
   getIconByKey,
   lookUpBaselineStrokesGained,
@@ -27,7 +28,6 @@ import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import { themeColors } from "../../../../../Constants";
 
 /***************************************
  * Firebase Upload

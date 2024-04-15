@@ -11,13 +11,13 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { themeColors } from "../../../Constants";
 
 function Index() {
   const { currentUserId } = currentAuthContext();

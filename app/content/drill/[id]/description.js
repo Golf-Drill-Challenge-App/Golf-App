@@ -1,13 +1,14 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { ScrollView } from "react-native";
 import { Button } from "react-native-paper";
+
+import { themeColors } from "~/Constants";
 import DrillDescription from "~/components/drillDescription";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { themeColors } from "../../../../Constants";
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];

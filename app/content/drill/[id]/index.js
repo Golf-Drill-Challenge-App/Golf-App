@@ -7,11 +7,11 @@ import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { themeColors } from "../../../../Constants";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
