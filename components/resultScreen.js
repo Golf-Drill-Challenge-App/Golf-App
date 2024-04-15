@@ -100,9 +100,7 @@ export default function ResultScreen({
           {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
             <View style={getStyle(idx)} key={output}>
               <Text>{title[output]}</Text>
-              <Text>
-                {numTrunc(attempt[output])}
-              </Text>
+              <Text>{numTrunc(attempt[output])}</Text>
             </View>
           ))}
         </View>
