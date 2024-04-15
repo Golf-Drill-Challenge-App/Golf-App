@@ -2,6 +2,7 @@
 import { Divider } from "react-native-paper";
 
 import DrillCard from "~/components/drillCard";
+import { themeColors } from "../Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
 export default function DrillList({ drillData, href, userId, children }) {
@@ -56,7 +57,7 @@ export default function DrillList({ drillData, href, userId, children }) {
             flex: 1,
             flexDirection: "row",
             paddingVertical: 5,
-            backgroundColor: "#F2F2F2",
+            backgroundColor: themeColors.background,
           }}
         >
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>

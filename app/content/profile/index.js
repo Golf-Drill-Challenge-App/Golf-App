@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   closeButtonText: {
-    color: "#F24D1F",
+    color: themeColors.accent,
     fontSize: 17,
     marginLeft: 10,
     marginTop: -10,
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     marginBottom: 20, // Increase margin bottom for more spacing
   },
   signOutButton: {
-    color: "#F24D1F",
+    color: themeColors.accent,
     fontSize: 16,
   },
 });

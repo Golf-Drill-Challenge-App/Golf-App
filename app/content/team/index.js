@@ -119,74 +119,74 @@ function Index() {
                 </View>
               </View>
 
-                <Text style={{ textAlign: "center", marginBottom: 20 }}>
-                  {Object.keys(userInfo).length} members
-                </Text>
-                <View
+              <Text style={{ textAlign: "center", marginBottom: 20 }}>
+                {Object.keys(userInfo).length} members
+              </Text>
+              <View
+                style={{
+                  // default react native background color or something, so stuff scrolling behind this is less jank
+                  backgroundColor: themeColors.background,
+                  paddingBottom: 10,
+                  paddingTop: 10,
+                }}
+              >
+                <Searchbar
+                  onChangeText={onChangeSearch}
+                  value={searchQuery}
                   style={{
-                    // default react native background color or something, so stuff scrolling behind this is less jank
-                    backgroundColor: "#f2f2f2",
-                    paddingBottom: 10,
-                    paddingTop: 10,
+                    marginLeft: 20,
+                    marginRight: 20,
+                    backgroundColor: "#fff",
+                    borderWidth: 1,
+                    borderColor: themeColors.border,
                   }}
-                >
-                  <Searchbar
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
-                    style={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                      backgroundColor: "#fff",
-                      borderWidth: 1,
-                      borderColor: themeColors.border,
-                    }}
-                    placeholder="Search team members"
-                  />
-                </View>
+                  placeholder="Search team members"
+                />
+              </View>
 
-                <List.Section>
-                  {foundUsers.map((user, i) => {
-                    const userId = user["uid"];
-                    return (
-                      <List.Item
-                        key={userId}
-                        title={user.name}
-                        style={{
-                          paddingLeft: 20,
-                        }}
-                        left={() => (
-                          <Avatar.Image
-                            size={24}
-                            source={{
-                              uri: user.pfp,
-                            }}
-                          />
-                        )}
-                        right={() => (
-                          <View
+              <List.Section>
+                {foundUsers.map((user, i) => {
+                  const userId = user["uid"];
+                  return (
+                    <List.Item
+                      key={userId}
+                      title={user.name}
+                      style={{
+                        paddingLeft: 20,
+                      }}
+                      left={() => (
+                        <Avatar.Image
+                          size={24}
+                          source={{
+                            uri: user.pfp,
+                          }}
+                        />
+                      )}
+                      right={() => (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text
                             style={{
-                              flexDirection: "row",
-                              alignItems: "center",
+                              color: roleColor(user),
                             }}
                           >
-                            <Text
-                              style={{
-                                color: roleColor(user),
-                              }}
-                            >
-                              {userId === currentUserId ? "Me!" : user.role}
-                            </Text>
-                            <Icon source="chevron-right" />
-                          </View>
-                        )}
-                        onPress={() =>
-                          router.push(`content/team/users/${userId}`)
-                        }
-                      />
-                    );
-                  })}
-                </List.Section>
-              </KeyboardAwareScrollView>
+                            {userId === currentUserId ? "Me!" : user.role}
+                          </Text>
+                          <Icon source="chevron-right" />
+                        </View>
+                      )}
+                      onPress={() =>
+                        router.push(`content/team/users/${userId}`)
+                      }
+                    />
+                  );
+                })}
+              </List.Section>
+            </KeyboardAwareScrollView>
           </>
         </TouchableWithoutFeedback>
       </SafeAreaView>
