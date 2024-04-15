@@ -158,23 +158,8 @@ export default function Leaderboard() {
   };
 
   return (
-    <ScrollView
-      refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+    <ScrollView       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
-      {/*<List.Accordion 
-        title={title[mainOutputAttempt]}
-      >
-        {Object.keys(drillInfo.aggOutputs).map((output) => (
-          <List.Item 
-            key={output}
-            title={title[output]}
-            onPress={() => {
-              setDefaultMainOutputAttempt(false);
-              setCustomMainOutputAttempt(output);
-            }}
-          />
-        ))}
-      </List.Accordion>*/}
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
         {title[drillInfo.mainOutputAttempt]}
       </Text>
@@ -188,6 +173,9 @@ export default function Leaderboard() {
                 pathname: `${currentPath}/attempts/${attempt["id"]}`,
               }}
               asChild
+              style={{
+                paddingLeft: 20,
+              }}
             >
               <List.Item
                 title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
