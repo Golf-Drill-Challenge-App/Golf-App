@@ -60,6 +60,11 @@ export default function Index() {
           value={value}
           onValueChange={setValue}
           style={{ marginLeft: 10, marginRight: 10 }}
+          theme={{
+            colors: {
+              secondaryContainer: "#FFD5C9",
+            },
+          }}
           buttons={[
             {
               value: "description",
