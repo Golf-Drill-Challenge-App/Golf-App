@@ -12,7 +12,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-function Index(props) {
+function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
   const {
@@ -57,10 +57,20 @@ function Index(props) {
   }
 
   const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
+  const profileHeader = (
+    <>
+      <View style={styles.profileContainer}>
+        <ProfileCard user={userData} email={userEmail} />
+      </View>
+      <View>
+        <Text style={styles.heading}>Drill History</Text>
+      </View>
+    </>
+  );
 
   return (
     <PaperProvider>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
           <Appbar.BackAction
             onPress={() => {
@@ -70,20 +80,18 @@ function Index(props) {
           />
           <Appbar.Content title={userData["name"] + "'s Profile"} />
         </Appbar.Header>
-
-        <View style={styles.profileContainer}>
-          <ProfileCard user={userData} email={userEmail} />
-        </View>
-
-        <Text style={styles.heading}>Drill History</Text>
-
         {uniqueDrills.length > 0 ? (
           <DrillList
             drillData={uniqueDrills}
             href={"/content/team/users/" + userData["uid"] + "/drills/"}
-          />
+          >
+            {profileHeader}
+          </DrillList>
         ) : (
-          <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+          <>
+            {profileHeader}
+            <Text style={styles.noDrillsText}>No drills attempted yet</Text>
+          </>
         )}
       </SafeAreaView>
     </PaperProvider>
@@ -96,11 +104,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   heading: {
+    textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
     marginBottom: 5,
-    marginLeft: 17,
   },
   scrollViewContent: {
     paddingHorizontal: 20,
