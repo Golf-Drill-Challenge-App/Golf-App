@@ -128,6 +128,10 @@ export function lookUpBaselineStrokesGained(value) {
       return sgValues[i - 1];
     }
   }
+  console.log(
+    "Distance Exceeded ceiling of strokes gained in lookUpBaselineStrokesGained",
+  );
+  return sgValues[sgValues.length - 1];
 }
 export function lookUpExpectedPutts(proxHole) {
   const putt_keys = [
