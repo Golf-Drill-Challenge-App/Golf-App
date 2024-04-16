@@ -674,9 +674,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                             <NavigationRectangle
                               key={id}
                               drillInfo={drillInfo}
-                              attemptShots={attemptShots}
+                              shot={item}
                               inputValues={inputValues[id]}
-                              shotIndex={item.shotNum}
                             />
                           </Pressable>
                         ))}
@@ -857,6 +856,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "flex-start",
+    gap: 10,
     paddingVertical: 20,
   },
   modalContainerStyle: {

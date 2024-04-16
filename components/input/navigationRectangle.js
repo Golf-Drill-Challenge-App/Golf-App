@@ -1,130 +1,100 @@
 import { View } from "react-native";
-import { Icon, Text } from "react-native-paper";
+import { Divider, Icon, Text } from "react-native-paper";
 
 import { getIconByKey } from "~/Utility";
 
-function requirementDisplay(attemptShots, drillInfo, shotIndex) {
-  for (let i = 0; i < drillInfo.requirements.length; i++) {
-    const requirementName = drillInfo.requirements[i].name;
-    //Target Requirement takes priority in multi-requirement Drills
-    if (requirementName == "target") {
-      return (
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 16,
-            padding: 2,
-          }}
-        >
-          {drillInfo.requirements[0].prompt}:{" "}
-          {attemptShots[shotIndex - 1].items.target}{" "}
-          {drillInfo.requirements[0].distanceMeasure}
-        </Text>
-      );
-    }
-    //Club Requirement takes next priority in multi-requirement Drills
-    if (requirementName == "club") {
-      return (
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 16,
-            padding: 2,
-          }}
-        >
-          {drillInfo.requirements[0].prompt}:{" "}
-          {attemptShots[shotIndex - 1].items.club}
-        </Text>
-      );
-    }
-  }
-
-  //Return empty if no requirement display is found
-  console.log(
-    "Requirement Display error in requirementDisplay located within navitgationRectangle component",
-  );
-  return <></>;
-}
-
-export default function NavigationRectangle({
-  drillInfo,
-  attemptShots,
-  inputValues,
-  shotIndex,
-}) {
+export default function NavigationRectangle({ drillInfo, inputValues, shot }) {
+  console.log("inputValues", inputValues);
+  const keys = Object.keys(inputValues);
   return (
     <View
       style={{
         backgroundColor: "#d9d9d9",
-        padding: 20,
+        padding: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
         borderRadius: 10,
         maxHeight: 250,
         width: "80%",
         overflow: "hidden",
-        marginBottom: 20,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        elevation: 5,
       }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{}}>
         <Text
           style={{
-            fontWeight: "bold",
-            fontSize: 25,
-            elevation: 5,
-            textShadowColor: "rgba(0, 0, 0, 0.2)",
-            textShadowOffset: { width: 2, height: 2 },
-            textShadowRadius: 5,
+            fontSize: 20,
           }}
         >
-          Shot {shotIndex}/{attemptShots.length}
+          Shot <Text style={{ fontWeight: "bold" }}>{shot.shotNum}</Text>
         </Text>
       </View>
 
       <View
         style={{
-          flex: 1,
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
         <View
           style={{
-            marginBottom: 10,
-            borderBottomWidth: 2,
-            borderColor: "#A0A0A0",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            gap: 10,
           }}
         >
-          {requirementDisplay(attemptShots, drillInfo, shotIndex)}
+          {drillInfo.requirements.map((requirement) => (
+            <Text
+              key={requirement.name}
+              style={{
+                fontSize: 16,
+                padding: 2,
+              }}
+            >
+              {requirement.prompt}:
+              <Text style={{ fontWeight: "bold" }}>
+                {" "}
+                {shot.items[requirement.name]} {requirement.distanceMeasure}
+              </Text>
+            </Text>
+          ))}
         </View>
+
+        {keys.length > 0 && !keys.some((key) => !inputValues[key]) && (
+          <Divider
+            style={{ backgroundColor: "#A0A0A0", height: 1, width: "100%" }}
+          />
+        )}
 
         <View
           style={{
             flexDirection: "row",
-            marginBottom: 10,
-            alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
-          {drillInfo.inputs.map((item, id) => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: 10,
-                flex: 1,
-              }}
-              key={id}
-            >
-              <Icon source={getIconByKey(item.id)} size={15} />
-              <Text style={{ fontSize: 13, padding: 2 }}>
-                {inputValues[item.id]} {item.distanceMeasure}
-              </Text>
-            </View>
-          ))}
+          {drillInfo.inputs.map((input, id) => {
+            if (inputValues[input.id]) {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: 10,
+                  }}
+                  key={id}
+                >
+                  <Icon source={getIconByKey(input.id)} size={15} />
+                  <Text style={{ fontSize: 13, padding: 2 }}>
+                    {inputValues[input.id]} {input.distanceMeasure}
+                  </Text>
+                </View>
+              );
+            }
+          })}
         </View>
       </View>
     </View>
