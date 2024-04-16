@@ -4,35 +4,46 @@ import { Icon, Text } from "react-native-paper";
 import { getIconByKey } from "~/Utility";
 
 function requirementDisplay(attemptShots, drillInfo, shotIndex) {
-  if (drillInfo.requirements[0].name == "target") {
-    return (
-      <Text
-        style={{
-          fontWeight: "bold",
-          fontSize: 16,
-          padding: 2,
-        }}
-      >
-        {drillInfo.requirements[0].prompt}:{" "}
-        {attemptShots[shotIndex - 1].items.target}{" "}
-        {drillInfo.requirements[0].distanceMeasure}
-      </Text>
-    );
+  for (let i = 0; i < drillInfo.requirements.length; i++) {
+    const requirementName = drillInfo.requirements[i].name;
+    //Target Requirement takes priority in multi-requirement Drills
+    if (requirementName == "target") {
+      return (
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 16,
+            padding: 2,
+          }}
+        >
+          {drillInfo.requirements[0].prompt}:{" "}
+          {attemptShots[shotIndex - 1].items.target}{" "}
+          {drillInfo.requirements[0].distanceMeasure}
+        </Text>
+      );
+    }
+    //Club Requirement takes next priority in multi-requirement Drills
+    if (requirementName == "club") {
+      return (
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 16,
+            padding: 2,
+          }}
+        >
+          {drillInfo.requirements[0].prompt}:{" "}
+          {attemptShots[shotIndex - 1].items.club}
+        </Text>
+      );
+    }
   }
-  if (drillInfo.requirements[0].name == "club") {
-    return (
-      <Text
-        style={{
-          fontWeight: "bold",
-          fontSize: 16,
-          padding: 2,
-        }}
-      >
-        {drillInfo.requirements[0].prompt}:{" "}
-        {attemptShots[shotIndex - 1].items.club}
-      </Text>
-    );
-  }
+
+  //Return empty if no requirement display is found
+  console.log(
+    "Requirement Display error in requirementDisplay located within navitgationRectangle component",
+  );
+  return <></>;
 }
 
 export default function NavigationRectangle({
