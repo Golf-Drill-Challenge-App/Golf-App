@@ -12,7 +12,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Image,
   Keyboard,
@@ -25,7 +25,10 @@ import {
   View,
 } from "react-native";
 import { Appbar, PaperProvider, Snackbar } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaInsetsContext,
+  SafeAreaView,
+} from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DialogComponent from "~/components/dialog";
@@ -96,6 +99,8 @@ function Index() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const insets = useContext(SafeAreaInsetsContext);
 
   useEffect(() => {
     setNewName(userData ? userData.name : "");
@@ -250,12 +255,11 @@ function Index() {
       </Snackbar>
 
       <DialogComponent
+        type={"snackbar"}
         title={dialogTitle}
         content={dialogMessage}
         visible={dialogVisible}
         onHide={() => setDialogVisible(false)}
-        buttons={["OK"]}
-        buttonsFunctions={[() => setDialogVisible(false)]}
       />
 
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
@@ -294,7 +298,14 @@ function Index() {
             ref={bottomSheetModalRef}
             index={1}
             snapPoints={snapPoints}
-            backdropComponent={BottomSheetBackdrop}
+            backdropComponent={({ animatedIndex, style }) => {
+              return (
+                <BottomSheetBackdrop
+                  animatedIndex={animatedIndex}
+                  style={[style, { top: -insets.top }]}
+                />
+              );
+            }}
           >
             <View style={styles.modalContent}>
               {/* Close Button */}
