@@ -3,6 +3,39 @@ import { Icon, Text } from "react-native-paper";
 
 import { getIconByKey } from "~/Utility";
 
+function requirementDisplay(attemptShots, drillInfo, shotIndex) {
+  if (drillInfo.requirements[0].name == "target") {
+    return (
+      <Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 16,
+          padding: 2,
+        }}
+      >
+        {drillInfo.requirements[0].prompt}:{" "}
+        {attemptShots[shotIndex - 1].items.target}{" "}
+        {drillInfo.requirements[0].distanceMeasure}
+      </Text>
+    );
+  }
+  if (drillInfo.requirements[0].name == "club") {
+    console.log("It's Clubbin time");
+    return (
+      <Text
+        style={{
+          fontWeight: "bold",
+          fontSize: 16,
+          padding: 2,
+        }}
+      >
+        {drillInfo.requirements[0].prompt}:{" "}
+        {attemptShots[shotIndex - 1].items.club}
+      </Text>
+    );
+  }
+}
+
 export default function NavigationRectangle({
   drillInfo,
   attemptShots,
@@ -55,16 +88,7 @@ export default function NavigationRectangle({
             borderColor: "#A0A0A0",
           }}
         >
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 16,
-              padding: 2,
-            }}
-          >
-            Target: {attemptShots[shotIndex - 1].target}
-            {drillInfo.requirements[0].distanceMeasure}
-          </Text>
+          {requirementDisplay(attemptShots, drillInfo, shotIndex)}
         </View>
 
         <View
