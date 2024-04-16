@@ -20,7 +20,6 @@ function requirementDisplay(attemptShots, drillInfo, shotIndex) {
     );
   }
   if (drillInfo.requirements[0].name == "club") {
-    console.log("It's Clubbin time");
     return (
       <Text
         style={{
