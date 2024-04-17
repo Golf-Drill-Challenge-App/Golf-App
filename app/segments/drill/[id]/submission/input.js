@@ -589,24 +589,26 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
         <SafeAreaView>
           <View style={{ height: "100%" }}>
             <BottomSheetModalProvider>
-              <Appbar.Header
-                style={{ backgroundColor: "FFF" }}
-                statusBarHeight={0}
-              >
-                <Appbar.Action
-                  icon="close"
-                  onPress={() => setLeaveDialogVisible(true)}
-                  color={"#F24E1E"}
-                />
-                <Header drillInfo={drillInfo} />
-                <Appbar.Action
-                  icon="information-outline"
-                  onPress={() => {
-                    descriptionModalRef.current?.present();
-                  }}
-                  color={"#F24E1E"}
-                />
-              </Appbar.Header>
+              <Header
+                title={drillInfo.drillType}
+                subTitle={drillInfo.subType}
+                preChildren={
+                  <Appbar.Action
+                    icon="close"
+                    onPress={() => setLeaveDialogVisible(true)}
+                    color={"#F24E1E"}
+                  />
+                }
+                postChildren={
+                  <Appbar.Action
+                    icon="information-outline"
+                    onPress={() => {
+                      descriptionModalRef.current?.present();
+                    }}
+                    color={"#F24E1E"}
+                  />
+                }
+              />
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}

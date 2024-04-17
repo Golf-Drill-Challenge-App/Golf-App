@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { Appbar, List, PaperProvider, Text } from "react-native-paper";
+import { List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Loading from "~/components/loading";
@@ -10,7 +10,8 @@ import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-import { formatDate } from "../../../Utility";
+import { formatDate } from "~/Utility";
+import Header from "~/components/header";
 import EmptyScreen from "../../../components/emptyScreen";
 
 const DrillList = () => {
@@ -186,9 +187,7 @@ export default function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.Content title={"Assigned Drills"} titleStyle={{}} />
-        </Appbar.Header>
+        <Header title="Assigned Drills" />
 
         <DrillList />
       </SafeAreaView>

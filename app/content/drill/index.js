@@ -1,9 +1,10 @@
 import { useNavigation } from "expo-router";
-import { Appbar, PaperProvider } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
@@ -27,9 +28,7 @@ export default function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.Content title="Drills" />
-        </Appbar.Header>
+        <Header title={"Drills"} />
 
         <DrillList
           drillData={Object.values(drillInfo)}

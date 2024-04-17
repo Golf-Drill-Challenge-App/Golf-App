@@ -3,6 +3,7 @@ import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -34,15 +35,17 @@ export default function Stat() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.goBack();
-            }}
-            color={"#F24E1E"}
-          />
-          <Appbar.Content title={"Statistics"} />
-        </Appbar.Header>
+        <Header
+          title={"Statistics"}
+          preChildren={
+            <Appbar.BackAction
+              onPress={() => {
+                navigation.goBack();
+              }}
+              color={"#F24E1E"}
+            />
+          }
+        />
 
         <BarChartScreen
           drillData={drillAttempts}

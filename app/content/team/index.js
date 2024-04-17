@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  Appbar,
   Avatar,
   Icon,
   List,
@@ -13,6 +12,7 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
@@ -84,12 +84,7 @@ function Index() {
           accessible={false}
         >
           <>
-            <Appbar.Header
-              statusBarHeight={0}
-              style={{ backgroundColor: "FFF" }}
-            >
-              <Appbar.Content title={"Team"} />
-            </Appbar.Header>
+            <Header title={"Team"} />
             <KeyboardAwareScrollView
               style={{ marginLeft: 20 }}
               // allows opening links from search results without closing keyboard first

@@ -42,18 +42,18 @@ export default function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header
-          statusBarHeight={0}
-          style={{ padding: 0, backgroundColor: "FFF" }}
-        >
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.goBack();
-            }}
-            color={"#F24E1E"}
-          />
-          <Header drillInfo={drillInfo} />
-        </Appbar.Header>
+        <Header
+          title={drillInfo.drillType}
+          subTitle={drillInfo.subType}
+          preChildren={
+            <Appbar.BackAction
+              onPress={() => {
+                navigation.goBack();
+              }}
+              color={"#F24E1E"}
+            />
+          }
+        />
         {/* Tab system */}
         <SegmentedButtons
           value={value}
