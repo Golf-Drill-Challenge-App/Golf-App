@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { List, Text } from "react-native-paper";
+import { Icon, List, Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 
@@ -90,29 +90,51 @@ function ShotAccordion(props) {
             background: themeColors.background,
           },
         }}
-        title={""}
+        title={<View style={{ width: 0, backgroundColor: "red" }}></View>}
+        rippleColor={"rgba(221,221,221,0.25)"}
         left={() => (
           <View
             style={{
               width: "90%",
               flexDirection: "row",
               alignItems: "center",
-              paddingLeft: 20,
+              marginLeft: 20,
             }}
           >
-            <Text style={{ width: "30%" }}>
+            <Text
+              style={{
+                width: "31%",
+              }}
+            >
               <Text style={styles.boldText}>Shot: {props.shot["sid"]}</Text>/
               {props.total}
             </Text>
-            <Text style={{ width: "40%" }}>
+            <Text
+              style={{
+                width: "41%",
+              }}
+            >
               <Text style={styles.boldText}>Target:</Text>{" "}
               {props.shot[props.drillInfo.requirements[0].name]}{" "}
               {props.drillInfo.requirements[0].distanceMeasure}
             </Text>
-            <Text style={{ width: "30%" }}>
+            <Text style={{}}>
               <Text style={styles.boldText}>SG:</Text>{" "}
               {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
             </Text>
+          </View>
+        )}
+        right={({ isExpanded }) => (
+          <View
+            style={{
+              position: "relative",
+              left: -20,
+            }}
+          >
+            <Icon
+              source={isExpanded ? "chevron-up" : "chevron-down"}
+              size={20}
+            />
           </View>
         )}
         style={{
