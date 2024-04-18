@@ -1,22 +1,21 @@
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
+import { currentAuthContext } from "~/context/Auth";
+
 export const updateLeaderboard = async ({
-  currentTeamId,
-  drillId = null,
+  drillId,
   userId = null,
   attemptId = null,
-  value = null,
+  value,
 }) => {
+  const { currentTeamId } = currentAuthContext();
   if (!currentTeamId || !drillId || !value) {
     console.log("currentTeamId, drillId, or value not passed in");
     return;
   }
   if (userId) {
     //update a user's best after an attempt. Only pass in values to update, don't pass in everything...
-    if (!attemptId) {
-      console.log("attemptId or value not passed in");
-      return;
-    }
+
     const leaderboardRef = doc(
       db,
       "teams",

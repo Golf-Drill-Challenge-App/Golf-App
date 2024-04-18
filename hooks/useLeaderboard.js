@@ -3,10 +3,11 @@ import { doc, getDoc } from "firebase/firestore";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useLeaderboard = ({ drillId = null }) => {
+export const useLeaderboard = ( drillId ) => {
   const { currentTeamId } = currentAuthContext();
+  console.log(currentTeamId)
   const { data, error, isLoading } = useQuery({
-    queryKey: ["best_attempts", currentTeamId, drillId],
+    queryKey: ["best_attempts", drillId],
     queryFn: async () => {
       // Fetch all drills info
       const newLeaderboard = {};

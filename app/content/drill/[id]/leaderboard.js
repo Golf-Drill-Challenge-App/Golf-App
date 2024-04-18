@@ -14,7 +14,7 @@ import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Leaderboard() {
-  const { currentTeamId } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
   const drillId = useLocalSearchParams()["id"];
   const currentPath = usePathname();
   const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
@@ -38,35 +38,40 @@ export default function Leaderboard() {
     data: preCalcLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
-  } = useLeaderboard({ drillId });
+  } = useLeaderboard(drillId);
 
   const invalidateKeys = [
-    ["userInfo"],
+    ["user"],
     ["drillInfo", { drillId }],
     ["best_attempts", drillId],
   ];
 
-  const preCalcLeaderboardExists =
-    preCalcLeaderboard && Object.keys(preCalcLeaderboard).length > 0;
+  if (preCalcLeaderboard) {
+    console.log("YOOOOOO");
+    console.log(Object.keys(preCalcLeaderboard).length);
+  }
 
   useEffect(() => {
+    console.log("\nLB UPDATEE");
+    if (preCalcLeaderboard) {
+      console.log(preCalcLeaderboard);
+    }
+
     setManualAttemptCalc(
       !drillIsLoading && // so that mainOutputAttempt is calculated
         !leaderboardIsLoading && //leaderboard must've finished loading
-        (!preCalcLeaderboardExists || //and not exist
-          preCalcLeaderboard[Object.keys(preCalcLeaderboard)[0]][
-            mainOutputAttempt
-          ] === undefined), //or exist but does not have the required field
+        ((foundUserAttempt ? false: true) || (Object.keys(preCalcLeaderboard).length === 0) || ((foundUserAttempt && !preCalcLeaderboard[currentUserId]) ? true: false)), //or exist but does not have the required field
     );
-  }, [drillIsLoading, leaderboardIsLoading, preCalcLeaderboard]);
-
-  // console.log("enabled: ", manualAttempt);
+  }, [!drillIsLoading, !leaderboardIsLoading, preCalcLeaderboard]);
+  console.log(foundUserAttempt ? false: true)
+  console.log("enabled: ", manualAttemptCalc);
 
   const {
     data: attempts,
     isLoading: attemptIsLoading,
     error: attemptError,
   } = useAttempts({
+    currentUserId,
     drillId,
     enabled: manualAttemptCalc,
   });
@@ -92,8 +97,16 @@ export default function Leaderboard() {
     ? drillInfo["mainOutputAttempt"]
     : customMainOutputAttempt;
 
+    let foundUserAttempt = null;
+
+    if (attempts) {
+      foundUserAttempt = attempts.find(o => (o.did === drillId) && (o.uid === currentUserId) && (o[customMainOutputAttempt])) ?? null;
+    }
+
   const leaderboardAttempts = preCalcLeaderboard || {};
-  if (!preCalcLeaderboardExists && attempts) {
+  if (
+    (!foundUserAttempt || (Object.keys(preCalcLeaderboard).length === 0) || (!preCalcLeaderboard[currentUserId]))
+  ) {
     //just in case...
     for (const id in attempts) {
       const entry = attempts[id];
@@ -118,12 +131,12 @@ export default function Leaderboard() {
         };
       }
     }
-
+    // comment out here to test
     updateLeaderboard({
-      currentTeamId,
       drillId,
       value: leaderboardAttempts,
     });
+
   }
 
   // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
