@@ -670,7 +670,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       />
                     );
                   }}
-                  backgroundStyle={{ backgroundColor: "#F2F2F2" }}
+                  backgroundStyle={{ backgroundColor: themeColors.background }}
                 >
                   <BottomSheetScrollView>
                     <View style={styles.bottomSheetContentContainer}>
@@ -712,7 +712,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       />
                     );
                   }}
-                  backgroundStyle={{ backgroundColor: "#F2F2F2" }}
+                  backgroundStyle={{ backgroundColor: themeColors.background }}
                 >
                   <BottomSheetScrollView>
                     <DrillDescription drillData={drillInfo} />
@@ -881,7 +881,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   modalContainerStyle: {
-    backgroundColor: "#F2F2F2",
+    backgroundColor: themeColors.background,
     padding: 20,
     alignItems: "center",
     justifyContent: "center",

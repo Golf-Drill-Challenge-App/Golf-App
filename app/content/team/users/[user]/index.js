@@ -65,9 +65,7 @@ function Index() {
       <View style={styles.profileContainer}>
         <ProfileCard user={userData} email={userEmail} />
       </View>
-      <View>
-        <Text style={styles.heading}>Drill History</Text>
-      </View>
+      <View>{/*<Text style={styles.heading}>Drill History</Text>*/}</View>
     </>
   );
 
