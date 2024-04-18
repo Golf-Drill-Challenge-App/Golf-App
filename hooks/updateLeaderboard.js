@@ -1,6 +1,6 @@
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "~/firebaseConfig";
 import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 
 export const updateLeaderboard = async ({
   drillId,

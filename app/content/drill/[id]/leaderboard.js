@@ -60,10 +60,14 @@ export default function Leaderboard() {
     setManualAttemptCalc(
       !drillIsLoading && // so that mainOutputAttempt is calculated
         !leaderboardIsLoading && //leaderboard must've finished loading
-        ((foundUserAttempt ? false: true) || (Object.keys(preCalcLeaderboard).length === 0) || ((foundUserAttempt && !preCalcLeaderboard[currentUserId]) ? true: false)), //or exist but does not have the required field
+        ((foundUserAttempt ? false : true) ||
+          Object.keys(preCalcLeaderboard).length === 0 ||
+          (foundUserAttempt && !preCalcLeaderboard[currentUserId]
+            ? true
+            : false)), //or exist but does not have the required field
     );
   }, [!drillIsLoading, !leaderboardIsLoading, preCalcLeaderboard]);
-  console.log(foundUserAttempt ? false: true)
+  console.log(foundUserAttempt ? false : true);
   console.log("enabled: ", manualAttemptCalc);
 
   const {
@@ -97,15 +101,23 @@ export default function Leaderboard() {
     ? drillInfo["mainOutputAttempt"]
     : customMainOutputAttempt;
 
-    let foundUserAttempt = null;
+  let foundUserAttempt = null;
 
-    if (attempts) {
-      foundUserAttempt = attempts.find(o => (o.did === drillId) && (o.uid === currentUserId) && (o[customMainOutputAttempt])) ?? null;
-    }
+  if (attempts) {
+    foundUserAttempt =
+      attempts.find(
+        (o) =>
+          o.did === drillId &&
+          o.uid === currentUserId &&
+          o[customMainOutputAttempt],
+      ) ?? null;
+  }
 
   const leaderboardAttempts = preCalcLeaderboard || {};
   if (
-    (!foundUserAttempt || (Object.keys(preCalcLeaderboard).length === 0) || (!preCalcLeaderboard[currentUserId]))
+    !foundUserAttempt ||
+    Object.keys(preCalcLeaderboard).length === 0 ||
+    !preCalcLeaderboard[currentUserId]
   ) {
     //just in case...
     for (const id in attempts) {
@@ -136,7 +148,6 @@ export default function Leaderboard() {
       drillId,
       value: leaderboardAttempts,
     });
-
   }
 
   // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
