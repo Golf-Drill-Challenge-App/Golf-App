@@ -18,20 +18,24 @@ import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "../context/Auth";
 import { removeAttempt } from "../hooks/removeAttempt";
+import EmptyScreen from "./emptyScreen";
 
-export default function BarChartScreen({ drillData, drillInfo }) {
-  if (drillData.length === 0) {
-    return <Text>No attempts have been made yet.</Text>;
-  }
+export default function BarChartScreen({ drillData, drillInfo, userId }) {
+  const drillId = drillInfo["did"];
 
-  // presumably you can't access another user's drill stats page except through team tab, which handles invalidating
-  // cache for a new drill submission type for another user
-  const drillId = drillData[0].did;
-  const userId = drillData[0].uid;
   const invalidateKeys = [
     ["drillInfo", { drillId }],
     ["attempts", { userId, drillId }],
   ];
+
+  if (drillData.length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No attempts have been made yet."}
+      />
+    );
+  }
 
   const scrollViewRef = useRef();
 

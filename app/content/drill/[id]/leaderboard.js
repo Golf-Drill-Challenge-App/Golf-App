@@ -12,6 +12,7 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import EmptyScreen from "../../../../components/emptyScreen";
 
 export default function Leaderboard() {
   const { currentTeamId } = currentAuthContext();
@@ -139,7 +140,12 @@ export default function Leaderboard() {
   );
 
   if (orderedLeaderboard.length < 1) {
-    return <Text>No attempts have been made yet.</Text>;
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No attempts have been made yet."}
+      />
+    );
   }
 
   let title = {

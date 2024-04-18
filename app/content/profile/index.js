@@ -18,7 +18,6 @@ import {
   Keyboard,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -33,13 +32,13 @@ import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
-import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import EmptyScreen from "../../../components/emptyScreen";
 
 function Index() {
   const { signOut } = currentAuthContext();
@@ -280,14 +279,10 @@ function Index() {
           ) : (
             <>
               {profileHeader}
-              <ScrollView
-                refreshControl={
-                  // handle updating cache for logged in user's list of drills
-                  <RefreshInvalidate invalidateKeys={invalidateKeys} />
-                }
-              >
-                <Text style={styles.noDrillsText}>No drills attempted yet</Text>
-              </ScrollView>
+              <EmptyScreen
+                invalidateKeys={invalidateKeys}
+                text={"No drills attempted yet"}
+              />
             </>
           )}
 

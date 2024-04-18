@@ -31,5 +31,11 @@ export default function Stat() {
   }
   // console.log(drillAttempts);
 
-  return <BarChartScreen drillData={drillAttempts} drillInfo={drillInfo} />;
+  return (
+    <BarChartScreen
+      drillData={drillAttempts}
+      drillInfo={drillInfo}
+      userId={userId}
+    />
+  );
 }
