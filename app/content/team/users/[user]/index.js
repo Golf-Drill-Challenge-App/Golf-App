@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getUnique } from "~/Utility";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { useAttempts } from "~/hooks/useAttempts";
@@ -78,15 +79,17 @@ function Index() {
   return (
     <PaperProvider>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.BackAction
-            onPress={() => {
-              navigation.goBack();
-            }}
-            color={"#F24E1E"}
-          />
-          <Appbar.Content title={userData["name"] + "'s Profile"} />
-        </Appbar.Header>
+        <Header
+          title={userData["name"] + "'s Profile"}
+          preChildren={
+            <Appbar.BackAction
+              onPress={() => {
+                navigation.goBack();
+              }}
+              color={"#F24E1E"}
+            />
+          }
+        />
         {uniqueDrills.length > 0 ? (
           <DrillList
             drillData={uniqueDrills}

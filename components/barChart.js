@@ -16,8 +16,8 @@ import { clampNumber, formatDate, numTrunc } from "~/Utility";
 import { Button } from "react-native-paper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
-import { currentAuthContext } from "../context/Auth";
-import { removeAttempt } from "../hooks/removeAttempt";
+import { currentAuthContext } from "~/context/Auth";
+import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
 
 export default function BarChartScreen({ drillData, drillInfo, userId }) {

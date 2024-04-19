@@ -30,6 +30,7 @@ import { getUnique } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
@@ -257,15 +258,17 @@ function Index() {
       />
 
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-          <Appbar.Content title={"Personal Profile"} />
-          <Appbar.Action
-            icon="cog"
-            color={"#F24E1E"}
-            onPress={() => bottomSheetModalRef.current?.present()}
-            style={{ marginRight: 7 }}
-          />
-        </Appbar.Header>
+        <Header
+          title={"Personal Profile"}
+          postChildren={
+            <Appbar.Action
+              icon="cog"
+              color={"#F24E1E"}
+              onPress={() => bottomSheetModalRef.current?.present()}
+              style={{ marginRight: 7 }}
+            />
+          }
+        />
 
         <BottomSheetModalProvider>
           {uniqueDrills.length > 0 ? (

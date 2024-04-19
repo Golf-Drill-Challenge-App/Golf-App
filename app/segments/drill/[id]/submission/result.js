@@ -13,14 +13,17 @@ function Result(props) {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-      <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "FFF" }}>
-        <Appbar.Action
-          icon="close"
-          onPress={navigation.goBack}
-          color={"#F24E1E"}
-        />
-        <Header drillInfo={props.drill} />
-      </Appbar.Header>
+      <Header
+        title={drillInfo.drillType}
+        subTitle={drillInfo.subType}
+        preChildren={
+          <Appbar.Action
+            icon="close"
+            onPress={navigation.goBack}
+            color={"#F24E1E"}
+          />
+        }
+      />
       <ResultScreen drillId={drillId} attemptData={submission} />
       <Button
         style={{
