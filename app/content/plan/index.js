@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, SectionList, TouchableOpacity, View } from "react-native";
+import { SectionList, TouchableOpacity, View } from "react-native";
 import { Appbar, List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,6 +11,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 import { formatDate } from "../../../Utility";
+import EmptyScreen from "../../../components/emptyScreen";
 
 const DrillList = () => {
   const { currentUserId, currentTeamId } = currentAuthContext();
@@ -70,16 +71,7 @@ const DrillList = () => {
 
   // Render the list of drills
   return sortedDates.length === 0 ? (
-    <ScrollView
-      refreshControl={
-        // handle updating cache for another user list of drills
-        <RefreshInvalidate invalidateKeys={invalidateKeys} />
-      }
-    >
-      <Text style={{ fontSize: 30, fontWeight: "bold", textAlign: "center" }}>
-        No drills assigned
-      </Text>
-    </ScrollView>
+    <EmptyScreen invalidateKeys={invalidateKeys} text={"No drills assigned"} />
   ) : (
     <SectionList
       sections={sortedDates.map((date) => ({
