@@ -11,9 +11,9 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 import { formatDate } from "~/Utility";
+import EmptyScreen from "~/components/emptyScreen";
+import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
-import EmptyScreen from "../../../components/emptyScreen";
-import ErrorComponent from "../../../components/errorComponent";
 
 const DrillList = () => {
   const { currentUserId } = currentAuthContext();

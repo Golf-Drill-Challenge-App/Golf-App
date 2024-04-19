@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DrillList from "~/components/drillList";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -13,7 +14,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import EmptyScreen from "../../../../../components/emptyScreen";
 
 function Index() {
   const userId = useLocalSearchParams()["user"];

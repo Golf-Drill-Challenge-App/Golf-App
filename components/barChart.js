@@ -5,8 +5,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Path } from "react-native-svg";
@@ -14,9 +14,9 @@ import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
 import { Button } from "react-native-paper";
+import { themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
-import { themeColors } from "~/Constants";
 import { currentAuthContext } from "~/context/Auth";
 import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";

@@ -30,6 +30,7 @@ import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -40,7 +41,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import EmptyScreen from "../../../components/emptyScreen";
 
 function Index() {
   const { signOut } = currentAuthContext();
