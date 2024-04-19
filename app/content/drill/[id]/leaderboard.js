@@ -58,6 +58,7 @@ export default function Leaderboard() {
             mainOutputAttempt
           ] === undefined), //or exist but does not have the required field
     );
+    console.log("WE ARE USING MANUAL ATTEMPT LEADERBOARD!", manualAttemptCalc);
   }, [drillIsLoading, leaderboardIsLoading, preCalcLeaderboard]);
 
   // console.log("enabled: ", manualAttempt);
@@ -97,6 +98,8 @@ export default function Leaderboard() {
     //just in case...
     for (const id in attempts) {
       const entry = attempts[id];
+
+      console.log("ENTRYID", entry.id);
 
       const lowerIsBetter =
         drillInfo["aggOutputs"][mainOutputAttempt]["lowerIsBetter"];
@@ -139,10 +142,36 @@ export default function Leaderboard() {
     return <Text>No attempts have been made yet.</Text>;
   }
 
+  let title = {
+    proxHoleAverage: "Closest to the Hole",
+    sideLandingAverage: "Side Landing Average",
+    sideLandingTotal: "Side Landing",
+    carryDiffAverage: "Carry Difference Average",
+    strokesGained: "Total Strokes Gained",
+    strokesGainedAverage: "Average Strokes Gained",
+  };
+
   return (
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
+      {/*<List.Accordion 
+        title={title[mainOutputAttempt]}
+      >
+        {Object.keys(drillInfo.aggOutputs).map((output) => (
+          <List.Item 
+            key={output}
+            title={title[output]}
+            onPress={() => {
+              setDefaultMainOutputAttempt(false);
+              setCustomMainOutputAttempt(output);
+            }}
+          />
+        ))}
+      </List.Accordion>*/}
+      <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
+        {title[drillInfo.mainOutputAttempt]}
+      </Text>
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];

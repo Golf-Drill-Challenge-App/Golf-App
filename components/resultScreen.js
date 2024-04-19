@@ -60,24 +60,50 @@ export default function ResultScreen({
     ]);
   }
 
-  console.log("attempt[shots]", attempt["shots"]);
+  function getStyle(idx) {
+    let styles = {
+      paddingVertical: 8,
+      paddingHorizontal: 10,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    };
+    if (idx !== Object.keys(drillInfo["aggOutputs"]).length - 1) {
+      styles.borderColor = "#ddd";
+      styles.borderBottomWidth = 1;
+    }
+    return styles;
+  }
+
+  let title = {
+    carryDiffAverage: "Carry Difference Average",
+    proxHoleAverage: "Proximity-to-hole Average",
+    sideLandingAverage: "Side Landing Average",
+    sideLandingTotal: "Side Landing Total",
+    strokesGained: "Strokes Gained",
+    strokesGainedAverage: "Strokes Gained Average",
+  };
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-        {Object.keys(drillInfo["aggOutputs"]).map((output) => (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            key={output}
-          >
-            <Text>{output}</Text>
-            <Text>{numTrunc(attempt[output])}</Text>
-          </View>
-        ))}
+        <Text style={styles.sectionTitle}>Aggregate Data</Text>
+        <View
+          style={{
+            margin: 10,
+            backgroundColor: "#f5f5f5",
+            borderWidth: 1,
+            borderColor: "#ddd",
+            borderRadius: 8,
+          }}
+        >
+          {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
+            <View style={getStyle(idx)} key={output}>
+              <Text>{title[output]}</Text>
+              <Text>{numTrunc(attempt[output])}</Text>
+            </View>
+          ))}
+        </View>
 
         {dots.length > 0 && (
           <View style={styles.chartSection}>

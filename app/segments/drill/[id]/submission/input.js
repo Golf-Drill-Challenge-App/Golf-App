@@ -267,7 +267,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "sideLanding":
           shot.sideLanding = Number(inputValues[j].sideLanding);
-          sideLandingTotal += Number(inputValues[j].sideLanding);
+          sideLandingTotal += Math.abs(Number(inputValues[j].sideLanding));
           break;
 
         case "proxHole":
@@ -308,8 +308,8 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                     inputValues[j].carry,
                     inputValues[j].sideLanding,
                   ),
-                );
-              -1;
+                ) -
+                1;
               break;
             case "putt":
               shot.strokesGained =
