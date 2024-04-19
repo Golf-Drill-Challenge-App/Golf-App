@@ -148,8 +148,10 @@ function checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
     leaderboardData[uploadData.uid]?.[drillInfo.mainOutputAttempt]?.value;
 
   const newAttempt = {
-    id: uploadData.id,
-    value: uploadData[drillInfo.mainOutputAttempt],
+    [drillInfo.mainOutputAttempt]: {
+      id: uploadData.id,
+      value: uploadData[drillInfo.mainOutputAttempt],
+    },
   };
 
   console.log("currentBest: ", currentBest);
@@ -184,9 +186,10 @@ function checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
         console.log("Didn't update");
       }
     } else {
+      // console.log(uploadData)
       console.log("Lower is not better");
       //compare the current attempt to the attempt currently on leaderboard
-      if (uploadData[mainOutputAttempt] > currentBest) {
+      if (uploadData[drillInfo.mainOutputAttempt] > currentBest) {
         console.log("New Best Attempt! Time to upload!");
 
         uploadNewLeaderboard(

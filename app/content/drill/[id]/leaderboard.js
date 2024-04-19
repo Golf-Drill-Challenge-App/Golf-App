@@ -137,7 +137,11 @@ export default function Leaderboard() {
     (a, b) =>
       leaderboardAttempts[a][mainOutputAttempt]["value"] -
       leaderboardAttempts[b][mainOutputAttempt]["value"],
+    // console.log("test"),
+    // console.log(leaderboardAttempts)
   );
+  // console.log("\nordered")
+  // console.log(orderedLeaderboard)
 
   if (orderedLeaderboard.length < 1) {
     return (
