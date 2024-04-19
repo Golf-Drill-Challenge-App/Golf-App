@@ -31,6 +31,7 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { useLeaderboard } from "~/hooks/useLeaderboard";
 
 /***************************************
  * Firebase Upload
@@ -90,6 +91,8 @@ async function uploadAttempt(
   assignedTime,
   drillId,
   queryClient,
+  drillInfo,
+  currentLeaderboard,
 ) {
   console.log("WAS IT ASIGNED 4 and ID", assignedTime, userId);
 
@@ -108,11 +111,12 @@ async function uploadAttempt(
       .then(() => {
         console.log("Document successfully uploaded!");
 
+        //TODO: Call function to check for leaderboard update
+        checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
+
         // invalidate cache after successful upload
         // TODO: Move this into wherever the update leaderboard hook is?
         invalidateOnSubmit(queryClient, drillId, teamId, userId);
-
-        //TODO: Call function to check for leaderboard update
 
         //Check if drill was assigned
         if (assignedTime) {
@@ -136,6 +140,86 @@ async function uploadAttempt(
 }
 
 //TODO: Create a function to check leaderboard and update if needed
+function checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
+  const leaderboardData = currentLeaderboard["data"];
+
+  //used if an attempt already exists
+  const currentBest =
+    leaderboardData[uploadData.uid]?.[drillInfo.mainOutputAttempt]?.value;
+
+  const newAttempt = {
+    id: uploadData.id,
+    value: uploadData[drillInfo.mainOutputAttempt],
+  };
+
+  console.log("currentBest: ", currentBest);
+
+  //check if the user exists on the leaderboard
+  if (leaderboardData[uploadData.uid] == undefined) {
+    console.log("User not on leaderboard, uploading this attempt");
+
+    uploadNewLeaderboard(
+      leaderboardData,
+      newAttempt,
+      uploadData.uid,
+      uploadData.did,
+    );
+  } else {
+    //Determine if lower is better for mainOutputAttempt
+    if (drillInfo.aggOutputs[drillInfo.mainOutputAttempt].lowerIsBetter) {
+      console.log("Lower is in fact better");
+      //compare the current attempt to the attempt currently on leaderboard
+      if (uploadData[drillInfo.mainOutputAttempt] < currentBest) {
+        console.log("New Best Attempt! Time to upload!");
+
+        uploadNewLeaderboard(
+          leaderboardData,
+          newAttempt,
+          uploadData.uid,
+          uploadData.did,
+        );
+      }
+      //else for testing
+      else {
+        console.log("Didn't update");
+      }
+    } else {
+      console.log("Lower is not better");
+      //compare the current attempt to the attempt currently on leaderboard
+      if (uploadData[mainOutputAttempt] > currentBest) {
+        console.log("New Best Attempt! Time to upload!");
+
+        uploadNewLeaderboard(
+          leaderboardData,
+          newAttempt,
+          uploadData.uid,
+          uploadData.did,
+        );
+      }
+      //else for testing
+      else {
+        console.log("Didn't update");
+      }
+    }
+  }
+}
+
+async function uploadNewLeaderboard(leaderboardData, newAttempt, uid, did) {
+  //Add new attempt to leaderboard
+  leaderboardData[uid] = newAttempt;
+
+  //Reference to best_attempts drill document
+  const bestAttemptsDrillRef = doc(db, "teams", "1", "best_attempts", did);
+
+  try {
+    await setDoc(bestAttemptsDrillRef, leaderboardData).then(
+      console.log("Leaderboard has been updated!"),
+    );
+  } catch (e) {
+    alert(e);
+    console.log(e);
+  }
+}
 
 /***************************************
  * AttemptShots Generation
@@ -456,6 +540,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const { id: did } = useLocalSearchParams();
 
+  const currentLeaderboard = useLeaderboard({ drillId: did });
+
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
 
@@ -568,6 +654,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
         assignedTime,
         id,
         queryClient,
+        drillInfo,
+        currentLeaderboard,
       );
       setToggleResult(true);
     } else {
