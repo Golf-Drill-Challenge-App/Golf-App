@@ -20,9 +20,10 @@ export default function NavigationRectangle({ drillInfo, inputValues, shot }) {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        elevation: 5,
       }}
     >
-      <View style={{}}>
+      <View>
         <Text
           style={{
             fontSize: 20,
