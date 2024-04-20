@@ -34,9 +34,7 @@ export default function DrillScreen(props) {
         <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
           Description
         </Text>
-        <Text style={{ paddingLeft: 10 }} variant="bodySmall">
-          {props.drillData["description"]}
-        </Text>
+        <Text variant="bodyMedium">{props.drillData["description"]}</Text>
         {hasImages && (
           <View style={{ marginTop: 10 }}>
             <View
