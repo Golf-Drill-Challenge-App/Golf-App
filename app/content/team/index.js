@@ -30,7 +30,6 @@ function Index() {
   if (userIsLoading) return <Loading />;
 
   if (userError) return <ErrorComponent message={userError.message} />;
-  // console.log("userInfo: ", currentUserId);
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),

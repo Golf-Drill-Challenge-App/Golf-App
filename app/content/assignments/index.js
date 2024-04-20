@@ -35,8 +35,6 @@ const DrillList = () => {
 
   const [assignedData, setAssignedData] = useState([]);
 
-  // console.log("USER DATA", userInfo);
-
   // Set the assigned_data state when the user data is loaded
   useEffect(() => {
     if (!userIsLoading && userInfo && userInfo.assigned_data) {
