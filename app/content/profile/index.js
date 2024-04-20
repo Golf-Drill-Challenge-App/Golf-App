@@ -3,6 +3,8 @@ import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetTextInput,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -15,12 +17,10 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
   Image,
-  Keyboard,
   Platform,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -80,7 +80,6 @@ function Index() {
   const queryClient = useQueryClient(); // also called here for updating name
 
   // variables
-  const [snapPoints, setSnapPoints] = useState(["57%"]);
   const invalidateKeys = [
     ["user", { userId }],
     ["attempts", { userId }],
@@ -92,7 +91,6 @@ function Index() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
   const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
@@ -107,39 +105,6 @@ function Index() {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
   }, [userData, userEmail]);
-
-  useEffect(() => {
-    if (keyboardVisible && passwordInputVisible) {
-      setSnapPoints(["93%"]);
-    } else if (passwordInputVisible) {
-      setSnapPoints(["70%"]);
-    } else if (keyboardVisible) {
-      setSnapPoints(["83%"]);
-    } else {
-      setSnapPoints(["57%"]);
-    }
-  }, [keyboardVisible, passwordInputVisible]);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   if (
     userIsLoading ||
@@ -300,8 +265,9 @@ function Index() {
 
           <BottomSheetModal
             ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
+            enableDynamicSizing
+            keyboardBehavior={"interactive"}
+            keyboardBlurBehavior={"restore"}
             backdropComponent={({ animatedIndex, style }) => {
               return (
                 <BottomSheetBackdrop
@@ -313,7 +279,7 @@ function Index() {
               );
             }}
           >
-            <View style={styles.modalContent}>
+            <BottomSheetView style={styles.modalContent}>
               {/* Close Button */}
               <Pressable
                 onPress={() => {
@@ -345,7 +311,7 @@ function Index() {
               </View>
 
               {/* Name Update input field */}
-              <TextInput
+              <BottomSheetTextInput
                 style={styles.input}
                 value={newName}
                 onChangeText={(text) => setNewName(text)}
@@ -365,14 +331,14 @@ function Index() {
               {/* Password Input Field */}
               {passwordInputVisible && (
                 <>
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.input}
                     value={currentPassword}
                     onChangeText={setCurrentPassword}
                     placeholder="Enter your current password"
                     secureTextEntry={true}
                   />
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.input}
                     value={newPassword}
                     onChangeText={setNewPassword}
@@ -394,7 +360,7 @@ function Index() {
               <Pressable onPress={handleSignOut}>
                 <Text style={styles.signOutButton}>Sign Out</Text>
               </Pressable>
-            </View>
+            </BottomSheetView>
           </BottomSheetModal>
         </BottomSheetModalProvider>
       </SafeAreaView>
@@ -424,6 +390,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     paddingHorizontal: 30, // Increase padding for more spacing
     paddingVertical: Platform.OS === "android" ? 10 : 30,
+    paddingBottom: 50,
     alignItems: "center",
   },
   closeButton: {

@@ -656,8 +656,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetModal
                   ref={navModalRef}
-                  index={0}
-                  snapPoints={[currentShot > 3 ? "93%" : "50%"]}
+                  enableDynamicSizing
                   backdropComponent={({ animatedIndex, style }) => {
                     return (
                       <BottomSheetBackdrop
@@ -700,8 +699,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/* Description Bottom Sheet */}
                 <BottomSheetModal
                   ref={descriptionModalRef}
-                  index={0}
-                  snapPoints={["50%"]}
+                  enableDynamicSizing
                   backdropComponent={({ animatedIndex, style }) => {
                     return (
                       <BottomSheetBackdrop
