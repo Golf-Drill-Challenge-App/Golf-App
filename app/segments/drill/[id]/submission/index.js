@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { PaperProvider } from "react-native-paper";
+import { DefaultTheme, PaperProvider } from "react-native-paper";
 
 import Loading from "~/components/loading";
 import Input from "./input";
@@ -45,5 +45,5 @@ export default function Index() {
     }
   };
 
-  return <PaperProvider>{display()}</PaperProvider>;
+  return <PaperProvider theme={DefaultTheme}>{display()}</PaperProvider>;
 }

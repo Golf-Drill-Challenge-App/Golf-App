@@ -1,6 +1,11 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
+import {
+  Appbar,
+  DefaultTheme,
+  PaperProvider,
+  SegmentedButtons,
+} from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
@@ -40,7 +45,7 @@ export default function Index() {
   };
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={DefaultTheme}>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={drillInfo.drillType}

@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { Appbar, PaperProvider } from "react-native-paper";
+import { Appbar, DefaultTheme, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import BarChartScreen from "~/components/barChart";
@@ -34,7 +34,7 @@ export default function Stat() {
   }
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={DefaultTheme}>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={"Statistics"}

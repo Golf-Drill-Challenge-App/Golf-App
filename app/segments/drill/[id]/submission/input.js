@@ -11,7 +11,13 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Appbar, Button, PaperProvider, Text } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  DefaultTheme,
+  PaperProvider,
+  Text,
+} from "react-native-paper";
 import {
   SafeAreaInsetsContext,
   SafeAreaView,
@@ -586,7 +592,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider>
+      <PaperProvider theme={DefaultTheme}>
         <SafeAreaView>
           <View style={{ height: "100%" }}>
             <BottomSheetModalProvider>

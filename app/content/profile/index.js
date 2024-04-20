@@ -24,7 +24,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Appbar, PaperProvider, Snackbar } from "react-native-paper";
+import {
+  Appbar,
+  DefaultTheme,
+  PaperProvider,
+  Snackbar,
+} from "react-native-paper";
 import {
   SafeAreaInsetsContext,
   SafeAreaView,
@@ -214,7 +219,7 @@ function Index() {
   );
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={DefaultTheme}>
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}

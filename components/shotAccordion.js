@@ -118,7 +118,7 @@ function ShotAccordion(props) {
               {props.shot[props.drillInfo.requirements[0].name]}{" "}
               {props.drillInfo.requirements[0].distanceMeasure}
             </Text>
-            <Text style={{}}>
+            <Text>
               <Text style={styles.boldText}>SG:</Text>{" "}
               {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
             </Text>

@@ -4,6 +4,7 @@ import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Avatar,
+  DefaultTheme,
   Icon,
   List,
   PaperProvider,
@@ -70,7 +71,7 @@ function Index() {
         : "#222";
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={DefaultTheme}>
       <SafeAreaView
         // flex: without this the scrollview automatically scrolls back up when finger no longer held down
         style={{ flex: 1 }}

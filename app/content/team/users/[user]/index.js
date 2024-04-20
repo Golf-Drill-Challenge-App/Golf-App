@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Appbar, PaperProvider } from "react-native-paper";
+import { Appbar, DefaultTheme, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
@@ -73,7 +73,7 @@ function Index() {
   ];
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={DefaultTheme}>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={userData["name"] + "'s Profile"}

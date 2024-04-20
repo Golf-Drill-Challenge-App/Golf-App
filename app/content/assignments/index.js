@@ -1,7 +1,7 @@
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { List, PaperProvider, Text } from "react-native-paper";
+import { DefaultTheme, List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { formatDate } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
@@ -31,15 +31,6 @@ const DrillList = () => {
   const userId = currentUserId;
   const invalidateKeys = [["user", { userId }], ["drillInfo"]];
 
-  const [assignedData, setAssignedData] = useState([]);
-
-  // Set the assigned_data state when the user data is loaded
-  useEffect(() => {
-    if (!userIsLoading && userInfo && userInfo.assigned_data) {
-      setAssignedData(userInfo.assigned_data);
-    }
-  }, [userIsLoading, userInfo]);
-
   if (userIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
@@ -50,7 +41,7 @@ const DrillList = () => {
 
   const today = formatDate(Date.now());
   // Group the assigned drills by date
-  const groupedData = assignedData.reduce((acc, curr) => {
+  const groupedData = userInfo.assigned_data.reduce((acc, curr) => {
     const date = formatDate(curr.assignedTime);
     const dateKey = date === today ? "Today" : date;
 
@@ -177,7 +168,7 @@ const CoachView = () => {
 
 export default function Index() {
   return (
-    <PaperProvider>
+    <PaperProvider theme={DefaultTheme}>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
 
