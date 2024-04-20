@@ -7,7 +7,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -454,8 +454,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const { id: did } = useLocalSearchParams();
 
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
 
@@ -658,13 +656,13 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetModal
                   ref={navModalRef}
-                  index={1}
-                  snapPoints={
-                    currentShot > 3 ? ["25%", "100%"] : ["25%", "50%"]
-                  }
+                  index={0}
+                  snapPoints={[currentShot > 3 ? "93%" : "50%"]}
                   backdropComponent={({ animatedIndex, style }) => {
                     return (
                       <BottomSheetBackdrop
+                        appearsOnIndex={0}
+                        disappearsOnIndex={-1}
                         animatedIndex={animatedIndex}
                         style={[style, { top: -insets.top }]}
                       />
@@ -702,11 +700,13 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/* Description Bottom Sheet */}
                 <BottomSheetModal
                   ref={descriptionModalRef}
-                  index={1}
-                  snapPoints={snapPoints}
+                  index={0}
+                  snapPoints={["50%"]}
                   backdropComponent={({ animatedIndex, style }) => {
                     return (
                       <BottomSheetBackdrop
+                        appearsOnIndex={0}
+                        disappearsOnIndex={-1}
                         animatedIndex={animatedIndex}
                         style={[style, { top: -insets.top }]}
                       />

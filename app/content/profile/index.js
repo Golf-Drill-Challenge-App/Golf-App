@@ -80,7 +80,7 @@ function Index() {
   const queryClient = useQueryClient(); // also called here for updating name
 
   // variables
-  const [snapPoints, setSnapPoints] = useState(["60%", "60%"]);
+  const [snapPoints, setSnapPoints] = useState(["57%"]);
   const invalidateKeys = [
     ["user", { userId }],
     ["attempts", { userId }],
@@ -92,6 +92,7 @@ function Index() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
   const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
@@ -108,23 +109,29 @@ function Index() {
   }, [userData, userEmail]);
 
   useEffect(() => {
-    setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
-  }, [passwordInputVisible]);
+    if (keyboardVisible && passwordInputVisible) {
+      setSnapPoints(["93%"]);
+    } else if (passwordInputVisible) {
+      setSnapPoints(["70%"]);
+    } else if (keyboardVisible) {
+      setSnapPoints(["83%"]);
+    } else {
+      setSnapPoints(["57%"]);
+    }
+  }, [keyboardVisible, passwordInputVisible]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       () => {
-        passwordInputVisible
-          ? setSnapPoints(["45%", "93%"])
-          : setSnapPoints(["40%", "83%"]);
+        setKeyboardVisible(true);
       },
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
-        setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
+        setKeyboardVisible(false);
       },
     );
 
@@ -132,7 +139,7 @@ function Index() {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, [passwordInputVisible]);
+  }, []);
 
   if (
     userIsLoading ||
@@ -293,11 +300,13 @@ function Index() {
 
           <BottomSheetModal
             ref={bottomSheetModalRef}
-            index={1}
+            index={0}
             snapPoints={snapPoints}
             backdropComponent={({ animatedIndex, style }) => {
               return (
                 <BottomSheetBackdrop
+                  appearsOnIndex={0}
+                  disappearsOnIndex={-1}
                   animatedIndex={animatedIndex}
                   style={[style, { top: -insets.top }]}
                 />
