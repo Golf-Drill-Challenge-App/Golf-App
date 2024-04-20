@@ -143,7 +143,7 @@ function Index() {
                 />
               </View>
 
-              <List.Section>
+              <List.Section style={{ backgroundColor: themeColors.background }}>
                 {foundUsers.map((user) => {
                   const userId = user["uid"];
                   return (

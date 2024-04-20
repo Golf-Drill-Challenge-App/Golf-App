@@ -3,17 +3,15 @@ import { useEffect, useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
 import { List, PaperProvider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { formatDate } from "~/Utility";
+import EmptyScreen from "~/components/emptyScreen";
+import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-
-import { formatDate } from "~/Utility";
-import EmptyScreen from "~/components/emptyScreen";
-import ErrorComponent from "~/components/errorComponent";
-import Header from "~/components/header";
 
 const DrillList = () => {
   const { currentUserId } = currentAuthContext();
@@ -82,7 +80,7 @@ const DrillList = () => {
         title: date,
         data: groupedData[date],
       }))}
-      keyExtractor={(item, index) => `${item.assignedTime}-${item.drillId}`}
+      keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
       renderItem={({ item: assignment }) => (
         <TouchableOpacity
           key={`${assignment.assignedTime}-${assignment.drillId}`}
