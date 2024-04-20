@@ -713,6 +713,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   backgroundStyle={{ backgroundColor: themeColors.background }}
                 >
                   <BottomSheetScrollView>
+                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                      Description
+                    </Text>
                     <DrillDescription drillData={drillInfo} />
                   </BottomSheetScrollView>
                 </BottomSheetModal>

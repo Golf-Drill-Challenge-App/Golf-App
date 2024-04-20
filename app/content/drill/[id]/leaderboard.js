@@ -174,9 +174,6 @@ export default function Leaderboard() {
                 pathname: `${currentPath}/attempts/${attempt["id"]}`,
               }}
               asChild
-              style={{
-                paddingLeft: 20,
-              }}
             >
               <List.Item
                 title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
