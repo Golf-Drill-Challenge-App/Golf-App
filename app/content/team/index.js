@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  Appbar,
   Avatar,
   Icon,
   List,
@@ -14,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
@@ -64,7 +64,7 @@ function Index() {
 
   const roleColor = (user) =>
     user["uid"] === currentUserId
-      ? "#F24F1D"
+      ? themeColors.accent
       : user.role === "owner"
         ? "#3366ff"
         : "#222";
@@ -84,14 +84,8 @@ function Index() {
           accessible={false}
         >
           <>
-            <Appbar.Header
-              statusBarHeight={0}
-              style={{ backgroundColor: "FFF" }}
-            >
-              <Appbar.Content title={"Team"} />
-            </Appbar.Header>
+            <Header title={"Team"} />
             <KeyboardAwareScrollView
-              style={{ marginLeft: 20 }}
               // allows opening links from search results without closing keyboard first
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
@@ -141,7 +135,7 @@ function Index() {
                   style={{
                     marginLeft: 20,
                     marginRight: 20,
-                    backgroundColor: "#FFF",
+                    backgroundColor: "#fff",
                     borderWidth: 1,
                     borderColor: themeColors.border,
                   }}

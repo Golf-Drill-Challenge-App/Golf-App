@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Appbar, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -61,12 +61,9 @@ function Index() {
 
   const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
   const profileHeader = (
-    <>
-      <View style={styles.profileContainer}>
-        <ProfileCard user={userData} email={userEmail} />
-      </View>
-      <View>{/*<Text style={styles.heading}>Drill History</Text>*/}</View>
-    </>
+    <View style={styles.profileContainer}>
+      <ProfileCard user={userData} email={userEmail} />
+    </View>
   );
 
   const invalidateKeys = [

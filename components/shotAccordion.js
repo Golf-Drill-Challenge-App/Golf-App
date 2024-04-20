@@ -90,7 +90,7 @@ function ShotAccordion(props) {
             background: themeColors.background,
           },
         }}
-        title={<View style={{ width: 0, backgroundColor: "red" }}></View>}
+        title={""}
         rippleColor={"rgba(221,221,221,0.25)"}
         left={() => (
           <View

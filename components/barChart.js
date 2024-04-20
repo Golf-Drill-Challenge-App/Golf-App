@@ -5,8 +5,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Path } from "react-native-svg";
@@ -20,7 +20,6 @@ import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "~/context/Auth";
 import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
-import { themeColors } from "~/Constants";
 
 export default function BarChartScreen({ drillData, drillInfo, userId }) {
   const drillId = drillInfo["did"];
