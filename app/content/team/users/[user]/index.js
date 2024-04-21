@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Appbar, DefaultTheme, PaperProvider } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
@@ -9,6 +9,7 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -73,7 +74,7 @@ function Index() {
   ];
 
   return (
-    <PaperProvider theme={DefaultTheme}>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={userData["name"] + "'s Profile"}
@@ -104,7 +105,7 @@ function Index() {
           </>
         )}
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
 

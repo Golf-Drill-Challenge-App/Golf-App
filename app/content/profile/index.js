@@ -24,12 +24,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  Appbar,
-  DefaultTheme,
-  PaperProvider,
-  Snackbar,
-} from "react-native-paper";
+import { Appbar, Snackbar } from "react-native-paper";
 import {
   SafeAreaInsetsContext,
   SafeAreaView,
@@ -42,6 +37,7 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
@@ -219,7 +215,7 @@ function Index() {
   );
 
   return (
-    <PaperProvider theme={DefaultTheme}>
+    <PaperWrapper>
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
@@ -369,7 +365,7 @@ function Index() {
           </BottomSheetModal>
         </BottomSheetModalProvider>
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
 

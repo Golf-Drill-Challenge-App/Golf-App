@@ -5,13 +5,12 @@ import Header from "~/components/header";
 import ResultScreen from "~/components/resultScreen";
 import { themeColors } from "~/Constants";
 
-function Result(props) {
-  const submission = props.submission;
+function Result({ submission, drillInfo, setToggleResult }) {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+    <SafeAreaView style={{ flex: 1 }}>
       <Header
         title={drillInfo.drillType}
         subTitle={drillInfo.subType}
@@ -32,7 +31,7 @@ function Result(props) {
         buttonColor={themeColors.accent}
         textColor="white"
         onPress={() => {
-          props.setToggleResult(false);
+          setToggleResult(false);
         }}
       >
         Restart Drill

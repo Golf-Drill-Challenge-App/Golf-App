@@ -30,7 +30,7 @@ export default function Index() {
       return (
         <Result
           submission={outputData}
-          drill={drillInfo}
+          drillInfo={drillInfo}
           setToggleResult={setToggleResult}
         />
       );

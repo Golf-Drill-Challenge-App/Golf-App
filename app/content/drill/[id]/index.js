@@ -1,11 +1,6 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import {
-  Appbar,
-  DefaultTheme,
-  PaperProvider,
-  SegmentedButtons,
-} from "react-native-paper";
+import { Appbar, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
@@ -16,6 +11,7 @@ import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
@@ -45,7 +41,7 @@ export default function Index() {
   };
 
   return (
-    <PaperProvider theme={DefaultTheme}>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={drillInfo.drillType}
@@ -86,6 +82,6 @@ export default function Index() {
         />
         {tabComponent()}
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }

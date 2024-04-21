@@ -11,13 +11,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Appbar,
-  Button,
-  DefaultTheme,
-  PaperProvider,
-  Text,
-} from "react-native-paper";
+import { Appbar, Button, Text } from "react-native-paper";
 import {
   SafeAreaInsetsContext,
   SafeAreaView,
@@ -35,6 +29,7 @@ import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
@@ -592,7 +587,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider theme={DefaultTheme}>
+      <PaperWrapper>
         <SafeAreaView>
           <View style={{ height: "100%" }}>
             <BottomSheetModalProvider>
@@ -814,7 +809,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             </BottomSheetModalProvider>
           </View>
         </SafeAreaView>
-      </PaperProvider>
+      </PaperWrapper>
     </GestureHandlerRootView>
   );
 }

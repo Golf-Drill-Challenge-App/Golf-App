@@ -2,20 +2,13 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Avatar,
-  DefaultTheme,
-  Icon,
-  List,
-  PaperProvider,
-  Searchbar,
-  Text,
-} from "react-native-paper";
+import { Avatar, Icon, List, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -71,7 +64,7 @@ function Index() {
         : "#222";
 
   return (
-    <PaperProvider theme={DefaultTheme}>
+    <PaperWrapper>
       <SafeAreaView
         // flex: without this the scrollview automatically scrolls back up when finger no longer held down
         style={{ flex: 1 }}
@@ -190,7 +183,7 @@ function Index() {
           </>
         </TouchableWithoutFeedback>
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
 

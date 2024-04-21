@@ -1,13 +1,14 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { DefaultTheme, List, PaperProvider, Text } from "react-native-paper";
+import { List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { formatDate } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -168,12 +169,12 @@ const CoachView = () => {
 
 export default function Index() {
   return (
-    <PaperProvider theme={DefaultTheme}>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
 
         <DrillList />
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
