@@ -12,8 +12,8 @@ function Result({ submission, drillInfo, setToggleResult }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
-        title={drillInfo.drillType}
-        subTitle={drillInfo.subType}
+        title={props.drill.drillType}
+        subTitle={props.drill.subType}
         preChildren={
           <Appbar.Action
             icon="close"
@@ -26,6 +26,12 @@ function Result({ submission, drillInfo, setToggleResult }) {
       <Button
         style={{
           margin: 10,
+          marginTop: 5,
+        }}
+        labelStyle={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "#FFFFFF",
         }}
         mode="contained"
         buttonColor={themeColors.accent}
