@@ -34,10 +34,10 @@ function DataField(field, value) {
           }}
           key={field}
         >
-          <Text style={{ marginLeft: 11, fontWeight: "bold" }}>Carry</Text>
+          <Text style={{ fontWeight: "bold" }}>Carry</Text>
           <View
             style={{
-              width: 200,
+              width: 150,
             }}
           >
             <Row name={"(Actual)"} value={`${numTrunc(value["carry"])} yd`} />
@@ -147,6 +147,8 @@ function ShotAccordion(props) {
         <View
           style={{
             backgroundColor: themeColors.background,
+            paddingLeft: 20,
+            paddingRight: 20,
           }}
         >
           {props.drillInfo["outputs"].map((field) => {
@@ -193,7 +195,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     fontSize: 8,
     justifyContent: "space-between",
-    paddingHorizontal: 10,
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderColor: themeColors.border,
