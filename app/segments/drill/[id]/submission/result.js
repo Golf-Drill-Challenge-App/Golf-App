@@ -12,8 +12,8 @@ function Result({ submission, drillInfo, setToggleResult }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Header
-        title={props.drill.drillType}
-        subTitle={props.drill.subType}
+        title={drillInfo.drillType}
+        subTitle={drillInfo.subType}
         preChildren={
           <Appbar.Action
             icon="close"
