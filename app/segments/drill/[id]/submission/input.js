@@ -872,7 +872,7 @@ const styles = StyleSheet.create({
   },
   navigationContainer: {
     alignItems: "center",
-    height: "contain",
+    height: "auto",
     justifyContent: "center",
   },
   button: {
