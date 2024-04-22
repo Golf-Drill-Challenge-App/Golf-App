@@ -1,7 +1,6 @@
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { SectionList, TouchableOpacity, View } from "react-native";
-import { List, Text } from "react-native-paper";
+import { useState } from "react";
+import { SectionList, View } from "react-native";
+import { Divider, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { formatDate } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
@@ -14,10 +13,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-import { formatDate } from "~/Utility";
-import Header from "~/components/header";
 import DrillCard from "../../../components/drillCard";
-import EmptyScreen from "../../../components/emptyScreen";
 
 const DrillList = () => {
   const { currentUserId } = currentAuthContext();
