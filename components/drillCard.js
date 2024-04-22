@@ -1,5 +1,6 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { themeColors } from "~/Constants";
 
 function DrillCard(props) {
   return (
@@ -19,7 +20,7 @@ function DrillCard(props) {
 const styles = StyleSheet.create({
   cardContainer: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: themeColors.border,
     borderRadius: 8,
     marginVertical: 5,
     padding: 15,

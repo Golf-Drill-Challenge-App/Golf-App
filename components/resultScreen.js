@@ -1,4 +1,3 @@
-import { useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -7,6 +6,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import ScatterChart from "react-native-scatter-chart";
+import { themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -20,7 +20,6 @@ export default function ResultScreen({
   attemptData = null,
 }) {
   const { width } = useWindowDimensions();
-  const navigation = useNavigation();
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
@@ -54,7 +53,7 @@ export default function ResultScreen({
     drillInfo["outputs"].includes("sideLanding") &&
     drillInfo["outputs"].includes("carryDiff")
   ) {
-    dots = attempt["shots"].map((value, index) => [
+    dots = attempt["shots"].map((value) => [
       value["sideLanding"],
       value["carryDiff"],
     ]);
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 20,
     padding: 15,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: themeColors.background,
     borderRadius: 10,
     width: "60%",
     alignSelf: "center",

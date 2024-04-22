@@ -3,6 +3,8 @@ import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetTextInput,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -12,26 +14,30 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Image,
-  Keyboard,
   Platform,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { Appbar, PaperProvider, Snackbar } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Appbar, Snackbar } from "react-native-paper";
+import {
+  SafeAreaInsetsContext,
+  SafeAreaView,
+} from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
@@ -39,7 +45,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import EmptyScreen from "../../../components/emptyScreen";
 
 function Index() {
   const { signOut } = currentAuthContext();
@@ -76,7 +81,6 @@ function Index() {
   const queryClient = useQueryClient(); // also called here for updating name
 
   // variables
-  const [snapPoints, setSnapPoints] = useState(["60%", "60%"]);
   const invalidateKeys = [
     ["user", { userId }],
     ["attempts", { userId }],
@@ -96,37 +100,12 @@ function Index() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
 
+  const insets = useContext(SafeAreaInsetsContext);
+
   useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
   }, [userData, userEmail]);
-
-  useEffect(() => {
-    setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
-  }, [passwordInputVisible]);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        passwordInputVisible
-          ? setSnapPoints(["45%", "93%"])
-          : setSnapPoints(["40%", "83%"]);
-      },
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setSnapPoints(passwordInputVisible ? ["35%", "70%"] : ["25%", "57%"]);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, [passwordInputVisible]);
 
   if (
     userIsLoading ||
@@ -232,14 +211,11 @@ function Index() {
       <View style={styles.profileContainer}>
         <ProfileCard user={userData} email={userEmail} />
       </View>
-      <View>
-        <Text style={styles.heading}>Drill History</Text>
-      </View>
     </>
   );
 
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
@@ -249,12 +225,11 @@ function Index() {
       </Snackbar>
 
       <DialogComponent
+        type={"snackbar"}
         title={dialogTitle}
         content={dialogMessage}
         visible={dialogVisible}
         onHide={() => setDialogVisible(false)}
-        buttons={["OK"]}
-        buttonsFunctions={[() => setDialogVisible(false)]}
       />
 
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
@@ -263,7 +238,7 @@ function Index() {
           postChildren={
             <Appbar.Action
               icon="cog"
-              color={"#F24E1E"}
+              color={themeColors.accent}
               onPress={() => bottomSheetModalRef.current?.present()}
               style={{ marginRight: 7 }}
             />
@@ -291,11 +266,21 @@ function Index() {
 
           <BottomSheetModal
             ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={snapPoints}
-            backdropComponent={BottomSheetBackdrop}
+            enableDynamicSizing
+            keyboardBehavior={"interactive"}
+            keyboardBlurBehavior={"restore"}
+            backdropComponent={({ animatedIndex, style }) => {
+              return (
+                <BottomSheetBackdrop
+                  appearsOnIndex={0}
+                  disappearsOnIndex={-1}
+                  animatedIndex={animatedIndex}
+                  style={[style, { top: -insets.top }]}
+                />
+              );
+            }}
           >
-            <View style={styles.modalContent}>
+            <BottomSheetView style={styles.modalContent}>
               {/* Close Button */}
               <Pressable
                 onPress={() => {
@@ -327,7 +312,7 @@ function Index() {
               </View>
 
               {/* Name Update input field */}
-              <TextInput
+              <BottomSheetTextInput
                 style={styles.input}
                 value={newName}
                 onChangeText={(text) => setNewName(text)}
@@ -347,14 +332,14 @@ function Index() {
               {/* Password Input Field */}
               {passwordInputVisible && (
                 <>
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.input}
                     value={currentPassword}
                     onChangeText={setCurrentPassword}
                     placeholder="Enter your current password"
                     secureTextEntry={true}
                   />
-                  <TextInput
+                  <BottomSheetTextInput
                     style={styles.input}
                     value={newPassword}
                     onChangeText={setNewPassword}
@@ -376,11 +361,11 @@ function Index() {
               <Pressable onPress={handleSignOut}>
                 <Text style={styles.signOutButton}>Sign Out</Text>
               </Pressable>
-            </View>
+            </BottomSheetView>
           </BottomSheetModal>
         </BottomSheetModalProvider>
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
 
@@ -406,6 +391,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     paddingHorizontal: 30, // Increase padding for more spacing
     paddingVertical: Platform.OS === "android" ? 10 : 30,
+    paddingBottom: 50,
     alignItems: "center",
   },
   closeButton: {
@@ -414,7 +400,7 @@ const styles = StyleSheet.create({
     left: 10,
   },
   closeButtonText: {
-    color: "#F24D1F",
+    color: themeColors.accent,
     fontSize: 17,
     marginLeft: 10,
     marginTop: -10,
@@ -460,7 +446,7 @@ const styles = StyleSheet.create({
     padding: 10, // Increase padding for input fields
   },
   saveChangesButton: {
-    backgroundColor: "#F24E1E",
+    backgroundColor: themeColors.accent,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
@@ -479,7 +465,7 @@ const styles = StyleSheet.create({
     marginBottom: 20, // Increase margin bottom for more spacing
   },
   signOutButton: {
-    color: "#F24D1F",
+    color: themeColors.accent,
     fontSize: 16,
   },
 });

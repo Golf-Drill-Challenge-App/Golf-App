@@ -2,18 +2,13 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  Avatar,
-  Icon,
-  List,
-  PaperProvider,
-  Searchbar,
-  Text,
-} from "react-native-paper";
+import { Avatar, Icon, List, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -29,7 +24,6 @@ function Index() {
   if (userIsLoading) return <Loading />;
 
   if (userError) return <ErrorComponent message={userError.message} />;
-  console.log("userInfo: ", currentUserId);
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -64,13 +58,13 @@ function Index() {
 
   const roleColor = (user) =>
     user["uid"] === currentUserId
-      ? "#F24F1D"
+      ? themeColors.accent
       : user.role === "owner"
         ? "#3366ff"
         : "#222";
 
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <SafeAreaView
         // flex: without this the scrollview automatically scrolls back up when finger no longer held down
         style={{ flex: 1 }}
@@ -86,7 +80,6 @@ function Index() {
           <>
             <Header title={"Team"} />
             <KeyboardAwareScrollView
-              style={{ marginLeft: 20 }}
               // allows opening links from search results without closing keyboard first
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
@@ -125,7 +118,7 @@ function Index() {
               <View
                 style={{
                   // default react native background color or something, so stuff scrolling behind this is less jank
-                  backgroundColor: "#f2f2f2",
+                  backgroundColor: themeColors.background,
                   paddingBottom: 10,
                   paddingTop: 10,
                 }}
@@ -133,18 +126,27 @@ function Index() {
                 <Searchbar
                   onChangeText={onChangeSearch}
                   value={searchQuery}
-                  style={{ paddingLeft: 20, paddingRight: 20 }}
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                    backgroundColor: "#fff",
+                    borderWidth: 1,
+                    borderColor: themeColors.border,
+                  }}
                   placeholder="Search team members"
                 />
               </View>
 
-              <List.Section>
-                {foundUsers.map((user, i) => {
+              <List.Section style={{ backgroundColor: themeColors.background }}>
+                {foundUsers.map((user) => {
                   const userId = user["uid"];
                   return (
                     <List.Item
                       key={userId}
                       title={user.name}
+                      style={{
+                        paddingLeft: 20,
+                      }}
                       left={() => (
                         <Avatar.Image
                           size={24}
@@ -158,7 +160,6 @@ function Index() {
                           style={{
                             flexDirection: "row",
                             alignItems: "center",
-                            height: 16,
                           }}
                         >
                           <Text
@@ -182,7 +183,7 @@ function Index() {
           </>
         </TouchableWithoutFeedback>
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
 

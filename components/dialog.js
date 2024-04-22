@@ -1,4 +1,5 @@
-import { Button, Dialog, Portal, Text } from "react-native-paper";
+import { Button, Dialog, Portal, Snackbar, Text } from "react-native-paper";
+import { themeColors } from "~/Constants";
 
 /**
  * PROPS
@@ -10,11 +11,12 @@ import { Button, Dialog, Portal, Text } from "react-native-paper";
  * buttonsFunctions - an array of functions for the buttons to be displayed
  */
 export default function DialogComponent({
+  type,
   title,
   content,
   visible,
   onHide,
-  buttons,
+  buttons = [],
   buttonsFunctions,
 }) {
   const Buttons = buttons.map((item, index) => {
@@ -22,9 +24,9 @@ export default function DialogComponent({
     let labelStyle;
     if (index === 0) {
       style = {};
-      labelStyle = { color: "#F24E1E" };
+      labelStyle = { color: themeColors.accent };
     } else {
-      style = { backgroundColor: "#F24E1E" };
+      style = { backgroundColor: themeColors.accent };
       labelStyle = { color: "white" };
     }
 
@@ -42,17 +44,30 @@ export default function DialogComponent({
 
   return (
     <Portal>
-      <Dialog
-        visible={visible}
-        onDismiss={onHide}
-        style={{ backgroundColor: "white" }}
-      >
-        <Dialog.Title style={{ fontWeight: "bold" }}>{title}</Dialog.Title>
-        <Dialog.Content>
-          <Text variant="bodyMedium">{content}</Text>
-        </Dialog.Content>
-        <Dialog.Actions>{Buttons}</Dialog.Actions>
-      </Dialog>
+      {type === "snackbar" ? (
+        <Snackbar
+          visible={visible}
+          onDismiss={onHide}
+          action={{
+            label: "Dismiss",
+            onPress: onHide,
+          }}
+        >
+          {content}
+        </Snackbar>
+      ) : (
+        <Dialog
+          visible={visible}
+          onDismiss={onHide}
+          style={{ backgroundColor: "white" }}
+        >
+          <Dialog.Title style={{ fontWeight: "bold" }}>{title}</Dialog.Title>
+          <Dialog.Content>
+            <Text variant="bodyMedium">{content}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>{Buttons}</Dialog.Actions>
+        </Dialog>
+      )}
     </Portal>
   );
 }

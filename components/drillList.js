@@ -1,6 +1,7 @@
 ﻿import { SectionList, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 
+import { themeColors } from "~/Constants";
 import DrillCard from "~/components/drillCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
@@ -56,13 +57,13 @@ export default function DrillList({ drillData, href, userId, children }) {
             flex: 1,
             flexDirection: "row",
             paddingVertical: 5,
-            backgroundColor: "#F2F2F2",
+            backgroundColor: themeColors.background,
           }}
         >
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>
           <Text style={{ color: "#666", paddingHorizontal: 5 }}>
             {drillData[getDrillIndexByTitle(title)].inputs.map((input) => {
-              let retVal = "";
+              let retVal;
               switch (input.id) {
                 case "carry":
                   retVal = "↑";

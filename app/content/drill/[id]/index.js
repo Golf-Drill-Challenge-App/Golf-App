@@ -1,23 +1,24 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React from "react";
-import { Appbar, PaperProvider, SegmentedButtons } from "react-native-paper";
+import { Appbar, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
 import Leaderboard from "./leaderboard";
 import Stat from "./statistics";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
   const navigation = useNavigation();
-  const { id: drillId, assignedTime: assignedTime } = useLocalSearchParams();
+  const { id: drillId } = useLocalSearchParams();
 
-  // console.log("WAS IT ASSIGNED", assignedTime);
   const {
     data: drillInfo,
     error: drillInfoError,
@@ -40,7 +41,7 @@ export default function Index() {
   };
 
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={drillInfo.drillType}
@@ -50,7 +51,7 @@ export default function Index() {
               onPress={() => {
                 navigation.goBack();
               }}
-              color={"#F24E1E"}
+              color={themeColors.accent}
             />
           }
         />
@@ -59,6 +60,11 @@ export default function Index() {
           value={value}
           onValueChange={setValue}
           style={{ marginLeft: 10, marginRight: 10 }}
+          theme={{
+            colors: {
+              secondaryContainer: themeColors.highlight,
+            },
+          }}
           buttons={[
             {
               value: "description",
@@ -76,6 +82,6 @@ export default function Index() {
         />
         {tabComponent()}
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }

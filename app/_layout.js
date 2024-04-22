@@ -35,7 +35,6 @@ export default function RootLayoutNav() {
         >
           <Stack.Screen name="index" />
           <Stack.Screen name="content" />
-          <Stack.Screen name="test" />
         </Stack>
       </AuthProvider>
     </PersistQueryClientProvider>

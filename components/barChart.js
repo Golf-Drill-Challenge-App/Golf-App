@@ -14,6 +14,7 @@ import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
 import { Button } from "react-native-paper";
+import { themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "~/context/Auth";
@@ -178,7 +179,7 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
     dropdown: {
       width: "100%",
       backgroundColor: "#fafafa",
-      borderColor: "#ccc",
+      borderColor: themeColors.border,
       borderWidth: 1,
       borderRadius: 4,
       paddingHorizontal: 10,
@@ -191,7 +192,7 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
       left: 0,
       height: chartHeight,
       zIndex: 5,
-      backgroundColor: "#F2F2F2", // Set background color
+      backgroundColor: themeColors.background, // Set background color
       paddingHorizontal: 5, // Add padding
     },
     middleLine: {
@@ -294,6 +295,9 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
           scrollEventThrottle={128}
           style={styles.scrollViewContainer}
           removeClippedSubviews={true}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: false })
+          }
         >
           <View style={styles.chartContainer}>
             <BarChart

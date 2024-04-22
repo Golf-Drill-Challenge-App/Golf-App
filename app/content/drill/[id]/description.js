@@ -1,6 +1,8 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { ScrollView } from "react-native";
 import { Button } from "react-native-paper";
+
+import { themeColors } from "~/Constants";
 import DrillDescription from "~/components/drillDescription";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -28,6 +30,7 @@ export default function Description() {
     <>
       <ScrollView
         refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+        style={{ paddingTop: 10 }}
       >
         <DrillDescription drillData={drillInfo} />
       </ScrollView>
@@ -47,7 +50,7 @@ export default function Description() {
             right: 0,
           }}
           mode="contained"
-          buttonColor="#F24E1E"
+          buttonColor={themeColors.accent}
           textColor="white"
         >
           Start Drill

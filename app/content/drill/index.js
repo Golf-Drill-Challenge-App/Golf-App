@@ -1,16 +1,13 @@
-import { useNavigation } from "expo-router";
-import { PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
-  const navigation = useNavigation();
-
   const {
     data: drillInfo,
     error: drillInfoError,
@@ -26,7 +23,7 @@ export default function Index() {
   }
 
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title={"Drills"} />
 
@@ -35,6 +32,6 @@ export default function Index() {
           href={"content/drill/"}
         />
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }

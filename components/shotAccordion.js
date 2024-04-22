@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
-import { List, Text } from "react-native-paper";
+import { Icon, List, Text } from "react-native-paper";
+import { themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
@@ -33,10 +34,10 @@ function DataField(field, value) {
           }}
           key={field}
         >
-          <Text style={{ marginLeft: 11, fontWeight: "bold" }}>Carry</Text>
+          <Text style={{ fontWeight: "bold" }}>Carry</Text>
           <View
             style={{
-              width: 200,
+              width: 150,
             }}
           >
             <Row name={"(Actual)"} value={`${numTrunc(value["carry"])} yd`} />
@@ -86,43 +87,68 @@ function ShotAccordion(props) {
       <List.Accordion
         theme={{
           colors: {
-            background: "#f5f5f5",
+            background: themeColors.background,
           },
         }}
-        title={
+        title={""}
+        rippleColor={"rgba(221,221,221,0.25)"}
+        left={() => (
           <View
             style={{
+              width: "90%",
               flexDirection: "row",
-              justifyContent: "flex-start",
               alignItems: "center",
-              width: "100%",
+              marginLeft: 20,
             }}
           >
-            <Text style={{ width: "30%", paddingRight: 2 }}>
-              <Text style={styles.boldText}>Shot: {props.shot["sid"]}/</Text>
+            <Text
+              style={{
+                width: "31%",
+              }}
+            >
+              <Text style={styles.boldText}>Shot: {props.shot["sid"]}</Text>/
               {props.total}
             </Text>
-            <Text style={{ width: "40%", textAlign: "center", padding: 2 }}>
+            <Text
+              style={{
+                width: "41%",
+              }}
+            >
               <Text style={styles.boldText}>Target:</Text>{" "}
               {props.shot[props.drillInfo.requirements[0].name]}{" "}
               {props.drillInfo.requirements[0].distanceMeasure}
             </Text>
-            <Text style={{ width: "30%", textAlign: "right", paddingLeft: 2 }}>
+            <Text>
               <Text style={styles.boldText}>SG:</Text>{" "}
               {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
             </Text>
           </View>
-        }
+        )}
+        right={({ isExpanded }) => (
+          <View
+            style={{
+              position: "relative",
+              left: -20,
+            }}
+          >
+            <Icon
+              source={isExpanded ? "chevron-up" : "chevron-down"}
+              size={20}
+            />
+          </View>
+        )}
         style={{
-          backgroundColor: "#f5f5f5",
+          backgroundColor: themeColors.background,
           borderWidth: 1,
-          borderColor: "#ddd",
+          borderColor: themeColors.border,
           borderRadius: 8,
         }}
       >
         <View
           style={{
-            backgroundColor: "#f5f5f5",
+            backgroundColor: themeColors.background,
+            paddingLeft: 20,
+            paddingRight: 20,
           }}
         >
           {props.drillInfo["outputs"].map((field) => {
@@ -152,9 +178,9 @@ function ShotAccordion(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: themeColors.background,
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: themeColors.border,
     borderRadius: 8,
   },
   titleContainer: {
@@ -169,10 +195,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     fontSize: 8,
     justifyContent: "space-between",
-    paddingHorizontal: 10,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderColor: "#ddd",
+    borderColor: themeColors.border,
   },
   rowName: {
     fontWeight: "bold",

@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.frankreed.GolfApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +30,14 @@
     "mods": {
       "mods.android.gradleProperties": {
         "AsyncStorage_db_size_in_MB": "100"
+      }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "62a9d839-399f-4f8f-b3f2-eaa7c1c78080"
       }
     }
   }

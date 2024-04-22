@@ -29,14 +29,9 @@ export default function DrillScreen(props) {
   const windowWidth = Dimensions.get("window").width;
 
   return (
-    <View style={{ margin: 10, position: "relative" }}>
+    <View style={{ margin: 10 }}>
       <ScrollView style={{ height: "100%", paddingBottom: 50, paddingLeft: 5 }}>
-        <Text style={{ paddingBottom: 10 }} variant="headlineLarge">
-          Description
-        </Text>
-        <Text style={{ paddingLeft: 10 }} variant="bodySmall">
-          {props.drillData["description"]}
-        </Text>
+        <Text variant="bodyMedium">{props.drillData["description"]}</Text>
         {hasImages && (
           <View style={{ marginTop: 10 }}>
             <View

@@ -1,21 +1,21 @@
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { List, PaperProvider, Text } from "react-native-paper";
+import { List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { formatDate } from "~/Utility";
+import EmptyScreen from "~/components/emptyScreen";
+import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-import { formatDate } from "~/Utility";
-import Header from "~/components/header";
-import EmptyScreen from "../../../components/emptyScreen";
-
 const DrillList = () => {
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
 
   const {
     data: drillInfo,
@@ -32,24 +32,17 @@ const DrillList = () => {
   const userId = currentUserId;
   const invalidateKeys = [["user", { userId }], ["drillInfo"]];
 
-  const [assignedData, setAssignedData] = useState([]);
-
-  console.log("USER DATA", userInfo);
-
-  // Set the assigned_data state when the user data is loaded
-  useEffect(() => {
-    if (!userIsLoading && userInfo && userInfo.assigned_data) {
-      setAssignedData(userInfo.assigned_data);
-    }
-  }, [userIsLoading, userInfo]);
-
   if (userIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
 
+  if (userInfoError || drillInfoError) {
+    return <ErrorComponent message={[userInfoError, drillInfoError]} />;
+  }
+
   const today = formatDate(Date.now());
   // Group the assigned drills by date
-  const groupedData = assignedData.reduce((acc, curr) => {
+  const groupedData = userInfo.assigned_data.reduce((acc, curr) => {
     const date = formatDate(curr.assignedTime);
     const dateKey = date === today ? "Today" : date;
 
@@ -79,7 +72,7 @@ const DrillList = () => {
         title: date,
         data: groupedData[date],
       }))}
-      keyExtractor={(item, index) => `${item.assignedTime}-${item.drillId}`}
+      keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
       renderItem={({ item: assignment }) => (
         <TouchableOpacity
           key={`${assignment.assignedTime}-${assignment.drillId}`}
@@ -143,15 +136,6 @@ const DrillList = () => {
   );
 };
 
-/*
-const convertTimestampToDate = (timestamp) => {
-  const date = new Date(timestamp * 1000);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-*/
 const CoachView = () => {
   const {
     data: drillInfo,
@@ -164,6 +148,9 @@ const CoachView = () => {
   const handlePress = () => setExpanded(!expanded);
   if (drillInfoIsLoading) {
     return <Loading />;
+  }
+  if (drillInfoError) {
+    return <ErrorComponent message={drillInfoError.message} />;
   }
   return (
     <List.Section>
@@ -181,16 +168,13 @@ const CoachView = () => {
 };
 
 export default function Index() {
-  const { data: userInfo, userIsLoading, userError } = useUserInfo();
-
-  console.log("USER INFO IN PLAN BEGGINING", userInfo);
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
 
         <DrillList />
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }

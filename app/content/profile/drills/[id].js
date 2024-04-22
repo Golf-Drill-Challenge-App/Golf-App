@@ -1,10 +1,12 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { Appbar, PaperProvider } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -35,7 +37,7 @@ export default function Stat() {
   }
 
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={"Statistics"}
@@ -44,7 +46,7 @@ export default function Stat() {
               onPress={() => {
                 navigation.goBack();
               }}
-              color={"#F24E1E"}
+              color={themeColors.accent}
             />
           }
         />
@@ -54,6 +56,6 @@ export default function Stat() {
           userId={userId}
         />
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }

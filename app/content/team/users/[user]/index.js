@@ -1,18 +1,20 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { Appbar, PaperProvider } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import DrillList from "~/components/drillList";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import EmptyScreen from "../../../../../components/emptyScreen";
 
 function Index() {
   const userId = useLocalSearchParams()["user"];
@@ -60,14 +62,9 @@ function Index() {
 
   const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
   const profileHeader = (
-    <>
-      <View style={styles.profileContainer}>
-        <ProfileCard user={userData} email={userEmail} />
-      </View>
-      <View>
-        <Text style={styles.heading}>Drill History</Text>
-      </View>
-    </>
+    <View style={styles.profileContainer}>
+      <ProfileCard user={userData} email={userEmail} />
+    </View>
   );
 
   const invalidateKeys = [
@@ -77,7 +74,7 @@ function Index() {
   ];
 
   return (
-    <PaperProvider>
+    <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={userData["name"] + "'s Profile"}
@@ -86,7 +83,7 @@ function Index() {
               onPress={() => {
                 navigation.goBack();
               }}
-              color={"#F24E1E"}
+              color={themeColors.accent}
             />
           }
         />
@@ -108,7 +105,7 @@ function Index() {
           </>
         )}
       </SafeAreaView>
-    </PaperProvider>
+    </PaperWrapper>
   );
 }
 

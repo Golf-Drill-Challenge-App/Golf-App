@@ -7,12 +7,16 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Appbar, Button, PaperProvider, Text } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Appbar, Button, Text } from "react-native-paper";
+import {
+  SafeAreaInsetsContext,
+  SafeAreaView,
+} from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import {
   getIconByKey,
   lookUpBaselineStrokesGained,
@@ -25,6 +29,7 @@ import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
@@ -428,8 +433,7 @@ function invalidateOnSubmit(queryClient, drillId, teamId, userId) {
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
-
-  console.log("ID AND THE ASSIGNED TIME", id, assignedTime);
+  const insets = useContext(SafeAreaInsetsContext);
   const queryClient = useQueryClient();
 
   const numInputs = drillInfo.inputs.length;
@@ -450,8 +454,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
   const { id: did } = useLocalSearchParams();
-
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -585,7 +587,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider>
+      <PaperWrapper>
         <SafeAreaView>
           <View style={{ height: "100%" }}>
             <BottomSheetModalProvider>
@@ -596,7 +598,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <Appbar.Action
                     icon="close"
                     onPress={() => setLeaveDialogVisible(true)}
-                    color={"#F24E1E"}
+                    color={themeColors.accent}
                   />
                 }
                 postChildren={
@@ -605,7 +607,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                     onPress={() => {
                       descriptionModalRef.current?.present();
                     }}
-                    color={"#F24E1E"}
+                    color={themeColors.accent}
                   />
                 }
               />
@@ -655,9 +657,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetModal
                   ref={navModalRef}
-                  index={1}
-                  snapPoints={snapPoints}
-                  backdropComponent={BottomSheetBackdrop}
+                  enableDynamicSizing
+                  backdropComponent={({ animatedIndex, style }) => {
+                    return (
+                      <BottomSheetBackdrop
+                        appearsOnIndex={0}
+                        disappearsOnIndex={-1}
+                        animatedIndex={animatedIndex}
+                        style={[style, { top: -insets.top }]}
+                      />
+                    );
+                  }}
+                  backgroundStyle={{ backgroundColor: themeColors.background }}
                 >
                   <BottomSheetScrollView>
                     <View style={styles.bottomSheetContentContainer}>
@@ -689,11 +700,23 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 {/* Description Bottom Sheet */}
                 <BottomSheetModal
                   ref={descriptionModalRef}
-                  index={1}
-                  snapPoints={snapPoints}
-                  backdropComponent={BottomSheetBackdrop}
+                  enableDynamicSizing
+                  backdropComponent={({ animatedIndex, style }) => {
+                    return (
+                      <BottomSheetBackdrop
+                        appearsOnIndex={0}
+                        disappearsOnIndex={-1}
+                        animatedIndex={animatedIndex}
+                        style={[style, { top: -insets.top }]}
+                      />
+                    );
+                  }}
+                  backgroundStyle={{ backgroundColor: themeColors.background }}
                 >
                   <BottomSheetScrollView>
+                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                      Description
+                    </Text>
                     <DrillDescription drillData={drillInfo} />
                   </BottomSheetScrollView>
                 </BottomSheetModal>
@@ -716,22 +739,20 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
                 {/* Error Dialog: Empty Input*/}
                 <DialogComponent
+                  type={"snackbar"}
                   title={"Error!"}
                   content="All inputs must be filled."
                   visible={emptyDialogVisible}
                   onHide={hideEmptyDialog}
-                  buttons={["Dismiss"]}
-                  buttonsFunctions={[hideEmptyDialog]}
                 />
 
                 {/* Error Dialog: Invalid Input*/}
                 <DialogComponent
+                  type={"snackbar"}
                   title={"Error!"}
                   content="All inputs must be numbers."
                   visible={invalidDialogVisible}
                   onHide={hideInvalidDialog}
-                  buttons={["Dismiss"]}
-                  buttonsFunctions={[hideInvalidDialog]}
                 />
 
                 {/* Navigation */}
@@ -776,7 +797,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   {buttonDisplayHandler()}
 
                   <Text
-                    style={{ color: "#F3572A" }}
+                    style={{ color: themeColors.accent }}
                     onPress={() => {
                       navModalRef.current?.present();
                     }}
@@ -788,7 +809,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
             </BottomSheetModalProvider>
           </View>
         </SafeAreaView>
-      </PaperProvider>
+      </PaperWrapper>
     </GestureHandlerRootView>
   );
 }
@@ -802,6 +823,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-start",
     marginBottom: 15,
+    marginLeft: 10,
   },
   navigationContainer: {
     alignItems: "center",
@@ -810,7 +832,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "95%",
-    backgroundColor: "#F24E1E",
+    backgroundColor: themeColors.accent,
     marginBottom: 20,
     justifyContent: "center",
   },
@@ -821,7 +843,6 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     width: "95%",
-    height: 52,
     backgroundColor: "#A0A0A0",
     marginBottom: 20,
     justifyContent: "center",
@@ -862,7 +883,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   modalContainerStyle: {
-    backgroundColor: "white",
+    backgroundColor: themeColors.background,
     padding: 20,
     alignItems: "center",
     justifyContent: "center",

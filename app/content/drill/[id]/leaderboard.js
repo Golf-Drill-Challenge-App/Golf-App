@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -12,7 +13,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import EmptyScreen from "../../../../components/emptyScreen";
 
 export default function Leaderboard() {
   const { currentTeamId } = currentAuthContext();
@@ -161,20 +161,6 @@ export default function Leaderboard() {
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
-      {/*<List.Accordion 
-        title={title[mainOutputAttempt]}
-      >
-        {Object.keys(drillInfo.aggOutputs).map((output) => (
-          <List.Item 
-            key={output}
-            title={title[output]}
-            onPress={() => {
-              setDefaultMainOutputAttempt(false);
-              setCustomMainOutputAttempt(output);
-            }}
-          />
-        ))}
-      </List.Accordion>*/}
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
         {title[drillInfo.mainOutputAttempt]}
       </Text>
