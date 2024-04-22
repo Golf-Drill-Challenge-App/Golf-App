@@ -49,7 +49,12 @@ export default function DrillList({ drillData, href, userId, children }) {
       sections={drills}
       ListHeaderComponent={children}
       renderItem={({ item }) => (
-        <DrillCard key={item.did} drill={item} hrefString={href + item.did} />
+        <DrillCard
+          key={item.did}
+          leftString={item.subType}
+          rightString={"x" + item.reps}
+          hrefString={href + item.did}
+        />
       )}
       renderSectionHeader={({ section: { title } }) => (
         <View
