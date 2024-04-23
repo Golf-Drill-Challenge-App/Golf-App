@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { List, Text } from "react-native-paper";
+import { Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { formatDate } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
@@ -91,13 +91,14 @@ const DrillList = () => {
           <View style={{ marginLeft: 20, marginRight: 20 }}>
             <View
               style={{
+                flexDirection: "row",
                 borderWidth: 1,
                 borderColor: "rgba(0,0,0,0.2)",
                 alignItems: "center",
                 justifyContent: "space-between",
                 width: "100%",
                 height: 65,
-                backgroundColor: `${!assignment.completed ? "#fff" : "#89E894"}`,
+                backgroundColor: `${!assignment.completed ? "rgba(255,255,255,1.)" : "rgba(137,232,148,0.4)"}`,
                 borderRadius: 20,
                 marginBottom: 10,
                 paddingLeft: 30,
@@ -106,12 +107,17 @@ const DrillList = () => {
                 paddingBottom: 5,
               }}
             >
-              <Text style={{ fontSize: 20 }}>
-                {drillInfo[assignment.drillId]["drillType"]}
-              </Text>
-              <Text style={{ fontSize: 17, fontStyle: "italic" }}>
-                {drillInfo[assignment.drillId]["subType"]}
-              </Text>
+              <View style={{ flexDirection: "column" }}>
+                <Text style={{ fontSize: 20 }}>
+                  {drillInfo[assignment.drillId]["drillType"]}
+                </Text>
+                <Text style={{ fontSize: 14, fontStyle: "italic" }}>
+                  {drillInfo[assignment.drillId]["subType"]}
+                </Text>
+              </View>
+              {assignment.completed && 
+                <Icon source="check" size={20} color="green" />
+              }
             </View>
           </View>
         </TouchableOpacity>
