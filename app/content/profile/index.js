@@ -1,7 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetTextInput,
   BottomSheetView,
@@ -45,6 +43,7 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import BottomSheetWrapper from "../../../components/BottomSheetWrapper";
 
 function Index() {
   const { signOut } = currentAuthContext();
@@ -264,22 +263,7 @@ function Index() {
             </>
           )}
 
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            enableDynamicSizing
-            keyboardBehavior={"interactive"}
-            keyboardBlurBehavior={"restore"}
-            backdropComponent={({ animatedIndex, style }) => {
-              return (
-                <BottomSheetBackdrop
-                  appearsOnIndex={0}
-                  disappearsOnIndex={-1}
-                  animatedIndex={animatedIndex}
-                  style={[style, { top: -insets.top }]}
-                />
-              );
-            }}
-          >
+          <BottomSheetWrapper ref={bottomSheetModalRef}>
             <BottomSheetView style={styles.modalContent}>
               {/* Close Button */}
               <Pressable
@@ -362,7 +346,7 @@ function Index() {
                 <Text style={styles.signOutButton}>Sign Out</Text>
               </Pressable>
             </BottomSheetView>
-          </BottomSheetModal>
+          </BottomSheetWrapper>
         </BottomSheetModalProvider>
       </SafeAreaView>
     </PaperWrapper>

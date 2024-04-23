@@ -1,6 +1,4 @@
 import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
@@ -39,6 +37,7 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import BottomSheetWrapper from "../../../../../components/BottomSheetWrapper";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 
@@ -726,64 +725,36 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 ))}
               </View>
 
-              {/*Navigation Bottom Sheet */}
-              <BottomSheetModal
-                ref={navModalRef}
-                enableDynamicSizing
-                backdropComponent={({ animatedIndex, style }) => {
-                  return (
-                    <BottomSheetBackdrop
-                      appearsOnIndex={0}
-                      disappearsOnIndex={-1}
-                      animatedIndex={animatedIndex}
-                      style={[style, { top: -insets.top }]}
-                    />
-                  );
-                }}
-                backgroundStyle={{ backgroundColor: themeColors.background }}
-              >
-                <BottomSheetScrollView>
-                  <View style={styles.bottomSheetContentContainer}>
-                    {attemptShots.slice(0, currentShot + 1).map((item, id) => (
-                      <NavigationRectangle
-                        key={id}
-                        drillInfo={drillInfo}
-                        shot={item}
-                        inputValues={inputValues[id]}
-                        currentShot={currentShot}
-                        pressFunction={() => {
-                          setDisplayedShot(id);
-                          navModalRef.current.close();
-                        }}
-                      />
-                    ))}
-                  </View>
-                </BottomSheetScrollView>
-              </BottomSheetModal>
+                {/*Navigation Bottom Sheet */}
+                <BottomSheetWrapper ref={navModalRef}>
+                  <BottomSheetScrollView>
+                    <View style={styles.bottomSheetContentContainer}>
+                      {attemptShots.slice(0, currentShot + 1).map((item, id) => (
+                        <NavigationRectangle
+                          key={id}
+                          drillInfo={drillInfo}
+                          shot={item}
+                          inputValues={inputValues[id]}
+                          currentShot={currentShot}
+                          pressFunction={() => {
+                            setDisplayedShot(id);
+                            navModalRef.current.close();
+                          }}
+                        />
+                      ))}
+                    </View>
+                  </BottomSheetScrollView>
+                </BottomSheetWrapper>
 
-              {/* Description Bottom Sheet */}
-              <BottomSheetModal
-                ref={descriptionModalRef}
-                enableDynamicSizing
-                backdropComponent={({ animatedIndex, style }) => {
-                  return (
-                    <BottomSheetBackdrop
-                      appearsOnIndex={0}
-                      disappearsOnIndex={-1}
-                      animatedIndex={animatedIndex}
-                      style={[style, { top: -insets.top }]}
-                    />
-                  );
-                }}
-                backgroundStyle={{ backgroundColor: themeColors.background }}
-              >
-                <BottomSheetScrollView>
-                  <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                    Description
-                  </Text>
-                  <DrillDescription drillData={drillInfo} />
-                </BottomSheetScrollView>
-              </BottomSheetModal>
+                {/* Description Bottom Sheet */}
+                <BottomSheetWrapper ref={descriptionModalRef}>
+                  <BottomSheetScrollView>
+                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                      Description
+                    </Text>
+                    <DrillDescription drillData={drillInfo} />
+                  </BottomSheetScrollView>
+                </BottomSheetWrapper>
 
               {/* Error Dialog: Empty Input*/}
               <DialogComponent
