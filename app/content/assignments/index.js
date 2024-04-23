@@ -115,9 +115,9 @@ const DrillList = () => {
                   {drillInfo[assignment.drillId]["subType"]}
                 </Text>
               </View>
-              {assignment.completed && 
+              {assignment.completed && (
                 <Icon source="check" size={20} color="green" />
-              }
+              )}
             </View>
           </View>
         </TouchableOpacity>

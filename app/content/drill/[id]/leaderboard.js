@@ -182,7 +182,10 @@ export default function Leaderboard() {
                 left={() => <Avatar.Image size={24} source={{ uri: userInfo[userId]["pfp"] }} />}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text>{numTrunc(attempt["value"], true)} {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}</Text>
+                    <Text>
+                      {numTrunc(attempt["value"], true)}{" "}
+                      {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
+                    </Text>
                     <Icon source="chevron-right" />
                   </View>
                 )}
