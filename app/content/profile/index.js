@@ -12,7 +12,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
   Platform,
@@ -23,12 +23,10 @@ import {
   View,
 } from "react-native";
 import { Appbar, Snackbar } from "react-native-paper";
-import {
-  SafeAreaInsetsContext,
-  SafeAreaView,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
+import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
@@ -43,7 +41,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import BottomSheetWrapper from "../../../components/BottomSheetWrapper";
 
 function Index() {
   const { signOut } = currentAuthContext();
@@ -98,8 +95,6 @@ function Index() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
-
-  const insets = useContext(SafeAreaInsetsContext);
 
   useEffect(() => {
     setNewName(userData ? userData.name : "");
@@ -263,20 +258,14 @@ function Index() {
             </>
           )}
 
-          <BottomSheetWrapper ref={bottomSheetModalRef}>
+          <BottomSheetWrapper
+            ref={bottomSheetModalRef}
+            closeFn={() => {
+              resetForm();
+              setPasswordInputVisible(false);
+            }}
+          >
             <BottomSheetView style={styles.modalContent}>
-              {/* Close Button */}
-              <Pressable
-                onPress={() => {
-                  bottomSheetModalRef.current.close();
-                  resetForm();
-                  setPasswordInputVisible(false);
-                }}
-                style={styles.closeButton}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </Pressable>
-
               {/* Profile Picture */}
               <TouchableOpacity onPress={handleImageClick}>
                 <View style={styles.profilePictureContainer}>
@@ -372,22 +361,10 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   modalContent: {
-    backgroundColor: "#FFF",
     paddingHorizontal: 30, // Increase padding for more spacing
     paddingVertical: Platform.OS === "android" ? 10 : 30,
     paddingBottom: 50,
     alignItems: "center",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-  },
-  closeButtonText: {
-    color: themeColors.accent,
-    fontSize: 17,
-    marginLeft: 10,
-    marginTop: -10,
   },
   profilePictureContainer: {
     position: "relative",

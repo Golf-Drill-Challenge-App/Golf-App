@@ -16,16 +16,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Text } from "react-native-paper";
-import {
-  SafeAreaInsetsContext,
-  SafeAreaView,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import {
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
+import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillDescription from "~/components/drillDescription";
 import ErrorComponent from "~/components/errorComponent";
@@ -483,7 +481,6 @@ function validateInputs(inputs) {
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
-  const insets = useContext(SafeAreaInsetsContext);
   const queryClient = useQueryClient();
 
   const numInputs = drillInfo.inputs.length;
