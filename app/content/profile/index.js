@@ -24,7 +24,7 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "react-native-expo-image-cache";
-import { Appbar, Snackbar } from "react-native-paper";
+import { Appbar, Portal, Snackbar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -105,6 +105,9 @@ function Index() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
 
+  const [isImageUploadModalVisible, setIsImageUploadModalVisible] =
+    useState(false);
+
   useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
@@ -137,7 +140,19 @@ function Index() {
   );
 
   const handleImageClick = () => {
-    console.log("TODO: implement and open an image upload modal!");
+    setIsImageUploadModalVisible(true);
+  };
+
+  // Function to handle closing the image upload modal
+  const hideImageUploadModal = () => {
+    setIsImageUploadModalVisible(false);
+  };
+
+  // Function to handle uploading image
+  const handleImageUpload = () => {
+    console.log("TODO: Implement image upload logic");
+    // Close the modal after image upload is done
+    setIsImageUploadModalVisible(false);
   };
 
   async function handleSignOut() {
@@ -302,6 +317,35 @@ function Index() {
     signOutButton: {
       color: themeColors.accent,
       fontSize: 16,
+    },
+    imageUploadModalContent: {
+      width: 300,
+      height: 160,
+      padding: 20,
+      backgroundColor: "white",
+      borderRadius: 10,
+      alignSelf: "center", // Center the modal horizontally
+    },
+    uploadModalTitle: {
+      fontSize: 19,
+      fontWeight: "bold",
+      marginBottom: 10,
+      alignSelf: "center",
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      marginTop: 20,
+      marginBottom: 10,
+    },
+    uploadButton: {
+      backgroundColor: themeColors.accent,
+      borderRadius: 8,
+      alignSelf: "center",
+    },
+    buttonLabel: {
+      fontSize: 18,
+      fontWeight: "bold",
     },
   });
   const profileHeader = (
