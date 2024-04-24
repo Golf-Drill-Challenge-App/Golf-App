@@ -131,15 +131,21 @@ export default function Leaderboard() {
   }
 
   // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
-
+  const sortByLower = drillInfo["aggOutputs"][mainOutputAttempt][
+    "lowerIsBetter"
+  ]
+    ? 1
+    : -1;
   const orderedLeaderboard = Object.keys(leaderboardAttempts).sort(
     //only sort the userId
     (a, b) =>
-      leaderboardAttempts[a][mainOutputAttempt]["value"] -
-      leaderboardAttempts[b][mainOutputAttempt]["value"],
+      sortByLower * leaderboardAttempts[a][mainOutputAttempt]["value"] +
+      sortByLower * -1 * leaderboardAttempts[b][mainOutputAttempt]["value"],
     // console.log("test"),
     // console.log(leaderboardAttempts)
   );
+  console.log("orderedLeaderboard", orderedLeaderboard);
+  console.log("sortByLower", sortByLower);
   // console.log("\nordered")
   // console.log(orderedLeaderboard)
 
