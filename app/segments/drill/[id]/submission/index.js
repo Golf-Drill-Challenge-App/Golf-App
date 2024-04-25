@@ -6,9 +6,9 @@ import Loading from "~/components/loading";
 import Input from "./input";
 import Result from "./result";
 
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import DialogComponent from "../../../../../components/dialog";
 
 export default function Index() {
   const { id } = useLocalSearchParams();
@@ -22,23 +22,24 @@ export default function Index() {
   // Navigation
   const navigation = useNavigation();
 
-  navigation.setOptions({ gestureEnabled: toggleResult });
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        if (toggleResult) {
-          return;
-        }
-        // Prevent default behavior of leaving the screen
-        e.preventDefault();
+  useEffect(() => {
+    navigation.setOptions({ gestureEnabled: toggleResult });
+  }, [toggleResult]);
 
-        setExitAction(e.data.action);
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", (e) => {
+      if (toggleResult) {
+        return;
+      }
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
 
-        // Prompt the user before leaving the screen
-        setLeaveDialogVisible(true);
-      }),
-    [navigation, toggleResult],
-  );
+      setExitAction(e.data.action);
+
+      // Prompt the user before leaving the screen
+      setLeaveDialogVisible(true);
+    });
+  }, []);
 
   const {
     data: drillInfo,
