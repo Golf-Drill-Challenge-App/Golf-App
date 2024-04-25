@@ -37,9 +37,7 @@ function getLeaderboardRanks(
     }
     //Next rank Case
     else {
-      console.log("== i: ", i);
       currentRank = i + 1;
-      console.log("== currentRank: ", currentRank);
       leaderboardRanks.push(currentRank);
     }
 
