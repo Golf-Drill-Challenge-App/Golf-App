@@ -14,6 +14,41 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
+function getLeaderboardRanks(
+  orderedLeaderboard,
+  leaderboardAttempts,
+  mainOutputAttempt,
+) {
+  let leaderboardRanks = [];
+  let currentRank = 1;
+
+  for (let i = 0; i < orderedLeaderboard.length; i++) {
+    const userId = orderedLeaderboard[i];
+
+    const attempt = leaderboardAttempts[userId][mainOutputAttempt];
+    //base case for a clear number 1
+    if (i == 0) {
+      leaderboardRanks.push(currentRank);
+    }
+
+    //case for a tie
+    else if (attempt.value == previousAttempt.value) {
+      leaderboardRanks.push(currentRank);
+    }
+    //Next rank Case
+    else {
+      console.log("== i: ", i);
+      currentRank = i + 1;
+      console.log("== currentRank: ", currentRank);
+      leaderboardRanks.push(currentRank);
+    }
+
+    let previousAttempt = attempt;
+  }
+
+  return leaderboardRanks;
+}
+
 export default function Leaderboard() {
   const { currentTeamId } = currentAuthContext();
   const drillId = useLocalSearchParams()["id"];
@@ -167,6 +202,12 @@ export default function Leaderboard() {
     strokesGainedAverage: "Average Strokes Gained",
   };
 
+  let leaderboardRanks = getLeaderboardRanks(
+    orderedLeaderboard,
+    leaderboardAttempts,
+    mainOutputAttempt,
+  );
+
   return (
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
@@ -175,7 +216,7 @@ export default function Leaderboard() {
         {title[drillInfo.mainOutputAttempt]}
       </Text>
       <List.Section style={{ marginLeft: 20 }}>
-        {orderedLeaderboard.map((userId) => {
+        {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];
           return (
             <Link
@@ -187,7 +228,20 @@ export default function Leaderboard() {
             >
               <List.Item
                 title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
-                left={() => <Avatar.Text size={24} label="XD" />}
+                left={() => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+
+                      padding: 6,
+                    }}
+                  >
+                    <Text style={{ marginRight: 10, alignSelf: "center" }}>
+                      {leaderboardRanks[idx].toString()}.
+                    </Text>
+                    <Avatar.Text size={24} label="XD" />
+                  </View>
+                )}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text>{numTrunc(attempt["value"], true)} ft</Text>
