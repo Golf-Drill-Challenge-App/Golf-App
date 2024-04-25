@@ -689,6 +689,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                               drillInfo={drillInfo}
                               shot={item}
                               inputValues={inputValues[id]}
+                              currentShot={currentShot}
                             />
                           </Pressable>
                         ))}

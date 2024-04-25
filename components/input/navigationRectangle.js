@@ -3,7 +3,12 @@ import { Divider, Icon, Text } from "react-native-paper";
 
 import { getIconByKey } from "~/Utility";
 
-export default function NavigationRectangle({ drillInfo, inputValues, shot }) {
+export default function NavigationRectangle({
+  drillInfo,
+  inputValues,
+  shot,
+  currentShot,
+}) {
   // console.log("inputValues", inputValues);
   const keys = Object.keys(inputValues);
   return (
@@ -84,11 +89,9 @@ export default function NavigationRectangle({ drillInfo, inputValues, shot }) {
             ))}
           </View>
 
-          {keys.length > 0 && !keys.some((key) => !inputValues[key]) && (
-            <Divider
-              style={{ backgroundColor: "#A0A0A0", height: 1, width: "100%" }}
-            />
-          )}
+          <Divider
+            style={{ backgroundColor: "#A0A0A0", height: 1, width: "100%" }}
+          />
 
           <View
             style={{
@@ -96,26 +99,41 @@ export default function NavigationRectangle({ drillInfo, inputValues, shot }) {
               justifyContent: "space-evenly",
             }}
           >
-            {drillInfo.inputs.map((input, id) => {
-              if (inputValues[input.id]) {
-                return (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 10,
-                    }}
-                    key={id}
-                  >
-                    <Icon source={getIconByKey(input.id)} size={15} />
-                    <Text style={{ fontSize: 13, padding: 2 }}>
-                      {inputValues[input.id]} {input.distanceMeasure}
-                    </Text>
-                  </View>
-                );
-              }
-            })}
+            {currentShot + 1 == shot.shotNum ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 10,
+                }}
+              >
+                <Text style={{ fontSize: 13, padding: 2, fontWeight: "bold" }}>
+                  Current Shot
+                </Text>
+              </View>
+            ) : (
+              drillInfo.inputs.map((input, id) => {
+                if (inputValues[input.id]) {
+                  return (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 10,
+                      }}
+                      key={id}
+                    >
+                      <Icon source={getIconByKey(input.id)} size={15} />
+                      <Text style={{ fontSize: 13, padding: 2 }}>
+                        {inputValues[input.id]} {input.distanceMeasure}
+                      </Text>
+                    </View>
+                  );
+                }
+              })
+            )}
           </View>
         </View>
       </View>
