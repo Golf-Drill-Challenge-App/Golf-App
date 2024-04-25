@@ -175,11 +175,12 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
       width: 70,
       height: 45,
       zIndex: 3,
+      borderColor: themeColors.border,
     },
     dropdown: {
       width: "100%",
-      backgroundColor: "#fafafa",
-      borderColor: themeColors.border,
+      backgroundColor: themeColors.highlight,
+      // borderColor: themeColors.border, I can't find out how to change the drop down border, so let's just make it all black border here.
       borderWidth: 1,
       borderRadius: 4,
       paddingHorizontal: 10,

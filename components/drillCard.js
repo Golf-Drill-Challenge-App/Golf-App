@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 5,
     padding: 15,
-    backgroundColor: "#fff",
+    backgroundColor: themeColors.highlight,
   },
   cardContent: {
     flexDirection: "row",
