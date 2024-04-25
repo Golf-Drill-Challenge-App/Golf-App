@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
@@ -16,7 +16,7 @@ export default function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
-  const [lastRedirect, setLastRedirect] = useState(0);
+  const [lastRedirect, setLastRedirect] = useState("0");
 
   if (drillInfoIsLoading) {
     return <Loading />;
@@ -25,17 +25,18 @@ export default function Index() {
   if (drillInfoError) {
     return <ErrorComponent message={drillInfoError} />;
   }
-
-  if (lastRedirect !== currentTime && assignedTime) {
-    setLastRedirect(currentTime);
-    router.push({
-      pathname: `content/drill/${drillId}`,
-      params: {
-        id: `${drillId}`,
-        assignedTime: assignedTime,
-      },
-    });
-  }
+  useEffect(() => {
+    if (lastRedirect !== currentTime && assignedTime) {
+      setLastRedirect(currentTime);
+      router.push({
+        pathname: `content/drill/${drillId}`,
+        params: {
+          id: `${drillId}`,
+          assignedTime: assignedTime,
+        },
+      });
+    }
+  }, [currentTime]);
 
   return (
     <PaperWrapper>
