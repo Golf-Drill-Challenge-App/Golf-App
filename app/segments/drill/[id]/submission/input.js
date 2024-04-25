@@ -442,6 +442,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const { currentUserId, currentTeamId } = currentAuthContext();
 
+  const { height } = useWindowDimensions();
+
   //a useState hook to track the inputs on each shot
   const [inputValues, setInputValues] = useState(
     Array.from({ length: drillInfo.reps }, () => ({})),
@@ -586,7 +588,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ height: height }}>
       <PaperWrapper>
         <SafeAreaView>
           <View style={{ height: "100%" }}>
@@ -821,9 +823,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "contain",
     justifyContent: "center",
-    position: "absolute",
-    bottom: 25,
-    width: "100%",
   },
   button: {
     width: "95%",
