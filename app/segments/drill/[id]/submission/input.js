@@ -8,8 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Text } from "react-native-paper";
 import {
@@ -588,223 +587,219 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   }
 
   return (
-    <GestureHandlerRootView style={{ height: height }}>
-      <PaperWrapper>
-        <SafeAreaView>
-          <View style={{ height: "100%" }}>
-            <BottomSheetModalProvider>
-              <Header
-                title={drillInfo.drillType}
-                subTitle={drillInfo.subType}
-                preChildren={
-                  <Appbar.Action
-                    icon="close"
-                    onPress={() => setLeaveDialogVisible(true)}
-                    color={themeColors.accent}
-                  />
-                }
-                postChildren={
-                  <Appbar.Action
-                    icon="information-outline"
-                    onPress={() => {
-                      descriptionModalRef.current?.present();
-                    }}
-                    color={themeColors.accent}
-                  />
-                }
-              />
+    <PaperWrapper>
+      <SafeAreaView style={{ height: height }}>
+        <View style={{ height: "100%" }}>
+          <BottomSheetModalProvider>
+            <Header
+              title={drillInfo.drillType}
+              subTitle={drillInfo.subType}
+              preChildren={
+                <Appbar.Action
+                  icon="close"
+                  onPress={() => setLeaveDialogVisible(true)}
+                  color={themeColors.accent}
+                />
+              }
+              postChildren={
+                <Appbar.Action
+                  icon="information-outline"
+                  onPress={() => {
+                    descriptionModalRef.current?.present();
+                  }}
+                  color={themeColors.accent}
+                />
+              }
+            />
 
-              <KeyboardAwareScrollView>
-                {/* Shot Number / Total shots */}
-                <View style={styles.shotNumContainer}>
-                  <Text style={styles.shotNumber}>
-                    Shot {attemptShots[displayedShot].shotNum}
-                    <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
-                  </Text>
-                </View>
+            <KeyboardAwareScrollView>
+              {/* Shot Number / Total shots */}
+              <View style={styles.shotNumContainer}>
+                <Text style={styles.shotNumber}>
+                  Shot {attemptShots[displayedShot].shotNum}
+                  <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
+                </Text>
+              </View>
 
-                <View style={styles.container}>
-                  {/* Instruction */}
+              <View style={styles.container}>
+                {/* Instruction */}
 
-                  <View style={styles.horizontalContainer}>
-                    {drillInfo.requirements.map((item, id) => (
-                      <DrillTarget
-                        key={id}
-                        prompt={item.prompt}
-                        distanceMeasure={item.distanceMeasure}
-                        target={attemptShots[displayedShot].items[item.name]}
-                      />
-                    ))}
-                  </View>
-
-                  {/* Inputs */}
-
-                  {drillInfo.inputs.map((item, id) => (
-                    <DrillInput
+                <View style={styles.horizontalContainer}>
+                  {drillInfo.requirements.map((item, id) => (
+                    <DrillTarget
                       key={id}
-                      icon={getIconByKey(item.id)}
                       prompt={item.prompt}
-                      helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
-                      onInputChange={(newText) => {
-                        handleInputChange(item.id, newText);
-                      }}
-                      currentShot={currentShot}
-                      displayedShot={displayedShot}
+                      target={attemptShots[displayedShot].items[item.name]}
                     />
                   ))}
                 </View>
 
-                {/*Navigation Bottom Sheet */}
-                <BottomSheetModal
-                  ref={navModalRef}
-                  enableDynamicSizing
-                  backdropComponent={({ animatedIndex, style }) => {
-                    return (
-                      <BottomSheetBackdrop
-                        appearsOnIndex={0}
-                        disappearsOnIndex={-1}
-                        animatedIndex={animatedIndex}
-                        style={[style, { top: -insets.top }]}
-                      />
-                    );
-                  }}
-                  backgroundStyle={{ backgroundColor: themeColors.background }}
-                >
-                  <BottomSheetScrollView>
-                    <View style={styles.bottomSheetContentContainer}>
-                      {attemptShots
-                        .slice(0, currentShot + 1)
-                        .map((item, id) => (
-                          <NavigationRectangle
-                            key={id}
-                            drillInfo={drillInfo}
-                            shot={item}
-                            inputValues={inputValues[id]}
-                            currentShot={currentShot}
-                            pressFunction={() => {
-                              setDisplayedShot(id);
-                              navModalRef.current.close();
-                            }}
-                          />
-                        ))}
-                    </View>
-                  </BottomSheetScrollView>
-                </BottomSheetModal>
+                {/* Inputs */}
 
-                {/* Description Bottom Sheet */}
-                <BottomSheetModal
-                  ref={descriptionModalRef}
-                  enableDynamicSizing
-                  backdropComponent={({ animatedIndex, style }) => {
-                    return (
-                      <BottomSheetBackdrop
-                        appearsOnIndex={0}
-                        disappearsOnIndex={-1}
-                        animatedIndex={animatedIndex}
-                        style={[style, { top: -insets.top }]}
-                      />
-                    );
-                  }}
-                  backgroundStyle={{ backgroundColor: themeColors.background }}
-                >
-                  <BottomSheetScrollView>
-                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                      Description
-                    </Text>
-                    <DrillDescription drillData={drillInfo} />
-                  </BottomSheetScrollView>
-                </BottomSheetModal>
-
-                {/* Leave Drill Dialog */}
-                <DialogComponent
-                  title={"Alert"}
-                  content="All inputs will be lost."
-                  visible={leaveDialogVisible}
-                  onHide={hideLeaveDialog}
-                  buttons={["Cancel", "Leave Drill"]}
-                  buttonsFunctions={[
-                    hideLeaveDialog,
-                    () => {
-                      hideLeaveDialog;
-                      navigation.goBack();
-                    },
-                  ]}
-                />
-
-                {/* Error Dialog: Empty Input*/}
-                <DialogComponent
-                  type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be filled."
-                  visible={emptyDialogVisible}
-                  onHide={hideEmptyDialog}
-                />
-
-                {/* Error Dialog: Invalid Input*/}
-                <DialogComponent
-                  type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be numbers."
-                  visible={invalidDialogVisible}
-                  onHide={hideInvalidDialog}
-                />
-              </KeyboardAwareScrollView>
-              {/* Navigation */}
-              <View style={styles.navigationContainer}>
-                <Text
-                  onPress={() => {
-                    const newInputValues = Array.from(
-                      { length: attemptShots.length },
-                      () => ({}),
-                    );
-                    for (let i = 0; i < attemptShots.length; i++) {
-                      drillInfo.inputs.forEach((item) => {
-                        switch (item.id) {
-                          case "carry":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() *
-                                attemptShots[displayedShot].items["target"] +
-                                attemptShots[displayedShot].items["target"] / 2,
-                            ).toString();
-                            break;
-                          case "sideLanding":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 21 - 10,
-                            ).toString();
-                            break;
-                          case "strokes":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 2 + 1,
-                            ).toString();
-                            break;
-                        }
-                      });
-                    }
-                    setInputValues(newInputValues);
-                    setDisplayedShot(attemptShots.length - 1);
-                    setCurrentShot(attemptShots.length - 1);
-                  }}
-                >
-                  Fill in all inputs
-                </Text>
-                {buttonDisplayHandler()}
-
-                <Text
-                  style={{ color: themeColors.accent }}
-                  onPress={() => {
-                    navModalRef.current?.present();
-                  }}
-                >
-                  View all shots
-                </Text>
+                {drillInfo.inputs.map((item, id) => (
+                  <DrillInput
+                    key={id}
+                    icon={getIconByKey(item.id)}
+                    prompt={item.prompt}
+                    helperText={item.helperText}
+                    distanceMeasure={item.distanceMeasure}
+                    inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                    onInputChange={(newText) => {
+                      handleInputChange(item.id, newText);
+                    }}
+                    currentShot={currentShot}
+                    displayedShot={displayedShot}
+                  />
+                ))}
               </View>
-            </BottomSheetModalProvider>
-          </View>
-        </SafeAreaView>
-      </PaperWrapper>
-    </GestureHandlerRootView>
+
+              {/*Navigation Bottom Sheet */}
+              <BottomSheetModal
+                ref={navModalRef}
+                enableDynamicSizing
+                backdropComponent={({ animatedIndex, style }) => {
+                  return (
+                    <BottomSheetBackdrop
+                      appearsOnIndex={0}
+                      disappearsOnIndex={-1}
+                      animatedIndex={animatedIndex}
+                      style={[style, { top: -insets.top }]}
+                    />
+                  );
+                }}
+                backgroundStyle={{ backgroundColor: themeColors.background }}
+              >
+                <BottomSheetScrollView>
+                  <View style={styles.bottomSheetContentContainer}>
+                    {attemptShots.slice(0, currentShot + 1).map((item, id) => (
+                      <NavigationRectangle
+                        key={id}
+                        drillInfo={drillInfo}
+                        shot={item}
+                        inputValues={inputValues[id]}
+                        currentShot={currentShot}
+                        pressFunction={() => {
+                          setDisplayedShot(id);
+                          navModalRef.current.close();
+                        }}
+                      />
+                    ))}
+                  </View>
+                </BottomSheetScrollView>
+              </BottomSheetModal>
+
+              {/* Description Bottom Sheet */}
+              <BottomSheetModal
+                ref={descriptionModalRef}
+                enableDynamicSizing
+                backdropComponent={({ animatedIndex, style }) => {
+                  return (
+                    <BottomSheetBackdrop
+                      appearsOnIndex={0}
+                      disappearsOnIndex={-1}
+                      animatedIndex={animatedIndex}
+                      style={[style, { top: -insets.top }]}
+                    />
+                  );
+                }}
+                backgroundStyle={{ backgroundColor: themeColors.background }}
+              >
+                <BottomSheetScrollView>
+                  <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                    Description
+                  </Text>
+                  <DrillDescription drillData={drillInfo} />
+                </BottomSheetScrollView>
+              </BottomSheetModal>
+
+              {/* Leave Drill Dialog */}
+              <DialogComponent
+                title={"Alert"}
+                content="All inputs will be lost."
+                visible={leaveDialogVisible}
+                onHide={hideLeaveDialog}
+                buttons={["Cancel", "Leave Drill"]}
+                buttonsFunctions={[
+                  hideLeaveDialog,
+                  () => {
+                    hideLeaveDialog;
+                    navigation.goBack();
+                  },
+                ]}
+              />
+
+              {/* Error Dialog: Empty Input*/}
+              <DialogComponent
+                type={"snackbar"}
+                title={"Error!"}
+                content="All inputs must be filled."
+                visible={emptyDialogVisible}
+                onHide={hideEmptyDialog}
+              />
+
+              {/* Error Dialog: Invalid Input*/}
+              <DialogComponent
+                type={"snackbar"}
+                title={"Error!"}
+                content="All inputs must be numbers."
+                visible={invalidDialogVisible}
+                onHide={hideInvalidDialog}
+              />
+            </KeyboardAwareScrollView>
+            {/* Navigation */}
+            <View style={styles.navigationContainer}>
+              <Text
+                onPress={() => {
+                  const newInputValues = Array.from(
+                    { length: attemptShots.length },
+                    () => ({}),
+                  );
+                  for (let i = 0; i < attemptShots.length; i++) {
+                    drillInfo.inputs.forEach((item) => {
+                      switch (item.id) {
+                        case "carry":
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() *
+                              attemptShots[displayedShot].items["target"] +
+                              attemptShots[displayedShot].items["target"] / 2,
+                          ).toString();
+                          break;
+                        case "sideLanding":
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() * 21 - 10,
+                          ).toString();
+                          break;
+                        case "strokes":
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() * 2 + 1,
+                          ).toString();
+                          break;
+                      }
+                    });
+                  }
+                  setInputValues(newInputValues);
+                  setDisplayedShot(attemptShots.length - 1);
+                  setCurrentShot(attemptShots.length - 1);
+                }}
+              >
+                Fill in all inputs
+              </Text>
+              {buttonDisplayHandler()}
+
+              <Text
+                style={{ color: themeColors.accent }}
+                onPress={() => {
+                  navModalRef.current?.present();
+                }}
+              >
+                View all shots
+              </Text>
+            </View>
+          </BottomSheetModalProvider>
+        </View>
+      </SafeAreaView>
+    </PaperWrapper>
   );
 }
 const styles = StyleSheet.create({
