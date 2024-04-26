@@ -210,14 +210,63 @@ function checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
 async function uploadNewLeaderboard(leaderboardData, newAttempt, uid, did) {
   //Add new attempt to leaderboard
   leaderboardData[uid] = newAttempt;
+  const submitMainOutputAttempt = Object.keys(newAttempt)[0];
+  console.log("new attempt");
+  console.log(newAttempt);
 
   //Reference to best_attempts drill document
   const bestAttemptsDrillRef = doc(db, "teams", "1", "best_attempts", did);
 
   try {
-    await setDoc(bestAttemptsDrillRef, leaderboardData).then(
-      console.log("Leaderboard has been updated!"),
-    );
+    console.log("LEADERBOARD UPDATE STARTED");
+    console.log(submitMainOutputAttempt);
+
+    // get a fresh call without tanstack cache just in case
+    const latestLeaderboard = await getDoc(bestAttemptsDrillRef);
+    const latestLeaderboardData = latestLeaderboard.data() || {};
+    console.log("maybe cached leaderboard");
+    console.log(leaderboardData);
+    console.log("latest leaderboard");
+    console.log(latestLeaderboardData);
+    console.log("number of leaderboard entries");
+    console.log(Object.keys(latestLeaderboardData).length);
+
+    if (Object.keys(latestLeaderboardData).length > 0) {
+      if (latestLeaderboardData[uid]) {
+        const updatedLeaderboardUser = latestLeaderboardData[uid];
+
+        // Handle potential future case of multiple mainOutputAttempt values per drill & user
+        updatedLeaderboardUser[submitMainOutputAttempt] =
+          newAttempt[submitMainOutputAttempt];
+        await updateDoc(bestAttemptsDrillRef, {
+          [uid]: updatedLeaderboardUser,
+        }).then(
+          console.log(
+            "Leaderboard has been updated (updated user personal best) (updateDoc)!",
+          ),
+        );
+      } else {
+        // if it's user's first submission, don't need to handle multiple mainOutputAttempt values
+        await updateDoc(bestAttemptsDrillRef, {
+          [uid]: newAttempt,
+        }).then(
+          console.log(
+            "Leaderboard has been updated (user's first submission on a non-empty board) (updateDoc)!",
+          ),
+        );
+      }
+    } else {
+      latestLeaderboardData[uid] = newAttempt;
+
+      // will overwrite (remove) all other entries on board, only use for first submission on board in general
+      await setDoc(bestAttemptsDrillRef, {
+        [uid]: newAttempt,
+      }).then(
+        console.log(
+          "Leaderboard has been updated, (team's first submission) (setDoc)!",
+        ),
+      );
+    }
   } catch (e) {
     alert(e);
     console.log(e);
