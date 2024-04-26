@@ -8,7 +8,6 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
-import { updateLeaderboard } from "~/hooks/updateLeaderboard";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
@@ -157,12 +156,6 @@ export default function Leaderboard() {
         };
       }
     }
-
-    updateLeaderboard({
-      currentTeamId,
-      drillId,
-      value: leaderboardAttempts,
-    });
   }
 
   // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);

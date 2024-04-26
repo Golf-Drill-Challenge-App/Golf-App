@@ -231,7 +231,7 @@ async function uploadNewLeaderboard(leaderboardData, newAttempt, uid, did) {
     console.log("number of leaderboard entries");
     console.log(Object.keys(latestLeaderboardData).length);
 
-    if (Object.keys(latestLeaderboardData).length > 0) {
+    if (latestLeaderboard.exists()) {
       if (latestLeaderboardData[uid]) {
         const updatedLeaderboardUser = latestLeaderboardData[uid];
 
@@ -251,19 +251,17 @@ async function uploadNewLeaderboard(leaderboardData, newAttempt, uid, did) {
           [uid]: newAttempt,
         }).then(
           console.log(
-            "Leaderboard has been updated (user's first submission on a non-empty board) (updateDoc)!",
+            "Leaderboard has been updated (user's first submission) (updateDoc)!",
           ),
         );
       }
     } else {
-      latestLeaderboardData[uid] = newAttempt;
-
-      // will overwrite (remove) all other entries on board, only use for first submission on board in general
+      // Edge case for if the best_attempts > drillId document doesn't exist (shouldn't come up in current scope)
       await setDoc(bestAttemptsDrillRef, {
         [uid]: newAttempt,
       }).then(
         console.log(
-          "Leaderboard has been updated, (team's first submission) (setDoc)!",
+          "Leaderboard has been updated (leaderboard did not exist previously, created new best_attempts document) (setDoc)!",
         ),
       );
     }
