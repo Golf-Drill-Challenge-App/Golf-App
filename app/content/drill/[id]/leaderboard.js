@@ -1,5 +1,5 @@
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Avatar, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
@@ -7,7 +7,6 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
@@ -49,13 +48,11 @@ function getLeaderboardRanks(
 }
 
 export default function Leaderboard() {
-  const { currentTeamId } = currentAuthContext();
   const drillId = useLocalSearchParams()["id"];
   const currentPath = usePathname();
   const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
     useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user
   const [customMainOutputAttempt, setCustomMainOutputAttempt] = useState("did"); //What is the custom mainOutputAttempt in case defaultMainOutputAttempt is false
-  const [manualAttemptCalc, setManualAttemptCalc] = useState(false); //whether the attempt is manually calculated or grabbed from precalculated leaderboard
 
   const {
     data: userInfo,
@@ -84,27 +81,12 @@ export default function Leaderboard() {
   const preCalcLeaderboardExists =
     preCalcLeaderboard && Object.keys(preCalcLeaderboard).length > 0;
 
-  useEffect(() => {
-    setManualAttemptCalc(
-      !drillIsLoading && // so that mainOutputAttempt is calculated
-        !leaderboardIsLoading && //leaderboard must've finished loading
-        (!preCalcLeaderboardExists || //and not exist
-          preCalcLeaderboard[Object.keys(preCalcLeaderboard)[0]][
-            mainOutputAttempt
-          ] === undefined), //or exist but does not have the required field
-    );
-    console.log("WE ARE USING MANUAL ATTEMPT LEADERBOARD!", manualAttemptCalc);
-  }, [drillIsLoading, leaderboardIsLoading, preCalcLeaderboard]);
-
-  // console.log("enabled: ", manualAttempt);
-
   const {
     data: attempts,
     isLoading: attemptIsLoading,
     error: attemptError,
   } = useAttempts({
     drillId,
-    enabled: manualAttemptCalc,
   });
 
   if (
@@ -129,34 +111,6 @@ export default function Leaderboard() {
     : customMainOutputAttempt;
 
   const leaderboardAttempts = preCalcLeaderboard || {};
-  if (!preCalcLeaderboardExists && attempts) {
-    //just in case...
-    for (const id in attempts) {
-      const entry = attempts[id];
-
-      console.log("ENTRYID", entry.id);
-
-      const lowerIsBetter =
-        drillInfo["aggOutputs"][mainOutputAttempt]["lowerIsBetter"];
-      // If this uid has not been seen before or the current score is higher, store it
-      if (
-        !leaderboardAttempts[entry.uid] ||
-        (lowerIsBetter &&
-          leaderboardAttempts[entry.uid][mainOutputAttempt]["value"] <
-            entry[mainOutputAttempt]) ||
-        (!lowerIsBetter &&
-          leaderboardAttempts[entry.uid][mainOutputAttempt]["value"] >
-            entry[mainOutputAttempt])
-      ) {
-        leaderboardAttempts[entry.uid] = {
-          [mainOutputAttempt]: {
-            value: entry[mainOutputAttempt],
-            id: entry.id,
-          },
-        };
-      }
-    }
-  }
 
   // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
   const sortByLower = drillInfo["aggOutputs"][mainOutputAttempt][
