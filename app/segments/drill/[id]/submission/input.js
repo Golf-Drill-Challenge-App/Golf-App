@@ -1,6 +1,7 @@
 import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -745,12 +746,12 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
                 {/* Description Bottom Sheet */}
                 <BottomSheetWrapper ref={descriptionModalRef}>
-                  <BottomSheetScrollView>
+                  <BottomSheetView>
                     <Text style={{ marginLeft: 10 }} variant="headlineLarge">
                       Description
                     </Text>
                     <DrillDescription drillData={drillInfo} />
-                  </BottomSheetScrollView>
+                  </BottomSheetView>
                 </BottomSheetWrapper>
 
               {/* Error Dialog: Empty Input*/}
