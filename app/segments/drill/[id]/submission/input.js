@@ -143,10 +143,6 @@ async function uploadAttempt(
 function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
   const leaderboardData = currentLeaderboard["data"];
 
-  //used if an attempt already exists
-  const currentBest =
-    leaderboardData[uploadData.uid]?.[drillInfo.mainOutputAttempt]?.value;
-
   const newAttempt = {
     [drillInfo.mainOutputAttempt]: {
       id: uploadData.id,
@@ -167,6 +163,10 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
       uploadData.did,
     );
   } else {
+    //used if an attempt already exists
+    const currentBest =
+      leaderboardData[uploadData.uid]?.[drillInfo.mainOutputAttempt]?.value;
+
     //Determine if lower is better for mainOutputAttempt
     if (drillInfo.aggOutputs[drillInfo.mainOutputAttempt].lowerIsBetter) {
       console.log("Lower is in fact better");
