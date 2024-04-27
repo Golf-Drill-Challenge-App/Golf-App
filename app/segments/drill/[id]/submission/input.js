@@ -160,44 +160,26 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
     const currentBest =
       leaderboardData[uploadData.uid]?.[drillInfo.mainOutputAttempt]?.value;
 
-    //Determine if lower is better for mainOutputAttempt
-    if (drillInfo.aggOutputs[drillInfo.mainOutputAttempt].lowerIsBetter) {
-      console.log("Lower is in fact better");
-      //compare the current attempt to the attempt currently on leaderboard
-      if (uploadData[drillInfo.mainOutputAttempt] < currentBest) {
-        console.log("New Best Attempt! Time to upload!");
+    const lowerIsBetter =
+      drillInfo.aggOutputs[drillInfo.mainOutputAttempt].lowerIsBetter;
 
-        uploadNewLeaderboard(
-          leaderboardData,
-          drillInfo.mainOutputAttempt,
-          uploadData.uid,
-          uploadData.did,
-          uploadData[drillInfo.mainOutputAttempt],
-        );
-      }
-      //else for testing
-      else {
-        console.log("Didn't update");
-      }
+    //conditional for determining if update is needed
+    const isNewAttemptBest = lowerIsBetter
+      ? uploadData[drillInfo.mainOutputAttempt] < currentBest
+      : uploadData[drillInfo.mainOutputAttempt] > currentBest;
+
+    if (isNewAttemptBest) {
+      console.log("New Best Attempt! Time to upload!");
+
+      uploadNewLeaderboard(
+        leaderboardData,
+        drillInfo.mainOutputAttempt,
+        uploadData.uid,
+        uploadData.did,
+        uploadData[drillInfo.mainOutputAttempt],
+      );
     } else {
-      // console.log(uploadData)
-      console.log("Lower is not better");
-      //compare the current attempt to the attempt currently on leaderboard
-      if (uploadData[drillInfo.mainOutputAttempt] > currentBest) {
-        console.log("New Best Attempt! Time to upload!");
-
-        uploadNewLeaderboard(
-          leaderboardData,
-          drillInfo.mainOutputAttempt,
-          uploadData.uid,
-          uploadData.did,
-          uploadData[drillInfo.mainOutputAttempt],
-        );
-      }
-      //else for testing
-      else {
-        console.log("Didn't update");
-      }
+      console.log("Didn't update");
     }
   }
 }
