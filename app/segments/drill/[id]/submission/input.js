@@ -143,13 +143,6 @@ async function uploadAttempt(
 function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
   const leaderboardData = currentLeaderboard["data"];
 
-  const newAttempt = {
-    [drillInfo.mainOutputAttempt]: {
-      id: uploadData.id,
-      value: uploadData[drillInfo.mainOutputAttempt],
-    },
-  };
-
   console.log("currentBest: ", currentBest);
 
   //check if the user exists on the leaderboard
@@ -158,9 +151,10 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
 
     uploadNewLeaderboard(
       leaderboardData,
-      newAttempt,
+      drillInfo.mainOutputAttempt,
       uploadData.uid,
       uploadData.did,
+      uploadData[mainOutputAttempt],
     );
   } else {
     //used if an attempt already exists
@@ -176,9 +170,10 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
 
         uploadNewLeaderboard(
           leaderboardData,
-          newAttempt,
+          drillInfo.mainOutputAttempt,
           uploadData.uid,
           uploadData.did,
+          uploadData[mainOutputAttempt],
         );
       }
       //else for testing
@@ -194,9 +189,10 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
 
         uploadNewLeaderboard(
           leaderboardData,
-          newAttempt,
+          drillInfo.mainOutputAttempt,
           uploadData.uid,
           uploadData.did,
+          uploadData[mainOutputAttempt],
         );
       }
       //else for testing
@@ -207,7 +203,20 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
   }
 }
 
-async function uploadNewLeaderboard(leaderboardData, newAttempt, uid, did) {
+async function uploadNewLeaderboard(
+  leaderboardData,
+  mainOutputAttempt,
+  uid,
+  did,
+  newValue,
+) {
+  const newAttempt = {
+    [mainOutputAttempt]: {
+      id: uid,
+      value: newValue,
+    },
+  };
+
   //Add new attempt to leaderboard
   leaderboardData[uid] = newAttempt;
   const submitMainOutputAttempt = Object.keys(newAttempt)[0];
