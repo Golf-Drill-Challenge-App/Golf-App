@@ -137,7 +137,6 @@ function Index() {
                   <Appbar.Action
                     icon="dots-horizontal-circle-outline"
                     onPress={() => {
-                      console.log("pressed menu button");
                       setMenuVisible(true);
                     }}
                     color={themeColors.accent}
@@ -168,7 +167,9 @@ function Index() {
                 <Divider />
                 <Menu.Item
                   leadingIcon="account-cancel-outline"
-                  onPress={() => {}}
+                  onPress={() => {
+                    console.log("pressed Remove button");
+                  }}
                   title="Remove"
                 />
                 <Divider />
