@@ -1,6 +1,8 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { doc, updateDoc } from "firebase/firestore";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Appbar, Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import DrillList from "~/components/drillList";
@@ -10,14 +12,37 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
+import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
+async function changeRole(userId, newRole) {
+  const userRef = doc(db, "teams", "1", "users", userId);
+
+  try {
+    await updateDoc(userRef, { role: newRole });
+    console.log("Document updated successfully!");
+  } catch (error) {
+    console.error("Error updating document:", error);
+  }
+}
+
 function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
+
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const { currentUserId } = currentAuthContext();
+
+  const {
+    data: currentUserData,
+    userError: currentUserError,
+    userIsLoading: currentUserIsLoading,
+  } = useUserInfo(currentUserId);
+
   const {
     data: userData,
     error: userError,
@@ -44,6 +69,7 @@ function Index() {
 
   if (
     userIsLoading ||
+    currentUserIsLoading ||
     userEmailIsLoading ||
     userLeaderboardIsLoading ||
     drillInfoIsLoading
@@ -51,7 +77,14 @@ function Index() {
     return <Loading />;
   }
 
-  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
+  if (
+    userError ||
+    currentUserError ||
+    userEmailError ||
+    userLeaderboardError ||
+    drillInfoError ||
+    attemptsError
+  ) {
     return (
       <ErrorComponent
         errorList={[
@@ -93,7 +126,60 @@ function Index() {
               color={themeColors.accent}
             />
           }
+          postChildren={
+            currentUserData.role === "owner" && userData.role != "owner" ? (
+              <Menu
+                visible={menuVisible}
+                onDismiss={() => {
+                  setMenuVisible(false);
+                }}
+                anchor={
+                  <Appbar.Action
+                    icon="dots-horizontal-circle-outline"
+                    onPress={() => {
+                      console.log("pressed menu button");
+                      setMenuVisible(true);
+                    }}
+                    color={themeColors.accent}
+                  />
+                }
+                anchorPosition="bottom"
+                contentStyle={{ backgroundColor: themeColors.background }}
+              >
+                {userData.role === "player" ? (
+                  <Menu.Item
+                    leadingIcon="account-arrow-up-outline"
+                    onPress={() => {
+                      changeRole(userId, "coach");
+                      setMenuVisible(false);
+                    }}
+                    title="Promote"
+                  />
+                ) : (
+                  <Menu.Item
+                    leadingIcon="account-arrow-down-outline"
+                    onPress={() => {
+                      changeRole(userId, "player");
+                      setMenuVisible(false);
+                    }}
+                    title="Demote"
+                  />
+                )}
+                <Divider />
+                <Menu.Item
+                  leadingIcon="account-cancel-outline"
+                  onPress={() => {}}
+                  title="Remove"
+                />
+                <Divider />
+                <Menu.Item onPress={() => {}} title="Item 3" />
+              </Menu>
+            ) : (
+              <></>
+            )
+          }
         />
+
         {uniqueDrills.length > 0 ? (
           <DrillList
             drillData={uniqueDrills}
