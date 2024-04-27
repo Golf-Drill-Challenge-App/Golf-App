@@ -111,8 +111,8 @@ async function uploadAttempt(
       .then(() => {
         console.log("Document successfully uploaded!");
 
-        //TODO: Call function to check for leaderboard update
-        checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
+        //Call function to check for leaderboard update
+        handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
 
         // invalidate cache after successful upload
         // TODO: Move this into wherever the update leaderboard hook is?
@@ -139,8 +139,8 @@ async function uploadAttempt(
   }
 }
 
-//TODO: Create a function to check leaderboard and update if needed
-function checkLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
+//A function to check leaderboard and update if needed
+function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
   const leaderboardData = currentLeaderboard["data"];
 
   //used if an attempt already exists
