@@ -23,6 +23,7 @@ import {
 } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import DrillDescription from "~/components/drillDescription";
+import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
@@ -141,9 +142,7 @@ async function uploadAttempt(
 
 //A function to check leaderboard and update if needed
 function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
-  const leaderboardData = currentLeaderboard["data"];
-
-  console.log("currentBest: ", currentBest);
+  const leaderboardData = currentLeaderboard;
 
   //check if the user exists on the leaderboard
   if (leaderboardData[uploadData.uid] == undefined) {
@@ -154,7 +153,7 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
       drillInfo.mainOutputAttempt,
       uploadData.uid,
       uploadData.did,
-      uploadData[mainOutputAttempt],
+      uploadData[drillInfo.mainOutputAttempt],
     );
   } else {
     //used if an attempt already exists
@@ -173,7 +172,7 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
           drillInfo.mainOutputAttempt,
           uploadData.uid,
           uploadData.did,
-          uploadData[mainOutputAttempt],
+          uploadData[drillInfo.mainOutputAttempt],
         );
       }
       //else for testing
@@ -192,7 +191,7 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
           drillInfo.mainOutputAttempt,
           uploadData.uid,
           uploadData.did,
-          uploadData[mainOutputAttempt],
+          uploadData[drillInfo.mainOutputAttempt],
         );
       }
       //else for testing
@@ -599,7 +598,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const { id: did } = useLocalSearchParams();
 
-  const currentLeaderboard = useLeaderboard({ drillId: did });
+  const {
+    data: currentLeaderboard,
+    isLoading: leaderboardIsLoading,
+    error: leaderboardError,
+  } = useLeaderboard({ drillId: did });
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -724,9 +727,17 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   };
 
   //Loading until an attempt is generated
-  if (attemptShots.length === 0) {
+  if (attemptShots.length === 0 || leaderboardIsLoading) {
     console.log("Loading");
     return <Loading />;
+  }
+
+  if (leaderboardError) {
+    return (
+      <ErrorComponent
+        message={[userError, drillError, attemptError, leaderboardError]}
+      />
+    );
   }
 
   return (
