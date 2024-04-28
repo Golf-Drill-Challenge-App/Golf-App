@@ -13,6 +13,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import {
   Platform,
@@ -47,11 +48,6 @@ import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-// TODO: Create a Development Build: https://docs.expo.dev/develop/development-builds/use-development-builds/
-// Using React Native Firebase (@react - native - firebase / app and @react-native - firebase / storage) with Expo causes issues with native modules
-// React Native Firebase relies on native modules to interact with Firebase functionalities on the device.
-// Expo Go (development client) has limitations with native modules.
-// import storage from '@react-native-firebase/storage'; - CAUSES ISSUES
 
 function Index() {
   const { signOut } = currentAuthContext();
@@ -100,7 +96,6 @@ function Index() {
   ];
   const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
@@ -155,26 +150,42 @@ function Index() {
     setIsImageUploadModalVisible(false);
   };
 
-  /*
   const firebaseProfileImageUpload = async (uri) => {
     try {
+      // Fetch the image data from the URI
       const response = await fetch(uri);
       const blob = await response.blob();
-      const ref = storage().ref().child(`images/${userData.userId}`);
-      await ref.put(blob);
+
+      // Get a reference to the Firebase Storage instance
+      const storage = getStorage();
+
+      // Create a reference to the storage location where the image will be stored
+      const storageRef = ref(storage, userId);
+
+      // Upload the image to Firebase Storage
+      const snapshot = await uploadBytes(storageRef, blob);
+
+      console.log("Uploaded a blob or file:", snapshot);
+
+      // Get the download URL for the uploaded image
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
+        pfp: downloadURL,
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       setSnackbarMessage("Successfully uploaded the profile picture!");
-      return ref.getDownloadURL();
+
+      return downloadURL;
     } catch (error) {
       console.error("Error uploading image to Firebase:", error);
       setSnackbarMessage("Error uploading profile picture. Please try again.");
-      throw error;        // Rethrow the error to handle it at the caller's level if needed
+      throw error; // Rethrow the error to handle it at the caller's level if needed
     }
   };
-  */
 
   // Function to handle uploading image locally
   const handleImageUpload = async () => {
-    console.log("TODO: Implement image upload logic");
     let imageResult = await launchImageLibraryAsync({
       mediaTypes: MediaTypeOptions.Images,
       allowsEditing: true,
@@ -185,8 +196,7 @@ function Index() {
     // console.log(imageResult);
 
     if (!imageResult.canceled) {
-      setProfileImage(imageResult.assets[0].uri);
-      // await firebaseProfileImageUpload(imageResult.assets[0].uri);
+      await firebaseProfileImageUpload(imageResult.assets[0].uri);
     }
     // Close the modal after image upload is done
     setIsImageUploadModalVisible(false);
