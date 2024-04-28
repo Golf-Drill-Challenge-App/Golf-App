@@ -1,5 +1,12 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Divider, Menu } from "react-native-paper";
@@ -17,6 +24,62 @@ import { db } from "~/firebaseConfig";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+
+async function removeUser(userId) {
+  //Helpful Doc https://stackoverflow.com/questions/56727619/how-to-delete-a-document-when-multiple-conditions-are-matched-firestore-firebas
+  //TODO: remove all attempts from attempts table with UID == userID
+
+  console.log("USER ID: ", userId);
+  console.log("===ATTEMPTS FOR USER===");
+  let attemptQuery = query(
+    collection(db, "teams", "1", "attempts"),
+    where("uid", "==", userId),
+  );
+
+  try {
+    console.log("Getting attempts");
+    const querySnapshot = await getDocs(attemptQuery);
+
+    console.log("Got attempt");
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id);
+      //TODO: Delete these docs
+    });
+  } catch (e) {
+    console.error("Error getting attempts:", e);
+  }
+
+  //TODO: remove all entries from best_attempts table with UID == userID
+
+  console.log("===BEST_ATTEMPTS FOR USER===");
+
+  let bestAttemptQuery = query(collection(db, "teams", "1", "best_attempts"));
+
+  try {
+    console.log("Getting best_attempts");
+    const querySnapshot = await getDocs(bestAttemptQuery);
+
+    console.log("Got best_attempts");
+    querySnapshot.forEach((doc) => {
+      let docData = doc.data();
+
+      if (docData[userId]) {
+        console.log("Found an attempt in best_attempts!");
+        console.log(docData[userId]);
+        //TODO: Delete the field
+      }
+    });
+  } catch (e) {
+    console.error("Error getting best_attempts:", e);
+  }
+
+  //TODO: remove user from user table where UID == userID
+
+  //TODO: maybe remove account from auth
+  // Useful docs https://firebase.google.com/docs/auth/ios/manage-users
+  // Reasoning: Our current implimentation adds a user to the various tables on "sign up" so if they have
+  //            an auth account already it might cause issues
+}
 
 async function changeRole(userId, newRole) {
   const userRef = doc(db, "teams", "1", "users", userId);
@@ -169,6 +232,7 @@ function Index() {
                   leadingIcon="account-cancel-outline"
                   onPress={() => {
                     console.log("pressed Remove button");
+                    removeUser(userId);
                   }}
                   title="Remove"
                 />
