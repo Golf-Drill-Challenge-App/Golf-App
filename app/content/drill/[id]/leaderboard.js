@@ -1,7 +1,7 @@
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Avatar, Icon, List, Text } from "react-native-paper";
+import { Avatar, Divider, Icon, List, Text } from "react-native-paper";
 import { numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
