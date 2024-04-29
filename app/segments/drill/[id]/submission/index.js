@@ -39,7 +39,7 @@ export default function Index() {
       // Prompt the user before leaving the screen
       setLeaveDialogVisible(true);
     });
-  }, []);
+  }, [toggleResult]);
 
   const {
     data: drillInfo,

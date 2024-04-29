@@ -709,14 +709,14 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                 </BottomSheetScrollView>
               </BottomSheetModal>
 
-                {/* Error Dialog: Empty Input*/}
-                <DialogComponent
-                  type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be filled."
-                  visible={emptyDialogVisible}
-                  onHide={hideEmptyDialog}
-                />
+              {/* Error Dialog: Empty Input*/}
+              <DialogComponent
+                type={"snackbar"}
+                title={"Error!"}
+                content="All inputs must be filled."
+                visible={emptyDialogVisible}
+                onHide={hideEmptyDialog}
+              />
 
               {/* Error Dialog: Invalid Input*/}
               <DialogComponent
