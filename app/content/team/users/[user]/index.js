@@ -14,6 +14,7 @@ import { StyleSheet, View } from "react-native";
 import { Appbar, Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -28,20 +29,14 @@ import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 async function removeUser(userId) {
-  //TODO: Remove all attempts from attempts table with UID == userID
-
-  console.log("USER ID: ", userId);
-  console.log("===ATTEMPTS FOR USER===");
+  //Remove all attempts from attempts table with UID == userID
   let attemptQuery = query(
     collection(db, "teams", "1", "attempts"),
     where("uid", "==", userId),
   );
 
   try {
-    console.log("Getting attempts");
     const querySnapshot = await getDocs(attemptQuery);
-
-    console.log("Got attempt");
 
     for (const doc of querySnapshot.docs) {
       await deleteDoc(doc.ref);
@@ -50,24 +45,17 @@ async function removeUser(userId) {
     console.error("Error getting attempts:", e);
   }
 
-  //TODO: Remove all entries from best_attempts table with UID == userID
-
-  console.log("===BEST_ATTEMPTS FOR USER===");
-
+  //Remove all entries from best_attempts table with UID == userID
   let bestAttemptQuery = query(collection(db, "teams", "1", "best_attempts"));
 
   try {
-    console.log("Getting best_attempts");
     const querySnapshot = await getDocs(bestAttemptQuery);
 
-    console.log("Got best_attempts");
     for (const doc of querySnapshot.docs) {
       let docData = doc.data();
 
       if (docData[userId]) {
-        console.log("Found an attempt in best_attempts!");
-        console.log(docData[userId]);
-        //TODO: Delete the field (might need to add an await here)
+        //Delete the field
         await updateDoc(doc.ref, {
           [userId]: deleteField(),
         });
@@ -103,6 +91,9 @@ function Index() {
   const navigation = useNavigation();
 
   const [menuVisible, setMenuVisible] = useState(false);
+
+  const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
+  const hideRemoveDialog = () => setRemoveDialogVisible(false);
 
   const { currentUserId } = currentAuthContext();
 
@@ -219,6 +210,7 @@ function Index() {
                     leadingIcon="account-arrow-up-outline"
                     onPress={() => {
                       changeRole(userId, "coach");
+                      //TODO: invalidate cache
                       setMenuVisible(false);
                     }}
                     title="Promote"
@@ -228,6 +220,7 @@ function Index() {
                     leadingIcon="account-arrow-down-outline"
                     onPress={() => {
                       changeRole(userId, "player");
+                      //TODO: invalidate cache
                       setMenuVisible(false);
                     }}
                     title="Demote"
@@ -237,8 +230,8 @@ function Index() {
                 <Menu.Item
                   leadingIcon="account-cancel-outline"
                   onPress={() => {
-                    console.log("pressed Remove button");
-                    removeUser(userId);
+                    setMenuVisible(false);
+                    setRemoveDialogVisible(true);
                   }}
                   title="Remove"
                 />
@@ -269,6 +262,21 @@ function Index() {
             }}
           />
         )}
+        <DialogComponent
+          title={"Alert"}
+          content="All data will be lost when this user is removed."
+          visible={removeDialogVisible}
+          onHide={hideRemoveDialog}
+          buttons={["Cancel", "Remove User"]}
+          buttonsFunctions={[
+            hideRemoveDialog,
+            () => {
+              removeUser(userId);
+              //TODO: invalidate cache
+              navigation.goBack();
+            },
+          ]}
+        />
       </SafeAreaView>
     </PaperWrapper>
   );
