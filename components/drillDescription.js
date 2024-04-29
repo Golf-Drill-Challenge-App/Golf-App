@@ -30,7 +30,7 @@ export default function DrillScreen(props) {
 
   return (
     <View style={{ margin: 10 }}>
-      <ScrollView style={{ height: "100%", paddingBottom: 50, paddingLeft: 5 }}>
+      <ScrollView style={{ paddingLeft: 5 }}>
         <Text variant="bodyMedium">{props.drillData["description"]}</Text>
         {hasImages && (
           <View style={{ marginTop: 10 }}>
