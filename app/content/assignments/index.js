@@ -98,7 +98,7 @@ const DrillList = () => {
                 justifyContent: "space-between",
                 width: "100%",
                 height: 65,
-                backgroundColor: `${!assignment.completed ? "rgba(255,255,255,1.)" : "rgba(137,232,148,0.4)"}`,
+                backgroundColor: "rgb(255,255,255)",
                 borderRadius: 20,
                 marginBottom: 10,
                 paddingLeft: 30,
@@ -116,7 +116,7 @@ const DrillList = () => {
                 </Text>
               </View>
               {assignment.completed && (
-                <Icon source="check" size={20} color="green" />
+                <Icon source="check" size={28} color="green" />
               )}
             </View>
           </View>
