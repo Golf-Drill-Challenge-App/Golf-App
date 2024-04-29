@@ -1,5 +1,4 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { deleteUser } from "firebase/auth";
 import {
   collection,
   deleteDoc,
@@ -29,8 +28,7 @@ import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 async function removeUser(userId) {
-  //Helpful Doc https://stackoverflow.com/questions/56727619/how-to-delete-a-document-when-multiple-conditions-are-matched-firestore-firebas
-  //TODO: remove all attempts from attempts table with UID == userID
+  //TODO: Remove all attempts from attempts table with UID == userID
 
   console.log("USER ID: ", userId);
   console.log("===ATTEMPTS FOR USER===");
@@ -52,7 +50,7 @@ async function removeUser(userId) {
     console.error("Error getting attempts:", e);
   }
 
-  //TODO: remove all entries from best_attempts table with UID == userID
+  //TODO: Remove all entries from best_attempts table with UID == userID
 
   console.log("===BEST_ATTEMPTS FOR USER===");
 
@@ -70,7 +68,7 @@ async function removeUser(userId) {
         console.log("Found an attempt in best_attempts!");
         console.log(docData[userId]);
         //TODO: Delete the field (might need to add an await here)
-        await updateDoc(doc.ref(), {
+        await updateDoc(doc.ref, {
           [doc.id]: deleteField(),
         });
       }
@@ -79,8 +77,7 @@ async function removeUser(userId) {
     console.error("Error getting or deleting from best_attempts:", e);
   }
 
-  //TODO: remove user from user table where UID == userID
-
+  //Remove user from user table where UID == userID
   try {
     const userRef = doc(db, "teams", "1", "users", userId);
 
@@ -88,19 +85,6 @@ async function removeUser(userId) {
   } catch (e) {
     console.error("Error deleting user from users:", e);
   }
-
-  //TODO: maybe remove account from auth
-  // Useful docs https://firebase.google.com/docs/auth/ios/manage-users
-  // Reasoning: Our current implimentation adds a user to the various tables on "sign up" so if they have
-  //            an auth account already it might cause issues
-
-  deleteUser(userId)
-    .then(() => {
-      console.log(userId, " has been deleted");
-    })
-    .catch((e) => {
-      console.error("Error deleting user from auth:", e);
-    });
 }
 
 async function changeRole(userId, newRole) {
