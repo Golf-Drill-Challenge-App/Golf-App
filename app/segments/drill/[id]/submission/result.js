@@ -26,6 +26,12 @@ function Result({ submission, drillInfo, setToggleResult }) {
       <Button
         style={{
           margin: 10,
+          marginTop: 5,
+        }}
+        labelStyle={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "#FFFFFF",
         }}
         mode="contained"
         buttonColor={themeColors.accent}
