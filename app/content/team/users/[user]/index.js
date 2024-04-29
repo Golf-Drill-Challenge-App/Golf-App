@@ -69,7 +69,7 @@ async function removeUser(userId) {
         console.log(docData[userId]);
         //TODO: Delete the field (might need to add an await here)
         await updateDoc(doc.ref, {
-          [doc.id]: deleteField(),
+          [userId]: deleteField(),
         });
       }
     }
