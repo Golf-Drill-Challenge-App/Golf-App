@@ -1,6 +1,9 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
+import { deleteUser } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
+  deleteField,
   doc,
   getDocs,
   query,
@@ -41,10 +44,10 @@ async function removeUser(userId) {
     const querySnapshot = await getDocs(attemptQuery);
 
     console.log("Got attempt");
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id);
-      //TODO: Delete these docs
-    });
+
+    for (const doc of querySnapshot.docs) {
+      await deleteDoc(doc.ref);
+    }
   } catch (e) {
     console.error("Error getting attempts:", e);
   }
@@ -60,25 +63,44 @@ async function removeUser(userId) {
     const querySnapshot = await getDocs(bestAttemptQuery);
 
     console.log("Got best_attempts");
-    querySnapshot.forEach((doc) => {
+    for (const doc of querySnapshot.docs) {
       let docData = doc.data();
 
       if (docData[userId]) {
         console.log("Found an attempt in best_attempts!");
         console.log(docData[userId]);
-        //TODO: Delete the field
+        //TODO: Delete the field (might need to add an await here)
+        await updateDoc(doc.ref(), {
+          [doc.id]: deleteField(),
+        });
       }
-    });
+    }
   } catch (e) {
-    console.error("Error getting best_attempts:", e);
+    console.error("Error getting or deleting from best_attempts:", e);
   }
 
   //TODO: remove user from user table where UID == userID
+
+  try {
+    const userRef = doc(db, "teams", "1", "users", userId);
+
+    await deleteDoc(userRef);
+  } catch (e) {
+    console.error("Error deleting user from users:", e);
+  }
 
   //TODO: maybe remove account from auth
   // Useful docs https://firebase.google.com/docs/auth/ios/manage-users
   // Reasoning: Our current implimentation adds a user to the various tables on "sign up" so if they have
   //            an auth account already it might cause issues
+
+  deleteUser(userId)
+    .then(() => {
+      console.log(userId, " has been deleted");
+    })
+    .catch((e) => {
+      console.error("Error deleting user from auth:", e);
+    });
 }
 
 async function changeRole(userId, newRole) {
