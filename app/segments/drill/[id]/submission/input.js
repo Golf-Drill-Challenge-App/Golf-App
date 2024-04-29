@@ -154,6 +154,7 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
       uploadData.uid,
       uploadData.did,
       uploadData[drillInfo.mainOutputAttempt],
+      uploadData.id,
     );
   } else {
     //used if an attempt already exists
@@ -177,6 +178,7 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
         uploadData.uid,
         uploadData.did,
         uploadData[drillInfo.mainOutputAttempt],
+        uploadData.id,
       );
     } else {
       console.log("Didn't update");
@@ -190,10 +192,11 @@ async function uploadNewLeaderboard(
   uid,
   did,
   newValue,
+  attemptId,
 ) {
   const newAttempt = {
     [mainOutputAttempt]: {
-      id: uid,
+      id: attemptId,
       value: newValue,
     },
   };
