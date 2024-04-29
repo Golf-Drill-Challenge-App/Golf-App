@@ -79,10 +79,11 @@ const DrillList = () => {
           disabled={assignment.completed}
           onPress={() => {
             router.push({
-              pathname: `content/drill/${assignment.drillId}`,
+              pathname: `content/drill`,
               params: {
                 id: `${assignment.drillId}`,
                 assignedTime: assignment.assignedTime,
+                currentTime: new Date(),
               },
             });
           }}
