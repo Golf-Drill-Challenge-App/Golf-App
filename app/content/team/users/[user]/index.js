@@ -1,6 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { deleteUser } from "firebase/auth";
 import {
   collection,
   deleteDoc,
