@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Text } from "react-native-paper";
@@ -675,23 +675,17 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                       {attemptShots
                         .slice(0, currentShot + 1)
                         .map((item, id) => (
-                          <Pressable
+                          <NavigationRectangle
                             key={id}
-                            onPress={() => {
+                            drillInfo={drillInfo}
+                            shot={item}
+                            inputValues={inputValues[id]}
+                            currentShot={currentShot}
+                            pressFunction={() => {
                               setDisplayedShot(id);
                               navModalRef.current.close();
                             }}
-                            width={"100%"}
-                            alignItems={"center"}
-                          >
-                            <NavigationRectangle
-                              key={id}
-                              drillInfo={drillInfo}
-                              attemptShots={attemptShots}
-                              inputValues={inputValues[id]}
-                              shotIndex={item.shotNum}
-                            />
-                          </Pressable>
+                          />
                         ))}
                     </View>
                   </BottomSheetScrollView>
@@ -880,6 +874,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "flex-start",
+    gap: 10,
     paddingVertical: 20,
   },
   modalContainerStyle: {

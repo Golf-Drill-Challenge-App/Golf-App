@@ -1,58 +1,166 @@
-import { StyleSheet, View } from "react-native";
-import { Icon, Text } from "react-native-paper";
+import { View } from "react-native";
+import {
+  Divider,
+  Icon,
+  Surface,
+  Text,
+  TouchableRipple,
+} from "react-native-paper";
 
 import { getIconByKey } from "~/Utility";
 
 export default function NavigationRectangle({
   drillInfo,
-  attemptShots,
   inputValues,
-  shotIndex,
+  shot,
+  currentShot,
+  pressFunction,
 }) {
+  // console.log("inputValues", inputValues);
+  const keys = Object.keys(inputValues);
   return (
-    <View style={styles.container}>
-      <View style={styles.rowContainer}>
-        <Text>
-          Shot {shotIndex}/{attemptShots.length}
-        </Text>
-        <Text>
-          Target: {attemptShots[shotIndex - 1].target}
-          {drillInfo.requirements[0].distanceMeasure}
-        </Text>
-      </View>
-      <View style={styles.rowContainer}>
-        {drillInfo.inputs.map((item, id) => (
-          <View style={styles.horizontalContainer} key={id}>
-            <Icon source={getIconByKey(item.id)} />
-            <Text>
-              {inputValues[item.id]} {item.distanceMeasure}
-            </Text>
+    <Surface
+      style={{
+        borderRadius: 10,
+        width: "80%",
+        elevation: 10,
+      }}
+    >
+      <View
+        style={{
+          overflow: "hidden",
+          borderRadius: 10,
+        }}
+      >
+        <TouchableRipple
+          onPress={() => {
+            pressFunction();
+          }}
+          rippleColor="rgba(0, 0, 0, 0.2)"
+          style={{
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "rgba(217, 217, 217, 0.7)",
+              padding: 10,
+              paddingLeft: 20,
+              paddingRight: 20,
+              borderRadius: 10,
+              maxHeight: 250,
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <View>
+                <Text
+                  style={{
+                    fontSize: 20,
+                  }}
+                >
+                  Shot{" "}
+                  <Text style={{ fontWeight: "bold" }}>{shot.shotNum}</Text>
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    gap: 10,
+                  }}
+                >
+                  {drillInfo.requirements.map((requirement) => (
+                    <Text
+                      key={requirement.name}
+                      style={{
+                        fontSize: 16,
+                        padding: 2,
+                      }}
+                    >
+                      {requirement.prompt}:
+                      <Text style={{ fontWeight: "bold" }}>
+                        {" "}
+                        {shot.items[requirement.name]}{" "}
+                        {requirement.distanceMeasure}
+                      </Text>
+                    </Text>
+                  ))}
+                </View>
+
+                <Divider
+                  style={{
+                    backgroundColor: "#A0A0A0",
+                    height: 1,
+                    width: "100%",
+                  }}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  {currentShot + 1 == shot.shotNum ? (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 10,
+                      }}
+                    >
+                      <Text
+                        style={{ fontSize: 13, padding: 2, fontWeight: "bold" }}
+                      >
+                        Current Shot
+                      </Text>
+                    </View>
+                  ) : (
+                    drillInfo.inputs.map((input, id) => {
+                      if (inputValues[input.id]) {
+                        return (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              marginTop: 10,
+                            }}
+                            key={id}
+                          >
+                            <Icon source={getIconByKey(input.id)} size={15} />
+                            <Text style={{ fontSize: 13, padding: 2 }}>
+                              {inputValues[input.id]} {input.distanceMeasure}
+                            </Text>
+                          </View>
+                        );
+                      }
+                    })
+                  )}
+                </View>
+              </View>
+            </View>
           </View>
-        ))}
+        </TouchableRipple>
       </View>
-    </View>
+    </Surface>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#d9d9d9",
-    padding: 20,
-    borderRadius: 10,
-    maxHeight: 250,
-    width: "80%",
-    overflow: "hidden",
-    marginBottom: 20,
-  },
-  rowContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  horizontalContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});
