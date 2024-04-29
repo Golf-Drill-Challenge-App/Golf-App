@@ -463,10 +463,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const descriptionModalRef = useRef(null);
 
-  /***** Leave drill Dialog Stuff *****/
-  const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
-  const hideLeaveDialog = () => setLeaveDialogVisible(false);
-
   /***** Empty Input dialog Stuff *****/
   const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
   const hideEmptyDialog = () => setEmptyDialogVisible(false);
@@ -597,7 +593,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               preChildren={
                 <Appbar.Action
                   icon="close"
-                  onPress={() => setLeaveDialogVisible(true)}
+                  onPress={() => navigation.goBack()}
                   color={themeColors.accent}
                 />
               }
@@ -712,22 +708,6 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
                   <DrillDescription drillData={drillInfo} />
                 </BottomSheetScrollView>
               </BottomSheetModal>
-
-              {/* Leave Drill Dialog */}
-              <DialogComponent
-                title={"Alert"}
-                content="All inputs will be lost."
-                visible={leaveDialogVisible}
-                onHide={hideLeaveDialog}
-                buttons={["Cancel", "Leave Drill"]}
-                buttonsFunctions={[
-                  hideLeaveDialog,
-                  () => {
-                    hideLeaveDialog;
-                    navigation.goBack();
-                  },
-                ]}
-              />
 
               {/* Error Dialog: Empty Input*/}
               <DialogComponent

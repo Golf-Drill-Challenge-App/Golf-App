@@ -5,3 +5,5 @@ assets
 venv
 .expo
 .idea
+ios
+android
