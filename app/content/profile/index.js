@@ -26,7 +26,7 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "react-native-expo-image-cache";
-import { Appbar, Button, Portal, Snackbar } from "react-native-paper";
+import { Appbar, Button, Portal, Snackbar, ActivityIndicator,Modal, } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -109,6 +109,7 @@ function Index() {
 
   const [isImageUploadModalVisible, setIsImageUploadModalVisible] =
     useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
 
   useEffect(() => {
     setNewName(userData ? userData.name : "");
@@ -152,6 +153,7 @@ function Index() {
 
   const firebaseProfileImageUpload = async (uri) => {
     try {
+      setImageUploading(true);
       // Fetch the image data from the URI
       const response = await fetch(uri);
       const blob = await response.blob();
@@ -165,7 +167,7 @@ function Index() {
       // Upload the image to Firebase Storage
       const snapshot = await uploadBytes(storageRef, blob);
 
-      console.log("Uploaded a blob or file:", snapshot);
+      console.log("Uploaded the image blob to the Firebase storage:", snapshot);
 
       // Get the download URL for the uploaded image
       const downloadURL = await getDownloadURL(snapshot.ref);
@@ -175,11 +177,14 @@ function Index() {
 
       queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       setSnackbarMessage("Successfully uploaded the profile picture!");
+      setImageUploading(false);
 
       return downloadURL;
     } catch (error) {
       console.error("Error uploading image to Firebase:", error);
       setSnackbarMessage("Error uploading profile picture. Please try again.");
+      setImageUploading(false);
+
       throw error; // Rethrow the error to handle it at the caller's level if needed
     }
   };
@@ -393,6 +398,21 @@ function Index() {
     buttonLabel: {
       fontSize: 18,
       fontWeight: "bold",
+    },
+    activityIndicatorOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black background
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 1, // Ensure the overlay is on top of other components
+    },
+    activityIndicator: {
+      alignSelf: "center",
     },
   });
   const profileHeader = (
