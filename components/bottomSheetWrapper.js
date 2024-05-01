@@ -12,7 +12,7 @@ const BottomSheetWrapper = forwardRef(
         ref={ref}
         enableDynamicSizing
         backgroundStyle={{ backgroundColor: themeColors.background }}
-        keyboardBehavior={"interactive"}
+        topInset={insets.top}
         keyboardBlurBehavior={"restore"}
         backdropComponent={({ animatedIndex, style }) => {
           return (

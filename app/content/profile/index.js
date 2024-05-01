@@ -1,8 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   BottomSheetModalProvider,
+  BottomSheetScrollView,
   BottomSheetTextInput,
-  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -21,9 +21,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { Appbar, Snackbar } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getUnique } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
@@ -47,6 +51,10 @@ function Index() {
   const { currentUserId, currentTeamId } = currentAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
+
+  const insets = useSafeAreaInsets();
+
+  const { height, width } = useWindowDimensions();
 
   const {
     data: userData,
@@ -200,6 +208,93 @@ function Index() {
 
   const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
 
+  const styles = StyleSheet.create({
+    profileContainer: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    heading: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: "bold",
+      marginTop: 10,
+      marginBottom: 5,
+    },
+    noDrillsText: {
+      marginTop: 20,
+      fontSize: 16,
+      textAlign: "center",
+      color: "gray",
+    },
+    modalContent: {
+      paddingHorizontal: 30, // Increase padding for more spacing
+      paddingBottom: insets.bottom + Platform.OS === "android" ? 60 : 80,
+      alignItems: "center",
+    },
+    profilePictureContainer: {
+      position: "relative",
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      marginBottom: 20,
+    },
+    profilePicture: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 60,
+    },
+    penIconContainer: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      width: 30,
+      height: 30,
+      borderRadius: 15, // half of the width and height to make it a circle
+      borderWidth: 1, // add border
+      borderColor: "black", // border color
+      backgroundColor: "#d6d6d6",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    emailContainer: {
+      alignItems: "center",
+      marginBottom: 15,
+    },
+    emailText: {
+      color: "gray",
+      fontSize: 14, // Adjust as needed
+    },
+    input: {
+      borderBottomWidth: 1,
+      borderColor: "gray",
+      marginBottom: 20, // Increase margin bottom for more spacing
+      width: "80%",
+      padding: 10, // Increase padding for input fields
+    },
+    saveChangesButton: {
+      backgroundColor: themeColors.accent,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 20,
+      marginBottom: 20,
+      width: 100, // Increase the width of the button
+      alignSelf: "center",
+    },
+    saveChangesButtonText: {
+      color: "#FFF",
+      fontWeight: "bold",
+      alignSelf: "center",
+    },
+    changePasswordButton: {
+      color: "black",
+      fontSize: 16,
+      marginBottom: 20, // Increase margin bottom for more spacing
+    },
+    signOutButton: {
+      color: themeColors.accent,
+      fontSize: 16,
+    },
+  });
   const profileHeader = (
     <>
       <View style={styles.profileContainer}>
@@ -210,225 +305,150 @@ function Index() {
 
   return (
     <PaperWrapper>
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-        duration={4000} // Duration in milliseconds for how long the snackbar is shown
-      >
-        {snackbarMessage}
-      </Snackbar>
-
-      <DialogComponent
-        type={"snackbar"}
-        title={dialogTitle}
-        content={dialogMessage}
-        visible={dialogVisible}
-        onHide={() => setDialogVisible(false)}
-      />
-
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Header
-          title={"Personal Profile"}
-          postChildren={
-            <Appbar.Action
-              icon="cog"
-              color={themeColors.accent}
-              onPress={() => bottomSheetModalRef.current?.present()}
-              style={{ marginRight: 7 }}
-            />
-          }
-        />
-
+      <View style={{ height: height, width: width }}>
         <BottomSheetModalProvider>
-          {uniqueDrills.length > 0 ? (
-            <DrillList
-              drillData={uniqueDrills}
-              href={"content/profile/drills/"}
-              userId={userId}
-            >
-              {profileHeader}
-            </DrillList>
-          ) : (
-            <>
-              {profileHeader}
-              <EmptyScreen
-                invalidateKeys={invalidateKeys}
-                text={"No drills attempted yet"}
-              />
-            </>
-          )}
-
-          <BottomSheetWrapper
-            ref={bottomSheetModalRef}
-            closeFn={() => {
-              resetForm();
-              setPasswordInputVisible(false);
-            }}
+          <Snackbar
+            visible={snackbarVisible}
+            onDismiss={() => setSnackbarVisible(false)}
+            duration={4000} // Duration in milliseconds for how long the snackbar is shown
           >
-            <BottomSheetView style={styles.modalContent}>
-              {/* Profile Picture */}
-              <TouchableOpacity onPress={handleImageClick}>
-                <View style={styles.profilePictureContainer}>
-                  <Image
-                    source={{ uri: userData.pfp }}
-                    style={styles.profilePicture}
-                  />
-                  <View style={styles.penIconContainer}>
-                    <MaterialIcons name="edit" size={24} color="black" />
+            {snackbarMessage}
+          </Snackbar>
+
+          <DialogComponent
+            type={"snackbar"}
+            title={dialogTitle}
+            content={dialogMessage}
+            visible={dialogVisible}
+            onHide={() => setDialogVisible(false)}
+          />
+          <SafeAreaView style={{ flex: 1 }}>
+            <Header
+              title={"Personal Profile"}
+              postChildren={
+                <Appbar.Action
+                  icon="cog"
+                  color={themeColors.accent}
+                  onPress={() => bottomSheetModalRef.current?.present()}
+                  style={{ marginRight: 7 }}
+                />
+              }
+            />
+            <BottomSheetWrapper
+              ref={bottomSheetModalRef}
+              closeFn={() => {
+                resetForm();
+                setPasswordInputVisible(false);
+              }}
+            >
+              <BottomSheetScrollView
+                contentContainerStyle={styles.modalContent}
+                keyboardDismissMode="on-drag"
+                keyboardShouldPersistTaps="never"
+              >
+                {/* Profile Picture */}
+                <TouchableOpacity onPress={handleImageClick}>
+                  <View style={styles.profilePictureContainer}>
+                    <Image
+                      source={{ uri: userData.pfp }}
+                      style={styles.profilePicture}
+                    />
+                    <View style={styles.penIconContainer}>
+                      <MaterialIcons name="edit" size={24} color="black" />
+                    </View>
                   </View>
+                </TouchableOpacity>
+
+                {/* Display Email */}
+                <View style={styles.emailContainer}>
+                  <Text style={styles.emailText}>{email}</Text>
                 </View>
-              </TouchableOpacity>
 
-              {/* Display Email */}
-              <View style={styles.emailContainer}>
-                <Text style={styles.emailText}>{email}</Text>
-              </View>
+                {/* Name Update input field */}
+                <BottomSheetTextInput
+                  style={styles.input}
+                  value={newName}
+                  onChangeText={(text) => setNewName(text)}
+                  placeholder="Update your name"
+                />
 
-              {/* Name Update input field */}
-              <BottomSheetTextInput
-                style={styles.input}
-                value={newName}
-                onChangeText={(text) => setNewName(text)}
-                placeholder="Update your name"
-              />
+                {/* Change Password Button */}
+                <Pressable
+                  onPress={() => {
+                    resetForm();
+                    setPasswordInputVisible(!passwordInputVisible);
+                  }}
+                >
+                  <Text style={styles.changePasswordButton}>
+                    Change Password
+                  </Text>
+                </Pressable>
 
-              {/* Change Password Button */}
-              <Pressable
-                onPress={() => {
-                  resetForm();
-                  setPasswordInputVisible(!passwordInputVisible);
+                {/* Password Input Field */}
+                {passwordInputVisible && (
+                  <>
+                    <BottomSheetTextInput
+                      style={styles.input}
+                      value={currentPassword}
+                      onChangeText={setCurrentPassword}
+                      placeholder="Enter your current password"
+                      secureTextEntry={true}
+                    />
+                    <BottomSheetTextInput
+                      style={styles.input}
+                      value={newPassword}
+                      onChangeText={setNewPassword}
+                      placeholder="Enter your new password"
+                      secureTextEntry={true}
+                    />
+                  </>
+                )}
+
+                {/* Save Button */}
+                <TouchableOpacity
+                  style={styles.saveChangesButton}
+                  onPress={handleUpdate}
+                >
+                  <Text style={styles.saveChangesButtonText}>Update</Text>
+                </TouchableOpacity>
+
+                {/* Sign Out Button */}
+                <Pressable onPress={handleSignOut}>
+                  <Text style={styles.signOutButton}>Sign Out</Text>
+                </Pressable>
+              </BottomSheetScrollView>
+            </BottomSheetWrapper>
+            {uniqueDrills.length > 0 ? (
+              <View
+                style={{
+                  paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
+                  borderStyle: "solid",
+                  borderWidth: 1,
+                  borderColor: "black",
                 }}
               >
-                <Text style={styles.changePasswordButton}>Change Password</Text>
-              </Pressable>
-
-              {/* Password Input Field */}
-              {passwordInputVisible && (
-                <>
-                  <BottomSheetTextInput
-                    style={styles.input}
-                    value={currentPassword}
-                    onChangeText={setCurrentPassword}
-                    placeholder="Enter your current password"
-                    secureTextEntry={true}
-                  />
-                  <BottomSheetTextInput
-                    style={styles.input}
-                    value={newPassword}
-                    onChangeText={setNewPassword}
-                    placeholder="Enter your new password"
-                    secureTextEntry={true}
-                  />
-                </>
-              )}
-
-              {/* Save Button */}
-              <TouchableOpacity
-                style={styles.saveChangesButton}
-                onPress={handleUpdate}
-              >
-                <Text style={styles.saveChangesButtonText}>Update</Text>
-              </TouchableOpacity>
-
-              {/* Sign Out Button */}
-              <Pressable onPress={handleSignOut}>
-                <Text style={styles.signOutButton}>Sign Out</Text>
-              </Pressable>
-            </BottomSheetView>
-          </BottomSheetWrapper>
+                <DrillList
+                  drillData={uniqueDrills}
+                  href={"content/profile/drills/"}
+                  userId={userId}
+                >
+                  {profileHeader}
+                </DrillList>
+              </View>
+            ) : (
+              <>
+                {profileHeader}
+                <EmptyScreen
+                  invalidateKeys={invalidateKeys}
+                  text={"No drills attempted yet"}
+                />
+              </>
+            )}
+          </SafeAreaView>
         </BottomSheetModalProvider>
-      </SafeAreaView>
+      </View>
     </PaperWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  profileContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  heading: {
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 5,
-  },
-  noDrillsText: {
-    marginTop: 20,
-    fontSize: 16,
-    textAlign: "center",
-    color: "gray",
-  },
-  modalContent: {
-    paddingHorizontal: 30, // Increase padding for more spacing
-    paddingVertical: Platform.OS === "android" ? 10 : 30,
-    paddingBottom: 50,
-    alignItems: "center",
-  },
-  profilePictureContainer: {
-    position: "relative",
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 20,
-  },
-  profilePicture: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 60,
-  },
-  penIconContainer: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: 30,
-    height: 30,
-    borderRadius: 15, // half of the width and height to make it a circle
-    borderWidth: 1, // add border
-    borderColor: "black", // border color
-    backgroundColor: "#d6d6d6",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  emailContainer: {
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  emailText: {
-    color: "gray",
-    fontSize: 14, // Adjust as needed
-  },
-  input: {
-    borderBottomWidth: 1,
-    borderColor: "gray",
-    marginBottom: 20, // Increase margin bottom for more spacing
-    width: "80%",
-    padding: 10, // Increase padding for input fields
-  },
-  saveChangesButton: {
-    backgroundColor: themeColors.accent,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginBottom: 20,
-    width: 100, // Increase the width of the button
-    alignSelf: "center",
-  },
-  saveChangesButtonText: {
-    color: "#FFF",
-    fontWeight: "bold",
-    alignSelf: "center",
-  },
-  changePasswordButton: {
-    color: "black",
-    fontSize: 16,
-    marginBottom: 20, // Increase margin bottom for more spacing
-  },
-  signOutButton: {
-    color: themeColors.accent,
-    fontSize: 16,
-  },
-});
 
 export default Index;
