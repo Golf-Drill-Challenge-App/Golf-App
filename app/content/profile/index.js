@@ -228,7 +228,8 @@ function Index() {
     },
     modalContent: {
       paddingHorizontal: 30, // Increase padding for more spacing
-      paddingBottom: insets.bottom + Platform.OS === "android" ? 60 : 80,
+      paddingBottom:
+        insets.bottom + insets.top + Platform.OS === "android" ? 60 : 80,
       alignItems: "center",
     },
     profilePictureContainer: {
@@ -343,7 +344,7 @@ function Index() {
             >
               <BottomSheetScrollView
                 contentContainerStyle={styles.modalContent}
-                keyboardDismissMode="on-drag"
+                keyboardDismissMode="interactive"
                 keyboardShouldPersistTaps="never"
               >
                 {/* Profile Picture */}
