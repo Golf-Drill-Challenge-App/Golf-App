@@ -10,6 +10,7 @@ function RefreshInvalidate({ invalidateKeys, ...props }) {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     const refresh = async () => {
+      // keep refresh spinner spinning, until the query invalidation completes
       await invalidateMultipleKeys(queryClient, invalidateKeys);
       setRefreshing(false);
     };

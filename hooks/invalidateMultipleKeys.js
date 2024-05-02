@@ -1,23 +1,45 @@
+/*
+general reference: https://tanstack.com/query/latest/docs/framework/react/guides/query-invalidation
+
+General Info (see comments in code for more):
+invalidateKeys input is supplied as a 2d array (list of lists), where each child list is query key, e.g.
+
+  const invalidateKeys = [
+    ["user", { userId }],
+    ["attempts", { userId }],
+    ["userEmail", userId],
+    ["drillInfo"],
+  ];
+
+Note that query.queryKey is equivalent to invalidateKeys[i].
+This is because query.queryKey is a 1D array (just the query key), and is called recursively for each active query key
+for the current page you are on (in the mobile app).
+
+Any mentions of "active Query Keys" below, such as in input arguments of checkLists function, can be read as equivalent to
+query.queryKeys
+*/
+
 export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
   console.log("Query Key Cache Invalidation Status:");
   queryClient.invalidateQueries({
-    // used predicate as it seemed to be the best method to invalidate multiple query keys
     predicate: (query) => {
       for (let i = 0; i < query.queryKey.length; i++) {
+        // If the first query key argument (e.g. "user") does not match up between invalidateKeys[i] and query.queryKey,
+        // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
         if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {
-          function checkLists(firstList, secondList) {
-            // Check each item in the first list
-            for (let item of firstList) {
-              if (typeof item === "string") {
-                // If item is a string, check if it exists in the second list
-                if (!secondList.includes(item)) {
+          function checkLists(invalidateKey, activeQueryKey) {
+            for (let invalidateKeyArg of invalidateKey) {
+              if (typeof invalidateKeyArg === "string") {
+                // If arg of invalidateKeys[i] is a string, check if it also exists (as a string) in query.queryKey
+                if (!activeQueryKey.includes(invalidateKeyArg)) {
                   return false;
                 }
-              } else if (typeof item === "object") {
-                // If item is an object, check if it exists as a subset in the second list
+              } else if (typeof invalidateKeyArg === "object") {
+                // If arg of invalidateKeys[i] is an object, check if it exists as a subset of another (object) arg in
+                // query.queryKey
                 let found = false;
-                for (let obj of secondList) {
-                  if (isObjectSubset(item, obj)) {
+                for (let activeQueryKeyArg of activeQueryKey) {
+                  if (isObjectSubset(invalidateKeyArg, activeQueryKeyArg)) {
                     found = true;
                     break;
                   }
