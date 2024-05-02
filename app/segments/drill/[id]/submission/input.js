@@ -6,7 +6,14 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  runTransaction,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -214,49 +221,29 @@ async function uploadNewLeaderboard(
     console.log("LEADERBOARD UPDATE STARTED");
     console.log(submitMainOutputAttempt);
 
-    // get a fresh call without tanstack cache just in case
-    const latestLeaderboard = await getDoc(bestAttemptsDrillRef);
-    const latestLeaderboardData = latestLeaderboard.data() || {};
-    console.log("maybe cached leaderboard");
-    console.log(leaderboardData);
-    console.log("latest leaderboard");
-    console.log(latestLeaderboardData);
-    console.log("number of leaderboard entries");
-    console.log(Object.keys(latestLeaderboardData).length);
+    // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
+    // firebase transactions to avoid race conditions on get + update leaderboard
+    try {
+      await runTransaction(db, async (transaction) => {
+        const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
+        if (!latestLeaderboard.exists()) {
 
-    if (latestLeaderboard.exists()) {
-      if (latestLeaderboardData[uid]) {
-        const updatedLeaderboardUser = latestLeaderboardData[uid];
-
-        // Handle potential future case of multiple mainOutputAttempt values per drill & user
-        updatedLeaderboardUser[submitMainOutputAttempt] =
-          newAttempt[submitMainOutputAttempt];
-        await updateDoc(bestAttemptsDrillRef, {
-          [uid]: updatedLeaderboardUser,
-        }).then(
-          console.log(
-            "Leaderboard has been updated (updated user personal best) (updateDoc)!",
-          ),
-        );
-      } else {
-        // if it's user's first submission, don't need to handle multiple mainOutputAttempt values
-        await updateDoc(bestAttemptsDrillRef, {
+          // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
+          // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
+          // If so, check if set / setDoc plays nicely with transactions.
+          throw "Document does not exist!";
+        }
+        transaction.update(bestAttemptsDrillRef, {
           [uid]: newAttempt,
-        }).then(
-          console.log(
-            "Leaderboard has been updated (user's first submission) (updateDoc)!",
-          ),
-        );
-      }
-    } else {
-      // Edge case for if the best_attempts > drillId document doesn't exist (shouldn't come up in current scope)
-      await setDoc(bestAttemptsDrillRef, {
-        [uid]: newAttempt,
-      }).then(
-        console.log(
-          "Leaderboard has been updated (leaderboard did not exist previously, created new best_attempts document) (setDoc)!",
-        ),
+        });
+      });
+      console.log("Transaction successfully committed!");
+      console.log(
+        "Leaderboard has been updated (user's first submission) (updateDoc)!",
       );
+    } catch (e) {
+      console.log("Transaction failed: ", e);
+      console.log("Leaderboard update failed during transaction");
     }
   } catch (e) {
     alert(e);
