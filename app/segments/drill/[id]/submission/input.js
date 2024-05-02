@@ -39,6 +39,7 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 
 /***************************************
@@ -120,11 +121,15 @@ async function uploadAttempt(
         console.log("Document successfully uploaded!");
 
         //Call function to check for leaderboard update
-        handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
-
-        // invalidate cache after successful upload
-        // TODO: Move this into wherever the update leaderboard hook is?
-        invalidateOnSubmit(queryClient, drillId, teamId, userId);
+        handleLeaderboardUpdate(
+          uploadData,
+          drillInfo,
+          currentLeaderboard,
+          teamId,
+          drillId,
+          userId,
+          queryClient,
+        );
 
         //Check if drill was assigned
         if (assignedTime) {
@@ -148,8 +153,23 @@ async function uploadAttempt(
 }
 
 //A function to check leaderboard and update if needed
-function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
+function handleLeaderboardUpdate(
+  uploadData,
+  drillInfo,
+  currentLeaderboard,
+  teamId,
+  drillId,
+  userId,
+  queryClient,
+) {
   const leaderboardData = currentLeaderboard;
+  const invalidateKeys = [
+    ["user"],
+    ["drillInfo"],
+    ["best_attempts", teamId, drillId], // keep teamId param as it is a string argument in useLeaderboard's query key
+    ["attempts", { drillId }], // stats pages
+    ["attempts", { userId }], // for profile index (list of drill types)
+  ];
 
   //check if the user exists on the leaderboard
   if (leaderboardData[uploadData.uid] == undefined) {
@@ -162,6 +182,8 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
       uploadData[drillInfo.mainOutputAttempt],
       uploadData.id,
     );
+    // invalidate cache after successful upload
+    invalidateMultipleKeys(queryClient, invalidateKeys);
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -185,6 +207,8 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
         uploadData[drillInfo.mainOutputAttempt],
         uploadData.id,
       );
+      // invalidate cache after successful upload
+      invalidateMultipleKeys(queryClient, invalidateKeys);
     } else {
       console.log("Didn't update");
     }
@@ -509,24 +533,6 @@ function checkEmptyInputs(inputs) {
 //A function to validate inputs are all numbers
 function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
-}
-
-// TODO: Maybe refactor this to a hook / combo with new refreshInvalidate component (if other button actions etc need to
-// invalidate multiple queries at once)
-function invalidateOnSubmit(queryClient, drillId, teamId, userId) {
-  queryClient.invalidateQueries({
-    // used predicate as it seemed to be the best method to invalidate multiple query keys
-    predicate: (query) =>
-      query.queryKey[0] === "user" ||
-      query.queryKey[0] === "drillInfo" ||
-      (query.queryKey[0] === "best_attempts" && // not sure the leaderboard updates correctly
-        query.queryKey[1] === teamId &&
-        query.queryKey[2].drillId === drillId) ||
-      (query.queryKey[0] === "attempts" &&
-        query.queryKey[1] === teamId &&
-        (query.queryKey[2].drillId === drillId || // stats pages
-          query.queryKey[2].userId === userId)), // for profile index (list of drill types)
-  });
 }
 
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
