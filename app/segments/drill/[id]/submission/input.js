@@ -227,7 +227,6 @@ async function uploadNewLeaderboard(
       await runTransaction(db, async (transaction) => {
         const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
         if (!latestLeaderboard.exists()) {
-
           // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
           // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
           // If so, check if set / setDoc plays nicely with transactions.
