@@ -156,7 +156,6 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
     console.log("User not on leaderboard, uploading this attempt");
 
     uploadNewLeaderboard(
-      leaderboardData,
       drillInfo.mainOutputAttempt,
       uploadData.uid,
       uploadData.did,
@@ -180,7 +179,6 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
       console.log("New Best Attempt! Time to upload!");
 
       uploadNewLeaderboard(
-        leaderboardData,
         drillInfo.mainOutputAttempt,
         uploadData.uid,
         uploadData.did,
@@ -194,7 +192,6 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
 }
 
 async function uploadNewLeaderboard(
-  leaderboardData,
   mainOutputAttempt,
   uid,
   did,
@@ -208,23 +205,17 @@ async function uploadNewLeaderboard(
     },
   };
 
-  //Add new attempt to leaderboard
-  leaderboardData[uid] = newAttempt;
-  const submitMainOutputAttempt = Object.keys(newAttempt)[0];
-  console.log("new attempt");
-  console.log(newAttempt);
-
   //Reference to best_attempts drill document
   const bestAttemptsDrillRef = doc(db, "teams", "1", "best_attempts", did);
 
   try {
     console.log("LEADERBOARD UPDATE STARTED");
-    console.log(submitMainOutputAttempt);
 
     // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
     // firebase transactions to avoid race conditions on get + update leaderboard
     try {
       await runTransaction(db, async (transaction) => {
+        // get latest leaderboard data again, just in case another player updated best score just now
         const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
         if (!latestLeaderboard.exists()) {
           // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
@@ -236,13 +227,9 @@ async function uploadNewLeaderboard(
           [uid]: newAttempt,
         });
       });
-      console.log("Transaction successfully committed!");
-      console.log(
-        "Leaderboard has been updated (user's first submission) (updateDoc)!",
-      );
+      console.log("Transaction (leaderboard update) successfully committed!");
     } catch (e) {
-      console.log("Transaction failed: ", e);
-      console.log("Leaderboard update failed during transaction");
+      console.log("Transaction (leaderboard update) failed: ", e);
     }
   } catch (e) {
     alert(e);

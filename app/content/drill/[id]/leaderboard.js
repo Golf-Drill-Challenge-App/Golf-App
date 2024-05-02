@@ -121,8 +121,9 @@ export default function Leaderboard() {
   const orderedLeaderboard = Object.keys(leaderboardAttempts).sort(
     //only sort the userId
     (a, b) =>
-      sortByLower * leaderboardAttempts[a][mainOutputAttempt]["value"] +
-      sortByLower * -1 * leaderboardAttempts[b][mainOutputAttempt]["value"],
+      sortByLower *
+      (leaderboardAttempts[a][mainOutputAttempt]["value"] -
+        leaderboardAttempts[b][mainOutputAttempt]["value"]),
     // console.log("test"),
     // console.log(leaderboardAttempts)
   );
