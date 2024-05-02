@@ -15,8 +15,8 @@ Note that query.queryKey is equivalent to invalidateKeys[i].
 This is because query.queryKey is a 1D array (just the query key), and is called recursively for each active query key
 for the current page you are on (in the mobile app).
 
-Any mentions of "active Query Keys" below, such as in input arguments of checkLists function, can be read as equivalent to
-query.queryKeys
+Any mentions of "active Query Key" below, such as in input arguments of checkLists function, can be read as equivalent to
+query.queryKey
 */
 
 export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
