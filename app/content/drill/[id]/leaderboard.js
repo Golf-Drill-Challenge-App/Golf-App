@@ -132,15 +132,6 @@ export default function Leaderboard() {
     );
   }
 
-  let title = {
-    proxHoleAverage: "Closest to the Hole",
-    sideLandingAverage: "Side Landing Average",
-    sideLandingTotal: "Side Landing",
-    carryDiffAverage: "Carry Difference Average",
-    strokesGained: "Total Strokes Gained",
-    strokesGainedAverage: "Average Strokes Gained",
-  };
-
   let leaderboardRanks = getLeaderboardRanks(
     orderedLeaderboard,
     leaderboardAttempts,
