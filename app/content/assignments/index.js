@@ -125,7 +125,9 @@ const DrillList = () => {
                 {assignment.completed && (
                   <Icon source="check" size={28} color="green" />
                 )}
-                <Icon source="chevron-right" theme={{ right: 0 }} />
+                <View style={{ paddingLeft: 10 }}>
+                  <Icon source="chevron-right" size={20} />
+                </View>
               </View>
             </View>
           </View>
