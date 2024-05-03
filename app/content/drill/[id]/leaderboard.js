@@ -19,6 +19,7 @@ function getLeaderboardRanks(
 ) {
   let leaderboardRanks = [];
   let currentRank = 1;
+  let prevAttemptValue = 0;
 
   for (let i = 0; i < orderedLeaderboard.length; i++) {
     const userId = orderedLeaderboard[i];
@@ -26,22 +27,15 @@ function getLeaderboardRanks(
     const attemptValue = numTrunc(
       leaderboardAttempts[userId][mainOutputAttempt].value,
     );
-    //base case for a clear number 1
-    if (i == 0) {
-      leaderboardRanks.push(currentRank);
-    }
 
-    //case for a tie
-    else if (attemptValue == prevAttemptValue) {
-      leaderboardRanks.push(currentRank);
-    }
-    //Next rank Case
-    else {
+    if (i !== 0 && attemptValue !== prevAttemptValue) {
+      //if not first player and not a tie
+
       currentRank = i + 1;
-      leaderboardRanks.push(currentRank);
     }
+    leaderboardRanks.push(currentRank);
 
-    let prevAttemptValue = attemptValue;
+    prevAttemptValue = attemptValue;
   }
 
   return leaderboardRanks;

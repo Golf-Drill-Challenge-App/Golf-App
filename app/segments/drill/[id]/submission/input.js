@@ -46,14 +46,7 @@ import { useLeaderboard } from "~/hooks/useLeaderboard";
  * Firebase Upload
  ***************************************/
 
-async function completeAssigned(
-  userId,
-  teamId,
-  assignedTime,
-  drillId,
-  attemptId,
-  queryClient,
-) {
+async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId);
 
   const userRef = doc(db, "teams", "1", "users", userId);
@@ -80,7 +73,6 @@ async function completeAssigned(
       try {
         await updateDoc(userRef, { assigned_data: updatedAssignedData });
         console.log("Document updated successfully!");
-        queryClient.invalidateQueries(["user", { teamId, userId }]);
       } catch (error) {
         console.error("Error updating document:", error);
       }
@@ -96,10 +88,8 @@ async function completeAssigned(
 async function uploadAttempt(
   outputData,
   userId,
-  teamId,
   assignedTime,
   drillId,
-  queryClient,
   drillInfo,
   currentLeaderboard,
 ) {
@@ -125,14 +115,7 @@ async function uploadAttempt(
 
         //Check if drill was assigned
         if (assignedTime) {
-          completeAssigned(
-            userId,
-            teamId,
-            assignedTime,
-            drillId,
-            newAttemptRef.id,
-            queryClient,
-          );
+          completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
         }
       })
       .catch((error) => {
@@ -653,10 +636,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       uploadAttempt(
         outputData,
         currentUserId,
-        currentTeamId,
         assignedTime,
         id,
-        queryClient,
         drillInfo,
         currentLeaderboard,
       );
