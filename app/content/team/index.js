@@ -117,7 +117,6 @@ function Index() {
               </Text>
               <View
                 style={{
-                  // default react native background color or something, so stuff scrolling behind this is less jank
                   backgroundColor: themeColors.background,
                   paddingBottom: 10,
                   paddingTop: 10,

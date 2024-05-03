@@ -252,28 +252,47 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
           style={styles.dropdown}
         />
       </View>
-      <Text>
-        {formatDate(sortedDrillData[startIndex]["time"])} -{" "}
-        {formatDate(sortedDrillData[endIndex - 1]["time"])}
-      </Text>
-      <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <Text>{formatDate(sortedDrillData[startIndex]["time"])}</Text>
+        <Text>to</Text>
+        <Text>{formatDate(sortedDrillData[endIndex - 1]["time"])}</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          width: "100%",
+        }}
+      >
         <Button
           onPress={() => {
             setPage(page + 1);
           }}
           disabled={page === totalPages - 1}
+          style={{ flexGrow: 1 }}
+          textColor={themeColors.accent}
+          compact
+          rippleColor={"rgba(200,200,200,0.25)"}
           //Previous attempts chronologically
         >
-          Prev
+          {"<Prev"}
         </Button>
         <Button
           onPress={() => {
             setPage(page - 1);
           }}
           disabled={page === 0}
+          style={{ flexGrow: 1 }}
+          textColor={themeColors.accent}
+          compact
+          rippleColor={"rgba(200,200,200,0.25)"}
           //Next attempts chronologically
         >
-          Next
+          {"Next>"}
         </Button>
       </View>
 
@@ -285,7 +304,7 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
           numberOfTicks={7}
           min={yMin}
           max={yMax}
-          contentInset={{ bottom: 5 }}
+          contentInset={{ bottom: 5, top: 6 }}
         />
         <View style={styles.middleLine} />
         <ScrollView
@@ -308,6 +327,7 @@ export default function BarChartScreen({ drillData, drillInfo, userId }) {
                 left: halfScreenCompensation,
                 right: halfScreenCompensation,
                 bottom: 5,
+                top: 6,
               }}
               yAccessor={({ item }) => item.value}
               pointerEvents={"none"}

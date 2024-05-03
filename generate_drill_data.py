@@ -29,14 +29,14 @@ putt_values = [0,1.001,1.009,1.053,1.147,1.256,1.357,1.443,1.515,1.575,1.626,1.6
 
 line_test = ["8", "9", "PW", "9", "8", "7", "8", "9", "PW", "9", "8", "7", "8", "9", "PW", "9", "8", "7", "8", "9"]
 
-users = ["rcnS0atnVgt4svjVK0ZS","dkjydFrmyi9dRK9Jj2Su","TaSveOyBkVaK012r6meC","c0nEyjaOMhItMQTLMY0X","8mTnNFsMQYlTDeaQmluZ","8j6vfO5xpIdZF9dUAAV8oizr60v1","8aUSErrZSHWEsgRYIedq","6r2BOnaLTaiDgPMd7RWa"]
+users = ["p4UhvrHAwYZgfU8oi3OCKRbnRNh2"]
 
 collection_ref = db.collection("teams").document("1").collection("attempts")
 
 # Function to generate random data for one submission
 def generate_submission(user_id):
     # Unix timestamp for the submission
-    time_stamp = random.randint(1600000000, 1800000000)
+    time_stamp = int((time.time() + random.randint(1000, 10000000)) * 1000)
 
     # Strokes gained - random number between 1 and 10
     strokes_gained_total = 0
@@ -100,7 +100,7 @@ def generate_submission(user_id):
 
 def generate_submission_line(user_id):
     # Unix timestamp for the submission
-    time_stamp = random.randint(1600000000, 1800000000)
+    time_stamp = int((time.time() + random.randint(1000, 10000000)) * 1000)
 
     # Strokes gained - random number between 1 and 10
     side_landing_total = 0
@@ -142,7 +142,14 @@ def generate_submission_line(user_id):
 
 # Generate 100 submissions
 for user_id in users:
-    for i in range(random.randint(50, 150)):
+    for i in range(500):
         submission = generate_submission(user_id)
-    for i in range(random.randint(50, 150)):
-        submission = generate_submission_line(user_id)
+#     for i in range(random.randint(50, 150)):
+#         submission = generate_submission_line(user_id)
+
+# query = collection_ref.where('uid', '==', 'p4UhvrHAwYZgfU8oi3OCKRbnRNh2')
+#
+# results = query.stream()
+#
+# for doc in results:
+#     collection_ref.document(doc.id).delete()

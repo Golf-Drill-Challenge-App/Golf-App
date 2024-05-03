@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
     onAuthStateChanged(auth, (currentUserId) => {
-      console.log("user changed");
+      console.log("user changed. userId: ", currentUserId["uid"]);
 
       // test user login (yarn test)
       // If you sign out, reload app to sign back in as test user
