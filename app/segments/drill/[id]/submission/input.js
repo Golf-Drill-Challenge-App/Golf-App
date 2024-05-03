@@ -13,7 +13,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Text } from "react-native-paper";
