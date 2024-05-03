@@ -11,7 +11,7 @@ function EmptyScreen({ invalidateKeys, text, preChild = () => {} }) {
       }
       contentContainerStyle={{ flex: 1 }}
     >
-      {preChild}
+      {preChild()}
       <View
         style={{
           flex: 1,
