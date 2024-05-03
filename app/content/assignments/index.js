@@ -141,6 +141,7 @@ const DrillList = () => {
             textAlign: "left",
             marginTop: 10,
             marginLeft: 20,
+            paddingBottom: 3,
           }}
         >
           {title}
