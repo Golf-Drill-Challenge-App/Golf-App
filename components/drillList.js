@@ -45,10 +45,7 @@ export default function DrillList({ drillData, href, userId, children }) {
 
   return (
     <SectionList
-      style={{
-        paddingHorizontal: 20,
-        height: "100%",
-      }}
+      style={{ paddingHorizontal: 20, height: "100%" }}
       sections={drills}
       ListHeaderComponent={children}
       renderItem={({ item }) => (

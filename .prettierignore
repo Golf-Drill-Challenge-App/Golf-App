@@ -4,3 +4,6 @@ assets
 *.lock
 venv
 .expo
+.idea
+ios
+android
