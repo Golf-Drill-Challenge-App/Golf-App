@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
-import { title, themeColors } from "~/Constants";
+import { prettyTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
@@ -58,7 +58,7 @@ function DataField(field, value) {
       return (
         <Row
           key={field}
-          name={field in title ? prettyTitle[field] : field}
+          name={field in prettyTitle ? prettyTitle[field] : field}
           value={value}
         />
       );

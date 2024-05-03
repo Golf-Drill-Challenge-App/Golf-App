@@ -109,15 +109,18 @@ const DrillList = () => {
             >
               <View style={{ flexDirection: "column" }}>
                 <Text style={{ fontSize: 20 }}>
-                  {drillInfo[assignment.drillId]["drillType"]}
-                </Text>
-                <Text style={{ fontSize: 14, fontStyle: "italic" }}>
                   {drillInfo[assignment.drillId]["subType"]}
                 </Text>
+                <Text style={{ fontSize: 14, color: "grey" }}>
+                  {drillInfo[assignment.drillId]["drillType"]}
+                </Text>
               </View>
-              {assignment.completed && (
-                <Icon source="check" size={28} color="green" />
-              )}
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }} >
+                {assignment.completed && (
+                  <Icon source="check" size={28} color="green" />
+                )}
+                <Icon source="chevron-right" theme={{ right: 0 }} />
+              </View>
             </View>
           </View>
         </TouchableOpacity>

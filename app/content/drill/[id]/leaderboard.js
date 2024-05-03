@@ -11,7 +11,7 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { prettyTitle } from "~/Costants";
+import { prettyTitle } from "~/Constants";
 
 function getLeaderboardRanks(
   orderedLeaderboard,

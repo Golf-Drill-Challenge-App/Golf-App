@@ -14,6 +14,12 @@ const prettyTitle = {
   strokes: "Strokes",
   break: "Break",
   club: "Club",
+  carryDiffAverage: "Carry Difference Average",
+  proxHoleAverage: "Proximity-to-hole Average",
+  sideLandingAverage: "Side Landing Average",
+  sideLandingTotal: "Side Landing Total",
+  strokesGained: "Strokes Gained",
+  strokesGainedAverage: "Strokes Gained Average",
 };
 
 export { prettyTitle, themeColors };

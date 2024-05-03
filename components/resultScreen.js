@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import ScatterChart from "react-native-scatter-chart";
-import { themeColors } from "~/Constants";
+import { prettyTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -74,15 +74,6 @@ export default function ResultScreen({
     return styles;
   }
 
-  let title = {
-    carryDiffAverage: "Carry Difference Average",
-    proxHoleAverage: "Proximity-to-hole Average",
-    sideLandingAverage: "Side Landing Average",
-    sideLandingTotal: "Side Landing Total",
-    strokesGained: "Strokes Gained",
-    strokesGainedAverage: "Strokes Gained Average",
-  };
-
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
@@ -98,7 +89,7 @@ export default function ResultScreen({
         >
           {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
             <View style={getStyle(idx)} key={output}>
-              <Text>{title[output]}</Text>
+              <Text>{prettyTitle[output]}</Text>
               <Text>{numTrunc(attempt[output])}</Text>
             </View>
           ))}
