@@ -176,11 +176,8 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
 }
 
 async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
-  const drillId = uploadData.did;
-  const userId = uploadData.uid;
   const attemptId = uploadData.id;
   const attemptValue = uploadData[mainOutputAttempt];
-  console.log(userId);
 
   const newAttempt = {
     [mainOutputAttempt]: {
@@ -190,7 +187,13 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
   };
 
   //Reference to best_attempts drill document
-  const bestAttemptsDrillRef = doc(db, "teams", "1", "best_attempts", drillId);
+  const bestAttemptsDrillRef = doc(
+    db,
+    "teams",
+    "1",
+    "best_attempts",
+    uploadData.did,
+  );
 
   try {
     console.log("LEADERBOARD UPDATE STARTED");
@@ -208,7 +211,7 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
           throw "Document does not exist!";
         }
         transaction.update(bestAttemptsDrillRef, {
-          [userId]: newAttempt,
+          [uploadData.uid]: newAttempt,
         });
       });
       console.log("Transaction (leaderboard update) successfully committed!");
