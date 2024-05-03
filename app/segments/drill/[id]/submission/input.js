@@ -6,7 +6,14 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  runTransaction,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -23,6 +30,7 @@ import {
 } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import DrillDescription from "~/components/drillDescription";
+import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import DrillInput from "~/components/input/drillInput";
 import DrillTarget from "~/components/input/drillTarget";
@@ -31,19 +39,14 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { useLeaderboard } from "~/hooks/useLeaderboard";
 
 /***************************************
  * Firebase Upload
  ***************************************/
 
-async function completeAssigned(
-  userId,
-  teamId,
-  assignedTime,
-  drillId,
-  attemptId,
-  queryClient,
-) {
+async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId);
 
   const userRef = doc(db, "teams", "1", "users", userId);
@@ -70,7 +73,6 @@ async function completeAssigned(
       try {
         await updateDoc(userRef, { assigned_data: updatedAssignedData });
         console.log("Document updated successfully!");
-        queryClient.invalidateQueries(["user", { teamId, userId }]);
       } catch (error) {
         console.error("Error updating document:", error);
       }
@@ -86,10 +88,10 @@ async function completeAssigned(
 async function uploadAttempt(
   outputData,
   userId,
-  teamId,
   assignedTime,
   drillId,
-  queryClient,
+  drillInfo,
+  currentLeaderboard,
 ) {
   console.log("WAS IT ASIGNED 4 and ID", assignedTime, userId);
 
@@ -108,22 +110,12 @@ async function uploadAttempt(
       .then(() => {
         console.log("Document successfully uploaded!");
 
-        // invalidate cache after successful upload
-        // TODO: Move this into wherever the update leaderboard hook is?
-        invalidateOnSubmit(queryClient, drillId, teamId, userId);
-
-        //TODO: Call function to check for leaderboard update
+        //Call function to check for leaderboard update
+        handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
 
         //Check if drill was assigned
         if (assignedTime) {
-          completeAssigned(
-            userId,
-            teamId,
-            assignedTime,
-            drillId,
-            newAttemptRef.id,
-            queryClient,
-          );
+          completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
         }
       })
       .catch((error) => {
@@ -135,7 +127,85 @@ async function uploadAttempt(
   }
 }
 
-//TODO: Create a function to check leaderboard and update if needed
+//A function to check leaderboard and update if needed
+function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
+  const mainOutputAttempt = drillInfo.mainOutputAttempt;
+
+  //check if the user exists on the leaderboard
+  if (currentLeaderboard[uploadData.uid] == undefined) {
+    console.log("User not on leaderboard, uploading this attempt");
+
+    uploadNewLeaderboard(mainOutputAttempt, uploadData);
+  } else {
+    //used if an attempt already exists
+    const currentBest =
+      currentLeaderboard[uploadData.uid][mainOutputAttempt].value;
+
+    const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
+
+    //conditional for determining if update is needed
+    const isNewAttemptBest = lowerIsBetter
+      ? uploadData[mainOutputAttempt] < currentBest
+      : uploadData[mainOutputAttempt] > currentBest;
+
+    if (isNewAttemptBest) {
+      console.log("New Best Attempt! Time to upload!");
+
+      uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    } else {
+      console.log("Didn't update");
+    }
+  }
+}
+
+async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
+  const attemptId = uploadData.id;
+  const attemptValue = uploadData[mainOutputAttempt];
+
+  const newAttempt = {
+    [mainOutputAttempt]: {
+      id: attemptId,
+      value: attemptValue,
+    },
+  };
+
+  //Reference to best_attempts drill document
+  const bestAttemptsDrillRef = doc(
+    db,
+    "teams",
+    "1",
+    "best_attempts",
+    uploadData.did,
+  );
+
+  try {
+    console.log("LEADERBOARD UPDATE STARTED");
+
+    // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
+    // firebase transactions to avoid race conditions on get + update leaderboard
+    try {
+      await runTransaction(db, async (transaction) => {
+        // get latest leaderboard data again, just in case another player updated best score just now
+        const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
+        if (!latestLeaderboard.exists()) {
+          // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
+          // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
+          // If so, check if set / setDoc plays nicely with transactions.
+          throw "Document does not exist!";
+        }
+        transaction.update(bestAttemptsDrillRef, {
+          [uploadData.uid]: newAttempt,
+        });
+      });
+      console.log("Transaction (leaderboard update) successfully committed!");
+    } catch (e) {
+      console.log("Transaction (leaderboard update) failed: ", e);
+    }
+  } catch (e) {
+    alert(e);
+    console.log(e);
+  }
+}
 
 /***************************************
  * AttemptShots Generation
@@ -411,24 +481,6 @@ function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
 }
 
-// TODO: Maybe refactor this to a hook / combo with new refreshInvalidate component (if other button actions etc need to
-// invalidate multiple queries at once)
-function invalidateOnSubmit(queryClient, drillId, teamId, userId) {
-  queryClient.invalidateQueries({
-    // used predicate as it seemed to be the best method to invalidate multiple query keys
-    predicate: (query) =>
-      query.queryKey[0] === "user" ||
-      query.queryKey[0] === "drillInfo" ||
-      (query.queryKey[0] === "best_attempts" && // not sure the leaderboard updates correctly
-        query.queryKey[1] === teamId &&
-        query.queryKey[2].drillId === drillId) ||
-      (query.queryKey[0] === "attempts" &&
-        query.queryKey[1] === teamId &&
-        (query.queryKey[2].drillId === drillId || // stats pages
-          query.queryKey[2].userId === userId)), // for profile index (list of drill types)
-  });
-}
-
 export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   //Helper varibles
   const { id, assignedTime } = useLocalSearchParams();
@@ -455,6 +507,12 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
   const { id: did } = useLocalSearchParams();
+
+  const {
+    data: currentLeaderboard,
+    isLoading: leaderboardIsLoading,
+    error: leaderboardError,
+  } = useLeaderboard({ drillId: did });
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -539,6 +597,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //Function to handle "Next shot" button click
   const handleButtonClick = () => {
+    // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
+    // useAttempts / useDrillInfo hooks
+    const userId = currentUserId;
+    const drillId = did;
+    const invalidateKeys = [
+      ["user"],
+      ["drillInfo"],
+      ["best_attempts", currentTeamId, drillId], // keep currentTeamId param as it is a string argument in useLeaderboard's query key
+      ["attempts", { drillId }], // stats pages
+      ["attempts", { userId }], // for profile index (list of drill types)
+    ];
+
     //Check if all inputs have been filled in
     if (
       Object.keys(inputValues[displayedShot]).length !== numInputs ||
@@ -561,13 +631,15 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       );
 
       setOutputData(outputData);
+      // invalidate cache on button press
+      invalidateMultipleKeys(queryClient, invalidateKeys);
       uploadAttempt(
         outputData,
         currentUserId,
-        currentTeamId,
         assignedTime,
         id,
-        queryClient,
+        drillInfo,
+        currentLeaderboard,
       );
       setToggleResult(true);
     } else {
@@ -577,9 +649,13 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   };
 
   //Loading until an attempt is generated
-  if (attemptShots.length === 0) {
+  if (attemptShots.length === 0 || leaderboardIsLoading) {
     console.log("Loading");
     return <Loading />;
+  }
+
+  if (leaderboardError) {
+    return <ErrorComponent message={[leaderboardError]} />;
   }
 
   return (
