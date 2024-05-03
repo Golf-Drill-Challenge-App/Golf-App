@@ -38,18 +38,32 @@ function DataField(field, value) {
       );
     case "target":
       return (
-        <Row key={field} name={prettyTitle[field]} value={`${numTrunc(value)} yd`} />
+        <Row
+          key={field}
+          name={prettyTitle[field]}
+          value={`${numTrunc(value)} yd`}
+        />
       );
     case "sideLanding":
       return (
-        <Row key={field} name={prettyTitle[field]} value={`${numTrunc(value)} yd`} />
+        <Row
+          key={field}
+          name={prettyTitle[field]}
+          value={`${numTrunc(value)} yd`}
+        />
       );
     case "proxHole": //has units
       return (
-        <Row key={field} name={prettyTitle[field]} value={`${numTrunc(value)} ft`} />
+        <Row
+          key={field}
+          name={prettyTitle[field]}
+          value={`${numTrunc(value)} ft`}
+        />
       );
     case "strokesGained": //just round to 3 decimals
-      return <Row key={field} name={prettyTitle[field]} value={numTrunc(value)} />;
+      return (
+        <Row key={field} name={prettyTitle[field]} value={numTrunc(value)} />
+      );
     case "strokes": //just round to 3 decimals
       return <Row key={field} name={prettyTitle[field]} value={value} />;
     case "break": //just round to 3 decimals

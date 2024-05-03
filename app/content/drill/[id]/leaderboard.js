@@ -1,7 +1,8 @@
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Avatar, Divider, Icon, List, Text } from "react-native-paper";
+import { Avatar, Icon, List, Text } from "react-native-paper";
+import { prettyTitle } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -11,7 +12,6 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { prettyTitle } from "~/Constants";
 
 function getLeaderboardRanks(
   orderedLeaderboard,
@@ -171,7 +171,12 @@ export default function Leaderboard() {
                     <Avatar.Text size={24} label="XD" />
                   </View>
                 )}
-                left={() => <Avatar.Image size={24} source={{ uri: userInfo[userId]["pfp"] }} />}
+                left={() => (
+                  <Avatar.Image
+                    size={24}
+                    source={{ uri: userInfo[userId]["pfp"] }}
+                  />
+                )}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text>

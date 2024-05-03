@@ -115,7 +115,13 @@ const DrillList = () => {
                   {drillInfo[assignment.drillId]["drillType"]}
                 </Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }} >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 {assignment.completed && (
                   <Icon source="check" size={28} color="green" />
                 )}
