@@ -49,6 +49,11 @@ export default function Description() {
             left: 0,
             right: 0,
           }}
+          labelStyle={{
+            fontSize: 20,
+            fontWeight: "bold",
+            padding: 5,
+          }}
           mode="contained"
           buttonColor={themeColors.accent}
           textColor="white"

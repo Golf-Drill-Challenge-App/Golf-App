@@ -31,6 +31,7 @@ function Result({ submission, drillInfo, setToggleResult }) {
         labelStyle={{
           fontSize: 20,
           fontWeight: "bold",
+          padding: 5,
           color: "#FFFFFF",
         }}
         mode="contained"

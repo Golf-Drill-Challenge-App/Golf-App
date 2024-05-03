@@ -15,7 +15,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Text } from "react-native-paper";
 import {
@@ -844,7 +844,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               {buttonDisplayHandler()}
 
               <Text
-                style={{ color: themeColors.accent }}
+                style={{ color: themeColors.accent, paddingBottom: Platform.OS === "android" ? 10 : 30, fontSize: 16, }}
                 onPress={() => {
                   navModalRef.current?.present();
                 }}
@@ -884,6 +884,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
+    padding: 5,
   },
   disabledButton: {
     width: "95%",
@@ -895,6 +896,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
+    padding: 10,
   },
   title: {
     fontSize: 20,
