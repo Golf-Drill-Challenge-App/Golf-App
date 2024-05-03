@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import {
   collection,
@@ -89,6 +90,8 @@ async function changeRole(userId, newRole) {
 function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
+
+  const queryClient = useQueryClient();
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -210,7 +213,7 @@ function Index() {
                     leadingIcon="account-arrow-up-outline"
                     onPress={() => {
                       changeRole(userId, "coach");
-                      //TODO: invalidate cache
+                      queryClient.invalidateQueries("user"); //invalidate cache
                       setMenuVisible(false);
                     }}
                     title="Promote"
@@ -220,7 +223,7 @@ function Index() {
                     leadingIcon="account-arrow-down-outline"
                     onPress={() => {
                       changeRole(userId, "player");
-                      //TODO: invalidate cache
+                      queryClient.invalidateQueries("user"); //invalidate cache
                       setMenuVisible(false);
                     }}
                     title="Demote"
