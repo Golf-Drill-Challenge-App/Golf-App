@@ -63,8 +63,7 @@ export default function Index() {
             marginLeft: 10,
             marginRight: 10,
             backgroundColor: themeColors.highlight,
-            borderRadius: "50%"
-            , paddingBottom: 10
+            borderRadius: "50%",
           }}
           theme={{
             colors: {
