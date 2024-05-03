@@ -100,6 +100,7 @@ function Index() {
 
   const { currentUserId } = currentAuthContext();
 
+  //Used for Displaying coach/owner view
   const {
     data: currentUserData,
     userError: currentUserError,
@@ -213,7 +214,7 @@ function Index() {
                     leadingIcon="account-arrow-up-outline"
                     onPress={() => {
                       changeRole(userId, "coach");
-                      queryClient.invalidateQueries("user"); //invalidate cache
+                      queryClient.invalidateQueries(["user", { userId }]); //invalidate cache
                       setMenuVisible(false);
                     }}
                     title="Promote"
@@ -223,7 +224,7 @@ function Index() {
                     leadingIcon="account-arrow-down-outline"
                     onPress={() => {
                       changeRole(userId, "player");
-                      queryClient.invalidateQueries("user"); //invalidate cache
+                      queryClient.invalidateQueries(["user", { userId }]); //invalidate cache
                       setMenuVisible(false);
                     }}
                     title="Demote"
@@ -275,7 +276,7 @@ function Index() {
             hideRemoveDialog,
             () => {
               removeUser(userId);
-              //TODO: invalidate cache
+              queryClient.invalidateQueries("user"); //invalidate cache
               navigation.goBack();
             },
           ]}
