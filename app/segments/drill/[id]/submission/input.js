@@ -724,7 +724,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
               {/*Navigation Bottom Sheet */}
               <BottomSheetWrapper ref={navModalRef}>
-                <BottomSheetScrollView>
+                <BottomSheetScrollView
+                  contentContainerStyle={{ paddingBottom: 20 }}
+                >
                   <View style={styles.bottomSheetContentContainer}>
                     {attemptShots.slice(0, currentShot + 1).map((item, id) => (
                       <NavigationRectangle

@@ -423,9 +423,6 @@ function Index() {
               <View
                 style={{
                   paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
-                  borderStyle: "solid",
-                  borderWidth: 1,
-                  borderColor: "black",
                 }}
               >
                 <DrillList
