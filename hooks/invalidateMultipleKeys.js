@@ -20,7 +20,8 @@ query.queryKey
 */
 
 export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
-  console.log("Query Key Cache Invalidation Status:");
+  console.log("These query keys (cache) were successfully invalidated:");
+  const alreadyInvalidated = [];
   queryClient.invalidateQueries({
     predicate: (query) => {
       for (let i = 0; i < query.queryKey.length; i++) {
@@ -66,9 +67,19 @@ export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
             }
             return true;
           }
+          // Uncomment the 3 logs below for more comprehensive debug
+          /*
           console.log(invalidateKeys[i]);
           console.log(query.queryKey);
           console.log(checkLists(invalidateKeys[i], query.queryKey));
+          */
+          if (
+            checkLists(invalidateKeys[i], query.queryKey) &&
+            !alreadyInvalidated.includes(query.queryKey)
+          ) {
+            alreadyInvalidated.push(query.queryKey);
+            console.log(query.queryKey);
+          }
           return checkLists(invalidateKeys[i], query.queryKey);
         }
       }

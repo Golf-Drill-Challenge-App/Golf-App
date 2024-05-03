@@ -121,15 +121,7 @@ async function uploadAttempt(
         console.log("Document successfully uploaded!");
 
         //Call function to check for leaderboard update
-        handleLeaderboardUpdate(
-          uploadData,
-          drillInfo,
-          currentLeaderboard,
-          teamId,
-          drillId,
-          userId,
-          queryClient,
-        );
+        handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
 
         //Check if drill was assigned
         if (assignedTime) {
@@ -153,84 +145,52 @@ async function uploadAttempt(
 }
 
 //A function to check leaderboard and update if needed
-function handleLeaderboardUpdate(
-  uploadData,
-  drillInfo,
-  currentLeaderboard,
-  teamId,
-  drillId,
-  userId,
-  queryClient,
-) {
-  const leaderboardData = currentLeaderboard;
-  const invalidateKeys = [
-    ["user"],
-    ["drillInfo"],
-    ["best_attempts", teamId, drillId], // keep teamId param as it is a string argument in useLeaderboard's query key
-    ["attempts", { drillId }], // stats pages
-    ["attempts", { userId }], // for profile index (list of drill types)
-  ];
+function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
+  const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
   //check if the user exists on the leaderboard
-  if (leaderboardData[uploadData.uid] == undefined) {
+  if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    uploadNewLeaderboard(
-      drillInfo.mainOutputAttempt,
-      uploadData.uid,
-      uploadData.did,
-      uploadData[drillInfo.mainOutputAttempt],
-      uploadData.id,
-    );
-    // invalidate cache after successful upload
-    invalidateMultipleKeys(queryClient, invalidateKeys);
+    uploadNewLeaderboard(mainOutputAttempt, uploadData);
   } else {
     //used if an attempt already exists
     const currentBest =
-      leaderboardData[uploadData.uid]?.[drillInfo.mainOutputAttempt]?.value;
+      currentLeaderboard[uploadData.uid][mainOutputAttempt].value;
 
-    const lowerIsBetter =
-      drillInfo.aggOutputs[drillInfo.mainOutputAttempt].lowerIsBetter;
+    const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
 
     //conditional for determining if update is needed
     const isNewAttemptBest = lowerIsBetter
-      ? uploadData[drillInfo.mainOutputAttempt] < currentBest
-      : uploadData[drillInfo.mainOutputAttempt] > currentBest;
+      ? uploadData[mainOutputAttempt] < currentBest
+      : uploadData[mainOutputAttempt] > currentBest;
 
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      uploadNewLeaderboard(
-        drillInfo.mainOutputAttempt,
-        uploadData.uid,
-        uploadData.did,
-        uploadData[drillInfo.mainOutputAttempt],
-        uploadData.id,
-      );
-      // invalidate cache after successful upload
-      invalidateMultipleKeys(queryClient, invalidateKeys);
+      uploadNewLeaderboard(mainOutputAttempt, uploadData);
     } else {
       console.log("Didn't update");
     }
   }
 }
 
-async function uploadNewLeaderboard(
-  mainOutputAttempt,
-  uid,
-  did,
-  newValue,
-  attemptId,
-) {
+async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
+  const drillId = uploadData.did;
+  const userId = uploadData.uid;
+  const attemptId = uploadData.id;
+  const attemptValue = uploadData[mainOutputAttempt];
+  console.log(userId);
+
   const newAttempt = {
     [mainOutputAttempt]: {
       id: attemptId,
-      value: newValue,
+      value: attemptValue,
     },
   };
 
   //Reference to best_attempts drill document
-  const bestAttemptsDrillRef = doc(db, "teams", "1", "best_attempts", did);
+  const bestAttemptsDrillRef = doc(db, "teams", "1", "best_attempts", drillId);
 
   try {
     console.log("LEADERBOARD UPDATE STARTED");
@@ -248,7 +208,7 @@ async function uploadNewLeaderboard(
           throw "Document does not exist!";
         }
         transaction.update(bestAttemptsDrillRef, {
-          [uid]: newAttempt,
+          [userId]: newAttempt,
         });
       });
       console.log("Transaction (leaderboard update) successfully committed!");
@@ -651,6 +611,18 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //Function to handle "Next shot" button click
   const handleButtonClick = () => {
+    // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
+    // useAttempts / useDrillInfo hooks
+    const userId = currentUserId;
+    const drillId = did;
+    const invalidateKeys = [
+      ["user"],
+      ["drillInfo"],
+      ["best_attempts", currentTeamId, drillId], // keep currentTeamId param as it is a string argument in useLeaderboard's query key
+      ["attempts", { drillId }], // stats pages
+      ["attempts", { userId }], // for profile index (list of drill types)
+    ];
+
     //Check if all inputs have been filled in
     if (
       Object.keys(inputValues[displayedShot]).length !== numInputs ||
@@ -673,6 +645,8 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
       );
 
       setOutputData(outputData);
+      // invalidate cache on button press
+      invalidateMultipleKeys(queryClient, invalidateKeys);
       uploadAttempt(
         outputData,
         currentUserId,
@@ -697,11 +671,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
   }
 
   if (leaderboardError) {
-    return (
-      <ErrorComponent
-        message={[userError, drillError, attemptError, leaderboardError]}
-      />
-    );
+    return <ErrorComponent message={[leaderboardError]} />;
   }
 
   return (
