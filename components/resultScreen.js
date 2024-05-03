@@ -65,7 +65,6 @@ export default function ResultScreen({
       paddingHorizontal: 10,
       flexDirection: "row",
       justifyContent: "space-between",
-      alignItems: "center",
     };
     if (idx !== Object.keys(drillInfo["aggOutputs"]).length - 1) {
       styles.borderColor = "#ddd";
@@ -90,7 +89,7 @@ export default function ResultScreen({
           {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
             <View style={getStyle(idx)} key={output}>
               <Text>{prettyTitle[output]}</Text>
-              <Text>{numTrunc(attempt[output])}</Text>
+              <Text>{numTrunc(attempt[output])} {drillInfo.aggOutputs[output].distanceMeasure}</Text>
             </View>
           ))}
         </View>
