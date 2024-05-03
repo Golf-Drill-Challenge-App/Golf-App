@@ -170,11 +170,10 @@ export default function Leaderboard() {
                   <View
                     style={{
                       flexDirection: "row",
-
-                      padding: 6,
+                      alignItems: "center",
                     }}
                   >
-                    <Text style={{ marginRight: 10, alignSelf: "center" }}>
+                    <Text style={{ width: 30 }}>
                       {leaderboardRanks[idx].toString()}.
                     </Text>
                     <Avatar.Text size={24} label="XD" />
