@@ -13,6 +13,7 @@ import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import { themeColors } from "../../../Constants";
 
 const DrillList = () => {
   const { currentUserId } = currentAuthContext();
@@ -139,14 +140,14 @@ const DrillList = () => {
             fontSize: 25,
             fontWeight: "bold",
             textAlign: "left",
-            marginTop: 10,
             marginLeft: 20,
+            backgroundColor: themeColors.background,
           }}
         >
           {title}
         </Text>
       )}
-      stickySectionHeadersEnabled={false}
+      stickySectionHeadersEnabled={true}
       refreshControl={
         // handle updating cache for another user list of drills
         <RefreshInvalidate invalidateKeys={invalidateKeys} />
