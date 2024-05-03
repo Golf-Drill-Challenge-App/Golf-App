@@ -7,6 +7,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
+import { Image } from "expo-image";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -16,7 +17,6 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
-  Image,
   Platform,
   Pressable,
   StyleSheet,

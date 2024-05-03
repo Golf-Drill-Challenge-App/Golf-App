@@ -1,8 +1,9 @@
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Image, Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Avatar, Icon, List, Searchbar, Text } from "react-native-paper";
+import { Icon, List, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
@@ -92,11 +93,9 @@ function Index() {
                 <Image
                   source={{
                     uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-                    resizeMode: "contain",
-                    width: 131,
-                    height: 75,
                   }}
-                  style={{ marginTop: 0 }}
+                  style={{ marginTop: 0, width: 131, height: 75 }}
+                  contentFit={"contain"}
                 />
               </View>
               <View style={{ alignItems: "center" }}>
@@ -148,10 +147,14 @@ function Index() {
                         paddingLeft: 20,
                       }}
                       left={() => (
-                        <Avatar.Image
-                          size={24}
+                        <Image
                           source={{
                             uri: user.pfp,
+                          }}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%", // to make it a circle
                           }}
                         />
                       )}
