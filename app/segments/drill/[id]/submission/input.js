@@ -844,7 +844,11 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
               {buttonDisplayHandler()}
 
               <Text
-                style={{ color: themeColors.accent, paddingBottom: Platform.OS === "android" ? 10 : 30, fontSize: 16, }}
+                style={{
+                  color: themeColors.accent,
+                  paddingBottom: Platform.OS === "android" ? 10 : 30,
+                  fontSize: 16,
+                }}
                 onPress={() => {
                   navModalRef.current?.present();
                 }}
