@@ -138,8 +138,9 @@ const DrillList = () => {
           style={{
             fontSize: 25,
             fontWeight: "bold",
-            textAlign: "center",
+            textAlign: "left",
             marginTop: 10,
+            marginLeft: 20,
           }}
         >
           {title}
