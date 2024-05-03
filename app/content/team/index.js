@@ -154,7 +154,7 @@ function Index() {
                           style={{
                             width: 24,
                             height: 24,
-                            borderRadius: "50%", // to make it a circle
+                            borderRadius: 12, // to make it a circle
                           }}
                         />
                       )}
