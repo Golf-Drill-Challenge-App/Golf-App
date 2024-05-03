@@ -60,7 +60,7 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
       const assignedData = docSnap.data()["assigned_data"];
       const updatedAssignedData = assignedData.map((assignment) => {
         if (
-          assignment.assignedTime === assignedTime &&
+          assignment.assignedTime == assignedTime &&
           assignment.drillId === drillId
         ) {
           return { ...assignment, completed: true, attemptId: attemptId };
