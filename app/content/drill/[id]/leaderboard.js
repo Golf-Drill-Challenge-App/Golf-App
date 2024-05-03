@@ -2,6 +2,7 @@ import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Avatar, Icon, List, Text } from "react-native-paper";
+import { prettyTitle } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -131,15 +132,6 @@ export default function Leaderboard() {
     );
   }
 
-  let title = {
-    proxHoleAverage: "Closest to the Hole",
-    sideLandingAverage: "Side Landing Average",
-    sideLandingTotal: "Side Landing",
-    carryDiffAverage: "Carry Difference Average",
-    strokesGained: "Total Strokes Gained",
-    strokesGainedAverage: "Average Strokes Gained",
-  };
-
   let leaderboardRanks = getLeaderboardRanks(
     orderedLeaderboard,
     leaderboardAttempts,
@@ -151,7 +143,7 @@ export default function Leaderboard() {
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
-        {title[drillInfo.mainOutputAttempt]}
+        {prettyTitle[drillInfo.mainOutputAttempt]}
       </Text>
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId, idx) => {
@@ -179,9 +171,18 @@ export default function Leaderboard() {
                     <Avatar.Text size={24} label="XD" />
                   </View>
                 )}
+                left={() => (
+                  <Avatar.Image
+                    size={24}
+                    source={{ uri: userInfo[userId]["pfp"] }}
+                  />
+                )}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text>{numTrunc(attempt["value"], true)} ft</Text>
+                    <Text>
+                      {numTrunc(attempt["value"], true)}{" "}
+                      {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
+                    </Text>
                     <Icon source="chevron-right" />
                   </View>
                 )}

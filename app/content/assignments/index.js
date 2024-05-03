@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { List, Text } from "react-native-paper";
+import { Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { formatDate } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
@@ -13,6 +13,7 @@ import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import { themeColors } from "../../../Constants";
 
 const DrillList = () => {
   const { currentUserId } = currentAuthContext();
@@ -91,13 +92,14 @@ const DrillList = () => {
           <View style={{ marginLeft: 20, marginRight: 20 }}>
             <View
               style={{
+                flexDirection: "row",
                 borderWidth: 1,
                 borderColor: "rgba(0,0,0,0.2)",
                 alignItems: "center",
                 justifyContent: "space-between",
                 width: "100%",
                 height: 65,
-                backgroundColor: `${!assignment.completed ? "#fff" : "#89E894"}`,
+                backgroundColor: "rgb(255,255,255)",
                 borderRadius: 20,
                 marginBottom: 10,
                 paddingLeft: 30,
@@ -106,12 +108,28 @@ const DrillList = () => {
                 paddingBottom: 5,
               }}
             >
-              <Text style={{ fontSize: 20 }}>
-                {drillInfo[assignment.drillId]["drillType"]}
-              </Text>
-              <Text style={{ fontSize: 17, fontStyle: "italic" }}>
-                {drillInfo[assignment.drillId]["subType"]}
-              </Text>
+              <View style={{ flexDirection: "column" }}>
+                <Text style={{ fontSize: 20 }}>
+                  {drillInfo[assignment.drillId]["subType"]}
+                </Text>
+                <Text style={{ fontSize: 14, color: "grey" }}>
+                  {drillInfo[assignment.drillId]["drillType"]}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {assignment.completed && (
+                  <Icon source="check" size={28} color="green" />
+                )}
+                <View style={{ paddingLeft: 10 }}>
+                  <Icon source="chevron-right" size={20} />
+                </View>
+              </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -121,14 +139,16 @@ const DrillList = () => {
           style={{
             fontSize: 25,
             fontWeight: "bold",
-            textAlign: "center",
-            marginTop: 10,
+            textAlign: "left",
+            marginLeft: 20,
+            paddingBottom: 3,
+            backgroundColor: themeColors.background,
           }}
         >
           {title}
         </Text>
       )}
-      stickySectionHeadersEnabled={false}
+      stickySectionHeadersEnabled={true}
       refreshControl={
         // handle updating cache for another user list of drills
         <RefreshInvalidate invalidateKeys={invalidateKeys} />

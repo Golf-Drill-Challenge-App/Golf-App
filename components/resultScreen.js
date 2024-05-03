@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import ScatterChart from "react-native-scatter-chart";
-import { themeColors } from "~/Constants";
+import { prettyTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -65,7 +65,6 @@ export default function ResultScreen({
       paddingHorizontal: 10,
       flexDirection: "row",
       justifyContent: "space-between",
-      alignItems: "center",
     };
     if (idx !== Object.keys(drillInfo["aggOutputs"]).length - 1) {
       styles.borderColor = "#ddd";
@@ -73,15 +72,6 @@ export default function ResultScreen({
     }
     return styles;
   }
-
-  let title = {
-    carryDiffAverage: "Carry Difference Average",
-    proxHoleAverage: "Proximity-to-hole Average",
-    sideLandingAverage: "Side Landing Average",
-    sideLandingTotal: "Side Landing Total",
-    strokesGained: "Strokes Gained",
-    strokesGainedAverage: "Strokes Gained Average",
-  };
 
   return (
     <>
@@ -98,8 +88,11 @@ export default function ResultScreen({
         >
           {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
             <View style={getStyle(idx)} key={output}>
-              <Text>{title[output]}</Text>
-              <Text>{numTrunc(attempt[output])}</Text>
+              <Text>{prettyTitle[output]}</Text>
+              <Text>
+                {numTrunc(attempt[output])}{" "}
+                {drillInfo.aggOutputs[output].distanceMeasure}
+              </Text>
             </View>
           ))}
         </View>

@@ -133,7 +133,7 @@ export default function SignUp() {
               backgroundColor={themeColors.accent}
             >
               <Link asChild href={"/signin"}>
-                <Text style={styles.buttonText}>Back to SignIn</Text>
+                <Text style={styles.buttonText}>Back to Login</Text>
               </Link>
             </Pressable>
           </View>
