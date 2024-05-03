@@ -11,6 +11,7 @@ import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import { prettyTitle } from "~/Costants";
 
 function getLeaderboardRanks(
   orderedLeaderboard,
@@ -151,7 +152,7 @@ export default function Leaderboard() {
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
-        {title[drillInfo.mainOutputAttempt]}
+        {prettyTitle[drillInfo.mainOutputAttempt]}
       </Text>
       <List.Section style={{ marginLeft: 20 }}>
         {orderedLeaderboard.map((userId, idx) => {

@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
-import { themeColors } from "~/Constants";
+import { title, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
@@ -13,16 +13,6 @@ function Row({ name, value }) {
 }
 
 function DataField(field, value) {
-  let title = {
-    target: "Target",
-    sideLanding: "Side Landing",
-    proxHole: "Proximity to Hole",
-    baseline: "Baseline SG",
-    expectedPutts: "Expected Putts",
-    strokes: "Strokes",
-    break: "Break",
-    club: "Club",
-  };
   switch (field) {
     case "carry": //compound
       return (
@@ -48,27 +38,27 @@ function DataField(field, value) {
       );
     case "target":
       return (
-        <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
+        <Row key={field} name={prettyTitle[field]} value={`${numTrunc(value)} yd`} />
       );
     case "sideLanding":
       return (
-        <Row key={field} name={title[field]} value={`${numTrunc(value)} yd`} />
+        <Row key={field} name={prettyTitle[field]} value={`${numTrunc(value)} yd`} />
       );
     case "proxHole": //has units
       return (
-        <Row key={field} name={title[field]} value={`${numTrunc(value)} ft`} />
+        <Row key={field} name={prettyTitle[field]} value={`${numTrunc(value)} ft`} />
       );
     case "strokesGained": //just round to 3 decimals
-      return <Row key={field} name={title[field]} value={numTrunc(value)} />;
+      return <Row key={field} name={prettyTitle[field]} value={numTrunc(value)} />;
     case "strokes": //just round to 3 decimals
-      return <Row key={field} name={title[field]} value={value} />;
+      return <Row key={field} name={prettyTitle[field]} value={value} />;
     case "break": //just round to 3 decimals
-      return <Row key={field} name={title[field]} value={value} />;
+      return <Row key={field} name={prettyTitle[field]} value={value} />;
     default:
       return (
         <Row
           key={field}
-          name={field in title ? title[field] : field}
+          name={field in title ? prettyTitle[field] : field}
           value={value}
         />
       );
