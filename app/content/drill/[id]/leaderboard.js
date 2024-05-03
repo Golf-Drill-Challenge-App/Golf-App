@@ -145,7 +145,7 @@ export default function Leaderboard() {
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
         {prettyTitle[drillInfo.mainOutputAttempt]}
       </Text>
-      <List.Section style={{ marginLeft: 20 }}>
+      <List.Section>
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];
           return (
@@ -155,6 +155,7 @@ export default function Leaderboard() {
                 pathname: `${currentPath}/attempts/${attempt["id"]}`,
               }}
               asChild
+              style={{ paddingLeft: 20 }}
             >
               <List.Item
                 title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}

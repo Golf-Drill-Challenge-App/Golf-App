@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColors } from "~/Constants";
 import { formatDate } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -13,7 +14,6 @@ import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { themeColors } from "../../../Constants";
 
 const DrillList = () => {
   const { currentUserId } = currentAuthContext();
@@ -99,7 +99,7 @@ const DrillList = () => {
                 justifyContent: "space-between",
                 width: "100%",
                 height: 65,
-                backgroundColor: "rgb(255,255,255)",
+                backgroundColor: themeColors.highlight,
                 borderRadius: 20,
                 marginBottom: 10,
                 paddingLeft: 30,

@@ -67,7 +67,7 @@ export default function ResultScreen({
       justifyContent: "space-between",
     };
     if (idx !== Object.keys(drillInfo["aggOutputs"]).length - 1) {
-      styles.borderColor = "#ddd";
+      styles.borderColor = themeColors.border;
       styles.borderBottomWidth = 1;
     }
     return styles;
@@ -82,7 +82,7 @@ export default function ResultScreen({
             margin: 10,
             backgroundColor: "#f5f5f5",
             borderWidth: 1,
-            borderColor: "#ddd",
+            borderColor: themeColors.border,
             borderRadius: 8,
           }}
         >
@@ -103,7 +103,7 @@ export default function ResultScreen({
             <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
               <ScatterChart
                 style={styles.chart}
-                backgroundColor="#ffffff"
+                backgroundColor={themeColors.highlight}
                 data={[
                   {
                     color: "blue",
@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   container: {
-    padding: 20,
     paddingBottom: 0,
   },
   header: {

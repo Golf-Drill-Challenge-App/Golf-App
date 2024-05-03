@@ -2,7 +2,7 @@ import { ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 import RefreshInvalidate from "./refreshInvalidate";
 
-function EmptyScreen({ invalidateKeys, text }) {
+function EmptyScreen({ invalidateKeys, text, preChild = () => {} }) {
   return (
     <ScrollView
       refreshControl={
@@ -11,6 +11,7 @@ function EmptyScreen({ invalidateKeys, text }) {
       }
       contentContainerStyle={{ flex: 1 }}
     >
+      {preChild()}
       <View
         style={{
           flex: 1,

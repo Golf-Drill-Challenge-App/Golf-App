@@ -253,7 +253,7 @@ function Index() {
       borderRadius: 15, // half of the width and height to make it a circle
       borderWidth: 1, // add border
       borderColor: "black", // border color
-      backgroundColor: "#d6d6d6",
+      backgroundColor: themeColors.highlight,
       justifyContent: "center",
       alignItems: "center",
     },

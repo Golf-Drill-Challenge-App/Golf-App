@@ -1,9 +1,13 @@
 import { View } from "react-native";
 import { Appbar, Text } from "react-native-paper";
+import { themeColors } from "~/Constants";
 
 function Header({ title, subTitle, preChildren, postChildren }) {
   return (
-    <Appbar.Header statusBarHeight={0} style={{ backgroundColor: "#F2F2F2" }}>
+    <Appbar.Header
+      statusBarHeight={0}
+      style={{ backgroundColor: themeColors.background }}
+    >
       {preChildren}
       <View
         style={{

@@ -96,13 +96,11 @@ function Index() {
             {profileHeader}
           </DrillList>
         ) : (
-          <>
-            {profileHeader}
-            <EmptyScreen
-              invalidateKeys={invalidateKeys}
-              text={"No drills attempted yet."}
-            />
-          </>
+          <EmptyScreen
+            invalidateKeys={invalidateKeys}
+            text={"No drills attempted yet."}
+            preChild={profileHeader}
+          />
         )}
       </SafeAreaView>
     </PaperWrapper>

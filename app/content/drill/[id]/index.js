@@ -59,10 +59,15 @@ export default function Index() {
         <SegmentedButtons
           value={value}
           onValueChange={setValue}
-          style={{ marginLeft: 10, marginRight: 10, paddingBottom: 10 }}
+          style={{
+            marginLeft: 10,
+            marginRight: 10,
+            backgroundColor: themeColors.highlight,
+            borderRadius: "50%",
+          }}
           theme={{
             colors: {
-              secondaryContainer: themeColors.highlight,
+              secondaryContainer: themeColors.overlay,
             },
           }}
           buttons={[

@@ -128,7 +128,7 @@ function Index() {
                   style={{
                     marginLeft: 20,
                     marginRight: 20,
-                    backgroundColor: "#fff",
+                    backgroundColor: themeColors.highlight,
                     borderWidth: 1,
                     borderColor: themeColors.border,
                   }}

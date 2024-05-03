@@ -142,7 +142,7 @@ function ShotAccordion(props) {
           </View>
         )}
         style={{
-          backgroundColor: themeColors.background,
+          backgroundColor: themeColors.highlight,
           borderWidth: 1,
           borderColor: themeColors.border,
           borderRadius: 8,
