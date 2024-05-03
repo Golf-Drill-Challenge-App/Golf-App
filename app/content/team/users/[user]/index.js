@@ -98,6 +98,9 @@ function Index() {
   const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
   const hideRemoveDialog = () => setRemoveDialogVisible(false);
 
+  const [blacklistDialogVisible, setBlacklistDialogVisible] = useState(false);
+  const hideBlacklistDialog = () => setBlacklistDialogVisible(false);
+
   const { currentUserId } = currentAuthContext();
 
   //Used for Displaying coach/owner view
@@ -240,7 +243,14 @@ function Index() {
                   title="Remove"
                 />
                 <Divider />
-                <Menu.Item onPress={() => {}} title="Item 3" />
+                <Menu.Item
+                  leadingIcon="account-lock-outline"
+                  onPress={() => {
+                    setMenuVisible(false);
+                    setBlacklistDialogVisible(true);
+                  }}
+                  title="Blacklist"
+                />
               </Menu>
             ) : (
               <></>
@@ -266,6 +276,7 @@ function Index() {
             }}
           />
         )}
+        {/* Remove user dialog */}
         <DialogComponent
           title={"Alert"}
           content="All data will be lost when this user is removed."
@@ -277,6 +288,24 @@ function Index() {
             () => {
               removeUser(userId);
               queryClient.invalidateQueries("user"); //invalidate cache
+              navigation.goBack();
+            },
+          ]}
+        />
+        {/* Blacklist user dialog */}
+        <DialogComponent
+          title={"Alert"}
+          content="Blacklisting this user will delete all their data and prevent them from joining the team."
+          visible={blacklistDialogVisible}
+          onHide={hideBlacklistDialog}
+          buttons={["Cancel", "Blacklist User"]}
+          buttonsFunctions={[
+            hideBlacklistDialog,
+            () => {
+              //TODO: Call removeUser
+              //TODO: add user ID to blacklist table
+              //TODO: Invalidate user cache
+              console.log("Blacklist not impliemented");
               navigation.goBack();
             },
           ]}
