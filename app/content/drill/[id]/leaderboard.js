@@ -1,7 +1,7 @@
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Avatar, Icon, List, Text } from "react-native-paper";
+import { Avatar, Divider, Icon, List, Text } from "react-native-paper";
 import { prettyTitle } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
@@ -145,47 +145,94 @@ export default function Leaderboard() {
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
         {prettyTitle[drillInfo.mainOutputAttempt]}
       </Text>
-      <List.Section>
+      <View
+        style={{
+          backgroundColor: "#ffffff",
+          borderRadius: 8,
+          padding: 16,
+          margin: 5,
+          width: 200,
+          justifyContent: "center",
+          alignSelf: "center",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            marginBottom: 8,
+          }}
+        >
+          All Time Record
+        </Text>
+        <Icon source="trophy-variant-outline" size={40} />
+
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 4,
+          }}
+        >
+          Patrick Maholmes
+        </Text>
+        <Text style={{ fontSize: 16 }}>101.362 ft</Text>
+        <Text style={{ fontSize: 12 }}>Apr 2, 2024</Text>
+      </View>
+      <List.Section
+        style={{ backgroundColor: "#ffffff", margin: 5, borderRadius: 5 }}
+      >
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];
           return (
-            <Link
-              key={userId}
-              href={{
-                pathname: `${currentPath}/attempts/${attempt["id"]}`,
-              }}
-              asChild
-              style={{ paddingLeft: 20 }}
-            >
-              <List.Item
-                title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
-                left={() => (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={{ width: 30 }}>
-                      {leaderboardRanks[idx].toString()}.
-                    </Text>
-                    <Avatar.Image
-                      size={24}
-                      source={{ uri: userInfo[userId]["pfp"] }}
-                    />
-                  </View>
-                )}
-                right={() => (
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text>
-                      {numTrunc(attempt["value"], true)}{" "}
-                      {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
-                    </Text>
-                    <Icon source="chevron-right" />
-                  </View>
-                )}
-              />
-            </Link>
+            <View>
+              <Link
+                key={userId}
+                href={{
+                  pathname: `${currentPath}/attempts/${attempt["id"]}`,
+                }}
+                asChild
+                style={{ paddingLeft: 20 }}
+              >
+                <List.Item
+                  title={
+                    userInfo[userId] ? userInfo[userId]["name"] : "Unknown"
+                  }
+                  left={() => (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text style={{ width: 30 }}>
+                        {leaderboardRanks[idx].toString()}.
+                      </Text>
+                      <Avatar.Image
+                        size={24}
+                        source={{ uri: userInfo[userId]["pfp"] }}
+                      />
+                    </View>
+                  )}
+                  right={() => (
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text>
+                        {numTrunc(attempt["value"], true)}{" "}
+                        {
+                          drillInfo.aggOutputs[mainOutputAttempt]
+                            .distanceMeasure
+                        }
+                      </Text>
+                      <Icon source="chevron-right" />
+                    </View>
+                  )}
+                />
+              </Link>
+              <Divider />
+            </View>
           );
         })}
       </List.Section>
