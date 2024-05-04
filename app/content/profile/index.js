@@ -14,7 +14,6 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import {
-  Image,
   Platform,
   Pressable,
   StyleSheet,
@@ -24,7 +23,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Appbar } from "react-native-paper";
+import { Image } from "react-native-expo-image-cache";
+import { Appbar, Snackbar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -356,11 +356,8 @@ function Index() {
                 >
                   {/* Profile Picture */}
                   <TouchableOpacity onPress={handleImageClick}>
-                    <View style={styles.profilePictureContainer}>
-                      <Image
-                        source={{ uri: userData.pfp }}
-                        style={styles.profilePicture}
-                      />
+                    <View style={styles.profilePictureContainer}>                    <Image uri={userData.pfp} style={styles.profilePicture} />
+
                       <View style={styles.penIconContainer}>
                         <MaterialIcons name="edit" size={24} color="black" />
                       </View>

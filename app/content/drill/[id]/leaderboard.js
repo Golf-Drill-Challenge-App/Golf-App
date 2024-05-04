@@ -1,7 +1,8 @@
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Avatar, Icon, List, Text } from "react-native-paper";
+import { Image } from "react-native-expo-image-cache";
+import { Icon, List, Text } from "react-native-paper";
 import { prettyTitle } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
@@ -147,9 +148,13 @@ export default function Leaderboard() {
                     <Text style={{ width: 30 }}>
                       {leaderboardRanks[idx].toString()}.
                     </Text>
-                    <Avatar.Image
-                      size={24}
-                      source={{ uri: userInfo[userId]["pfp"] }}
+                    <Image
+                      style={{
+                        height: 24,
+                        width: 24,
+                        borderRadius: 12,
+                      }}
+                      uri={userInfo[userId]["pfp"]}
                     />
                   </View>
                 )}
