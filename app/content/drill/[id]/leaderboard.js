@@ -169,14 +169,11 @@ export default function Leaderboard() {
                     <Text style={{ width: 30 }}>
                       {leaderboardRanks[idx].toString()}.
                     </Text>
-                    <Avatar.Text size={24} label="XD" />
+                    <Avatar.Image
+                      size={24}
+                      source={{ uri: userInfo[userId]["pfp"] }}
+                    />
                   </View>
-                )}
-                left={() => (
-                  <Avatar.Image
-                    size={24}
-                    source={{ uri: userInfo[userId]["pfp"] }}
-                  />
                 )}
                 right={() => (
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
