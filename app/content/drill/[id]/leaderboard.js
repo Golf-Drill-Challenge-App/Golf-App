@@ -2,12 +2,13 @@ import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Avatar, Divider, Icon, List, Text } from "react-native-paper";
-import { prettyTitle } from "~/Constants";
-import { numTrunc } from "~/Utility";
+import { prettyTitle, themeColors } from "~/Constants";
+import { formatDate, numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useAllTimeRecords } from "~/hooks/useAllTimeRecords";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
@@ -62,6 +63,12 @@ export default function Leaderboard() {
   } = useDrillInfo(drillId);
 
   const {
+    data: allTimeInfo,
+    allTimeRecordIsLoading: allTimeRecordIsLoading,
+    allTimeRecordError: allTimeRecordError,
+  } = useAllTimeRecords(drillId);
+
+  const {
     data: preCalcLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
@@ -88,12 +95,19 @@ export default function Leaderboard() {
     userIsLoading ||
     drillIsLoading ||
     attemptIsLoading ||
-    leaderboardIsLoading
+    leaderboardIsLoading ||
+    allTimeRecordIsLoading
   ) {
     return <Loading />;
   }
 
-  if (userError || drillError || attemptError || leaderboardError) {
+  if (
+    userError ||
+    drillError ||
+    attemptError ||
+    leaderboardError ||
+    allTimeRecordError
+  ) {
     return (
       <ErrorComponent
         message={[userError, drillError, attemptError, leaderboardError]}
@@ -138,6 +152,8 @@ export default function Leaderboard() {
     mainOutputAttempt,
   );
 
+  console.log("All Time Record: ", allTimeInfo);
+
   return (
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
@@ -147,7 +163,7 @@ export default function Leaderboard() {
       </Text>
       <View
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: themeColors.highlight,
           borderRadius: 8,
           padding: 16,
           margin: 5,
@@ -175,13 +191,19 @@ export default function Leaderboard() {
             marginBottom: 4,
           }}
         >
-          Patrick Maholmes
+          {allTimeInfo.name}
         </Text>
-        <Text style={{ fontSize: 16 }}>101.362 ft</Text>
-        <Text style={{ fontSize: 12 }}>Apr 2, 2024</Text>
+        <Text style={{ fontSize: 16 }}>
+          {numTrunc(allTimeInfo.value, true)} {allTimeInfo.distanceMeasure}
+        </Text>
+        <Text style={{ fontSize: 12 }}>{formatDate(allTimeInfo.time)}</Text>
       </View>
       <List.Section
-        style={{ backgroundColor: "#ffffff", margin: 5, borderRadius: 5 }}
+        style={{
+          backgroundColor: themeColors.highlight,
+          margin: 5,
+          borderRadius: 5,
+        }}
       >
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboardAttempts[userId][mainOutputAttempt];
