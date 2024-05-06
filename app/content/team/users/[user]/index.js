@@ -7,6 +7,7 @@ import {
   doc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -28,6 +29,18 @@ import { db } from "~/firebaseConfig";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+
+//A function to add a user to the blacklist table with a timestamp
+async function blacklistUser(userId, userData) {
+  //Create new document with userId as the id and a time field
+  await setDoc(doc(db, "teams", "1", "blacklist", userId), {
+    time: Date.now(),
+    name: userData["name"],
+  });
+
+  //remove users data
+  removeUser(userId);
+}
 
 async function removeUser(userId) {
   //Remove all attempts from attempts table with UID == userID
@@ -287,7 +300,7 @@ function Index() {
             hideRemoveDialog,
             () => {
               removeUser(userId);
-              queryClient.invalidateQueries("user"); //invalidate cache
+              queryClient.invalidateQueries(["user"]); //invalidate cache
               navigation.goBack();
             },
           ]}
@@ -295,17 +308,15 @@ function Index() {
         {/* Blacklist user dialog */}
         <DialogComponent
           title={"Alert"}
-          content="Blacklisting this user will delete all their data and prevent them from joining the team."
+          content="Blacklisting this user will delete all their data and prevent them from joining the team again."
           visible={blacklistDialogVisible}
           onHide={hideBlacklistDialog}
           buttons={["Cancel", "Blacklist User"]}
           buttonsFunctions={[
             hideBlacklistDialog,
             () => {
-              //TODO: Call removeUser
-              //TODO: add user ID to blacklist table
-              //TODO: Invalidate user cache
-              console.log("Blacklist not impliemented");
+              blacklistUser(userId, userData);
+              queryClient.invalidateQueries(["user"]); //invalidate cache
               navigation.goBack();
             },
           ]}
