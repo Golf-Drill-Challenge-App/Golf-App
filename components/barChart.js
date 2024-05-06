@@ -23,15 +23,15 @@ import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
 
 export default function BarChartScreen({
-  drillData,
+                                         drillAttempts,
   drillInfo,
   invalidateKeys,
 }) {
   useEffect(() => {
-    console.log("rendering barchart for: ", drillId);
+    console.log("rendering barchart for: ", drillInfo["did"]);
     LogBox.ignoreLogs(["VirtualizedLists"]);
   }, []);
-  if (drillData.length === 0) {
+  if (drillAttempts.length === 0) {
     return (
       <EmptyScreen
         invalidateKeys={invalidateKeys}
