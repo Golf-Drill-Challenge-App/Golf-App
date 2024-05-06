@@ -5,6 +5,7 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
+import { SaveFormat, manipulateAsync } from "expo-image-manipulator";
 import { MediaTypeOptions, launchImageLibraryAsync } from "expo-image-picker";
 import {
   getAuth,
@@ -177,19 +178,30 @@ function Index() {
     }
   };
 
-  // Function to handle uploading image locally
+  // Function to resize the uploaded image
+  const resizeImage = async (uri) => {
+    const manipResult = await manipulateAsync(
+      uri,
+      [{ resize: { width: 300 } }], // Adjust the width as needed; height is adjusted automatically to maintain aspect ratio.
+      { /*compress: 0.7,*/ format: SaveFormat.JPEG }, // Uncomment the 'compress' property in case we decide to further reduce the quality.
+    );
+    return manipResult.uri;
+  };
+
+  // Function to handle image upload
   const handleImageUpload = async () => {
     let imageResult = await launchImageLibraryAsync({
       mediaTypes: MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
     // console.log(imageResult);
 
     if (!imageResult.canceled) {
-      await firebaseProfileImageUpload(imageResult.assets[0].uri);
+      const resizedUri = await resizeImage(imageResult.assets[0].uri);
+      await firebaseProfileImageUpload(resizedUri);
     }
   };
 
