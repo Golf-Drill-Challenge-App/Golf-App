@@ -302,7 +302,7 @@ function Index() {
     modalContent: {
       paddingHorizontal: 30, // Increase padding for more spacing
       paddingBottom:
-        insets.bottom + insets.top + Platform.OS === "android" ? 60 : 80,
+        insets.bottom + insets.top + Platform.OS === "android" ? 60 : 110,
       alignItems: "center",
     },
     profilePictureContainer: {
