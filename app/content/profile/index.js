@@ -368,20 +368,11 @@ function Index() {
       color: themeColors.accent,
       fontSize: 16,
     },
-    activityIndicatorOverlay: {
-      flex: 1,
-      backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black background
-      justifyContent: "center",
-      alignItems: "center",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 1, // Ensure the overlay is on top of other components
-    },
     activityIndicator: {
       alignSelf: "center",
+      width: "100%",
+      height: "100%",
+      borderRadius: 60,
     },
   });
   const profileHeader = (
@@ -435,25 +426,23 @@ function Index() {
                   keyboardShouldPersistTaps="handled"
                 >
                   {/* Profile Picture */}
-                  <TouchableOpacity onPress={handleImageClick}>
-                    <View style={styles.profilePictureContainer}>                    <Image uri={userData.pfp} style={styles.profilePicture} />
-
+                  <TouchableOpacity onPress={handleImageUpload}>
+                    <View style={styles.profilePictureContainer}>
+                      {imageUploading ? (
+                        <ActivityIndicator
+                          animating={imageUploading}
+                          size="large"
+                          color={themeColors.accent}
+                          style={styles.activityIndicator}
+                        />
+                      ) : (
+                        <Image uri={userData.pfp} style={styles.profilePicture} />
+                      )}
                       <View style={styles.penIconContainer}>
                         <MaterialIcons name="edit" size={24} color="black" />
                       </View>
                     </View>
                   </TouchableOpacity>
-
-              {imageUploading && (
-                <View style={styles.activityIndicatorOverlay}>
-                  <ActivityIndicator
-                    animating={imageUploading}
-                    size="large"
-                    color={themeColors.accent}
-                    style={styles.activityIndicator}
-                  />
-                </View>
-              )}
 
               {/* Display Email */}
               <View style={styles.emailContainer}>
