@@ -135,8 +135,6 @@ export default function Leaderboard() {
     mainOutputAttempt,
   );
 
-  console.log("All Time Record: ", allTimeInfo);
-
   return (
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
