@@ -9,10 +9,20 @@ import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useUserInfo } from "~/hooks/useUserInfo";
+import { currentAuthContext } from "~/context/Auth";
+
 
 export default function Description() {
   const drillId = useLocalSearchParams()["id"];
   const assignedTime = useLocalSearchParams()["assignedTime"];
+
+  const { currentUserId } = currentAuthContext();
+  const {
+    data: userInfo,
+    userError: userInfoError,
+    userIsLoading: userIsLoading,
+  } = useUserInfo(currentUserId);
 
   const {
     data: drillInfo,
@@ -22,7 +32,9 @@ export default function Description() {
 
   const invalidateKeys = [["drillInfo", { drillId }]];
 
-  if (drillInfoIsLoading) return <Loading />;
+
+
+  if (drillInfoIsLoading || userIsLoading) return <Loading />;
 
   if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
 
@@ -36,7 +48,7 @@ export default function Description() {
       </ScrollView>
       <Link
         href={{
-          pathname: `/segments/drill/${drillId}/submission`,
+          pathname: `/segments/drill/${drillId}/${drillInfo.user == 'player' ? 'submission' : 'assignment'}`,
           params: { assignedTime: assignedTime },
         }}
         asChild
@@ -58,7 +70,7 @@ export default function Description() {
           buttonColor={themeColors.accent}
           textColor="white"
         >
-          Start Drill
+          {userInfo.role == 'player' ? 'Start Drill' : 'Assign Drill'}
         </Button>
       </Link>
     </>
