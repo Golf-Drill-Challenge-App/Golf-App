@@ -107,7 +107,7 @@ async function uploadAttempt(
     //upload the data
     await setDoc(newAttemptRef, uploadData)
       .then(() => {
-        console.log("Document successfully uploaded!");
+        console.log("Attempt successfully uploaded!");
 
         //Call function to check for leaderboard update
         handleLeaderboardUpdate(
@@ -163,8 +163,6 @@ function handleLeaderboardUpdate(
 
       uploadNewLeaderboard(mainOutputAttempt, uploadData);
       handleRecordUpdate(uploadData, drillInfo, userInfo);
-    } else {
-      console.log("Didn't update");
     }
   }
 }
@@ -227,16 +225,11 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
 
   const docSnap = await getDoc(recordRef);
 
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-  }
   //Determine if lower is better
   const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
 
   //Check if record needs to be updated
   const currentRecord = docSnap.data();
-
-  console.log("Current Record: ", currentRecord["value"]);
 
   const isNewAttemptBest = lowerIsBetter
     ? uploadData[mainOutputAttempt] < currentRecord["value"]
