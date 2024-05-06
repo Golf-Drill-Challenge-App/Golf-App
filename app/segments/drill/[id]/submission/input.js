@@ -205,7 +205,7 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
   }
 }
 
-//TODO: Create a function to check if the all time record needs to be updated
+//A function to check if the all time record needs to be updated
 async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -230,7 +230,7 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
   }
 }
 
-//TODO: Create a function to update the all time record
+//A function to update the all time record
 async function uploadNewRecord(uploadData, drillInfo, currentRecord, userInfo) {
   //Create new Record object
   const newRecord = {
