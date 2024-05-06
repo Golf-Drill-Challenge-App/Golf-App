@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
-import { prettyTitle, themeColors } from "~/Constants";
+import { prettyTitle, shortTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 
 function Row({ name, value }) {
@@ -83,8 +83,6 @@ function ShotAccordion(props) {
   return (
     <View
       style={{
-        marginLeft: 11,
-        marginRight: 11,
         marginBottom: 9,
       }}
     >
@@ -102,30 +100,56 @@ function ShotAccordion(props) {
               width: "90%",
               flexDirection: "row",
               alignItems: "center",
-              marginLeft: 20,
+              paddingLeft: 20,
             }}
           >
-            <Text
+            <View
               style={{
-                width: "31%",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                flex: 1,
+                flexGrow: 1,
+                marginRight: 10,
               }}
             >
-              <Text style={styles.boldText}>Shot: {props.shot["sid"]}</Text>/
-              {props.total}
-            </Text>
-            <Text
+              <Text style={styles.boldText}>Shot: </Text>
+              <Text>
+                <Text style={styles.boldText}>{props.shot["sid"]}</Text>/
+                {props.total}
+              </Text>
+            </View>
+            <View
               style={{
-                width: "41%",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                flex: 1,
+                flexGrow: 1.5,
               }}
             >
-              <Text style={styles.boldText}>Target:</Text>{" "}
-              {props.shot[props.drillInfo.requirements[0].name]}{" "}
-              {props.drillInfo.requirements[0].distanceMeasure}
-            </Text>
-            <Text>
-              <Text style={styles.boldText}>SG:</Text>{" "}
-              {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
-            </Text>
+              <Text style={styles.boldText}>
+                {prettyTitle[props.drillInfo.requirements[0].name]}:{" "}
+              </Text>
+              <Text>
+                {props.shot[props.drillInfo.requirements[0].name]}{" "}
+                {props.drillInfo.requirements[0].distanceMeasure}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                flex: 1,
+                flexGrow: 1,
+                marginLeft: 10,
+              }}
+            >
+              <Text style={styles.boldText}>
+                {shortTitle[props.drillInfo["mainOutputShot"]]}:{" "}
+              </Text>
+              <Text>
+                {numTrunc(props.shot[props.drillInfo["mainOutputShot"]])}
+              </Text>
+            </View>
           </View>
         )}
         right={({ isExpanded }) => (
@@ -163,11 +187,6 @@ function ShotAccordion(props) {
                   target: props.shot["target"],
                   carryDiff: props.shot["carryDiff"],
                 });
-              case "strokesTaken":
-                return DataField(field, props.shot["strokes"]);
-              case "break":
-                return DataField(field, props.shot["break"]);
-              case "strokesGained":
               case "carryDiff":
                 return null;
               default:

@@ -34,11 +34,10 @@ export default function Stat() {
   if (drillInfoError || drillAttemptsError) {
     return <ErrorComponent errorList={[drillInfoError, drillAttemptsError]} />;
   }
-  // console.log(drillAttempts);
 
   return (
     <BarChartScreen
-      drillData={drillAttempts}
+      drillAttempts={drillAttempts}
       drillInfo={drillInfo}
       invalidateKeys={invalidateKeys}
     />

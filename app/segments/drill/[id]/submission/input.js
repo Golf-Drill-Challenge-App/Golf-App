@@ -663,8 +663,8 @@ export default function Input({ setToggleResult, setOutputData }) {
         <View style={{ height: "100%" }}>
           <BottomSheetModalProvider>
             <Header
-              title={drillInfo.drillType}
-              subTitle={drillInfo.subType}
+              title={drillInfo.subType}
+              subTitle={drillInfo.drillType}
               preChildren={
                 <Appbar.Action
                   icon="close"

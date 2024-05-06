@@ -71,23 +71,22 @@ export default function SignUp() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <View style={styles.container}>
-        <Image
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-            resizeMode: "contain",
-            width: 131,
-            height: 75,
-          }}
-          style={[styles.image]}
-        />
-        <Text style={[styles.title]}>Oregon State Golf</Text>
-
-        <KeyboardAwareScrollView
-          // allows opening links from search results without closing keyboard first
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
+      <KeyboardAwareScrollView
+        // allows opening links from search results without closing keyboard first
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <Image
+            source={{
+              uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+              resizeMode: "contain",
+              width: 131,
+              height: 75,
+            }}
+            style={[styles.image]}
+          />
+          <Text style={[styles.title]}>Oregon State Golf</Text>
           <View style={[styles.inputView]}>
             <Text style={[styles.placeholderText]}>Name</Text>
             <TextInput
@@ -138,8 +137,8 @@ export default function SignUp() {
               </Link>
             </Pressable>
           </View>
-        </KeyboardAwareScrollView>
-      </View>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -148,7 +147,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginTop: 100,
+    marginTop: 50,
+    marginBottom: 50,
   },
   image: {
     marginTop: 0,
