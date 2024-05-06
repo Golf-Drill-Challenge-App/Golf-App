@@ -26,7 +26,7 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "react-native-expo-image-cache";
-import { Appbar, Button, Portal, Snackbar, ActivityIndicator,Modal, } from "react-native-paper";
+import { Appbar, Snackbar, ActivityIndicator } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -106,9 +106,6 @@ function Index() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
-
-  const [isImageUploadModalVisible, setIsImageUploadModalVisible] =
-    useState(false);
   const [imageUploading, setImageUploading] = useState(false);
 
   useEffect(() => {
@@ -141,15 +138,6 @@ function Index() {
   const uniqueDrills = Object.keys(userLeaderboard).map(
     (drillId) => drillInfo[drillId],
   );
-
-  const handleImageClick = () => {
-    setIsImageUploadModalVisible(true);
-  };
-
-  // Function to handle closing the image upload modal
-  const hideImageUploadModal = () => {
-    setIsImageUploadModalVisible(false);
-  };
 
   const firebaseProfileImageUpload = async (uri) => {
     try {
@@ -203,8 +191,6 @@ function Index() {
     if (!imageResult.canceled) {
       await firebaseProfileImageUpload(imageResult.assets[0].uri);
     }
-    // Close the modal after image upload is done
-    setIsImageUploadModalVisible(false);
   };
 
   async function handleSignOut() {
@@ -370,35 +356,6 @@ function Index() {
       color: themeColors.accent,
       fontSize: 16,
     },
-    imageUploadModalContent: {
-      width: 300,
-      height: 160,
-      padding: 20,
-      backgroundColor: "white",
-      borderRadius: 10,
-      alignSelf: "center", // Center the modal horizontally
-    },
-    uploadModalTitle: {
-      fontSize: 19,
-      fontWeight: "bold",
-      marginBottom: 10,
-      alignSelf: "center",
-    },
-    buttonContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      marginTop: 20,
-      marginBottom: 10,
-    },
-    uploadButton: {
-      backgroundColor: themeColors.accent,
-      borderRadius: 8,
-      alignSelf: "center",
-    },
-    buttonLabel: {
-      fontSize: 18,
-      fontWeight: "bold",
-    },
     activityIndicatorOverlay: {
       flex: 1,
       backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black background
@@ -475,10 +432,21 @@ function Index() {
                     </View>
                   </TouchableOpacity>
 
-                  {/* Display Email */}
-                  <View style={styles.emailContainer}>
-                    <Text style={styles.emailText}>{email}</Text>
-                  </View>
+              {imageUploading && (
+                <View style={styles.activityIndicatorOverlay}>
+                  <ActivityIndicator
+                    animating={imageUploading}
+                    size="large"
+                    color={themeColors.accent}
+                    style={styles.activityIndicator}
+                  />
+                </View>
+              )}
+
+              {/* Display Email */}
+              <View style={styles.emailContainer}>
+                <Text style={styles.emailText}>{email}</Text>
+              </View>
 
                   {/* Name Update input field */}
                   <BottomSheetTextInput
