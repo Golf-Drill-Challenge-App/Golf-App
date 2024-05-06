@@ -150,37 +150,43 @@ export default function Leaderboard() {
           borderRadius: 8,
           padding: 16,
           margin: 5,
-          width: 200,
-          justifyContent: "center",
+          width: "90%",
+          justifyContent: "space-between",
           alignSelf: "center",
           display: "flex",
+          flexDirection: "row",
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            fontSize: 12,
-            marginBottom: 8,
-          }}
-        >
-          All Time Record
-        </Text>
-        <Icon source="trophy-variant-outline" size={40} />
+        <View style={{ width: "15%" }}>
+          <Icon source="trophy-variant-outline" size={40} />
+        </View>
+        <View style={{ width: "60%" }}>
+          <Text
+            style={{
+              fontSize: 12,
+            }}
+          >
+            All Time Record
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+            }}
+          >
+            {allTimeInfo.name}
+          </Text>
+          <Text style={{ fontSize: 12 }}>{formatDate(allTimeInfo.time)}</Text>
+        </View>
 
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: "bold",
-            marginBottom: 4,
-          }}
-        >
-          {allTimeInfo.name}
-        </Text>
-        <Text style={{ fontSize: 16 }}>
-          {numTrunc(allTimeInfo.value, true)} {allTimeInfo.distanceMeasure}
-        </Text>
-        <Text style={{ fontSize: 12 }}>{formatDate(allTimeInfo.time)}</Text>
+        <View style={{ width: "25%" }}>
+          <Text style={{ fontSize: 16 }}>
+            {numTrunc(allTimeInfo.value, true)} {allTimeInfo.distanceMeasure}
+          </Text>
+        </View>
       </View>
+
       <List.Section
         style={{
           backgroundColor: themeColors.highlight,
