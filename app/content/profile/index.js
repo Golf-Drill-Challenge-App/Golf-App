@@ -287,19 +287,6 @@ function Index() {
       alignItems: "center",
       marginBottom: 20,
     },
-    heading: {
-      textAlign: "center",
-      fontSize: 20,
-      fontWeight: "bold",
-      marginTop: 10,
-      marginBottom: 5,
-    },
-    noDrillsText: {
-      marginTop: 20,
-      fontSize: 16,
-      textAlign: "center",
-      color: "gray",
-    },
     modalContent: {
       paddingHorizontal: 30, // Increase padding for more spacing
       paddingBottom:
