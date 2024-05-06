@@ -99,7 +99,9 @@ function Index() {
           <EmptyScreen
             invalidateKeys={invalidateKeys}
             text={"No drills attempted yet."}
-            preChild={profileHeader}
+            preChild={() => {
+              profileHeader;
+            }}
           />
         )}
       </SafeAreaView>
