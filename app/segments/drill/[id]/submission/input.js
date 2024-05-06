@@ -39,6 +39,7 @@ import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 /***************************************
  * Firebase Upload
@@ -86,6 +87,7 @@ async function uploadAttempt(
   drillId,
   drillInfo,
   currentLeaderboard,
+  userInfo,
 ) {
   //create new document
   const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
@@ -100,8 +102,13 @@ async function uploadAttempt(
     await setDoc(newAttemptRef, uploadData);
     console.log("Document successfully uploaded!");
 
-    // Call function to check for leaderboard update
-    await handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
+    //Call function to check for leaderboard update
+    handleLeaderboardUpdate(
+      uploadData,
+      drillInfo,
+      currentLeaderboard,
+      userInfo,
+    );
 
     // Check if drill was assigned
     if (assignedTime) {
@@ -118,6 +125,7 @@ async function handleLeaderboardUpdate(
   uploadData,
   drillInfo,
   currentLeaderboard,
+  userInfo,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -125,7 +133,8 @@ async function handleLeaderboardUpdate(
   if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    handleRecordUpdate(uploadData, drillInfo, userInfo);
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -141,7 +150,8 @@ async function handleLeaderboardUpdate(
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+      uploadNewLeaderboard(mainOutputAttempt, uploadData);
+      handleRecordUpdate(uploadData, drillInfo, userInfo);
     } else {
       console.log("Didn't update");
     }
@@ -191,6 +201,58 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
     } catch (e) {
       console.log("Transaction (leaderboard update) failed: ", e);
     }
+  } catch (e) {
+    alert(e);
+    console.log(e);
+  }
+}
+
+//TODO: Create a function to check if the all time record needs to be updated
+async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
+  const mainOutputAttempt = drillInfo.mainOutputAttempt;
+
+  //Fetch All-time Record
+  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+
+  const docSnap = await getDoc(recordRef);
+
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+  }
+  //Determine if lower is better
+  const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
+
+  //Check if record needs to be updated
+  const currentRecord = docSnap.data();
+
+  console.log("Current Record: ", currentRecord["value"]);
+
+  const isNewAttemptBest = lowerIsBetter
+    ? uploadData[mainOutputAttempt] < currentRecord["value"]
+    : uploadData[mainOutputAttempt] > currentRecord["value"];
+
+  if (isNewAttemptBest) {
+    //Update record
+    uploadNewRecord(uploadData, drillInfo, currentRecord, userInfo);
+  }
+}
+
+//TODO: Create a function to update the all time record
+async function uploadNewRecord(uploadData, drillInfo, currentRecord, userInfo) {
+  //Create new Record object
+  const newRecord = {
+    name: userInfo.name,
+    value: uploadData[drillInfo.mainOutputAttempt],
+    time: uploadData["time"],
+    distanceMeasure: currentRecord["distanceMeasure"],
+  };
+
+  //Upload new Record
+  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+
+  try {
+    await setDoc(recordRef, newRecord);
+    console.log("New Record has been uploaded!");
   } catch (e) {
     alert(e);
     console.log(e);
@@ -503,6 +565,20 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
+  const { id: did } = useLocalSearchParams();
+
+  const {
+    data: currentLeaderboard,
+    isLoading: leaderboardIsLoading,
+    error: leaderboardError,
+  } = useLeaderboard({ drillId: did });
+
+  const {
+    data: userInfo,
+    userIsLoading: userIsLoading,
+    userError: userError,
+  } = useUserInfo(currentUserId);
+
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
 
@@ -638,6 +714,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         drillId,
         drillInfo,
         currentLeaderboard,
+        userInfo,
       ).then(() => {
         // invalidate cache on button press
         invalidateMultipleKeys(queryClient, invalidateKeys);
@@ -648,6 +725,16 @@ export default function Input({ setToggleResult, setOutputData }) {
       setCurrentShot(currentShot + 1);
     }
   };
+
+  //Loading until an attempt is generated or hooks are working
+  if (attemptShots.length === 0 || leaderboardIsLoading || userIsLoading) {
+    console.log("Loading");
+    return <Loading />;
+  }
+
+  if (leaderboardError || userError) {
+    return <ErrorComponent message={[leaderboardError, userError]} />;
+  }
 
   return (
     <PaperWrapper>

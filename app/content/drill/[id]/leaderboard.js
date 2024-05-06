@@ -191,7 +191,7 @@ export default function Leaderboard() {
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboard[userId][mainOutputAttempt];
           return (
-            <View>
+            <View key={userId}>
               <Link
                 key={userId}
                 href={{
