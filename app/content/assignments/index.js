@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { SectionList, TouchableOpacity, View } from "react-native";
+import { LogBox, SectionList, TouchableOpacity, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -16,7 +16,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 const DrillList = () => {
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = currentAuthContext();
 
   const {
     data: drillInfo,
@@ -32,6 +32,22 @@ const DrillList = () => {
 
   const userId = currentUserId;
   const invalidateKeys = [["user", { userId }], ["drillInfo"]];
+
+  // Handle both errors of 'cannot read property "reduce" of undefined' and
+  // 'data is undefined' / 'Query data cannot be undefined' (useUserInfo hook error)
+  if (
+    !currentUserId ||
+    (userInfoError && String(userInfoError).includes("data is undefined"))
+  ) {
+    // The logs still show up on the console (which is probably good), just hidden from phone screen
+    LogBox.ignoreLogs(["Query data cannot be undefined"]);
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No drills assigned"}
+      />
+    );
+  }
 
   if (userIsLoading || drillInfoIsLoading) {
     return <Loading />;

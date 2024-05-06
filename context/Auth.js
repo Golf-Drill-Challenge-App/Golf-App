@@ -45,18 +45,19 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
     onAuthStateChanged(auth, (currentUserId) => {
-      console.log("user changed. userId: ", currentUserId["uid"]);
-
       // test user login (yarn test)
-      // If you sign out, reload app to sign back in as test user
+      // If you sign out, reload or click "sign in" to login as test user
+      // Signout functionality for test user is buggy, chance of auto-logging back in
       if (process.env.EXPO_PUBLIC_TEST_UID) {
         setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
+        console.log("user changed. userId:", process.env.EXPO_PUBLIC_TEST_UID);
       }
 
       // regular user login
       else {
         if (currentUserId) {
-          setCurrentUserId(currentUserId.uid ?? "Error (uid)");
+          setCurrentUserId(currentUserId["uid"] ?? "Error (uid)");
+          console.log("user changed. userId:", currentUserId["uid"]);
         }
       }
     });
@@ -67,14 +68,11 @@ export const AuthProvider = ({ children }) => {
         currentUserId: currentUserId,
         setCurrentUserId: (uidvar) => {
           setCurrentUserId(uidvar ?? "Error (uid)");
-          // console.log(currentUserId);
         },
-        // setCurrentUserId({ name: "Test", email: "test@example.com", type: type }),
         signOut: () => setCurrentUserId(null),
         currentTeamId,
         setCurrentTeamId: (tidvar) => {
           setCurrentTeamId(tidvar ?? "Error (tid)");
-          // console.log(currentTeamId);
         },
       }}
     >

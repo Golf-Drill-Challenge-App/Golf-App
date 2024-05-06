@@ -134,12 +134,12 @@ function Index() {
     signoutFireBase(auth)
       .then(() => {
         // Sign-out successful.
+        signOut();
       })
       .catch((e) => {
         alert(e);
         console.log(e);
       });
-    signOut();
   }
 
   const resetForm = () => {

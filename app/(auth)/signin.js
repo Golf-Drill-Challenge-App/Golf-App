@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { themeColors } from "~/Constants";
+import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
@@ -25,13 +26,20 @@ const INPUT_WIDTH = 200;
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setCurrentUserId } = currentAuthContext();
 
   async function handleSignIn() {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (e) {
-      alert(e);
-      console.log(e);
+    if (process.env.EXPO_PUBLIC_TEST_UID) {
+      // Only allow login as test user while using `yarn test` to reduce errors
+      setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
+      console.log("user changed. userId:", process.env.EXPO_PUBLIC_TEST_UID);
+    } else {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (e) {
+        alert(e);
+        console.log(e);
+      }
     }
   }
 
