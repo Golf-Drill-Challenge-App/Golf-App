@@ -23,11 +23,11 @@ import {
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions, Modal
+  useWindowDimensions,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "react-native-expo-image-cache";
-import { Appbar, Snackbar, ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator, Appbar, Snackbar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -444,10 +444,10 @@ function Index() {
                     </View>
                   </TouchableOpacity>
 
-              {/* Display Email */}
-              <View style={styles.emailContainer}>
-                <Text style={styles.emailText}>{email}</Text>
-              </View>
+                {/* Display Email */}
+                <View style={styles.emailContainer}>
+                  <Text style={styles.emailText}>{email}</Text>
+                </View>
 
                   {/* Name Update input field */}
                   <BottomSheetTextInput
