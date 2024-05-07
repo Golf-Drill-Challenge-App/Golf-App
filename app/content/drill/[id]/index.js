@@ -12,9 +12,9 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
+import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
-import { currentAuthContext } from "~/context/Auth";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
