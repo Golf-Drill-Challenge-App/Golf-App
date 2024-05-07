@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { DefaultTheme, PaperProvider, Checkbox, Appbar } from "react-native-paper";
+import { DefaultTheme, PaperProvider, Checkbox, Appbar, Avatar } from "react-native-paper";
 import { Text } from "react-native-paper";
 import { List } from "react-native-paper";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -52,9 +52,9 @@ export default function Index() {
       .filter(([, value]) => value)
       .map((value) => value[0]);
     const time = new Date().getTime();
-  
+
     const updatedUserIds = [];
-   runTransaction(db, async (transaction) => { 
+    runTransaction(db, async (transaction) => {
       const updatedAssignedData = {};
 
       for (const userId of selectedUsers) {
@@ -76,14 +76,14 @@ export default function Index() {
         transaction.update(userRef, { assigned_data: updatedAssignedData[userId] });
 
       })
-    }).then(()=>{
+    }).then(() => {
 
-    // Invalidate cache after all users are updated
-    selectedUsers.forEach((userId) =>
-      queryClient.invalidateQueries(["user", { teamId: "1", userId }])
-    );
+      // Invalidate cache after all users are updated
+      selectedUsers.forEach((userId) =>
+        queryClient.invalidateQueries(["user", { teamId: "1", userId }])
+      );
     })
-  
+
     navigation.pop(3)
   };
   console.log(checkedItems)
@@ -100,15 +100,25 @@ export default function Index() {
           />
         }
         postChildren={
-          <Appbar.Action
-            icon="check-all"
+          <Button
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderColor: themeColors.accent,
+              borderWidth: 2,
+              borderRadius: 20,
+              marginRight: 10,
+            }}
             onPress={handleAssignAll}
-            color={themeColors.accent}
-          />
+          >
+            <Text style={{ color: themeColors.accent }}>Assign All</Text>
+
+          </Button>
         }
       />
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, marginBottom: 30 }}>
           {userIsLoading ? (
             <Text>Loading...</Text>
           ) : userInfoError ? (
@@ -127,6 +137,14 @@ export default function Index() {
                     })
                   }>
                   <View style={styles.cardContent}>
+
+                    <Avatar.Image
+                      size={24}
+                      source={{
+                        uri: userData.pfp,
+                      }}
+                    />
+
                     <Text style={styles.title}>{userData.name}</Text>
                     <View style={styles.specContainer}>
                       {checkedItems[uid] ? <Icon name="checkbox-outline" size={20} /> : <Icon name="checkbox-blank-outline" size={20} />}
@@ -137,19 +155,27 @@ export default function Index() {
             </List.Section>
           )}
         </ScrollView>
-        <Button
-          style={{
-            margin: 10,
-            bottom: 20,
-          }}
-          mode="contained"
-          buttonColor={themeColors.accent}
-          textColor="white"
-          onPress={handlePress}
-        >
-          Assign
-        </Button>
       </View>
+      <Button
+        style={{
+          margin: 10,
+          bottom: 30,
+          left: 0,
+          right: 0,
+        }}
+        labelStyle={{
+          fontSize: 20,
+          fontWeight: "bold",
+          padding: 5,
+        }}
+        mode="contained"
+        buttonColor={themeColors.accent}
+        textColor="white"
+        onPress={handlePress}
+      >
+        Assign
+      </Button>
+
     </SafeAreaView>
   </PaperProvider>
 }
