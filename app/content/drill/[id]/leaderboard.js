@@ -8,7 +8,6 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -62,7 +61,7 @@ export default function Leaderboard() {
   } = useDrillInfo(drillId);
 
   const {
-    data: preCalcLeaderboard,
+    data: leaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
   } = useLeaderboard({ drillId });
@@ -73,31 +72,13 @@ export default function Leaderboard() {
     ["best_attempts", drillId],
   ];
 
-  const preCalcLeaderboardExists =
-    preCalcLeaderboard && Object.keys(preCalcLeaderboard).length > 0;
-
-  const {
-    data: attempts,
-    isLoading: attemptIsLoading,
-    error: attemptError,
-  } = useAttempts({
-    drillId,
-  });
-
-  if (
-    userIsLoading ||
-    drillIsLoading ||
-    attemptIsLoading ||
-    leaderboardIsLoading
-  ) {
+  if (userIsLoading || drillIsLoading || leaderboardIsLoading) {
     return <Loading />;
   }
 
-  if (userError || drillError || attemptError || leaderboardError) {
+  if (userError || drillError || leaderboardError) {
     return (
-      <ErrorComponent
-        message={[userError, drillError, attemptError, leaderboardError]}
-      />
+      <ErrorComponent message={[userError, drillError, leaderboardError]} />
     );
   }
 
@@ -105,23 +86,20 @@ export default function Leaderboard() {
     ? drillInfo["mainOutputAttempt"]
     : customMainOutputAttempt;
 
-  const leaderboardAttempts = preCalcLeaderboard || {};
-
-  // console.log("drillLeaderboardAttempts: ", leaderboardAttempts);
   const sortByLower = drillInfo["aggOutputs"][mainOutputAttempt][
     "lowerIsBetter"
   ]
     ? 1
     : -1;
-  const orderedLeaderboard = Object.keys(leaderboardAttempts).sort(
-    //only sort the userId
-    (a, b) =>
-      sortByLower *
-      (leaderboardAttempts[a][mainOutputAttempt]["value"] -
-        leaderboardAttempts[b][mainOutputAttempt]["value"]),
-  );
-  console.log("orderedLeaderboard", orderedLeaderboard);
-  console.log("sortByLower", sortByLower);
+  const orderedLeaderboard = Object.keys(leaderboard)
+    .filter((a) => leaderboard[a] !== null)
+    .sort(
+      //only sort the userId
+      (a, b) =>
+        sortByLower *
+        (leaderboard[a][mainOutputAttempt]["value"] -
+          leaderboard[b][mainOutputAttempt]["value"]),
+    );
 
   if (orderedLeaderboard.length < 1) {
     return (
@@ -134,7 +112,7 @@ export default function Leaderboard() {
 
   let leaderboardRanks = getLeaderboardRanks(
     orderedLeaderboard,
-    leaderboardAttempts,
+    leaderboard,
     mainOutputAttempt,
   );
 
@@ -147,7 +125,7 @@ export default function Leaderboard() {
       </Text>
       <List.Section>
         {orderedLeaderboard.map((userId, idx) => {
-          const attempt = leaderboardAttempts[userId][mainOutputAttempt];
+          const attempt = leaderboard[userId][mainOutputAttempt];
           return (
             <Link
               key={userId}
