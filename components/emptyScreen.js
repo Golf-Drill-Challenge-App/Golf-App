@@ -3,6 +3,12 @@ import { Text } from "react-native-paper";
 import RefreshInvalidate from "./refreshInvalidate";
 
 function EmptyScreen({ invalidateKeys, text, preChild = () => {} }) {
+  if (typeof preChild === "object") {
+    const preChildObj = preChild;
+    preChild = () => {
+      return preChildObj;
+    };
+  }
   return (
     <ScrollView
       refreshControl={

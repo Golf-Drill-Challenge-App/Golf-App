@@ -1,23 +1,55 @@
 import { useQuery } from "@tanstack/react-query";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useLeaderboard = ({ drillId = null }) => {
+export const useLeaderboard = ({ drillId = null, userId = null }) => {
   const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
-    queryKey: ["best_attempts", currentTeamId, drillId],
+    queryKey: ["best_attempts", currentTeamId, { drillId, userId }],
     queryFn: async () => {
-      // Fetch all drills info
-      const newLeaderboard = {};
-      const querySnapshot = await getDoc(
-        doc(db, "teams", currentTeamId, "best_attempts", drillId),
-      );
-      const data = querySnapshot.data();
-      if (data === undefined) {
-        return false;
+      if (drillId) {
+        // Fetch all drills info
+        const querySnapshot = await getDoc(
+          doc(db, "teams", currentTeamId, "best_attempts", drillId),
+        );
+        const data = querySnapshot.data();
+        if (data === undefined) {
+          return false;
+        }
+        return querySnapshot.data();
+      } else if (userId) {
+        // Fetch all drills this user has done
+        const newLeaderboard = {};
+        const q = query(
+          collection(db, "teams", currentTeamId, "best_attempts"),
+          where(userId, "!=", null),
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+          newLeaderboard[doc.id] = doc.data();
+        });
+        return newLeaderboard;
+      } else {
+        //Fetch everything
+        const newLeaderboard = {};
+        const querySnapshot = await getDocs(
+          collection(db, "teams", currentTeamId, "best_attempts"),
+        );
+
+        querySnapshot.forEach((doc) => {
+          newLeaderboard[doc.id] = doc.data();
+        });
       }
-      return querySnapshot.data();
     },
   });
 

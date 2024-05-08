@@ -29,7 +29,6 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import { getUnique } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -41,9 +40,9 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
+import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
@@ -69,10 +68,10 @@ function Index() {
   } = useEmailInfo(userId);
 
   const {
-    data: attempts,
-    error: attemptsError,
-    isLoading: attemptsIsLoading,
-  } = useAttempts({ userId });
+    data: userLeaderboard,
+    error: userLeaderboardError,
+    isLoading: userLeaderboardIsLoading,
+  } = useLeaderboard({ userId });
 
   const {
     data: drillInfo,
@@ -111,20 +110,29 @@ function Index() {
 
   if (
     userIsLoading ||
-    drillInfoIsLoading ||
-    attemptsIsLoading ||
-    userEmailIsLoading
+    userEmailIsLoading ||
+    userLeaderboardIsLoading ||
+    drillInfoIsLoading
   ) {
     return <Loading />;
   }
 
-  if (userError || drillInfoError || attemptsError || userEmailError) {
+  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
     return (
       <ErrorComponent
-        message={[userError, drillInfoError, attemptsError, userEmailError]}
+        message={[
+          userError,
+          userEmailError,
+          userLeaderboardError,
+          drillInfoError,
+        ]}
       />
     );
   }
+
+  const uniqueDrills = Object.keys(userLeaderboard).map(
+    (drillId) => drillInfo[drillId],
+  );
 
   const handleImageClick = () => {
     console.log("TODO: implement and open an image upload modal!");
@@ -205,8 +213,6 @@ function Index() {
       }
     }
   };
-
-  const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
 
   const styles = StyleSheet.create({
     profileContainer: {

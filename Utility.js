@@ -36,78 +36,6 @@ export function numTrunc(value, pad = false) {
   }
 }
 
-export function getUnique(array, drills) {
-  const unique = [];
-  drills.forEach((drillInfo) => {
-    const idx = array.findIndex((item) => item["did"] === drillInfo["did"]);
-    if (idx >= 0) unique.push(drillInfo);
-  });
-  return unique;
-}
-
-export function calculateAverageProxToHole(drillSubmissions) {
-  const userAverages = [];
-  drillSubmissions.forEach((submission) => {
-    const userId = submission.userId;
-    let totalProximity = 0;
-    submission.shots.forEach((shot) => {
-      const proximity = Math.sqrt(
-        Math.pow(Math.abs(shot.distance - shot.target) * 3, 2) +
-          Math.pow(shot.sideLanding, 2),
-      );
-      totalProximity += proximity;
-    });
-    const averageProximity =
-      Math.round((totalProximity / submission.shots.length) * 10) / 10;
-
-    if (userAverages.length === 0) {
-      userAverages.push({
-        attempts: [averageProximity],
-        totalSubmissions: 1,
-        userId: userId,
-      });
-    } else {
-      var userIdx = -1;
-      for (let i = 0; i < userAverages.length; i++) {
-        if (userAverages[i].userId === userId) {
-          userIdx = i;
-          break;
-        }
-      }
-
-      if (userIdx >= 0) {
-        userAverages[userIdx].attempts.push(averageProximity);
-        userAverages[userIdx].totalSubmissions++;
-      } else {
-        userAverages.push({
-          attempts: [averageProximity],
-          totalSubmissions: 1,
-          userId: userId,
-        });
-      }
-    }
-  });
-
-  return userAverages;
-}
-
-export function takeBestScore(userAverages) {
-  const bestSubmissions = [];
-  userAverages.forEach((user) => {
-    var bestScore = Number.MAX_VALUE;
-    user.attempts.forEach((attempt) => {
-      if (attempt < bestScore) {
-        bestScore = attempt;
-      }
-    });
-    bestSubmissions.push({
-      user: user.userId,
-      score: bestScore,
-    });
-  });
-
-  return bestSubmissions;
-}
 export function lookUpBaselineStrokesGained(value) {
   const sgKeys = [
     0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
@@ -173,7 +101,3 @@ export function getIconByKey(key) {
   const iconObject = icons.find((icon) => icon[key]);
   return iconObject ? iconObject[key] : null;
 }
-
-export const getCombinedDrillTitle = (drillInfo) => {
-  return `${drillInfo.prettyDrillType} | ${drillInfo.subType}`;
-};
