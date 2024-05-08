@@ -3,11 +3,11 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useUserInfo = (userId) => {
+export const useUserInfo = ({ userId = null }) => {
   const { currentTeamId } = currentAuthContext();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user", { currentTeamId, userId }],
+    queryKey: ["userInfo", { userId }],
     queryFn: async () => {
       if (userId) {
         const querySnapshot = await getDoc(
@@ -29,7 +29,7 @@ export const useUserInfo = (userId) => {
 
   return {
     data,
-    userError: error,
-    userIsLoading: isLoading,
+    error,
+    isLoading,
   };
 };

@@ -26,12 +26,12 @@ const DrillList = () => {
 
   const {
     data: userInfo,
-    userError: userInfoError,
-    userIsLoading: userIsLoading,
-  } = useUserInfo(currentUserId);
+    error: userInfoError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ currentUserId });
 
   const userId = currentUserId;
-  const invalidateKeys = [["user", { userId }], ["drillInfo"]];
+  const invalidateKeys = [["userInfo", { userId }], ["drillInfo"]];
 
   // Handle both errors of 'cannot read property "reduce" of undefined' and
   // 'data is undefined' / 'Query data cannot be undefined' (useUserInfo hook error)

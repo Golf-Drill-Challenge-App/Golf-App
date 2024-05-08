@@ -15,15 +15,19 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { currentUserId } = currentAuthContext();
-  const { data: userInfo, userIsLoading, userError } = useUserInfo();
-  const invalidateKeys = [["user"]];
+  const {
+    data: userInfo,
+    isLoading: userInfoIsLoading,
+    error: userInfoError,
+  } = useUserInfo();
+  const invalidateKeys = [["userInfo"]];
   const [searchQuery, setSearchQuery] = useState("");
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
-  if (userIsLoading) return <Loading />;
+  if (userInfoIsLoading) return <Loading />;
 
-  if (userError) return <ErrorComponent message={userError.message} />;
+  if (userInfoError) return <ErrorComponent message={userInfoError.message} />;
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),

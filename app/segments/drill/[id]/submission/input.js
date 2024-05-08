@@ -37,7 +37,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useLeaderboard } from "~/hooks/useLeaderboard";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 
 /***************************************
  * Firebase Upload
@@ -508,7 +508,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
-  } = useLeaderboard({ drillId: did });
+  } = useBestAttempts({ drillId: did });
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -598,9 +598,9 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     const userId = currentUserId;
     const drillId = did;
     const invalidateKeys = [
-      ["user"],
+      ["userInfo"],
       ["drillInfo"],
-      ["best_attempts", currentTeamId, drillId], // keep currentTeamId param as it is a string argument in useLeaderboard's query key
+      ["best_attempts", { drillId }], // keep currentTeamId param as it is a string argument in useLeaderboard's query key
       ["attempts", { drillId }], // stats pages
       ["attempts", { userId }], // for profile index (list of drill types)
     ];

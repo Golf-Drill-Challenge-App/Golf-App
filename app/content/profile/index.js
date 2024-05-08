@@ -40,6 +40,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useLeaderboard } from "~/hooks/useLeaderboard";
@@ -57,15 +58,15 @@ function Index() {
 
   const {
     data: userData,
-    userError: userError,
-    userIsLoading: userIsLoading,
-  } = useUserInfo(userId);
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId });
 
   const {
-    userEmail: userEmail,
-    userEmailError: userEmailError,
-    userEmailIsLoading: userEmailIsLoading,
-  } = useEmailInfo(userId);
+    data: userEmail,
+    error: userEmailError,
+    isLoading: userEmailIsLoading,
+  } = useEmailInfo({ userId });
 
   const {
     data: userLeaderboard,
@@ -85,9 +86,9 @@ function Index() {
 
   // variables
   const invalidateKeys = [
-    ["user", { userId }],
+    ["userInfo", { userId }],
     ["attempts", { userId }],
-    ["userEmail", userId],
+    ["userEmail", { userId }],
     ["drillInfo"],
   ];
   const [newName, setNewName] = useState("");
@@ -168,7 +169,7 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         name: newName,
       });
-      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
+      invalidateMultipleKeys(queryClient, [["userInfo", { userId }]]);
       bottomSheetModalRef.current.close();
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true); // Show success snackbar
@@ -435,6 +436,7 @@ function Index() {
                   drillData={uniqueDrills}
                   href={"content/profile/drills/"}
                   userId={userId}
+                  invalidateKeys={invalidateKeys}
                 >
                   {profileHeader}
                 </DrillList>

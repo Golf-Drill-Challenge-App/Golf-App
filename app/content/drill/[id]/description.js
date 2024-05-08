@@ -18,7 +18,7 @@ export default function Description() {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo(drillId);
+  } = useDrillInfo({ drillId });
 
   if (drillInfoIsLoading) return <Loading />;
 

@@ -16,19 +16,19 @@ import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const userId = useLocalSearchParams()["user"];
+  const userId = useLocalSearchParams()["userInfo"];
   const navigation = useNavigation();
   const {
     data: userData,
-    userError: userError,
-    userIsLoading: userIsLoading,
-  } = useUserInfo(userId);
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId });
 
   const {
-    userEmail: userEmail,
-    userEmailError: userEmailError,
-    userEmailIsLoading: userEmailIsLoading,
-  } = useEmailInfo(userId);
+    data: userEmail,
+    error: userEmailError,
+    isLoading: userEmailIsLoading,
+  } = useEmailInfo({ userId });
 
   const {
     data: userLeaderboard,
@@ -71,7 +71,7 @@ function Index() {
 
   const invalidateKeys = [
     ["attempts", { userId }],
-    ["user", { userId }],
+    ["userInfo", { userId }],
     ["drillInfo"],
   ];
 

@@ -13,8 +13,8 @@ export default function Stat() {
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
-    drillInfoError,
-  } = useDrillInfo(drillId);
+    error: drillInfoError,
+  } = useDrillInfo({ drillId });
 
   const {
     data: drillAttempts,
