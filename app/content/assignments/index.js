@@ -15,7 +15,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-const DrillList = () => {
+const AssignmentList = () => {
   const { currentUserId, currentTeamId } = currentAuthContext();
 
   const {
@@ -28,7 +28,7 @@ const DrillList = () => {
     data: userInfo,
     error: userInfoError,
     isLoading: userIsLoading,
-  } = useUserInfo({ currentUserId });
+  } = useUserInfo({ userId: currentUserId });
 
   const userId = currentUserId;
   const invalidateKeys = [["userInfo", { userId }], ["drillInfo"]];
@@ -210,7 +210,7 @@ export default function Index() {
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
 
-        <DrillList />
+        <AssignmentList />
       </SafeAreaView>
     </PaperWrapper>
   );

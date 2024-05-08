@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
-export const useEmailInfo = ({ userId = null }) => {
+export const useEmailInfo = ({ userId = null } = {}) => {
+  console.log("fetching userEmail: ", { userId });
   const { data, error, isLoading } = useQuery({
     queryKey: ["userEmail", { userId }],
     queryFn: async () => {

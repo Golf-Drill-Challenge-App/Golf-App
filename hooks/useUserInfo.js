@@ -3,9 +3,10 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useUserInfo = ({ userId = null }) => {
-  const { currentTeamId } = currentAuthContext();
+export const useUserInfo = ({ userId = null } = {}) => {
+  console.log("fetching userInfo: ", { userId });
 
+  const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
     queryKey: ["userInfo", { userId }],
     queryFn: async () => {
