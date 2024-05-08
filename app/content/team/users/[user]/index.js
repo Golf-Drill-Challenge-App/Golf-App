@@ -10,13 +10,13 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
-import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const userId = useLocalSearchParams()["userInfo"];
+  const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
   const {
     data: userData,
@@ -34,7 +34,7 @@ function Index() {
     data: userLeaderboard,
     error: userLeaderboardError,
     isLoading: userLeaderboardIsLoading,
-  } = useLeaderboard({ userId });
+  } = useBestAttempts({ userId });
 
   const {
     data: drillInfo,
@@ -70,8 +70,9 @@ function Index() {
   );
 
   const invalidateKeys = [
-    ["attempts", { userId }],
+    ["best_attempts", { userId }],
     ["userInfo", { userId }],
+    ["emailInfo", { userId }],
     ["drillInfo"],
   ];
 
@@ -98,6 +99,7 @@ function Index() {
             drillData={uniqueDrills}
             href={"/content/team/users/" + userData.uid + "/drills/"}
             userId={userData.uid}
+            invalidateKeys={invalidateKeys}
           >
             {profileHeader}
           </DrillList>

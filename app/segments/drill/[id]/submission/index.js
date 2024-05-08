@@ -45,7 +45,7 @@ export default function Index() {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo(id);
+  } = useDrillInfo({ drillId: id });
 
   if (drillInfoIsLoading) return <Loading />;
 

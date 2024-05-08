@@ -16,7 +16,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 const AssignmentList = () => {
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
 
   const {
     data: drillInfo,

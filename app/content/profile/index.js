@@ -41,9 +41,9 @@ import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
-import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
@@ -72,7 +72,7 @@ function Index() {
     data: userLeaderboard,
     error: userLeaderboardError,
     isLoading: userLeaderboardIsLoading,
-  } = useLeaderboard({ userId });
+  } = useBestAttempts({ userId });
 
   const {
     data: drillInfo,

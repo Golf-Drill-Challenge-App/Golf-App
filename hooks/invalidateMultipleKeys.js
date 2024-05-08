@@ -25,7 +25,7 @@ export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
   const alreadyInvalidated = [];
   queryClient.invalidateQueries({
     predicate: (query) => {
-      for (let i = 0; i < query.queryKey.length; i++) {
+      for (let i = 0; i < invalidateKeys.length; i++) {
         // If the first query key argument (e.g. "userInfo") does not match up between invalidateKeys[i] and query.queryKey,
         // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
         if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {

@@ -487,7 +487,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   const navigation = useNavigation();
 
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
 
   const { height } = useWindowDimensions();
 
@@ -600,7 +600,7 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     const invalidateKeys = [
       ["userInfo"],
       ["drillInfo"],
-      ["best_attempts", { drillId }], // keep currentTeamId param as it is a string argument in useLeaderboard's query key
+      ["best_attempts", { drillId }], // keep currentTeamId param as it is a string argument in useBestAttempts's query key
       ["attempts", { drillId }], // stats pages
       ["attempts", { userId }], // for profile index (list of drill types)
     ];

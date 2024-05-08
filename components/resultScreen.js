@@ -42,19 +42,6 @@ export default function ResultScreen({
 
   let attempt = attemptId ? fetchedAttempt : attemptData;
 
-  console.log(
-    "attempt",
-    attempt,
-    "fetchedAttempt",
-    fetchedAttempt,
-    "attemptData",
-    attemptData,
-    "attemptId",
-    attemptId,
-    "drillInfo",
-    drillInfo,
-  );
-
   let dots = [];
   if (
     drillInfo["outputs"].includes("sideLanding") &&
