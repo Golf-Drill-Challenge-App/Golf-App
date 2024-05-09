@@ -54,7 +54,7 @@ function Index() {
   if (userError || userEmailError || userLeaderboardError || drillInfoError) {
     return (
       <ErrorComponent
-        message={[
+        errorList={[
           userError,
           userEmailError,
           userLeaderboardError,

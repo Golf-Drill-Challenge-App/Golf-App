@@ -21,14 +21,11 @@ import { currentAuthContext } from "~/context/Auth";
 import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
 
-export default function BarChartScreen({ drillData, drillInfo, userId }) {
-  const drillId = drillInfo["did"];
-
-  const invalidateKeys = [
-    ["drillInfo", { drillId }],
-    ["attempts", { userId, drillId }],
-  ];
-
+export default function BarChartScreen({
+  drillData,
+  drillInfo,
+  invalidateKeys,
+}) {
   if (drillData.length === 0) {
     return (
       <EmptyScreen

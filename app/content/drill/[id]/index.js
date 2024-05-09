@@ -27,7 +27,7 @@ export default function Index() {
 
   if (drillInfoIsLoading) return <Loading />;
 
-  if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
+  if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
 
   const tabComponent = () => {
     switch (value) {

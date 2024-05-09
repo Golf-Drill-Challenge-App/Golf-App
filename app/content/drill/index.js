@@ -24,7 +24,7 @@ export default function Index() {
   }
 
   if (drillInfoError) {
-    return <ErrorComponent message={drillInfoError} />;
+    return <ErrorComponent errorList={[drillInfoError]} />;
   }
   useEffect(() => {
     if (lastRedirect !== currentTime && assignedTime) {

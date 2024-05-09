@@ -37,7 +37,7 @@ export default function ResultScreen({
   }
 
   if (drillInfoError || attemptError) {
-    return <ErrorComponent message={[drillInfoError, attemptError]} />;
+    return <ErrorComponent errorList={[drillInfoError, attemptError]} />;
   }
 
   let attempt = attemptId ? fetchedAttempt : attemptData;

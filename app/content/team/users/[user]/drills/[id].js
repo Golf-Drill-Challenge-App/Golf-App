@@ -26,12 +26,16 @@ export default function Stat() {
     isLoading: drillAttemptsIsLoading,
   } = useAttempts({ drillId, userId });
 
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["attempts", { userId, drillId }],
+  ];
   if (drillInfoIsLoading || drillAttemptsIsLoading) {
     return <Loading />;
   }
 
   if (drillInfoError || drillAttemptsError) {
-    return <ErrorComponent message={[drillInfoError, drillAttemptsError]} />;
+    return <ErrorComponent errorList={[drillInfoError, drillAttemptsError]} />;
   }
 
   return (
@@ -52,7 +56,7 @@ export default function Stat() {
         <BarChartScreen
           drillData={drillAttempts}
           drillInfo={drillInfo}
-          userId={userId}
+          invalidateKeys={invalidateKeys}
         />
       </SafeAreaView>
     </PaperWrapper>

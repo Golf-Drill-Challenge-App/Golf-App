@@ -23,7 +23,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { Appbar, Snackbar } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -87,7 +87,7 @@ function Index() {
   // variables
   const invalidateKeys = [
     ["userInfo", { userId }],
-    ["attempts", { userId }],
+    ["best_attempts", { userId }],
     ["userEmail", { userId }],
     ["drillInfo"],
   ];
@@ -121,7 +121,7 @@ function Index() {
   if (userError || userEmailError || userLeaderboardError || drillInfoError) {
     return (
       <ErrorComponent
-        message={[
+        errorList={[
           userError,
           userEmailError,
           userLeaderboardError,
@@ -169,7 +169,7 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         name: newName,
       });
-      invalidateMultipleKeys(queryClient, [["userInfo", { userId }]]);
+      invalidateMultipleKeys(queryClient, [["userInfo"]]);
       bottomSheetModalRef.current.close();
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true); // Show success snackbar
@@ -315,16 +315,14 @@ function Index() {
     <PaperWrapper>
       <View style={{ height: height, width: width }}>
         <BottomSheetModalProvider>
-          <Snackbar
-            visible={snackbarVisible}
-            onDismiss={() => setSnackbarVisible(false)}
-            duration={4000} // Duration in milliseconds for how long the snackbar is shown
-          >
-            {snackbarMessage}
-          </Snackbar>
-
           <DialogComponent
             type={"snackbar"}
+            visible={snackbarVisible}
+            content={snackbarMessage}
+            onHide={() => setSnackbarVisible(false)}
+          />
+
+          <DialogComponent
             title={dialogTitle}
             content={dialogMessage}
             visible={dialogVisible}
@@ -352,7 +350,7 @@ function Index() {
               <BottomSheetScrollView
                 contentContainerStyle={styles.modalContent}
                 keyboardDismissMode="interactive"
-                keyboardShouldPersistTaps="never"
+                keyboardShouldPersistTaps="handled"
               >
                 {/* Profile Picture */}
                 <TouchableOpacity onPress={handleImageClick}>

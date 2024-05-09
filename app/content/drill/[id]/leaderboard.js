@@ -78,7 +78,7 @@ export default function Leaderboard() {
 
   if (userError || drillError || leaderboardError) {
     return (
-      <ErrorComponent message={[userError, drillError, leaderboardError]} />
+      <ErrorComponent errorList={[userError, drillError, leaderboardError]} />
     );
   }
 

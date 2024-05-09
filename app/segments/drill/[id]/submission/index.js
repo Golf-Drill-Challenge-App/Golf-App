@@ -1,18 +1,13 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 
-import Loading from "~/components/loading";
 import Input from "./input";
 import Result from "./result";
 
 import DialogComponent from "~/components/dialog";
-import ErrorComponent from "~/components/errorComponent";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
-  const { id } = useLocalSearchParams();
-
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
   const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
@@ -41,29 +36,14 @@ export default function Index() {
     });
   }, [toggleResult]);
 
-  const {
-    data: drillInfo,
-    error: drillInfoError,
-    isLoading: drillInfoIsLoading,
-  } = useDrillInfo({ drillId: id });
-
-  if (drillInfoIsLoading) return <Loading />;
-
-  if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
-
   const display = () => {
     if (toggleResult) {
       return (
-        <Result
-          submission={outputData}
-          drillInfo={drillInfo}
-          setToggleResult={setToggleResult}
-        />
+        <Result submission={outputData} setToggleResult={setToggleResult} />
       );
     } else {
       return (
         <Input
-          drillInfo={drillInfo}
           setToggleResult={setToggleResult}
           setOutputData={setOutputData}
         />

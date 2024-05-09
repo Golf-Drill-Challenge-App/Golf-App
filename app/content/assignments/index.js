@@ -54,7 +54,7 @@ const AssignmentList = () => {
   }
 
   if (userInfoError || drillInfoError) {
-    return <ErrorComponent message={[userInfoError, drillInfoError]} />;
+    return <ErrorComponent errorList={[userInfoError, drillInfoError]} />;
   }
 
   const today = formatDate(Date.now());
@@ -187,7 +187,7 @@ const CoachView = () => {
     return <Loading />;
   }
   if (drillInfoError) {
-    return <ErrorComponent message={drillInfoError.message} />;
+    return <ErrorComponent errorList={[drillInfoError]} />;
   }
   return (
     <List.Section>

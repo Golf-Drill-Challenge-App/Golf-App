@@ -27,7 +27,7 @@ function Index() {
 
   if (userInfoIsLoading) return <Loading />;
 
-  if (userInfoError) return <ErrorComponent message={userInfoError.message} />;
+  if (userInfoError) return <ErrorComponent errorList={[userInfoError]} />;
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),
