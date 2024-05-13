@@ -48,6 +48,14 @@ export default function DialogComponent({
         <Snackbar
           visible={visible}
           onDismiss={onHide}
+          theme={{
+            colors: {
+              inversePrimary: themeColors.accent,
+              inverseSurface: themeColors.highlight,
+              inverseOnSurface: "black",
+              surface: "black",
+            },
+          }}
           action={{
             label: "Dismiss",
             onPress: onHide,
