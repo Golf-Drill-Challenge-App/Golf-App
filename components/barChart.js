@@ -23,7 +23,7 @@ import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
 
 export default function BarChartScreen({
-                                         drillAttempts,
+  drillAttempts,
   drillInfo,
   invalidateKeys,
 }) {
