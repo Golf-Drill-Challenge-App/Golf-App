@@ -1,9 +1,10 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Image } from "react-native-expo-image-cache";
 
 function ProfileCard(props) {
   return (
     <View style={styles.container}>
-      <Image source={{ uri: props.user["pfp"] }} style={styles.profileImage} />
+      <Image style={styles.profileImage} uri={props.user["pfp"]} />
       <Text style={styles.name}>{props.user["name"]}</Text>
       <Text style={styles.email}>{props.email}</Text>
     </View>
