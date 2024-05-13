@@ -18,13 +18,13 @@ export default function Description() {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo(drillId);
+  } = useDrillInfo({ drillId });
+
+  const invalidateKeys = [["drillInfo", { drillId }]];
 
   if (drillInfoIsLoading) return <Loading />;
 
-  if (drillInfoError) return <ErrorComponent error={error.message} />;
-
-  const invalidateKeys = [["drillInfo", { drillId }]];
+  if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
 
   return (
     <>

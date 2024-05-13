@@ -11,6 +11,7 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Index() {
   const { assignedTime, id: drillId, currentTime } = useLocalSearchParams();
+  const invalidationKeys = [["drillInfo"]];
   const {
     data: drillInfo,
     error: drillInfoError,
@@ -23,7 +24,7 @@ export default function Index() {
   }
 
   if (drillInfoError) {
-    return <ErrorComponent message={drillInfoError} />;
+    return <ErrorComponent errorList={[drillInfoError]} />;
   }
   useEffect(() => {
     if (lastRedirect !== currentTime && assignedTime) {
@@ -46,6 +47,7 @@ export default function Index() {
         <DrillList
           drillData={Object.values(drillInfo)}
           href={"content/drill/"}
+          invalidateKeys={invalidationKeys}
         />
       </SafeAreaView>
     </PaperWrapper>

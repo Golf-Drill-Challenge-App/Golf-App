@@ -2,13 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
-export const useEmailInfo = (userId) => {
-  const {
-    data: userEmail,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["userEmail", userId],
+export const useEmailInfo = ({ userId = null } = {}) => {
+  console.log("fetching userEmail: ", { userId });
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["userEmail", { userId }],
     queryFn: async () => {
       if (userId) {
         const querySnapshot = await getDoc(doc(db, "users", userId));
@@ -20,8 +17,8 @@ export const useEmailInfo = (userId) => {
   });
 
   return {
-    userEmail,
-    userEmailError: error,
-    userEmailIsLoading: isLoading,
+    data,
+    error,
+    isLoading,
   };
 };

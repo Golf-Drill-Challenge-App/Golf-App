@@ -8,8 +8,8 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useLeaderboard } from "~/hooks/useLeaderboard";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function getLeaderboardRanks(
@@ -50,26 +50,26 @@ export default function Leaderboard() {
 
   const {
     data: userInfo,
-    userIsLoading: userIsLoading,
-    userError: userError,
+    isLoading: userIsLoading,
+    error: userError,
   } = useUserInfo();
 
   const {
     data: drillInfo,
     isLoading: drillIsLoading,
     error: drillError,
-  } = useDrillInfo(drillId);
+  } = useDrillInfo({ drillId });
 
   const {
     data: leaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
-  } = useLeaderboard({ drillId });
+  } = useBestAttempts({ drillId });
 
   const invalidateKeys = [
     ["userInfo"],
     ["drillInfo", { drillId }],
-    ["best_attempts", drillId],
+    ["best_attempts", { drillId }],
   ];
 
   if (userIsLoading || drillIsLoading || leaderboardIsLoading) {
@@ -78,7 +78,7 @@ export default function Leaderboard() {
 
   if (userError || drillError || leaderboardError) {
     return (
-      <ErrorComponent message={[userError, drillError, leaderboardError]} />
+      <ErrorComponent errorList={[userError, drillError, leaderboardError]} />
     );
   }
 

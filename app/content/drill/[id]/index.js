@@ -23,11 +23,11 @@ export default function Index() {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo(drillId);
+  } = useDrillInfo({ drillId });
 
   if (drillInfoIsLoading) return <Loading />;
 
-  if (drillInfoError) return <ErrorComponent error={drillInfoError.message} />;
+  if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
 
   const tabComponent = () => {
     switch (value) {

@@ -24,29 +24,23 @@ export default function ResultScreen({
     data: drillInfo,
     isLoading: drillInfoIsLoading,
     error: drillInfoError,
-  } = useDrillInfo(drillId);
+  } = useDrillInfo({ drillId });
 
-  let attempt;
+  const {
+    data: fetchedAttempt,
+    isLoading: attemptIsLoading,
+    error: attemptError,
+  } = useAttempts({ attemptId, enabled: !!attemptId });
 
-  if (attemptId) {
-    const {
-      data: usedAttempt,
-      isLoading: attemptIsLoading,
-      error: attemptError,
-    } = useAttempts({ attemptId });
-
-    attempt = usedAttempt;
-
-    if (drillInfoIsLoading || attemptIsLoading) {
-      return <Loading />;
-    }
-
-    if (drillInfoError || attemptError) {
-      return <ErrorComponent message={[drillInfoError, attemptError]} />;
-    }
-  } else {
-    attempt = attemptData;
+  if (drillInfoIsLoading || attemptIsLoading) {
+    return <Loading />;
   }
+
+  if (drillInfoError || attemptError) {
+    return <ErrorComponent errorList={[drillInfoError, attemptError]} />;
+  }
+
+  let attempt = attemptId ? fetchedAttempt : attemptData;
 
   let dots = [];
   if (

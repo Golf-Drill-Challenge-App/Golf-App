@@ -2,9 +2,8 @@ import { Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaperWrapper from "./paperWrapper";
 
-function ErrorComponent({ message }) {
-  const displayMessage =
-    message.constructor === Array ? message.join(", ") : message;
+function ErrorComponent({ errorList }) {
+  const displayMessage = errorList.map((error) => error.message).join("\n");
   return (
     <PaperWrapper>
       <SafeAreaView>

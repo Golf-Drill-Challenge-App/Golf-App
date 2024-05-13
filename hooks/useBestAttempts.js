@@ -10,10 +10,11 @@ import {
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useLeaderboard = ({ drillId = null, userId = null }) => {
+export const useBestAttempts = ({ drillId = null, userId = null } = {}) => {
+  console.log("fetching bestAttempts: ", { drillId, userId });
   const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
-    queryKey: ["best_attempts", currentTeamId, { drillId, userId }],
+    queryKey: ["best_attempts", { drillId, userId }],
     queryFn: async () => {
       if (drillId) {
         // Fetch all drills info
