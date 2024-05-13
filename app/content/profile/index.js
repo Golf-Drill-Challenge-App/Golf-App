@@ -25,9 +25,9 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "react-native-expo-image-cache";
-import { ActivityIndicator, Appbar, Snackbar } from "react-native-paper";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ActivityIndicator, Appbar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -202,6 +202,7 @@ function Index() {
     if (!imageResult.canceled) {
       const resizedUri = await resizeImage(imageResult.assets[0].uri);
       await firebaseProfileImageUpload(resizedUri);
+      invalidateMultipleKeys(queryClient, [["userInfo"]]);
     }
   };
 
@@ -436,7 +437,10 @@ function Index() {
                           style={styles.activityIndicator}
                         />
                       ) : (
-                        <Image uri={userData.pfp} style={styles.profilePicture} />
+                        <Image
+                          uri={userData.pfp}
+                          style={styles.profilePicture}
+                        />
                       )}
                       <View style={styles.penIconContainer}>
                         <MaterialIcons name="edit" size={24} color="black" />
@@ -444,10 +448,10 @@ function Index() {
                     </View>
                   </TouchableOpacity>
 
-                {/* Display Email */}
-                <View style={styles.emailContainer}>
-                  <Text style={styles.emailText}>{email}</Text>
-                </View>
+                  {/* Display Email */}
+                  <View style={styles.emailContainer}>
+                    <Text style={styles.emailText}>{email}</Text>
+                  </View>
 
                   {/* Name Update input field */}
                   <BottomSheetTextInput
