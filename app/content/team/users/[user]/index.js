@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import { getUnique } from "~/Utility";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -11,7 +10,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
-import { useAttempts } from "~/hooks/useAttempts";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -21,21 +20,21 @@ function Index() {
   const navigation = useNavigation();
   const {
     data: userData,
-    userError: userError,
-    userIsLoading: userIsLoading,
-  } = useUserInfo(userId);
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId });
 
   const {
-    userEmail: userEmail,
-    userEmailError: userEmailError,
-    userEmailIsLoading: userEmailIsLoading,
-  } = useEmailInfo(userId);
+    data: userEmail,
+    error: userEmailError,
+    isLoading: userEmailIsLoading,
+  } = useEmailInfo({ userId });
 
   const {
-    data: attempts,
-    error: attemptsError,
-    isLoading: attemptsIsLoading,
-  } = useAttempts({ userId });
+    data: userLeaderboard,
+    error: userLeaderboardError,
+    isLoading: userLeaderboardIsLoading,
+  } = useBestAttempts({ userId });
 
   const {
     data: drillInfo,
@@ -46,21 +45,24 @@ function Index() {
   if (
     userIsLoading ||
     userEmailIsLoading ||
-    drillInfoIsLoading ||
-    attemptsIsLoading
+    userLeaderboardIsLoading ||
+    drillInfoIsLoading
   ) {
     return <Loading />;
   }
 
-  if (userError || userEmailError || drillInfoError || attemptsError) {
+  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
     return (
       <ErrorComponent
-        message={[userError, userEmailError, drillInfoError, attemptsError]}
+        errorList={[
+          userError,
+          userEmailError,
+          userLeaderboardError,
+          drillInfoError,
+        ]}
       />
     );
   }
-
-  const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
   const profileHeader = (
     <View style={styles.profileContainer}>
       <ProfileCard user={userData} email={userEmail} />
@@ -68,10 +70,15 @@ function Index() {
   );
 
   const invalidateKeys = [
-    ["attempts", { userId }],
-    ["user", { userId }],
+    ["best_attempts", { userId }],
+    ["userInfo", { userId }],
+    ["emailInfo", { userId }],
     ["drillInfo"],
   ];
+
+  const uniqueDrills = Object.keys(userLeaderboard).map(
+    (drillId) => drillInfo[drillId],
+  );
 
   return (
     <PaperWrapper>
@@ -92,6 +99,7 @@ function Index() {
             drillData={uniqueDrills}
             href={"/content/team/users/" + userData.uid + "/drills/"}
             userId={userData.uid}
+            invalidateKeys={invalidateKeys}
           >
             {profileHeader}
           </DrillList>

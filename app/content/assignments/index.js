@@ -15,8 +15,8 @@ import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-const DrillList = () => {
-  const { currentUserId, currentTeamId } = currentAuthContext();
+const AssignmentList = () => {
+  const { currentUserId } = currentAuthContext();
 
   const {
     data: drillInfo,
@@ -26,12 +26,12 @@ const DrillList = () => {
 
   const {
     data: userInfo,
-    userError: userInfoError,
-    userIsLoading: userIsLoading,
-  } = useUserInfo(currentUserId);
+    error: userInfoError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId: currentUserId });
 
   const userId = currentUserId;
-  const invalidateKeys = [["user", { userId }], ["drillInfo"]];
+  const invalidateKeys = [["userInfo", { userId }], ["drillInfo"]];
 
   // Handle both errors of 'cannot read property "reduce" of undefined' and
   // 'data is undefined' / 'Query data cannot be undefined' (useUserInfo hook error)
@@ -54,7 +54,7 @@ const DrillList = () => {
   }
 
   if (userInfoError || drillInfoError) {
-    return <ErrorComponent message={[userInfoError, drillInfoError]} />;
+    return <ErrorComponent errorList={[userInfoError, drillInfoError]} />;
   }
 
   const today = formatDate(Date.now());
@@ -187,7 +187,7 @@ const CoachView = () => {
     return <Loading />;
   }
   if (drillInfoError) {
-    return <ErrorComponent message={drillInfoError.message} />;
+    return <ErrorComponent errorList={[drillInfoError]} />;
   }
   return (
     <List.Section>
@@ -210,7 +210,7 @@ export default function Index() {
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
 
-        <DrillList />
+        <AssignmentList />
       </SafeAreaView>
     </PaperWrapper>
   );

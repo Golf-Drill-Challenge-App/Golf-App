@@ -5,7 +5,7 @@ General Info (see comments in code for more):
 invalidateKeys input is supplied as a 2d array (list of lists), where each child list is query key, e.g.
 
   const invalidateKeys = [
-    ["user", { userId }],
+    ["userInfo", { userId }],
     ["attempts", { userId }],
     ["userEmail", userId],
     ["drillInfo"],
@@ -20,12 +20,13 @@ query.queryKey
 */
 
 export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
+  console.log("invalidateKeys requested: ", invalidateKeys);
   console.log("These query keys (cache) were successfully invalidated:");
   const alreadyInvalidated = [];
   queryClient.invalidateQueries({
     predicate: (query) => {
-      for (let i = 0; i < query.queryKey.length; i++) {
-        // If the first query key argument (e.g. "user") does not match up between invalidateKeys[i] and query.queryKey,
+      for (let i = 0; i < invalidateKeys.length; i++) {
+        // If the first query key argument (e.g. "userInfo") does not match up between invalidateKeys[i] and query.queryKey,
         // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
         if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {
           function checkLists(invalidateKey, activeQueryKey) {

@@ -16,12 +16,18 @@ export const useAttempts = ({
   userId = null,
   drillId = null,
   enabled = true,
-}) => {
+} = {}) => {
+  console.log("fetching attempts: ", { attemptId, userId, drillId, enabled });
   const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
-    queryKey: ["attempts", currentTeamId, { attemptId, userId, drillId }],
+    queryKey: ["attempts", { attemptId, userId, drillId }],
     queryFn: async () => {
-      console.log("fetching attempts");
+      console.log("fetching attempts: ", {
+        attemptId,
+        userId,
+        drillId,
+        enabled,
+      });
       if (attemptId) {
         const querySnapshot = await getDoc(
           doc(db, "teams", currentTeamId, "attempts", attemptId),

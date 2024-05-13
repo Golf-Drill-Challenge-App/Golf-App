@@ -13,8 +13,8 @@ export default function Stat() {
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
-    drillInfoError,
-  } = useDrillInfo(drillId);
+    error: drillInfoError,
+  } = useDrillInfo({ drillId });
 
   const {
     data: drillAttempts,
@@ -22,12 +22,17 @@ export default function Stat() {
     error: drillAttemptsError,
   } = useAttempts({ drillId, userId });
 
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["attempts", { userId, drillId }],
+  ];
+
   if (drillInfoIsLoading || drillAttemptsIsLoading) {
     return <Loading />;
   }
 
   if (drillInfoError || drillAttemptsError) {
-    return <ErrorComponent message={[drillInfoError, drillAttemptsError]} />;
+    return <ErrorComponent errorList={[drillInfoError, drillAttemptsError]} />;
   }
   // console.log(drillAttempts);
 
@@ -35,7 +40,7 @@ export default function Stat() {
     <BarChartScreen
       drillData={drillAttempts}
       drillInfo={drillInfo}
-      userId={userId}
+      invalidateKeys={invalidateKeys}
     />
   );
 }

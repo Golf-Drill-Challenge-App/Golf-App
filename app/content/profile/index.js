@@ -23,13 +23,13 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { Appbar, Snackbar } from "react-native-paper";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Appbar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import { getUnique } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -41,7 +41,8 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import { useAttempts } from "~/hooks/useAttempts";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -58,21 +59,21 @@ function Index() {
 
   const {
     data: userData,
-    userError: userError,
-    userIsLoading: userIsLoading,
-  } = useUserInfo(userId);
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId });
 
   const {
-    userEmail: userEmail,
-    userEmailError: userEmailError,
-    userEmailIsLoading: userEmailIsLoading,
-  } = useEmailInfo(userId);
+    data: userEmail,
+    error: userEmailError,
+    isLoading: userEmailIsLoading,
+  } = useEmailInfo({ userId });
 
   const {
-    data: attempts,
-    error: attemptsError,
-    isLoading: attemptsIsLoading,
-  } = useAttempts({ userId });
+    data: userLeaderboard,
+    error: userLeaderboardError,
+    isLoading: userLeaderboardIsLoading,
+  } = useBestAttempts({ userId });
 
   const {
     data: drillInfo,
@@ -86,9 +87,9 @@ function Index() {
 
   // variables
   const invalidateKeys = [
-    ["user", { userId }],
-    ["attempts", { userId }],
-    ["userEmail", userId],
+    ["userInfo", { userId }],
+    ["best_attempts", { userId }],
+    ["userEmail", { userId }],
     ["drillInfo"],
   ];
   const [newName, setNewName] = useState("");
@@ -111,20 +112,29 @@ function Index() {
 
   if (
     userIsLoading ||
-    drillInfoIsLoading ||
-    attemptsIsLoading ||
-    userEmailIsLoading
+    userEmailIsLoading ||
+    userLeaderboardIsLoading ||
+    drillInfoIsLoading
   ) {
     return <Loading />;
   }
 
-  if (userError || drillInfoError || attemptsError || userEmailError) {
+  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
     return (
       <ErrorComponent
-        message={[userError, drillInfoError, attemptsError, userEmailError]}
+        errorList={[
+          userError,
+          userEmailError,
+          userLeaderboardError,
+          drillInfoError,
+        ]}
       />
     );
   }
+
+  const uniqueDrills = Object.keys(userLeaderboard).map(
+    (drillId) => drillInfo[drillId],
+  );
 
   const handleImageClick = () => {
     console.log("TODO: implement and open an image upload modal!");
@@ -160,7 +170,7 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         name: newName,
       });
-      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
+      invalidateMultipleKeys(queryClient, [["userInfo"]]);
       bottomSheetModalRef.current.close();
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true); // Show success snackbar
@@ -205,8 +215,6 @@ function Index() {
       }
     }
   };
-
-  const uniqueDrills = getUnique(attempts, Object.values(drillInfo));
 
   const styles = StyleSheet.create({
     profileContainer: {
@@ -306,145 +314,146 @@ function Index() {
 
   return (
     <PaperWrapper>
-      <View style={{ height: height, width: width }}>
-        <BottomSheetModalProvider>
-          <Snackbar
-            visible={snackbarVisible}
-            onDismiss={() => setSnackbarVisible(false)}
-            duration={4000} // Duration in milliseconds for how long the snackbar is shown
-          >
-            {snackbarMessage}
-          </Snackbar>
-
-          <DialogComponent
-            type={"snackbar"}
-            title={dialogTitle}
-            content={dialogMessage}
-            visible={dialogVisible}
-            onHide={() => setDialogVisible(false)}
-          />
-          <SafeAreaView style={{ flex: 1 }}>
-            <Header
-              title={"Personal Profile"}
-              postChildren={
-                <Appbar.Action
-                  icon="cog"
-                  color={themeColors.accent}
-                  onPress={() => bottomSheetModalRef.current?.present()}
-                  style={{ marginRight: 7 }}
-                />
-              }
+      <GestureHandlerRootView>
+        <View style={{ height: height, width: width }}>
+          <BottomSheetModalProvider>
+            <DialogComponent
+              type={"snackbar"}
+              visible={snackbarVisible}
+              content={snackbarMessage}
+              onHide={() => setSnackbarVisible(false)}
             />
-            <BottomSheetWrapper
-              ref={bottomSheetModalRef}
-              closeFn={() => {
-                resetForm();
-                setPasswordInputVisible(false);
-              }}
-            >
-              <BottomSheetScrollView
-                contentContainerStyle={styles.modalContent}
-                keyboardDismissMode="interactive"
-                keyboardShouldPersistTaps="never"
-              >
-                {/* Profile Picture */}
-                <TouchableOpacity onPress={handleImageClick}>
-                  <View style={styles.profilePictureContainer}>
-                    <Image
-                      source={{ uri: userData.pfp }}
-                      style={styles.profilePicture}
-                    />
-                    <View style={styles.penIconContainer}>
-                      <MaterialIcons name="edit" size={24} color="black" />
-                    </View>
-                  </View>
-                </TouchableOpacity>
 
-                {/* Display Email */}
-                <View style={styles.emailContainer}>
-                  <Text style={styles.emailText}>{email}</Text>
-                </View>
-
-                {/* Name Update input field */}
-                <BottomSheetTextInput
-                  style={styles.input}
-                  value={newName}
-                  onChangeText={(text) => setNewName(text)}
-                  placeholder="Update your name"
-                />
-
-                {/* Change Password Button */}
-                <Pressable
-                  onPress={() => {
-                    resetForm();
-                    setPasswordInputVisible(!passwordInputVisible);
-                  }}
-                >
-                  <Text style={styles.changePasswordButton}>
-                    Change Password
-                  </Text>
-                </Pressable>
-
-                {/* Password Input Field */}
-                {passwordInputVisible && (
-                  <>
-                    <BottomSheetTextInput
-                      style={styles.input}
-                      value={currentPassword}
-                      onChangeText={setCurrentPassword}
-                      placeholder="Enter your current password"
-                      secureTextEntry={true}
-                    />
-                    <BottomSheetTextInput
-                      style={styles.input}
-                      value={newPassword}
-                      onChangeText={setNewPassword}
-                      placeholder="Enter your new password"
-                      secureTextEntry={true}
-                    />
-                  </>
-                )}
-
-                {/* Save Button */}
-                <TouchableOpacity
-                  style={styles.saveChangesButton}
-                  onPress={handleUpdate}
-                >
-                  <Text style={styles.saveChangesButtonText}>Update</Text>
-                </TouchableOpacity>
-
-                {/* Sign Out Button */}
-                <Pressable onPress={handleSignOut}>
-                  <Text style={styles.signOutButton}>Sign Out</Text>
-                </Pressable>
-              </BottomSheetScrollView>
-            </BottomSheetWrapper>
-            {uniqueDrills.length > 0 ? (
-              <View
-                style={{
-                  paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
+            <DialogComponent
+              title={dialogTitle}
+              content={dialogMessage}
+              visible={dialogVisible}
+              onHide={() => setDialogVisible(false)}
+            />
+            <SafeAreaView style={{ flex: 1 }}>
+              <Header
+                title={"Personal Profile"}
+                postChildren={
+                  <Appbar.Action
+                    icon="cog"
+                    color={themeColors.accent}
+                    onPress={() => bottomSheetModalRef.current?.present()}
+                    style={{ marginRight: 7 }}
+                  />
+                }
+              />
+              <BottomSheetWrapper
+                ref={bottomSheetModalRef}
+                closeFn={() => {
+                  resetForm();
+                  setPasswordInputVisible(false);
                 }}
               >
-                <DrillList
-                  drillData={uniqueDrills}
-                  href={"content/profile/drills/"}
-                  userId={userId}
+                <BottomSheetScrollView
+                  contentContainerStyle={styles.modalContent}
+                  keyboardDismissMode="interactive"
+                  keyboardShouldPersistTaps="handled"
                 >
+                  {/* Profile Picture */}
+                  <TouchableOpacity onPress={handleImageClick}>
+                    <View style={styles.profilePictureContainer}>
+                      <Image
+                        source={{ uri: userData.pfp }}
+                        style={styles.profilePicture}
+                      />
+                      <View style={styles.penIconContainer}>
+                        <MaterialIcons name="edit" size={24} color="black" />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+
+                  {/* Display Email */}
+                  <View style={styles.emailContainer}>
+                    <Text style={styles.emailText}>{email}</Text>
+                  </View>
+
+                  {/* Name Update input field */}
+                  <BottomSheetTextInput
+                    style={styles.input}
+                    value={newName}
+                    onChangeText={(text) => setNewName(text)}
+                    placeholder="Update your name"
+                  />
+
+                  {/* Change Password Button */}
+                  <Pressable
+                    onPress={() => {
+                      resetForm();
+                      setPasswordInputVisible(!passwordInputVisible);
+                    }}
+                  >
+                    <Text style={styles.changePasswordButton}>
+                      Change Password
+                    </Text>
+                  </Pressable>
+
+                  {/* Password Input Field */}
+                  {passwordInputVisible && (
+                    <>
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={currentPassword}
+                        onChangeText={setCurrentPassword}
+                        placeholder="Enter your current password"
+                        secureTextEntry={true}
+                      />
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={newPassword}
+                        onChangeText={setNewPassword}
+                        placeholder="Enter your new password"
+                        secureTextEntry={true}
+                      />
+                    </>
+                  )}
+
+                  {/* Save Button */}
+                  <TouchableOpacity
+                    style={styles.saveChangesButton}
+                    onPress={handleUpdate}
+                  >
+                    <Text style={styles.saveChangesButtonText}>Update</Text>
+                  </TouchableOpacity>
+
+                  {/* Sign Out Button */}
+                  <Pressable onPress={handleSignOut}>
+                    <Text style={styles.signOutButton}>Sign Out</Text>
+                  </Pressable>
+                </BottomSheetScrollView>
+              </BottomSheetWrapper>
+              {uniqueDrills.length > 0 ? (
+                <View
+                  style={{
+                    paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
+                  }}
+                >
+                  <DrillList
+                    drillData={uniqueDrills}
+                    href={"content/profile/drills/"}
+                    userId={userId}
+                    invalidateKeys={invalidateKeys}
+                  >
+                    {profileHeader}
+                  </DrillList>
+                </View>
+              ) : (
+                <>
                   {profileHeader}
-                </DrillList>
-              </View>
-            ) : (
-              <>
-                {profileHeader}
-                <EmptyScreen
-                  invalidateKeys={invalidateKeys}
-                  text={"No drills attempted yet"}
-                />
-              </>
-            )}
-          </SafeAreaView>
-        </BottomSheetModalProvider>
-      </View>
+                  <EmptyScreen
+                    invalidateKeys={invalidateKeys}
+                    text={"No drills attempted yet"}
+                  />
+                </>
+              )}
+            </SafeAreaView>
+          </BottomSheetModalProvider>
+        </View>
+      </GestureHandlerRootView>
     </PaperWrapper>
   );
 }

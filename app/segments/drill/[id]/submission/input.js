@@ -37,7 +37,8 @@ import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useLeaderboard } from "~/hooks/useLeaderboard";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 /***************************************
  * Firebase Upload
@@ -478,37 +479,37 @@ function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
 }
 
-export default function Input({ drillInfo, setToggleResult, setOutputData }) {
+export default function Input({ setToggleResult, setOutputData }) {
   //Helper varibles
-  const { id, assignedTime } = useLocalSearchParams();
-  const queryClient = useQueryClient();
+  const { id: drillId, assignedTime } = useLocalSearchParams();
+  const {
+    data: currentLeaderboard,
+    isLoading: leaderboardIsLoading,
+    error: leaderboardError,
+  } = useBestAttempts({ drillId: drillId });
 
-  const numInputs = drillInfo.inputs.length;
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo({ drillId: drillId });
+
+  const queryClient = useQueryClient();
 
   const navigation = useNavigation();
 
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId } = currentAuthContext();
 
   const { height } = useWindowDimensions();
 
   //a useState hook to track the inputs on each shot
-  const [inputValues, setInputValues] = useState(
-    Array.from({ length: drillInfo.reps }, () => ({})),
-  );
+  const [inputValues, setInputValues] = useState([]);
 
   const [attemptShots, setattemptShots] = useState([]); //a useState hook to hold the requirements of each shot
 
   const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
-
-  const { id: did } = useLocalSearchParams();
-
-  const {
-    data: currentLeaderboard,
-    isLoading: leaderboardIsLoading,
-    error: leaderboardError,
-  } = useLeaderboard({ drillId: did });
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -527,8 +528,22 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
-    setattemptShots(getShotInfo(drillInfo));
-  }, []);
+    if (drillInfo) {
+      setattemptShots(getShotInfo(drillInfo));
+      setInputValues(Array.from({ length: drillInfo.reps }, () => ({})));
+    }
+  }, [drillInfo]);
+
+  //Loading until an attempt is generated
+  if (leaderboardIsLoading || drillInfoIsLoading) {
+    return <Loading />;
+  }
+
+  if (leaderboardError || drillInfoError) {
+    return <ErrorComponent errorList={[leaderboardError, drillInfoError]} />;
+  }
+
+  const numInputs = drillInfo.inputs.length;
 
   //Varible to store if Submit button is active
   const submitVisible =
@@ -596,13 +611,10 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
     // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
     // useAttempts / useDrillInfo hooks
     const userId = currentUserId;
-    const drillId = did;
     const invalidateKeys = [
-      ["user"],
-      ["drillInfo"],
-      ["best_attempts", currentTeamId, drillId], // keep currentTeamId param as it is a string argument in useLeaderboard's query key
-      ["attempts", { drillId }], // stats pages
-      ["attempts", { userId }], // for profile index (list of drill types)
+      ["userInfo"], //assignments
+      ["attempts", { userId }], // stats pages
+      ["best_attempts", { drillId }],
     ];
 
     //Check if all inputs have been filled in
@@ -623,36 +635,27 @@ export default function Input({ drillInfo, setToggleResult, setOutputData }) {
         inputValues,
         attemptShots,
         currentUserId,
-        did,
+        drillId,
       );
 
       setOutputData(outputData);
-      // invalidate cache on button press
-      invalidateMultipleKeys(queryClient, invalidateKeys);
       uploadAttempt(
         outputData,
         currentUserId,
         assignedTime,
-        id,
+        drillId,
         drillInfo,
         currentLeaderboard,
-      );
+      ).then(() => {
+        // invalidate cache on button press
+        invalidateMultipleKeys(queryClient, invalidateKeys);
+      });
       setToggleResult(true);
     } else {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
     }
   };
-
-  //Loading until an attempt is generated
-  if (attemptShots.length === 0 || leaderboardIsLoading) {
-    console.log("Loading");
-    return <Loading />;
-  }
-
-  if (leaderboardError) {
-    return <ErrorComponent message={[leaderboardError]} />;
-  }
 
   return (
     <PaperWrapper>

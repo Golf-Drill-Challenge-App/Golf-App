@@ -1,13 +1,25 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { Appbar, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Header from "~/components/header";
-import ResultScreen from "~/components/resultScreen";
 import { themeColors } from "~/Constants";
+import ErrorComponent from "~/components/errorComponent";
+import Header from "~/components/header";
+import Loading from "~/components/loading";
+import ResultScreen from "~/components/resultScreen";
+import { useDrillInfo } from "~/hooks/useDrillInfo";
 
-function Result({ submission, drillInfo, setToggleResult }) {
+function Result({ submission, setToggleResult }) {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
+  const {
+    data: drillInfo,
+    error: drillInfoError,
+    isLoading: drillInfoIsLoading,
+  } = useDrillInfo({ drillId: id });
+
+  if (drillInfoIsLoading) return <Loading />;
+
+  if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
