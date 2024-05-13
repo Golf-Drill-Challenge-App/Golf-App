@@ -1,0 +1,12 @@
+{
+  "extends": "expo/jsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./*"
+      ]
+    }
+  }
+}

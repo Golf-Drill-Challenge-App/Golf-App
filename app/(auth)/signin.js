@@ -8,6 +8,7 @@ import { useState } from "react";
 import {
   Image,
   Keyboard,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
