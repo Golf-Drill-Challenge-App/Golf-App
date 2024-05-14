@@ -122,7 +122,7 @@ function Index() {
     data: currentUserData,
     userError: currentUserError,
     userIsLoading: currentUserIsLoading,
-  } = useUserInfo(currentUserId);
+  } = useUserInfo({ userId: currentUserId });
 
   const {
     data: userData,
@@ -222,6 +222,7 @@ function Index() {
                     color={themeColors.accent}
                   />
                 }
+                statusBarHeight={45}
                 anchorPosition="bottom"
                 contentStyle={{ backgroundColor: themeColors.background }}
               >
