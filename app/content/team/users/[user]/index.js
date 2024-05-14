@@ -26,6 +26,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -162,8 +163,7 @@ function Index() {
     currentUserError ||
     userEmailError ||
     userLeaderboardError ||
-    drillInfoError ||
-    attemptsError
+    drillInfoError
   ) {
     return (
       <ErrorComponent
