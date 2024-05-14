@@ -18,7 +18,9 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { themeColors } from "~/Constants";
+import { firebaseErrors, themeColors } from "~/Constants";
+import DialogComponent from "~/components/dialog";
+import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
@@ -32,6 +34,9 @@ export default function SignIn() {
 
   const { height } = useWindowDimensions();
 
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
       // Only allow login as test user while using `yarn test` to reduce errors
@@ -41,8 +46,9 @@ export default function SignIn() {
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
-        alert(e);
         console.log(e);
+        setDialogMessage(firebaseErrors[e["code"]]);
+        setDialogVisible(true);
       }
     }
   }
@@ -54,15 +60,18 @@ export default function SignIn() {
       }
       sendPasswordResetEmail(getAuth(), email)
         .then(() => {
-          alert("Password reset email sent");
+          setDialogMessage("Password reset email sent");
+          setDialogVisible(true);
         })
         .catch((e) => {
-          alert(e);
+          setDialogMessage(firebaseErrors[e["code"]]);
+          setDialogVisible(true);
           console.log(e);
         });
     } catch (e) {
       // dual catch but had to handle empty email
-      alert(e);
+      setDialogMessage(firebaseErrors[e["code"]]);
+      setDialogVisible(true);
       console.log(e);
     }
   }
@@ -120,12 +129,19 @@ export default function SignIn() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <KeyboardAwareScrollView
+      <PaperWrapper>
+	        <KeyboardAwareScrollView
         // allows opening links from search results without closing keyboard first
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
+          <DialogComponent
+            title={"Error"}
+            content={dialogMessage}
+            visible={dialogVisible}
+            onHide={() => setDialogVisible(false)}
+          />
           <Image
             source={{
               uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
@@ -176,6 +192,7 @@ export default function SignIn() {
           </View>
         </View>
       </KeyboardAwareScrollView>
+      </PaperWrapper>
     </TouchableWithoutFeedback>
   );
 }

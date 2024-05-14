@@ -16,8 +16,8 @@ export default function DialogComponent({
   content,
   visible,
   onHide,
-  buttons = [],
-  buttonsFunctions,
+  buttons = ["Ok"],
+  buttonsFunctions = [() => onHide()],
 }) {
   const Buttons = buttons.map((item, index) => {
     let style;

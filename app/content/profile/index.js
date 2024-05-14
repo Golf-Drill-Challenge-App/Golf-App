@@ -32,7 +32,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { themeColors } from "~/Constants";
+import { firebaseErrors, themeColors } from "~/Constants";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -213,7 +213,7 @@ function Index() {
         signOut();
       })
       .catch((e) => {
-        alert(e);
+        showDialog("Error", firebaseErrors[e["code"]]);
         console.log(e);
       });
   }

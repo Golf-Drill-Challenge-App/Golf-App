@@ -15,7 +15,9 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { themeColors } from "~/Constants";
+import { firebaseErrors, themeColors } from "~/Constants";
+import DialogComponent from "~/components/dialog";
+import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 
@@ -31,9 +33,13 @@ export default function SignUp() {
 
   const { height } = useWindowDimensions();
 
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+
   async function handleSubmit() {
     if (password !== passwordCheck) {
-      alert("Passwords don't match");
+      setDialogMessage("Passwords don't match");
+      setDialogVisible(true);
       return;
     }
 
@@ -63,7 +69,8 @@ export default function SignUp() {
 
       // console.log(userCredential.user);
     } catch (e) {
-      alert(e);
+      setDialogMessage(firebaseErrors[e["code"]]);
+      setDialogVisible(true);
       console.log(e);
     }
   }
@@ -117,12 +124,19 @@ export default function SignUp() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <KeyboardAwareScrollView
+           <PaperWrapper>
+	        <KeyboardAwareScrollView
         // allows opening links from search results without closing keyboard first
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
+          <DialogComponent
+            title={"Error"}
+            content={dialogMessage}
+            visible={dialogVisible}
+            onHide={() => setDialogVisible(false)}
+          />
           <Image
             source={{
               uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
@@ -185,6 +199,7 @@ export default function SignUp() {
           </View>
         </View>
       </KeyboardAwareScrollView>
+      </PaperWrapper>
     </TouchableWithoutFeedback>
   );
 }

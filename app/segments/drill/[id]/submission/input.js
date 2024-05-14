@@ -478,13 +478,13 @@ export default function Input({ setToggleResult, setOutputData }) {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
-  } = useBestAttempts({ drillId: drillId });
+  } = useBestAttempts({ drillId });
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo({ drillId: drillId });
+  } = useDrillInfo({ drillId });
 
   const queryClient = useQueryClient();
 
@@ -517,6 +517,9 @@ export default function Input({ setToggleResult, setOutputData }) {
   /***** Invalid Input dialog Stuff *****/
   const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
   const hideInvalidDialog = () => setInvalidDialogVisible(false);
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
@@ -762,54 +765,61 @@ export default function Input({ setToggleResult, setOutputData }) {
                   onHide={hideEmptyDialog}
                 />
 
-                {/* Error Dialog: Invalid Input*/}
-                <DialogComponent
-                  type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be numbers."
-                  visible={invalidDialogVisible}
-                  onHide={hideInvalidDialog}
-                />
-              </KeyboardAwareScrollView>
-              {/* Navigation */}
-              <View style={styles.navigationContainer}>
-                <Text
-                  onPress={() => {
-                    const newInputValues = Array.from(
-                      { length: attemptShots.length },
-                      () => ({}),
-                    );
-                    for (let i = 0; i < attemptShots.length; i++) {
-                      drillInfo.inputs.forEach((item) => {
-                        switch (item.id) {
-                          case "carry":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() *
-                                attemptShots[displayedShot].items["target"] +
-                                attemptShots[displayedShot].items["target"] / 2,
-                            ).toString();
-                            break;
-                          case "sideLanding":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 21 - 10,
-                            ).toString();
-                            break;
-                          case "strokes":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 2 + 1,
-                            ).toString();
-                            break;
-                        }
-                      });
-                    }
-                    setInputValues(newInputValues);
-                    setDisplayedShot(attemptShots.length - 1);
-                    setCurrentShot(attemptShots.length - 1);
-                  }}
-                >
-                  Fill in all inputs
-                </Text>
-                {buttonDisplayHandler()}
+              {/* Error Dialog: Invalid Input*/}
+              <DialogComponent
+                type={"snackbar"}
+                title={"Error!"}
+                content="All inputs must be numbers."
+                visible={invalidDialogVisible}
+                onHide={hideInvalidDialog}
+              />
+
+              <DialogComponent
+                title={"Error"}
+                content={dialogMessage}
+                visible={dialogVisible}
+                onHide={() => setDialogVisible(false)}
+              />
+            </KeyboardAwareScrollView>
+            {/* Navigation */}
+            <View style={styles.navigationContainer}>
+              <Text
+                onPress={() => {
+                  const newInputValues = Array.from(
+                    { length: attemptShots.length },
+                    () => ({}),
+                  );
+                  for (let i = 0; i < attemptShots.length; i++) {
+                    drillInfo.inputs.forEach((item) => {
+                      switch (item.id) {
+                        case "carry":
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() *
+                              attemptShots[displayedShot].items["target"] +
+                              attemptShots[displayedShot].items["target"] / 2,
+                          ).toString();
+                          break;
+                        case "sideLanding":
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() * 21 - 10,
+                          ).toString();
+                          break;
+                        case "strokes":
+                          newInputValues[i][item.id] = Math.floor(
+                            Math.random() * 2 + 1,
+                          ).toString();
+                          break;
+                      }
+                    });
+                  }
+                  setInputValues(newInputValues);
+                  setDisplayedShot(attemptShots.length - 1);
+                  setCurrentShot(attemptShots.length - 1);
+                }}
+              >
+                Fill in all inputs
+              </Text>
+              {buttonDisplayHandler()}
 
                 <Text
                   style={{
