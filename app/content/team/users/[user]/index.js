@@ -255,7 +255,7 @@ function Index() {
                   }}
                   title="Remove"
                 />
-                <Divider />
+                {/* <Divider />
                 <Menu.Item
                   leadingIcon="account-lock-outline"
                   onPress={() => {
@@ -263,7 +263,7 @@ function Index() {
                     setBlacklistDialogVisible(true);
                   }}
                   title="Blacklist"
-                />
+                /> */}
               </Menu>
             ) : (
               <></>
@@ -306,7 +306,7 @@ function Index() {
           ]}
         />
         {/* Blacklist user dialog */}
-        <DialogComponent
+        {/* <DialogComponent
           title={"Alert"}
           content="Blacklisting this user will delete all their data and prevent them from joining the team again."
           visible={blacklistDialogVisible}
@@ -320,7 +320,7 @@ function Index() {
               navigation.goBack();
             },
           ]}
-        />
+        /> */}
       </SafeAreaView>
     </PaperWrapper>
   );
