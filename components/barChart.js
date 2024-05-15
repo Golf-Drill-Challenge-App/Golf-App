@@ -13,7 +13,6 @@ import { Path } from "react-native-svg";
 import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
-import { LogBox } from "react-native";
 import { Button } from "react-native-paper";
 import { prettyTitle, shortTitle, themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
