@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { themeColors } from "~/Constants";
@@ -27,6 +28,8 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+
+  const { height } = useWindowDimensions();
 
   async function handleSubmit() {
     if (password !== passwordCheck) {
@@ -64,6 +67,49 @@ export default function SignUp() {
       console.log(e);
     }
   }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      height: height,
+    },
+    image: {
+      marginTop: 0,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: "bold",
+      marginTop: 5,
+    },
+    button: {
+      borderRadius: 12,
+      marginTop: 20,
+      marginHorizontal: (INPUT_WIDTH - BUTTON_WIDTH) / 2,
+      width: BUTTON_WIDTH,
+    },
+    buttonText: {
+      fontSize: 18,
+      color: "white",
+      paddingVertical: 8,
+      textAlign: "center",
+    },
+    input: {
+      marginVertical: 5,
+      paddingVertical: Platform.OS === "ios" ? 10 : 5, // padding and margins on ios look different than android?
+      backgroundColor: "white",
+      paddingHorizontal: 5,
+      width: INPUT_WIDTH,
+      maxWidth: INPUT_WIDTH,
+    },
+    placeholderText: {
+      marginTop: 5,
+    },
+    inputView: {
+      marginTop: 20,
+    },
+  });
 
   return (
     <TouchableWithoutFeedback
@@ -142,46 +188,3 @@ export default function SignUp() {
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    marginTop: 50,
-    marginBottom: 50,
-  },
-  image: {
-    marginTop: 0,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginTop: 5,
-  },
-  button: {
-    borderRadius: 12,
-    marginTop: 20,
-    marginHorizontal: (INPUT_WIDTH - BUTTON_WIDTH) / 2,
-    width: BUTTON_WIDTH,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "white",
-    paddingVertical: 8,
-    textAlign: "center",
-  },
-  input: {
-    marginVertical: 5,
-    paddingVertical: Platform.OS === "ios" ? 10 : 5, // padding and margins on ios look different than android?
-    backgroundColor: "white",
-    paddingHorizontal: 5,
-    width: INPUT_WIDTH,
-    maxWidth: INPUT_WIDTH,
-  },
-  placeholderText: {
-    marginTop: 5,
-  },
-  inputView: {
-    marginTop: 20,
-  },
-});
