@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import React from "react";
+import React, { useMemo } from "react";
 import { Appbar, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
@@ -19,6 +19,15 @@ export default function Index() {
   const navigation = useNavigation();
   const { id: drillId } = useLocalSearchParams();
 
+  const tabComponent = useMemo(
+    () => ({
+      leaderboard: <Leaderboard />,
+      description: <Description />,
+      stats: <Stat />,
+    }),
+    [drillId],
+  ); // Recreate pages only if drillId changes
+
   const {
     data: drillInfo,
     error: drillInfoError,
@@ -29,23 +38,12 @@ export default function Index() {
 
   if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
 
-  const tabComponent = () => {
-    switch (value) {
-      case "leaderboard":
-        return <Leaderboard />;
-      case "description":
-        return <Description />;
-      case "stats":
-        return <Stat />;
-    }
-  };
-
   return (
     <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
-          title={drillInfo.drillType}
-          subTitle={drillInfo.subType}
+          title={drillInfo.subType}
+          subTitle={drillInfo.drillType}
           preChildren={
             <Appbar.BackAction
               onPress={() => {
@@ -85,7 +83,7 @@ export default function Index() {
             },
           ]}
         />
-        {tabComponent()}
+        {tabComponent[value]}
       </SafeAreaView>
     </PaperWrapper>
   );

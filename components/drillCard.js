@@ -40,10 +40,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-end",
   },
-  specText: {
-    fontSize: 14,
-    color: "#666",
-  },
   inputText: {
     fontSize: 14,
     color: "#666",

@@ -23,4 +23,14 @@ const prettyTitle = {
   strokesGainedAverage: "Strokes Gained Average",
 };
 
-export { prettyTitle, themeColors };
+const shortTitle = {
+  strokesGained: "SG",
+  strokesGainedAverage: "SGA",
+  sideLanding: "SL",
+  carryDiffAverage: "CDA",
+  proxHoleAverage: "PHA",
+  sideLandingAverage: "SLA",
+  sideLandingTotal: "SLT",
+};
+
+export { prettyTitle, shortTitle, themeColors };

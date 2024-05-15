@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -19,6 +20,9 @@ export default function ResultScreen({
   attemptId = null,
   attemptData = null,
 }) {
+  useEffect(() => {
+    console.log("rendering ResultScreen for: ", attemptId);
+  });
   const { width } = useWindowDimensions();
   const {
     data: drillInfo,
@@ -42,16 +46,22 @@ export default function ResultScreen({
 
   let attempt = attemptId ? fetchedAttempt : attemptData;
 
-  let dots = [];
-  if (
-    drillInfo["outputs"].includes("sideLanding") &&
-    drillInfo["outputs"].includes("carryDiff")
-  ) {
-    dots = attempt["shots"].map((value) => [
-      value["sideLanding"],
-      value["carryDiff"],
-    ]);
-  }
+  let dots = attempt["shots"].map((value) => [
+    value["sideLanding"] ? value["sideLanding"] : 0,
+    value["carryDiff"] ? value["carryDiff"] : 0,
+  ]);
+
+  let yValues = dots.map((value) => value[1]);
+  let yMax = Math.max(...yValues, 10) + 10;
+  yMax += 0.1 * yMax;
+  let yMin = Math.min(...yValues, -10) - 10;
+  yMin += 0.1 * yMin;
+
+  let xValues = dots.map((value) => value[0]);
+  let xMax = Math.max(...xValues, 10);
+  xMax += 0.1 * xMax;
+  let xMin = Math.min(...xValues, -10);
+  xMin += 0.1 * xMin;
 
   function getStyle(idx) {
     let styles = {
@@ -70,11 +80,12 @@ export default function ResultScreen({
   return (
     <>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.sectionTitle}>Aggregate Data</Text>
+        <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+          Aggregate Data
+        </Text>
         <View
           style={{
-            margin: 10,
-            backgroundColor: "#f5f5f5",
+            backgroundColor: themeColors.background,
             borderWidth: 1,
             borderColor: themeColors.border,
             borderRadius: 8,
@@ -91,32 +102,31 @@ export default function ResultScreen({
           ))}
         </View>
 
-        {dots.length > 0 && (
-          <View style={styles.chartSection}>
-            <Text style={styles.sectionTitle}>Shot Tendency</Text>
-            <View style={{ ...styles.chartContainer, width: width * 0.8 }}>
-              <ScatterChart
-                style={styles.chart}
-                backgroundColor={themeColors.highlight}
-                data={[
-                  {
-                    color: "blue",
-                    unit: "%",
-                    values: dots,
-                  },
-                ]}
-                horizontalLinesAt={[0]}
-                verticalLinesAt={[0]}
-                minY={-10}
-                maxY={10}
-                minX={-35}
-                maxX={35}
-                chartWidth={width * 0.8}
-              />
-            </View>
+        <Text style={styles.sectionTitle}>Shot Tendency</Text>
+        <View style={styles.chartSection}>
+          <View style={{ width: width * 0.9 }}>
+            <ScatterChart
+              style={styles.chart}
+              backgroundColor={themeColors.highlight}
+              data={[
+                {
+                  color: "blue",
+                  unit: "%",
+                  values: dots,
+                },
+              ]}
+              horizontalLinesAt={[0]}
+              verticalLinesAt={[0]}
+              minY={yMin}
+              maxY={yMax}
+              minX={xMin}
+              maxX={xMax}
+              chartWidth={width * 0.9}
+            />
           </View>
-        )}
+        </View>
 
+        <Text style={styles.sectionTitle}>Shot History</Text>
         {attempt["shots"] &&
           attempt["shots"].map((shot) => (
             <ShotAccordion
@@ -132,78 +142,21 @@ export default function ResultScreen({
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
   container: {
     paddingBottom: 0,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
+    marginLeft: 11,
+    marginRight: 11,
   },
   sectionTitle: {
     fontSize: 26,
     fontWeight: "bold",
     marginBottom: 10,
-    alignSelf: "center",
+    marginTop: 30,
   },
-  dataSection: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    padding: 15,
-    backgroundColor: themeColors.background,
-    borderRadius: 10,
-    width: "60%",
-    alignSelf: "center",
-  },
-  dataTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-
-  dataRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-
-  dataLabel: {
-    fontSize: 14,
-  },
-
-  dataValue: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-
   chartSection: {
-    marginBottom: 30,
     alignItems: "center",
   },
-  chartContainer: {},
   chart: {
     backgroundColor: "#ffffff",
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignSelf: "center",
-    height: 350,
-  },
-
-  restartButton: {
-    margin: 10,
-    alignItems: "center",
   },
 });

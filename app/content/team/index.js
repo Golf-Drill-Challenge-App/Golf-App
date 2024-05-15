@@ -133,6 +133,8 @@ function Index() {
                     borderColor: themeColors.border,
                   }}
                   placeholder="Search team members"
+                  selectionColor={themeColors.accent}
+                  cursorColor={themeColors.accent}
                 />
               </View>
 

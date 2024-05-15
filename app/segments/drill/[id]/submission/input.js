@@ -45,8 +45,6 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
  ***************************************/
 
 async function completeAssigned(userId, assignedTime, drillId, attemptId) {
-  console.log("WAS IT ASIGNED 5 and ID", assignedTime, userId);
-
   const userRef = doc(db, "teams", "1", "users", userId);
 
   const getDocument = async () => {
@@ -65,8 +63,6 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
         }
         return assignment;
       });
-
-      console.log("DOCUMENT DATA INSIDE", updatedAssignedData[0].completed);
 
       try {
         await updateDoc(userRef, { assigned_data: updatedAssignedData });
@@ -91,8 +87,6 @@ async function uploadAttempt(
   drillInfo,
   currentLeaderboard,
 ) {
-  console.log("WAS IT ASIGNED 4 and ID", assignedTime, userId);
-
   try {
     //create new document
     const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
@@ -663,8 +657,8 @@ export default function Input({ setToggleResult, setOutputData }) {
         <View style={{ height: "100%" }}>
           <BottomSheetModalProvider>
             <Header
-              title={drillInfo.drillType}
-              subTitle={drillInfo.subType}
+              title={drillInfo.subType}
+              subTitle={drillInfo.drillType}
               preChildren={
                 <Appbar.Action
                   icon="close"

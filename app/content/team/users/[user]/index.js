@@ -63,7 +63,7 @@ function Index() {
       />
     );
   }
-  const profileHeader = (
+  const profileHeader = () => (
     <View style={styles.profileContainer}>
       <ProfileCard user={userData} email={userEmail} />
     </View>

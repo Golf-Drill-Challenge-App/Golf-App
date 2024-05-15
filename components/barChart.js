@@ -13,8 +13,9 @@ import { Path } from "react-native-svg";
 import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
+import { LogBox } from "react-native";
 import { Button } from "react-native-paper";
-import { themeColors } from "~/Constants";
+import { prettyTitle, shortTitle, themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "~/context/Auth";
@@ -26,6 +27,10 @@ export default function BarChartScreen({
   drillInfo,
   invalidateKeys,
 }) {
+  useEffect(() => {
+    console.log("rendering barchart for: ", drillId);
+    LogBox.ignoreLogs(["VirtualizedLists"]);
+  }, []);
   if (drillData.length === 0) {
     return (
       <EmptyScreen
@@ -39,26 +44,39 @@ export default function BarChartScreen({
 
   const [page, setPage] = useState(0);
 
+  const [aggOutput, setAggOutput] = useState(drillInfo["mainOutputAttempt"]);
+  const [aggOutputValues] = useState(
+    Object.keys(drillInfo["aggOutputs"]).map((aggOutput) => {
+      return {
+        label: prettyTitle[aggOutput],
+        value: aggOutput,
+      };
+    }),
+  );
+
   const { currentTeamId } = currentAuthContext();
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: false });
   }, [page]);
 
-  const sortedDrillData = useMemo(
-    () => drillData.sort((a, b) => a.time - b.time),
-    [drillData],
+  const sortedDrillAttempts = useMemo(
+    () => drillAttempts.sort((a, b) => a.time - b.time),
+    [drillAttempts],
   );
 
   const itemsPerPage = 300;
 
-  const endIndex = sortedDrillData.length - page * itemsPerPage;
+  const endIndex = sortedDrillAttempts.length - page * itemsPerPage;
   const startIndex = Math.max(endIndex - itemsPerPage, 0);
-  const totalPages = Math.ceil(sortedDrillData.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedDrillAttempts.length / itemsPerPage);
 
-  const slicedDrillData = sortedDrillData.slice(startIndex, endIndex);
+  const slicedDrillAttempts = useMemo(
+    () => sortedDrillAttempts.slice(startIndex, endIndex),
+    [startIndex, endIndex],
+  );
 
-  const data = slicedDrillData.map((value) => {
+  const data = slicedDrillAttempts.map((value) => {
     if (isNaN(value[drillInfo["mainOutputAttempt"]])) {
       //the terminator
       removeAttempt({ currentTeamId, attemptId: value["id"] }).then(() => {
@@ -70,7 +88,7 @@ export default function BarChartScreen({
       });
       return 0;
     }
-    return value[drillInfo["mainOutputAttempt"]];
+    return value[aggOutput];
   });
 
   const yMin = Math.min(...data, 0); //For when minimum data is larger than 0
@@ -85,6 +103,8 @@ export default function BarChartScreen({
   ]);
   const [movingAvgRangeDropdownOpen, setMovingAvgRangeDropdownOpen] =
     useState(false);
+
+  const [aggOutputDropdownOpen, setAggOutputDropdownOpen] = useState(false);
 
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState(0);
@@ -102,6 +122,10 @@ export default function BarChartScreen({
       data.length - 1,
     );
   };
+
+  useEffect(() => {
+    console.log("Selected attemptID: ", sortedDrillAttempts[selected]["id"]);
+  }, [selected]);
 
   const processedData = data.map((value, index) => ({
     value: value,
@@ -142,36 +166,41 @@ export default function BarChartScreen({
 
   const shotAccordionList = useMemo(
     () =>
-      sortedDrillData[selected]["shots"].map((shot) => (
+      sortedDrillAttempts[selected]["shots"].map((shot) => (
         <ShotAccordion
           key={shot["sid"]}
           shot={shot}
           drillInfo={drillInfo}
-          total={sortedDrillData[selected]["shots"].length}
+          total={sortedDrillAttempts[selected]["shots"].length}
         />
       )),
-    [sortedDrillData, drillInfo, selected],
+    [sortedDrillAttempts, drillInfo, selected],
   );
 
   const styles = StyleSheet.create({
-    movingAvgContainer: {
-      flexDirection: "row",
+    dropDownSection: {
       alignItems: "center",
       marginBottom: 20,
       marginTop: 13,
-      zIndex: 3,
-      justifyContent: "center", // Center the content horizontally
+      marginHorizontal: 10,
+      zIndex: 6,
+      justifyContent: "space-evenly", // Center the content horizontally
     },
-    movingAvgLabel: {
+    dropDownAndLabelContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+      marginTop: 5,
+    },
+    dropDownLabel: {
       fontSize: 18,
       fontWeight: "bold",
       marginRight: 10,
       marginTop: 4.5,
+      marginBottom: 5,
+      flex: 1,
     },
-    dropdownContainer: {
-      width: 70,
-      height: 45,
-      zIndex: 3,
+    dropDownContainer: {
       borderColor: themeColors.border,
     },
     dropdown: {
@@ -218,7 +247,8 @@ export default function BarChartScreen({
     },
     bottomContainer: {
       marginTop: 20,
-      // marginBottom: 20,
+      marginLeft: 11,
+      marginRight: 11,
     },
     bottomTextContainer: {
       flexDirection: "row",
@@ -237,18 +267,44 @@ export default function BarChartScreen({
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
-      <View style={styles.movingAvgContainer}>
-        <Text style={styles.movingAvgLabel}>Moving Avg.</Text>
+      <View style={styles.dropDownSection}>
+        <View
+          style={[
+            styles.dropDownAndLabelContainer,
+            { zIndex: 7, flexDirection: "row", alignItems: "center" },
+          ]}
+        >
+          <Text style={styles.dropDownLabel}>Moving Avg.</Text>
 
-        <DropDownPicker
-          setValue={setMovingAvgRange}
-          value={movingAvgRange}
-          items={movingAvgRangeValues}
-          open={movingAvgRangeDropdownOpen}
-          setOpen={setMovingAvgRangeDropdownOpen}
-          containerStyle={styles.dropdownContainer}
-          style={styles.dropdown}
-        />
+          <DropDownPicker
+            setValue={setMovingAvgRange}
+            value={movingAvgRange}
+            items={movingAvgRangeValues}
+            open={movingAvgRangeDropdownOpen}
+            setOpen={setMovingAvgRangeDropdownOpen}
+            containerStyle={[styles.dropDownContainer, { width: 80 }]}
+            style={styles.dropdown}
+          />
+        </View>
+        <View style={styles.dropDownAndLabelContainer}>
+          <Text style={styles.dropDownLabel}>Agg Output</Text>
+
+          <DropDownPicker
+            setValue={setAggOutput}
+            value={aggOutput}
+            items={aggOutputValues}
+            open={aggOutputDropdownOpen}
+            setOpen={setAggOutputDropdownOpen}
+            containerStyle={[
+              styles.dropDownContainer,
+              {
+                flex: 1,
+                flexGrow: 1.6,
+              },
+            ]}
+            style={styles.dropdown}
+          />
+        </View>
       </View>
       <View
         style={{
@@ -256,9 +312,9 @@ export default function BarChartScreen({
           justifyContent: "space-evenly",
         }}
       >
-        <Text>{formatDate(sortedDrillData[startIndex]["time"])}</Text>
+        <Text>{formatDate(sortedDrillAttempts[startIndex]["time"])}</Text>
         <Text>to</Text>
-        <Text>{formatDate(sortedDrillData[endIndex - 1]["time"])}</Text>
+        <Text>{formatDate(sortedDrillAttempts[endIndex - 1]["time"])}</Text>
       </View>
       <View
         style={{
@@ -348,7 +404,7 @@ export default function BarChartScreen({
       <View style={styles.bottomContainer}>
         <View style={styles.bottomTextContainer}>
           <Text style={{ ...styles.bottomText, width: "30%" }}>
-            {formatDate(sortedDrillData[selected]["time"])}
+            {formatDate(sortedDrillAttempts[selected]["time"])}
           </Text>
           <Text
             style={{ ...styles.bottomText, width: "40%", textAlign: "center" }}
@@ -358,7 +414,7 @@ export default function BarChartScreen({
           <Text
             style={{ ...styles.bottomText, width: "30%", textAlign: "right" }}
           >
-            SG: {numTrunc(data[selected])}
+            {shortTitle[aggOutput]}: {numTrunc(data[selected])}
           </Text>
         </View>
 

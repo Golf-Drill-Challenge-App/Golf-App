@@ -54,7 +54,7 @@ export default function Stat() {
         />
 
         <BarChartScreen
-          drillData={drillAttempts}
+          drillAttempts={drillAttempts}
           drillInfo={drillInfo}
           invalidateKeys={invalidateKeys}
         />
