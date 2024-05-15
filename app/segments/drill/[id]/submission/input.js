@@ -686,25 +686,33 @@ export default function Input({ setToggleResult, setOutputData }) {
             <KeyboardAwareScrollView>
               {/* Shot Number / Total shots */}
               <View style={styles.shotNumContainer}>
-                <Text style={styles.shotNumber}>
-                  Shot {attemptShots[displayedShot].shotNum}
-                  <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
-                </Text>
+                {attemptShots[displayedShot] ? (
+                  <Text style={styles.shotNumber}>
+                    Shot {attemptShots[displayedShot].shotNum}
+                    <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
+                  </Text>
+                ) : (
+                  <Text>"attemptShots[displayedShot] not defined yet"</Text>
+                )}
               </View>
 
               <View style={styles.container}>
                 {/* Instruction */}
 
-                <View style={styles.horizontalContainer}>
-                  {drillInfo.requirements.map((item, id) => (
-                    <DrillTarget
-                      key={id}
-                      prompt={item.prompt}
-                      distanceMeasure={item.distanceMeasure}
-                      target={attemptShots[displayedShot].items[item.name]}
-                    />
-                  ))}
-                </View>
+                {attemptShots[displayedShot] ? (
+                  <View style={styles.horizontalContainer}>
+                    {drillInfo.requirements.map((item, id) => (
+                      <DrillTarget
+                        key={id}
+                        prompt={item.prompt}
+                        distanceMeasure={item.distanceMeasure}
+                        target={attemptShots[displayedShot].items[item.name]}
+                      />
+                    ))}
+                  </View>
+                ) : (
+                  <Text>"attemptShots[displayedShot] not defined yet"</Text>
+                )}
 
                 {/* Inputs */}
 
