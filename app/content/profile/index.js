@@ -140,10 +140,6 @@ function Index() {
     (drillId) => drillInfo[drillId],
   );
 
-  const uniqueDrills = Object.keys(userLeaderboard).map(
-    (drillId) => drillInfo[drillId],
-  );
-
   const firebaseProfileImageUpload = async (uri) => {
     try {
       setImageUploading(true);
