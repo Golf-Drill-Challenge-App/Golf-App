@@ -47,30 +47,39 @@ export default function SignIn() {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
         console.log(e);
-        setDialogMessage(firebaseErrors[e["code"]]);
+        if (e["code"]) {
+          if (firebaseErrors[e["code"]]) {
+            setDialogMessage(firebaseErrors[e["code"]]);
+          } else {
+            setDialogMessage(e["code"]);
+          }
+        } else {
+          setDialogMessage(String(e));
+        }
         setDialogVisible(true);
       }
     }
   }
 
   async function handleForgotPassword() {
-    try {
-      sendPasswordResetEmail(getAuth(), email)
-        .then(() => {
-          setDialogMessage("Password reset email sent");
-          setDialogVisible(true);
-        })
-        .catch((e) => {
-          setDialogMessage(firebaseErrors[e["code"]]);
-          setDialogVisible(true);
-          console.log(e);
-        });
-    } catch (e) {
-      // dual catch but had to handle empty email
-      setDialogMessage(firebaseErrors[e["code"]]);
-      setDialogVisible(true);
-      console.log(e);
-    }
+    sendPasswordResetEmail(getAuth(), email)
+      .then(() => {
+        setDialogMessage("Password reset email sent");
+        setDialogVisible(true);
+      })
+      .catch((e) => {
+        console.log(e);
+        if (e["code"]) {
+          if (firebaseErrors[e["code"]]) {
+            setDialogMessage(firebaseErrors[e["code"]]);
+          } else {
+            setDialogMessage(e["code"]);
+          }
+        } else {
+          setDialogMessage(String(e));
+        }
+        setDialogVisible(true);
+      });
   }
 
   const styles = StyleSheet.create({

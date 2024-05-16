@@ -213,8 +213,8 @@ function Index() {
         signOut();
       })
       .catch((e) => {
-        showDialog("Error", firebaseErrors[e["code"]]);
         console.log(e);
+        showDialog("Error", firebaseErrors[e["code"]]);
       });
   }
 

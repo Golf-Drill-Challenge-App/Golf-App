@@ -37,13 +37,10 @@ export default function SignUp() {
   const [dialogMessage, setDialogMessage] = useState("");
 
   async function handleSubmit() {
-    if (password !== passwordCheck) {
-      setDialogMessage("Passwords don't match");
-      setDialogVisible(true);
-      return;
-    }
-
     try {
+      if (password !== passwordCheck) {
+        throw "Passwords don't match";
+      }
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -69,9 +66,17 @@ export default function SignUp() {
 
       // console.log(userCredential.user);
     } catch (e) {
-      setDialogMessage(firebaseErrors[e["code"]]);
-      setDialogVisible(true);
       console.log(e);
+      if (e["code"]) {
+        if (firebaseErrors[e["code"]]) {
+          setDialogMessage(firebaseErrors[e["code"]]);
+        } else {
+          setDialogMessage(e["code"]);
+        }
+      } else {
+        setDialogMessage(String(e));
+      }
+      setDialogVisible(true);
     }
   }
 
