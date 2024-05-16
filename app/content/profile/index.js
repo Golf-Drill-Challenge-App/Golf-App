@@ -373,8 +373,8 @@ function Index() {
 
   return (
     <PaperWrapper>
-      <GestureHandlerRootView>
-        <View style={{ height: height, width: width }}>
+      <View style={{ height: height, width: width }}>
+        <GestureHandlerRootView>
           <BottomSheetModalProvider>
             <DialogComponent
               type={"snackbar"}
@@ -520,8 +520,8 @@ function Index() {
               )}
             </SafeAreaView>
           </BottomSheetModalProvider>
-        </View>
-      </GestureHandlerRootView>
+        </GestureHandlerRootView>
+      </View>
     </PaperWrapper>
   );
 }

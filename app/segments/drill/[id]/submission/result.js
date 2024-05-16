@@ -15,7 +15,7 @@ function Result({ submission, setToggleResult }) {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo({ drillId: id });
+  } = useDrillInfo({ drillId });
 
   if (drillInfoIsLoading) return <Loading />;
 

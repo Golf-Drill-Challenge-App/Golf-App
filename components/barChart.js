@@ -13,7 +13,6 @@ import { Path } from "react-native-svg";
 import { BarChart, Grid, YAxis } from "react-native-svg-charts";
 import { clampNumber, formatDate, numTrunc } from "~/Utility";
 
-import { LogBox } from "react-native";
 import { Button } from "react-native-paper";
 import { prettyTitle, shortTitle, themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -23,15 +22,15 @@ import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
 
 export default function BarChartScreen({
-  drillData,
+  drillAttempts,
   drillInfo,
   invalidateKeys,
 }) {
   useEffect(() => {
-    console.log("rendering barchart for: ", drillId);
+    console.log("rendering barchart for: ", drillInfo["did"]);
     LogBox.ignoreLogs(["VirtualizedLists"]);
   }, []);
-  if (drillData.length === 0) {
+  if (drillAttempts.length === 0) {
     return (
       <EmptyScreen
         invalidateKeys={invalidateKeys}

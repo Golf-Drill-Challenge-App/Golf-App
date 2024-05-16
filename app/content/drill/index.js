@@ -32,7 +32,6 @@ export default function Index() {
       router.push({
         pathname: `content/drill/${drillId}`,
         params: {
-          id: `${drillId}`,
           assignedTime: assignedTime,
         },
       });

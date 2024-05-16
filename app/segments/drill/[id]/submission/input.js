@@ -11,10 +11,10 @@ import {
   getDoc,
   runTransaction,
   setDoc,
-  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -75,7 +75,7 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
     }
   };
 
-  getDocument();
+  await getDocument();
 }
 
 //A function to upload the outputData to the "attempts" collection
@@ -87,47 +87,45 @@ async function uploadAttempt(
   drillInfo,
   currentLeaderboard,
 ) {
+  //create new document
+  const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+
+  //Newly created doc Id. Useful for finding upload data in testing.
+  console.log("New Attempt Ref ID: ", newAttemptRef.id);
+
+  //add id of new document into the data
+  const uploadData = { ...outputData, id: newAttemptRef.id };
   try {
-    //create new document
-    const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+    // Upload the data
+    await setDoc(newAttemptRef, uploadData);
+    console.log("Document successfully uploaded!");
 
-    //Newly created doc Id. Useful for finding upload data in testing.
-    console.log("New Attempt Ref ID: ", newAttemptRef.id);
+    // Call function to check for leaderboard update
+    await handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
 
-    //add id of new document into the data
-    const uploadData = { ...outputData, id: newAttemptRef.id };
-
-    //upload the data
-    await setDoc(newAttemptRef, uploadData)
-      .then(() => {
-        console.log("Document successfully uploaded!");
-
-        //Call function to check for leaderboard update
-        handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
-
-        //Check if drill was assigned
-        if (assignedTime) {
-          completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
-        }
-      })
-      .catch((error) => {
-        console.error("Error uploading document: ", error);
-      });
+    // Check if drill was assigned
+    if (assignedTime) {
+      await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
+    }
   } catch (e) {
+    console.error("Error uploading document: ", e);
     alert(e);
-    console.log(e);
   }
 }
 
 //A function to check leaderboard and update if needed
-function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
+async function handleLeaderboardUpdate(
+  uploadData,
+  drillInfo,
+  currentLeaderboard,
+) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
   //check if the user exists on the leaderboard
   if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    await uploadNewLeaderboard(mainOutputAttempt, uploadData);
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -143,7 +141,7 @@ function handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard) {
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      uploadNewLeaderboard(mainOutputAttempt, uploadData);
+      await uploadNewLeaderboard(mainOutputAttempt, uploadData);
     } else {
       console.log("Didn't update");
     }
@@ -529,7 +527,7 @@ export default function Input({ setToggleResult, setOutputData }) {
   }, [drillInfo]);
 
   //Loading until an attempt is generated
-  if (leaderboardIsLoading || drillInfoIsLoading) {
+  if (leaderboardIsLoading || drillInfoIsLoading || attemptShots.length === 0) {
     return <Loading />;
   }
 
@@ -654,177 +652,181 @@ export default function Input({ setToggleResult, setOutputData }) {
   return (
     <PaperWrapper>
       <SafeAreaView style={{ height: height }}>
-        <View style={{ height: "100%" }}>
-          <BottomSheetModalProvider>
-            <Header
-              title={drillInfo.subType}
-              subTitle={drillInfo.drillType}
-              preChildren={
-                <Appbar.Action
-                  icon="close"
-                  onPress={() => navigation.goBack()}
-                  color={themeColors.accent}
-                />
-              }
-              postChildren={
-                <Appbar.Action
-                  icon="information-outline"
-                  onPress={() => {
-                    descriptionModalRef.current?.present();
-                  }}
-                  color={themeColors.accent}
-                />
-              }
-            />
+        <GestureHandlerRootView>
+          <View style={{ height: "100%" }}>
+            <BottomSheetModalProvider>
+              <Header
+                title={drillInfo.subType}
+                subTitle={drillInfo.drillType}
+                preChildren={
+                  <Appbar.Action
+                    icon="close"
+                    onPress={() => navigation.goBack()}
+                    color={themeColors.accent}
+                  />
+                }
+                postChildren={
+                  <Appbar.Action
+                    icon="information-outline"
+                    onPress={() => {
+                      descriptionModalRef.current?.present();
+                    }}
+                    color={themeColors.accent}
+                  />
+                }
+              />
 
-            <KeyboardAwareScrollView>
-              {/* Shot Number / Total shots */}
-              <View style={styles.shotNumContainer}>
-                <Text style={styles.shotNumber}>
-                  Shot {attemptShots[displayedShot].shotNum}
-                  <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
-                </Text>
-              </View>
+              <KeyboardAwareScrollView>
+                {/* Shot Number / Total shots */}
+                <View style={styles.shotNumContainer}>
+                  <Text style={styles.shotNumber}>
+                    Shot {attemptShots[displayedShot].shotNum}
+                    <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
+                  </Text>
+                </View>
 
-              <View style={styles.container}>
-                {/* Instruction */}
+                <View style={styles.container}>
+                  {/* Instruction */}
 
-                <View style={styles.horizontalContainer}>
-                  {drillInfo.requirements.map((item, id) => (
-                    <DrillTarget
+                  <View style={styles.horizontalContainer}>
+                    {drillInfo.requirements.map((item, id) => (
+                      <DrillTarget
+                        key={id}
+                        prompt={item.prompt}
+                        distanceMeasure={item.distanceMeasure}
+                        target={attemptShots[displayedShot].items[item.name]}
+                      />
+                    ))}
+                  </View>
+
+                  {/* Inputs */}
+
+                  {drillInfo.inputs.map((item, id) => (
+                    <DrillInput
                       key={id}
+                      icon={getIconByKey(item.id)}
                       prompt={item.prompt}
+                      helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
-                      target={attemptShots[displayedShot].items[item.name]}
+                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                      onInputChange={(newText) => {
+                        handleInputChange(item.id, newText);
+                      }}
+                      currentShot={currentShot}
+                      displayedShot={displayedShot}
                     />
                   ))}
                 </View>
 
-                {/* Inputs */}
+                {/*Navigation Bottom Sheet */}
+                <BottomSheetWrapper ref={navModalRef}>
+                  <BottomSheetScrollView
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                  >
+                    <View style={styles.bottomSheetContentContainer}>
+                      {attemptShots
+                        .slice(0, currentShot + 1)
+                        .map((item, id) => (
+                          <NavigationRectangle
+                            key={id}
+                            drillInfo={drillInfo}
+                            shot={item}
+                            inputValues={inputValues[id]}
+                            currentShot={currentShot}
+                            pressFunction={() => {
+                              setDisplayedShot(id);
+                              navModalRef.current.close();
+                            }}
+                          />
+                        ))}
+                    </View>
+                  </BottomSheetScrollView>
+                </BottomSheetWrapper>
 
-                {drillInfo.inputs.map((item, id) => (
-                  <DrillInput
-                    key={id}
-                    icon={getIconByKey(item.id)}
-                    prompt={item.prompt}
-                    helperText={item.helperText}
-                    distanceMeasure={item.distanceMeasure}
-                    inputValue={inputValues[displayedShot]?.[item.id] || ""}
-                    onInputChange={(newText) => {
-                      handleInputChange(item.id, newText);
-                    }}
-                    currentShot={currentShot}
-                    displayedShot={displayedShot}
-                  />
-                ))}
-              </View>
+                {/* Description Bottom Sheet */}
+                <BottomSheetWrapper ref={descriptionModalRef}>
+                  <BottomSheetView style={{ paddingBottom: 50 }}>
+                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                      Description
+                    </Text>
+                    <DrillDescription drillData={drillInfo} />
+                  </BottomSheetView>
+                </BottomSheetWrapper>
 
-              {/*Navigation Bottom Sheet */}
-              <BottomSheetWrapper ref={navModalRef}>
-                <BottomSheetScrollView
-                  contentContainerStyle={{ paddingBottom: 20 }}
+                {/* Error Dialog: Empty Input*/}
+                <DialogComponent
+                  type={"snackbar"}
+                  title={"Error!"}
+                  content="All inputs must be filled."
+                  visible={emptyDialogVisible}
+                  onHide={hideEmptyDialog}
+                />
+
+                {/* Error Dialog: Invalid Input*/}
+                <DialogComponent
+                  type={"snackbar"}
+                  title={"Error!"}
+                  content="All inputs must be numbers."
+                  visible={invalidDialogVisible}
+                  onHide={hideInvalidDialog}
+                />
+              </KeyboardAwareScrollView>
+              {/* Navigation */}
+              <View style={styles.navigationContainer}>
+                <Text
+                  onPress={() => {
+                    const newInputValues = Array.from(
+                      { length: attemptShots.length },
+                      () => ({}),
+                    );
+                    for (let i = 0; i < attemptShots.length; i++) {
+                      drillInfo.inputs.forEach((item) => {
+                        switch (item.id) {
+                          case "carry":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() *
+                                attemptShots[displayedShot].items["target"] +
+                                attemptShots[displayedShot].items["target"] / 2,
+                            ).toString();
+                            break;
+                          case "sideLanding":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 21 - 10,
+                            ).toString();
+                            break;
+                          case "strokes":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 2 + 1,
+                            ).toString();
+                            break;
+                        }
+                      });
+                    }
+                    setInputValues(newInputValues);
+                    setDisplayedShot(attemptShots.length - 1);
+                    setCurrentShot(attemptShots.length - 1);
+                  }}
                 >
-                  <View style={styles.bottomSheetContentContainer}>
-                    {attemptShots.slice(0, currentShot + 1).map((item, id) => (
-                      <NavigationRectangle
-                        key={id}
-                        drillInfo={drillInfo}
-                        shot={item}
-                        inputValues={inputValues[id]}
-                        currentShot={currentShot}
-                        pressFunction={() => {
-                          setDisplayedShot(id);
-                          navModalRef.current.close();
-                        }}
-                      />
-                    ))}
-                  </View>
-                </BottomSheetScrollView>
-              </BottomSheetWrapper>
+                  Fill in all inputs
+                </Text>
+                {buttonDisplayHandler()}
 
-              {/* Description Bottom Sheet */}
-              <BottomSheetWrapper ref={descriptionModalRef}>
-                <BottomSheetView style={{ paddingBottom: 50 }}>
-                  <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                    Description
-                  </Text>
-                  <DrillDescription drillData={drillInfo} />
-                </BottomSheetView>
-              </BottomSheetWrapper>
-
-              {/* Error Dialog: Empty Input*/}
-              <DialogComponent
-                type={"snackbar"}
-                title={"Error!"}
-                content="All inputs must be filled."
-                visible={emptyDialogVisible}
-                onHide={hideEmptyDialog}
-              />
-
-              {/* Error Dialog: Invalid Input*/}
-              <DialogComponent
-                type={"snackbar"}
-                title={"Error!"}
-                content="All inputs must be numbers."
-                visible={invalidDialogVisible}
-                onHide={hideInvalidDialog}
-              />
-            </KeyboardAwareScrollView>
-            {/* Navigation */}
-            <View style={styles.navigationContainer}>
-              <Text
-                onPress={() => {
-                  const newInputValues = Array.from(
-                    { length: attemptShots.length },
-                    () => ({}),
-                  );
-                  for (let i = 0; i < attemptShots.length; i++) {
-                    drillInfo.inputs.forEach((item) => {
-                      switch (item.id) {
-                        case "carry":
-                          newInputValues[i][item.id] = Math.floor(
-                            Math.random() *
-                              attemptShots[displayedShot].items["target"] +
-                              attemptShots[displayedShot].items["target"] / 2,
-                          ).toString();
-                          break;
-                        case "sideLanding":
-                          newInputValues[i][item.id] = Math.floor(
-                            Math.random() * 21 - 10,
-                          ).toString();
-                          break;
-                        case "strokes":
-                          newInputValues[i][item.id] = Math.floor(
-                            Math.random() * 2 + 1,
-                          ).toString();
-                          break;
-                      }
-                    });
-                  }
-                  setInputValues(newInputValues);
-                  setDisplayedShot(attemptShots.length - 1);
-                  setCurrentShot(attemptShots.length - 1);
-                }}
-              >
-                Fill in all inputs
-              </Text>
-              {buttonDisplayHandler()}
-
-              <Text
-                style={{
-                  color: themeColors.accent,
-                  paddingBottom: Platform.OS === "android" ? 10 : 30,
-                  fontSize: 16,
-                }}
-                onPress={() => {
-                  navModalRef.current?.present();
-                }}
-              >
-                View all shots
-              </Text>
-            </View>
-          </BottomSheetModalProvider>
-        </View>
+                <Text
+                  style={{
+                    color: themeColors.accent,
+                    paddingBottom: Platform.OS === "android" ? 10 : 30,
+                    fontSize: 1,
+                  }}
+                  onPress={() => {
+                    navModalRef.current?.present();
+                  }}
+                >
+                  View all shots
+                </Text>
+              </View>
+            </BottomSheetModalProvider>
+          </View>
+        </GestureHandlerRootView>
       </SafeAreaView>
     </PaperWrapper>
   );
