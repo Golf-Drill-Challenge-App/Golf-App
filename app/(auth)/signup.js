@@ -129,81 +129,81 @@ export default function SignUp() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-           <PaperWrapper>
-	        <KeyboardAwareScrollView
-        // allows opening links from search results without closing keyboard first
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <DialogComponent
-            title={"Error"}
-            content={dialogMessage}
-            visible={dialogVisible}
-            onHide={() => setDialogVisible(false)}
-          />
-          <Image
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-              resizeMode: "contain",
-              width: 131,
-              height: 75,
-            }}
-            style={[styles.image]}
-          />
-          <Text style={[styles.title]}>Oregon State Golf</Text>
-          <View style={[styles.inputView]}>
-            <Text style={[styles.placeholderText]}>Name</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="name"
-              onChangeText={setName}
-              style={[styles.input]}
+      <PaperWrapper>
+        <KeyboardAwareScrollView
+          // allows opening links from search results without closing keyboard first
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <DialogComponent
+              title={"Error"}
+              content={dialogMessage}
+              visible={dialogVisible}
+              onHide={() => setDialogVisible(false)}
             />
-            <Text style={[styles.placeholderText]}>Email</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-              onChangeText={setEmail}
-              style={[styles.input]}
+            <Image
+              source={{
+                uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+                resizeMode: "contain",
+                width: 131,
+                height: 75,
+              }}
+              style={[styles.image]}
             />
-            <Text style={[styles.placeholderText]}>Password</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="new-password"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={setPassword}
-              style={[styles.input]}
-            />
-            <Text style={[styles.placeholderText]}>Confirm Password</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="new-password"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={setPasswordCheck}
-              style={[styles.input]}
-            />
-            <Pressable
-              style={[styles.button]}
-              onPress={handleSubmit}
-              backgroundColor={themeColors.accent}
-            >
-              <Text style={styles.buttonText}>Submit</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button]}
-              backgroundColor={themeColors.accent}
-            >
-              <Link asChild href={"/signin"}>
-                <Text style={styles.buttonText}>Back to Login</Text>
-              </Link>
-            </Pressable>
+            <Text style={[styles.title]}>Oregon State Golf</Text>
+            <View style={[styles.inputView]}>
+              <Text style={[styles.placeholderText]}>Name</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="name"
+                onChangeText={setName}
+                style={[styles.input]}
+              />
+              <Text style={[styles.placeholderText]}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
+                onChangeText={setEmail}
+                style={[styles.input]}
+              />
+              <Text style={[styles.placeholderText]}>Password</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="new-password"
+                autoCorrect={false}
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                style={[styles.input]}
+              />
+              <Text style={[styles.placeholderText]}>Confirm Password</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="new-password"
+                autoCorrect={false}
+                secureTextEntry={true}
+                onChangeText={setPasswordCheck}
+                style={[styles.input]}
+              />
+              <Pressable
+                style={[styles.button]}
+                onPress={handleSubmit}
+                backgroundColor={themeColors.accent}
+              >
+                <Text style={styles.buttonText}>Submit</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button]}
+                backgroundColor={themeColors.accent}
+              >
+                <Link asChild href={"/signin"}>
+                  <Text style={styles.buttonText}>Back to Login</Text>
+                </Link>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
       </PaperWrapper>
     </TouchableWithoutFeedback>
   );

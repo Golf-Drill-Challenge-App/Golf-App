@@ -136,68 +136,68 @@ export default function SignIn() {
       accessible={false}
     >
       <PaperWrapper>
-	        <KeyboardAwareScrollView
-        // allows opening links from search results without closing keyboard first
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <DialogComponent
-            title={"Error"}
-            content={dialogMessage}
-            visible={dialogVisible}
-            onHide={() => setDialogVisible(false)}
-          />
-          <Image
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-              resizeMode: "contain",
-              width: 131,
-              height: 75,
-            }}
-            style={styles.image}
-          />
-          <Text style={styles.title}>Oregon State Golf</Text>
-          <View style={styles.inputView}>
-            <Text style={styles.placeholderText}>Email</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-              onChangeText={setEmail}
-              style={styles.input}
+        <KeyboardAwareScrollView
+          // allows opening links from search results without closing keyboard first
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <DialogComponent
+              title={"Error"}
+              content={dialogMessage}
+              visible={dialogVisible}
+              onHide={() => setDialogVisible(false)}
             />
-            <Text style={styles.placeholderText}>Password</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="current-password"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={setPassword}
-              style={styles.input}
+            <Image
+              source={{
+                uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+                resizeMode: "contain",
+                width: 131,
+                height: 75,
+              }}
+              style={styles.image}
             />
-            <Pressable style={styles.button} onPress={handleForgotPassword}>
-              <Text style={styles.forgotPassword}>Forgot your password?</Text>
-            </Pressable>
+            <Text style={styles.title}>Oregon State Golf</Text>
+            <View style={styles.inputView}>
+              <Text style={styles.placeholderText}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
+                onChangeText={setEmail}
+                style={styles.input}
+              />
+              <Text style={styles.placeholderText}>Password</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="current-password"
+                autoCorrect={false}
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                style={styles.input}
+              />
+              <Pressable style={styles.button} onPress={handleForgotPassword}>
+                <Text style={styles.forgotPassword}>Forgot your password?</Text>
+              </Pressable>
 
-            <Pressable
-              style={styles.button}
-              onPress={handleSignIn}
-              backgroundColor={themeColors.accent}
-            >
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
-            <Pressable
-              style={styles.button}
-              backgroundColor={themeColors.accent}
-            >
-              <Link asChild href={"/signup"}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </Link>
-            </Pressable>
+              <Pressable
+                style={styles.button}
+                onPress={handleSignIn}
+                backgroundColor={themeColors.accent}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </Pressable>
+              <Pressable
+                style={styles.button}
+                backgroundColor={themeColors.accent}
+              >
+                <Link asChild href={"/signup"}>
+                  <Text style={styles.buttonText}>Sign Up</Text>
+                </Link>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
       </PaperWrapper>
     </TouchableWithoutFeedback>
   );
