@@ -55,9 +55,6 @@ export default function SignIn() {
 
   async function handleForgotPassword() {
     try {
-      if (email === "") {
-        throw "Please enter an email address for password reset";
-      }
       sendPasswordResetEmail(getAuth(), email)
         .then(() => {
           setDialogMessage("Password reset email sent");

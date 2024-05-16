@@ -39,5 +39,7 @@ const firebaseErrors = {
   "auth/weak-password": "Password is too weak",
   "auth/user-not-found": "User not found",
   "auth/wrong-password": "Incorrect password",
+  "auth/missing-email": "Missing email",
+  "auth/missing-password": "Missing password",
 };
 export { firebaseErrors, prettyTitle, shortTitle, themeColors };
