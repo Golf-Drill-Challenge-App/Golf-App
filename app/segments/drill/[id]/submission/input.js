@@ -42,9 +42,10 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 /***************************************
- * Firebase Upload
+ * Attempt Submission functions
  ***************************************/
 
+//A function to check if a drill was assigned upon completion
 async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   const userRef = doc(db, "teams", "1", "users", userId);
 
@@ -52,8 +53,6 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
     const docSnap = await getDoc(userRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-
       const assignedData = docSnap.data()["assigned_data"];
       const updatedAssignedData = assignedData.map((assignment) => {
         if (
@@ -67,19 +66,23 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
 
       try {
         await updateDoc(userRef, { assigned_data: updatedAssignedData });
-        console.log("Document updated successfully!");
+        console.log("Assignment Document updated successfully!");
       } catch (error) {
-        console.error("Error updating document:", error);
+        console.error("Error updating assignment document:", error);
       }
     } else {
-      console.log("No such document!");
+      console.log("No such assignment document!");
     }
   };
 
   await getDocument();
 }
 
-//A function to upload the outputData to the "attempts" collection
+/***************************************
+ * A function to upload the outputData to the "attempts" collection.
+ * Additionally, this function sets off checks for if a drill is assigned and
+ * if the leaderboard needs to be updated.
+ ***************************************/
 async function uploadAttempt(
   outputData,
   userId,
@@ -156,6 +159,7 @@ async function handleLeaderboardUpdate(
   }
 }
 
+//A function to update the "best_attempts" collection
 async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
   const attemptId = uploadData.id;
   const attemptValue = uploadData[mainOutputAttempt];
@@ -205,11 +209,9 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
   }
 }
 
-//A function to check if the all time record needs to be updated
+//A function to check if the "all_time_record" collection needs to be updated
 async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
-
-  console.log("Inside handleRecordUpdate");
 
   //Fetch All-time Record
   const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
@@ -232,7 +234,7 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
   }
 }
 
-//A function to update the all time record
+//A function to update the "all_time_record" collection
 async function uploadNewRecord(
   uploadData,
   drillInfo,
@@ -247,11 +249,7 @@ async function uploadNewRecord(
     distanceMeasure: currentRecordDoc.currentRecord["distanceMeasure"],
   };
 
-  console.log("Inside uploadNewRecord");
-
   const oldPreviousRecords = currentRecordDoc.previousRecords;
-
-  console.log("old Prev. Records: ", currentRecordDoc.previousRecords);
 
   //add old record to previous records
   const updatedPreviousRecords = [
@@ -259,14 +257,10 @@ async function uploadNewRecord(
     currentRecordDoc.currentRecord,
   ];
 
-  console.log("updated Prev. Records: ", updatedPreviousRecords);
-
   const newDocData = {
     currentRecord: newRecord,
     previousRecords: updatedPreviousRecords,
   };
-
-  console.log("New Doc data: ", newDocData);
 
   //Upload new Document Data
   const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
@@ -283,6 +277,8 @@ async function uploadNewRecord(
 /***************************************
  * AttemptShots Generation
  ***************************************/
+
+//A function to generate the shots of a given drill based on it's type
 function getShotInfo(drillInfo) {
   let shots = [];
   switch (drillInfo.requirements[0].type) {
@@ -303,7 +299,7 @@ function getShotInfo(drillInfo) {
   return shots;
 }
 
-//Helper function for the sequence drill type
+//Helper function to generate shots for the sequence drill type
 function fillClubTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
@@ -317,7 +313,7 @@ function fillClubTargets(drillInfo) {
   return shots;
 }
 
-//Helper function for the random drill type
+//Helper function to generate shots for the random drill type
 function fillRandomShotTargets(drillInfo) {
   const minCeiled = Math.ceil(drillInfo.requirements[0].min);
   const maxFloored = Math.floor(drillInfo.requirements[0].max);
@@ -339,7 +335,7 @@ function fillRandomShotTargets(drillInfo) {
   return shots;
 }
 
-//Helper function for the putt drill type
+//Helper function to generate shots for the putt drill type
 function fillPuttTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
@@ -555,7 +551,6 @@ function validateInputs(inputs) {
 }
 
 export default function Input({ setToggleResult, setOutputData }) {
-  //Helper varibles
   const { id: drillId, assignedTime } = useLocalSearchParams();
   const {
     data: currentLeaderboard,
@@ -584,7 +579,7 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
-  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
+  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot to be attempted
 
   const {
     data: userInfo,
@@ -596,7 +591,6 @@ export default function Input({ setToggleResult, setOutputData }) {
   const navModalRef = useRef(null);
 
   /***** Description Bottom Sheet Stuff *****/
-
   const descriptionModalRef = useRef(null);
 
   /***** Empty Input dialog Stuff *****/
@@ -614,15 +608,6 @@ export default function Input({ setToggleResult, setOutputData }) {
       setInputValues(Array.from({ length: drillInfo.reps }, () => ({})));
     }
   }, [drillInfo]);
-
-  //Loading until an attempt is generated
-  if (leaderboardIsLoading || drillInfoIsLoading || attemptShots.length === 0) {
-    return <Loading />;
-  }
-
-  if (leaderboardError || drillInfoError) {
-    return <ErrorComponent errorList={[leaderboardError, drillInfoError]} />;
-  }
 
   const numInputs = drillInfo.inputs.length;
 
@@ -741,13 +726,20 @@ export default function Input({ setToggleResult, setOutputData }) {
   };
 
   //Loading until an attempt is generated or hooks are working
-  if (attemptShots.length === 0 || leaderboardIsLoading || userIsLoading) {
+  if (
+    attemptShots.length === 0 ||
+    leaderboardIsLoading ||
+    userIsLoading ||
+    drillInfoIsLoading
+  ) {
     console.log("Loading");
     return <Loading />;
   }
 
-  if (leaderboardError || userError) {
-    return <ErrorComponent message={[leaderboardError, userError]} />;
+  if (leaderboardError || userError || drillInfoError) {
+    return (
+      <ErrorComponent message={[leaderboardError, userError, drillInfoError]} />
+    );
   }
 
   return (
