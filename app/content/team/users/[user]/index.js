@@ -26,6 +26,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
@@ -285,9 +286,7 @@ function Index() {
           <EmptyScreen
             invalidateKeys={invalidateKeys}
             text={"No drills attempted yet."}
-            preChild={() => {
-              profileHeader;
-            }}
+            preChild={profileHeader}
           />
         )}
         {/* Remove user dialog */}
@@ -300,8 +299,10 @@ function Index() {
           buttonsFunctions={[
             hideRemoveDialog,
             () => {
-              removeUser(userId);
-              queryClient.invalidateQueries(["user"]); //invalidate cache
+              removeUser(userId).then(() => {
+                invalidateMultipleKeys(queryClient, [["userInfo"]]);
+              });
+              // TODO: Add a catch block
               navigation.goBack();
             },
           ]}
