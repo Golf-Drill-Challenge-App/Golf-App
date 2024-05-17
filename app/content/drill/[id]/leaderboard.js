@@ -167,14 +167,17 @@ export default function Leaderboard() {
               fontWeight: "bold",
             }}
           >
-            {allTimeInfo.name}
+            {allTimeInfo.currentRecord.name}
           </Text>
-          <Text style={{ fontSize: 12 }}>{formatDate(allTimeInfo.time)}</Text>
+          <Text style={{ fontSize: 12 }}>
+            {formatDate(allTimeInfo.currentRecord.time)}
+          </Text>
         </View>
 
         <View style={{ width: "25%" }}>
           <Text style={{ fontSize: 16 }}>
-            {numTrunc(allTimeInfo.value, true)} {allTimeInfo.distanceMeasure}
+            {numTrunc(allTimeInfo.currentRecord.value, true)}{" "}
+            {allTimeInfo.currentRecord.distanceMeasure}
           </Text>
         </View>
       </View>

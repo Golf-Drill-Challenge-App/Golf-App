@@ -209,6 +209,8 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
 async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
+  console.log("Inside handleRecordUpdate");
+
   //Fetch All-time Record
   const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
 
@@ -218,33 +220,59 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
   const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
 
   //Check if record needs to be updated
-  const currentRecord = docSnap.data();
+  const currentRecordDoc = docSnap.data();
 
   const isNewAttemptBest = lowerIsBetter
-    ? uploadData[mainOutputAttempt] < currentRecord["value"]
-    : uploadData[mainOutputAttempt] > currentRecord["value"];
+    ? uploadData[mainOutputAttempt] < currentRecordDoc.currentRecord["value"]
+    : uploadData[mainOutputAttempt] > currentRecordDoc.currentRecord["value"];
 
   if (isNewAttemptBest) {
     //Update record
-    uploadNewRecord(uploadData, drillInfo, currentRecord, userInfo);
+    uploadNewRecord(uploadData, drillInfo, currentRecordDoc, userInfo);
   }
 }
 
 //A function to update the all time record
-async function uploadNewRecord(uploadData, drillInfo, currentRecord, userInfo) {
+async function uploadNewRecord(
+  uploadData,
+  drillInfo,
+  currentRecordDoc,
+  userInfo,
+) {
   //Create new Record object
   const newRecord = {
     name: userInfo.name,
     value: uploadData[drillInfo.mainOutputAttempt],
     time: uploadData["time"],
-    distanceMeasure: currentRecord["distanceMeasure"],
+    distanceMeasure: currentRecordDoc.currentRecord["distanceMeasure"],
   };
 
-  //Upload new Record
+  console.log("Inside uploadNewRecord");
+
+  const oldPreviousRecords = currentRecordDoc.previousRecords;
+
+  console.log("old Prev. Records: ", currentRecordDoc.previousRecords);
+
+  //add old record to previous records
+  const updatedPreviousRecords = [
+    ...oldPreviousRecords,
+    currentRecordDoc.currentRecord,
+  ];
+
+  console.log("updated Prev. Records: ", updatedPreviousRecords);
+
+  const newDocData = {
+    currentRecord: newRecord,
+    previousRecords: updatedPreviousRecords,
+  };
+
+  console.log("New Doc data: ", newDocData);
+
+  //Upload new Document Data
   const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
 
   try {
-    await setDoc(recordRef, newRecord);
+    await setDoc(recordRef, newDocData);
     console.log("New Record has been uploaded!");
   } catch (e) {
     alert(e);
@@ -545,7 +573,7 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const navigation = useNavigation();
 
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = currentAuthContext();
 
   const { height } = useWindowDimensions();
 
@@ -562,7 +590,7 @@ export default function Input({ setToggleResult, setOutputData }) {
     data: userInfo,
     userIsLoading: userIsLoading,
     userError: userError,
-  } = useUserInfo(currentUserId);
+  } = useUserInfo({ userId: currentUserId });
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -668,6 +696,7 @@ export default function Input({ setToggleResult, setOutputData }) {
       ["userInfo"], //assignments
       ["attempts", { userId }], // stats pages
       ["best_attempts", { drillId }],
+      ["all_time_records", { currentTeamId }, { drillId }],
     ];
 
     //Check if all inputs have been filled in
