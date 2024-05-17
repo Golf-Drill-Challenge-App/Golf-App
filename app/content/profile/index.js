@@ -32,7 +32,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { themeColors } from "~/Constants";
+import { firebaseErrors, themeColors } from "~/Constants";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -163,18 +163,15 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         pfp: downloadURL,
       });
-
-      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       setSnackbarMessage("Successfully uploaded the profile picture!");
       setImageUploading(false);
 
       return downloadURL;
-    } catch (error) {
-      console.error("Error uploading image to Firebase:", error);
+    } catch (e) {
+      console.log("Error uploading image to Firebase:", e);
       setSnackbarMessage("Error uploading profile picture. Please try again.");
       setImageUploading(false);
-
-      throw error; // Rethrow the error to handle it at the caller's level if needed
+      throw e; // Rethrow the error to handle it at the caller's level if needed
     }
   };
 
@@ -201,8 +198,24 @@ function Index() {
 
     if (!imageResult.canceled) {
       const resizedUri = await resizeImage(imageResult.assets[0].uri);
-      await firebaseProfileImageUpload(resizedUri);
-      invalidateMultipleKeys(queryClient, [["userInfo"]]);
+      await firebaseProfileImageUpload(resizedUri)
+        .then(() => {
+          // invalidate cache on successful image upload
+          invalidateMultipleKeys(queryClient, [["userInfo"]]);
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e["code"]) {
+            if (firebaseErrors[e["code"]]) {
+              setDialogMessage(firebaseErrors[e["code"]]);
+            } else {
+              setDialogMessage(e["code"]);
+            }
+          } else {
+            setDialogMessage(String(e));
+          }
+          setDialogVisible(true);
+        });
     }
   };
 
@@ -213,8 +226,8 @@ function Index() {
         signOut();
       })
       .catch((e) => {
-        alert(e);
         console.log(e);
+        showDialog("Error", firebaseErrors[e["code"]]);
       });
   }
 
@@ -266,9 +279,9 @@ function Index() {
               setSnackbarMessage("Password updated successfully");
               setSnackbarVisible(true); // Show success snackbar
             })
-            .catch((error) => {
+            .catch((e) => {
               // Update failed
-              console.log("password update error:", error.message);
+              console.log("password update error:", e.message);
               showDialog(
                 "New password is too short",
                 "Provided new password must be at least 6 characters long!",

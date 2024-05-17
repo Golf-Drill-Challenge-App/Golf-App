@@ -11,6 +11,7 @@ import {
   getDoc,
   runTransaction,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
@@ -49,8 +50,7 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   const userRef = doc(db, "teams", "1", "users", userId);
 
-  const getDocument = async () => {
-    const docSnap = await getDoc(userRef);
+  const docSnap = await getDoc(userRef);
 
     if (docSnap.exists()) {
       const assignedData = docSnap.data()["assigned_data"];
@@ -64,18 +64,11 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
         return assignment;
       });
 
-      try {
-        await updateDoc(userRef, { assigned_data: updatedAssignedData });
-        console.log("Assignment Document updated successfully!");
-      } catch (error) {
-        console.error("Error updating assignment document:", error);
-      }
-    } else {
-      console.log("No such assignment document!");
-    }
-  };
-
-  await getDocument();
+    await updateDoc(userRef, { assigned_data: updatedAssignedData });
+    console.log("Document updated successfully!");
+  } else {
+    console.log("No such document!");
+  }
 }
 
 /***************************************
@@ -100,26 +93,21 @@ async function uploadAttempt(
 
   //add id of new document into the data
   const uploadData = { ...outputData, id: newAttemptRef.id };
-  try {
-    // Upload the data
-    await setDoc(newAttemptRef, uploadData);
-    console.log("Document successfully uploaded!");
+  // Upload the data
+  await setDoc(newAttemptRef, uploadData);
+  console.log("Document successfully uploaded!");
 
     //Call function to check for leaderboard update
-    handleLeaderboardUpdate(
+    await handleLeaderboardUpdate(
       uploadData,
       drillInfo,
       currentLeaderboard,
       userInfo,
     );
 
-    // Check if drill was assigned
-    if (assignedTime) {
-      await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
-    }
-  } catch (e) {
-    console.error("Error uploading document: ", e);
-    alert(e);
+  // Check if drill was assigned
+  if (assignedTime) {
+    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
   }
 }
 
@@ -136,8 +124,8 @@ async function handleLeaderboardUpdate(
   if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    uploadNewLeaderboard(mainOutputAttempt, uploadData);
-    handleRecordUpdate(uploadData, drillInfo, userInfo);
+    await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    await handleRecordUpdate(uploadData, drillInfo, userInfo);
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -153,8 +141,8 @@ async function handleLeaderboardUpdate(
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      uploadNewLeaderboard(mainOutputAttempt, uploadData);
-      handleRecordUpdate(uploadData, drillInfo, userInfo);
+      await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+      await handleRecordUpdate(uploadData, drillInfo, userInfo);
     }
   }
 }
@@ -180,33 +168,24 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
     uploadData.did,
   );
 
-  try {
-    console.log("LEADERBOARD UPDATE STARTED");
+  console.log("LEADERBOARD UPDATE STARTED");
 
-    // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
-    // firebase transactions to avoid race conditions on get + update leaderboard
-    try {
-      await runTransaction(db, async (transaction) => {
-        // get latest leaderboard data again, just in case another player updated best score just now
-        const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
-        if (!latestLeaderboard.exists()) {
-          // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
-          // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
-          // If so, check if set / setDoc plays nicely with transactions.
-          throw "Document does not exist!";
-        }
-        transaction.update(bestAttemptsDrillRef, {
-          [uploadData.uid]: newAttempt,
-        });
-      });
-      console.log("Transaction (leaderboard update) successfully committed!");
-    } catch (e) {
-      console.log("Transaction (leaderboard update) failed: ", e);
+  // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
+  // firebase transactions to avoid race conditions on get + update leaderboard
+  await runTransaction(db, async (transaction) => {
+    // get latest leaderboard data again, just in case another player updated best score just now
+    const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
+    if (!latestLeaderboard.exists()) {
+      // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
+      // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
+      // If so, check if set / setDoc plays nicely with transactions.
+      throw "Document does not exist!";
     }
-  } catch (e) {
-    alert(e);
-    console.log(e);
-  }
+    transaction.update(bestAttemptsDrillRef, {
+      [uploadData.uid]: newAttempt,
+    });
+  });
+  console.log("Transaction (leaderboard update) successfully committed!");
 }
 
 //A function to check if the "all_time_record" collection needs to be updated
@@ -552,23 +531,34 @@ function validateInputs(inputs) {
 
 export default function Input({ setToggleResult, setOutputData }) {
   const { id: drillId, assignedTime } = useLocalSearchParams();
+  const { currentUserId, currentTeamId } = currentAuthContext();
   const {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
-  } = useBestAttempts({ drillId: drillId });
+  } = useBestAttempts({ drillId });
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo({ drillId: drillId });
+  } = useDrillInfo({ drillId });
+
+  const {
+    data: userInfo,
+    isLoading: userIsLoading,
+    error: userError,
+  } = useUserInfo({ userId: currentUserId });
 
   const queryClient = useQueryClient();
 
   const navigation = useNavigation();
 
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const invalidateKeys = [
+    ["userInfo"], //assignments
+    ["best_attempts", { drillId }],
+    ["all_time_records", { drillId }],
+  ];
 
   const { height } = useWindowDimensions();
 
@@ -579,13 +569,7 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
-  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot to be attempted
-
-  const {
-    data: userInfo,
-    userIsLoading: userIsLoading,
-    userError: userError,
-  } = useUserInfo({ userId: currentUserId });
+  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -600,6 +584,9 @@ export default function Input({ setToggleResult, setOutputData }) {
   /***** Invalid Input dialog Stuff *****/
   const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
   const hideInvalidDialog = () => setInvalidDialogVisible(false);
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
@@ -676,13 +663,6 @@ export default function Input({ setToggleResult, setOutputData }) {
   const handleButtonClick = () => {
     // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
     // useAttempts / useDrillInfo hooks
-    const userId = currentUserId;
-    const invalidateKeys = [
-      ["userInfo"], //assignments
-      ["attempts", { userId }], // stats pages
-      ["best_attempts", { drillId }],
-      ["all_time_records", { currentTeamId }, { drillId }],
-    ];
 
     //Check if all inputs have been filled in
     if (
@@ -714,11 +694,26 @@ export default function Input({ setToggleResult, setOutputData }) {
         drillInfo,
         currentLeaderboard,
         userInfo,
-      ).then(() => {
-        // invalidate cache on button press
-        invalidateMultipleKeys(queryClient, invalidateKeys);
-      });
-      setToggleResult(true);
+      )
+        .then(() => {
+          // invalidate cache on button press
+          invalidateMultipleKeys(queryClient, invalidateKeys);
+          // if there are no errors, go to result screen
+          setToggleResult(true);
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e["code"]) {
+            if (firebaseErrors[e["code"]]) {
+              setDialogMessage(firebaseErrors[e["code"]]);
+            } else {
+              setDialogMessage(e["code"]);
+            }
+          } else {
+            setDialogMessage(String(e));
+          }
+          setDialogVisible(true);
+        });
     } else {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
@@ -863,6 +858,13 @@ export default function Input({ setToggleResult, setOutputData }) {
                   visible={invalidDialogVisible}
                   onHide={hideInvalidDialog}
                 />
+
+                <DialogComponent
+                  title={"Error"}
+                  content={dialogMessage}
+                  visible={dialogVisible}
+                  onHide={() => setDialogVisible(false)}
+                />
               </KeyboardAwareScrollView>
               {/* Navigation */}
               <View style={styles.navigationContainer}>
@@ -908,7 +910,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 1,
+                    fontSize: 16,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();
