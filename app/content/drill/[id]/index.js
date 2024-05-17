@@ -38,13 +38,14 @@ export default function Index() {
   const { currentUserId } = currentAuthContext();
   const {
     data: userInfo,
-    userError: userInfoError,
-    userIsLoading: userIsLoading,
+    error: userInfoError,
+    isLoading: userIsLoading,
   } = useUserInfo(currentUserId);
 
   if (drillInfoIsLoading || userIsLoading) return <Loading />;
 
-  if (drillInfoError || userInfoError) return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
+  if (drillInfoError || userInfoError)
+    return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
 
   return (
     <PaperWrapper>
@@ -77,32 +78,32 @@ export default function Index() {
             },
           }}
           buttons={
-  userInfo.role === 'player'
-    ? [
-        {
-          value: "description",
-          label: "Description",
-        },
-        {
-          value: "leaderboard",
-          label: "Leaderboard",
-        },
-        {
-          value: "stats",
-          label: "Stats",
-        },
-      ]
-    : [
-        {
-          value: "description",
-          label: "Description",
-        },
-        {
-          value: "leaderboard",
-          label: "Leaderboard",
-        },
-      ]
-}
+            userInfo.role === "player"
+              ? [
+                  {
+                    value: "description",
+                    label: "Description",
+                  },
+                  {
+                    value: "leaderboard",
+                    label: "Leaderboard",
+                  },
+                  {
+                    value: "stats",
+                    label: "Stats",
+                  },
+                ]
+              : [
+                  {
+                    value: "description",
+                    label: "Description",
+                  },
+                  {
+                    value: "leaderboard",
+                    label: "Leaderboard",
+                  },
+                ]
+          }
         />
         {tabComponent[value]}
       </SafeAreaView>

@@ -45,7 +45,7 @@ export default function Description() {
       </ScrollView>
       <Link
         href={{
-          pathname: `/segments/drill/${drillId}/${drillInfo.user == "player" ? "submission" : "assignment"}`,
+          pathname: `/segments/drill/${drillId}/${userInfo.role == "player" ? "submission" : "assignment"}`,
           params: { assignedTime: assignedTime },
         }}
         asChild

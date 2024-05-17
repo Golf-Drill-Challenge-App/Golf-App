@@ -13,7 +13,7 @@ export const useUserInfo = ({ userId = null } = {}) => {
   console.log("fetching userInfo: ", { userId });
 
   const { currentTeamId } = currentAuthContext();
-  const week_milliseconds = 604800000
+  const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
 

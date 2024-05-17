@@ -2,59 +2,68 @@ import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { doc, runTransaction } from "firebase/firestore";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import {
-  Appbar,
-  Avatar,
-  Button,
-  DefaultTheme,
-  List,
-  PaperProvider,
-  Text,
-} from "react-native-paper";
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
+import { Appbar, Avatar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
+import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
+import PaperWrapper from "~/components/paperWrapper";
 import { db } from "~/firebaseConfig";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
-  console.log(id);
   const {
     data: userInfo,
-    userError: userInfoError,
-    userIsLoading: userIsLoading,
+    error: userInfoError,
+    isLoading: userIsLoading,
   } = useUserInfo();
 
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
 
   const queryClient = useQueryClient();
-  const [checked, setChecked] = useState(false);
-  const [outputData, setOutputData] = useState([]);
-  const [toggleResult, setToggleResult] = useState(false);
   const [checkedItems, setCheckedItems] = useState({});
   if (userIsLoading) {
     return <Loading />;
   }
+  if (userInfoError) {
+    return <ErrorComponent errorList={[userInfoError]} />;
+  }
+  const filteredUserInfo = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(userInfo)
+          .filter(([, value]) => value.role === "player")
+          .sort(([, a], [, b]) => a.name.localeCompare(b.name),
+      ),
+    [userInfo,
+  );
+
+  const allTrue = useMemo(() => {
+    if (Object.keys(checkedItems).length === 0) {
+      return false;
+    }
+    return Object.values(checkedItems).every((value) => value === true);
+  }, [checkedItems]);
+
   const handleAssignAll = () => {
     const updatedCheckedItems = {};
     Object.keys(userInfo).forEach((uid) => {
-      updatedCheckedItems[uid] = true;
+      updatedCheckedItems[uid] = !allTrue;
     });
     setCheckedItems(updatedCheckedItems);
   };
-  const handlePress = async () => {
+  const handleAssign = async () => {
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
     const time = new Date().getTime();
 
-    const updatedUserIds = [];
     runTransaction(db, async (transaction) => {
       const updatedAssignedData = {};
 
@@ -87,46 +96,40 @@ export default function Index() {
 
     navigation.pop(3);
   };
-  console.log(checkedItems);
   return (
-    <PaperProvider theme={DefaultTheme}>
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Header
-          title="assign drill"
-          preChildren={
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={themeColors.accent}
-            />
-          }
-          postChildren={
-            <Button
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                borderColor: themeColors.accent,
-                borderWidth: 2,
-                borderRadius: 20,
-                marginRight: 10,
-              }}
-              onPress={handleAssignAll}
-            >
-              <Text style={{ color: themeColors.accent }}>Assign All</Text>
-            </Button>
-          }
-        />
-        <View style={{ flex: 1 }}>
-          <ScrollView style={{ flex: 1, marginBottom: 30 }}>
-            {userIsLoading ? (
-              <Text>Loading...</Text>
-            ) : userInfoError ? (
-              <Text>Error: {userInfoError.message}</Text>
-            ) : (
+    <PaperWrapper>
+      <GestureHandlerRootView>
+        <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+          <Header
+            title="assign drill"
+            preChildren={
+              <Appbar.BackAction
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                color={themeColors.accent}
+              />
+            }
+            postChildren={
+              <Button
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginRight: 10
+                }}
+                onPress={handleAssignAll}
+              >
+                <Text style={{ color: themeColors.accent, fontSize: 17 }}>
+                  {allTrue ? "Unassign All" : "Assign All"}
+                </Text>
+              </Button>
+            }
+          />
+          <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1, marginBottom: 30 }}>
               <List.Section style={{ paddingHorizontal: 20, height: "100%" }}>
-                {Object.entries(userInfo).map(([uid, userData]) => (
+                {Object.entries(filteredUserInfo).map(([uid, userData]) => (
                   <TouchableOpacity
                     key={uid}
                     style={styles.cardContainer}
@@ -139,14 +142,22 @@ export default function Index() {
                     }
                   >
                     <View style={styles.cardContent}>
-                      <Avatar.Image
-                        size={24}
-                        source={{
-                          uri: userData.pfp,
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 20
                         }}
-                      />
+                      >
+                        <Avatar.Image
+                          size={24}
+                          source={{
+                            uri: userData.pfp
+                          }}
+                        />
 
-                      <Text style={styles.title}>{userData.name}</Text>
+                        <Text style={styles.title}>{userData.name}</Text>
+                      </View>
                       <View style={styles.specContainer}>
                         {checkedItems[uid] ? (
                           <Icon name="checkbox-outline" size={20} />
@@ -158,30 +169,30 @@ export default function Index() {
                   </TouchableOpacity>
                 ))}
               </List.Section>
-            )}
-          </ScrollView>
-        </View>
-        <Button
-          style={{
-            margin: 10,
-            bottom: 30,
-            left: 0,
-            right: 0,
-          }}
-          labelStyle={{
-            fontSize: 20,
-            fontWeight: "bold",
-            padding: 5,
-          }}
-          mode="contained"
-          buttonColor={themeColors.accent}
-          textColor="white"
-          onPress={handlePress}
-        >
-          Assign
-        </Button>
-      </SafeAreaView>
-    </PaperProvider>
+            </ScrollView>
+          </View>
+          <Button
+            style={{
+              margin: 10,
+              bottom: 30,
+              left: 0,
+              right: 0
+            }}
+            labelStyle={{
+              fontSize: 20,
+              fontWeight: "bold",
+              padding: 5
+            }}
+            mode="contained"
+            buttonColor={themeColors.accent}
+            textColor="white"
+            onPress={handleAssign}
+          >
+            Assign
+          </Button>
+        </SafeAreaView>
+      </GestureHandlerRootView>
+    </PaperWrapper>
   );
 }
 const styles = StyleSheet.create({
@@ -206,13 +217,5 @@ const styles = StyleSheet.create({
   specContainer: {
     flexDirection: "row", // Add flexDirection: 'row' to center the checkmark vertically
     alignItems: "center", // Add alignItems: 'center' to center the checkmark vertically
-  },
-  specText: {
-    fontSize: 14,
-    color: "#666",
-  },
-  inputText: {
-    fontSize: 14,
-    color: "#666",
   },
 });
