@@ -55,7 +55,7 @@ export default function Index() {
 
   const handleAssignAll = () => {
     const updatedCheckedItems = {};
-    Object.keys(userInfo).forEach((uid) => {
+    Object.keys(filteredUserInfo).forEach((uid) => {
       updatedCheckedItems[uid] = !allTrue;
     });
     setCheckedItems(updatedCheckedItems);
