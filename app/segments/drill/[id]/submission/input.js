@@ -11,6 +11,7 @@ import {
   getDoc,
   runTransaction,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
@@ -47,35 +48,27 @@ import { useDrillInfo } from "~/hooks/useDrillInfo";
 async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   const userRef = doc(db, "teams", "1", "users", userId);
 
-  const getDocument = async () => {
-    const docSnap = await getDoc(userRef);
+  const docSnap = await getDoc(userRef);
 
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
 
-      const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((assignment) => {
-        if (
-          assignment.assignedTime == assignedTime &&
-          assignment.drillId === drillId
-        ) {
-          return { ...assignment, completed: true, attemptId: attemptId };
-        }
-        return assignment;
-      });
-
-      try {
-        await updateDoc(userRef, { assigned_data: updatedAssignedData });
-        console.log("Document updated successfully!");
-      } catch (error) {
-        console.log("Error updating document:", error);
+    const assignedData = docSnap.data()["assigned_data"];
+    const updatedAssignedData = assignedData.map((assignment) => {
+      if (
+        assignment.assignedTime == assignedTime &&
+        assignment.drillId === drillId
+      ) {
+        return { ...assignment, completed: true, attemptId: attemptId };
       }
-    } else {
-      console.log("No such document!");
-    }
-  };
+      return assignment;
+    });
 
-  await getDocument();
+    await updateDoc(userRef, { assigned_data: updatedAssignedData });
+    console.log("Document updated successfully!");
+  } else {
+    console.log("No such document!");
+  }
 }
 
 //A function to upload the outputData to the "attempts" collection
@@ -95,21 +88,16 @@ async function uploadAttempt(
 
   //add id of new document into the data
   const uploadData = { ...outputData, id: newAttemptRef.id };
-  try {
-    // Upload the data
-    await setDoc(newAttemptRef, uploadData);
-    console.log("Document successfully uploaded!");
+  // Upload the data
+  await setDoc(newAttemptRef, uploadData);
+  console.log("Document successfully uploaded!");
 
-    // Call function to check for leaderboard update
-    await handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
+  // Call function to check for leaderboard update
+  await handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
 
-    // Check if drill was assigned
-    if (assignedTime) {
-      await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
-    }
-  } catch (e) {
-    console.log("Error uploading document: ", e);
-    throw e;
+  // Check if drill was assigned
+  if (assignedTime) {
+    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
   }
 }
 
@@ -168,34 +156,24 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
     uploadData.did,
   );
 
-  try {
-    console.log("LEADERBOARD UPDATE STARTED");
+  console.log("LEADERBOARD UPDATE STARTED");
 
-    // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
-    // firebase transactions to avoid race conditions on get + update leaderboard
-    try {
-      await runTransaction(db, async (transaction) => {
-        // get latest leaderboard data again, just in case another player updated best score just now
-        const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
-        if (!latestLeaderboard.exists()) {
-          // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
-          // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
-          // If so, check if set / setDoc plays nicely with transactions.
-          throw "Document does not exist!";
-        }
-        transaction.update(bestAttemptsDrillRef, {
-          [uploadData.uid]: newAttempt,
-        });
-      });
-      console.log("Transaction (leaderboard update) successfully committed!");
-    } catch (e) {
-      console.log("Transaction (leaderboard update) failed: ", e);
-      throw e;
+  // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
+  // firebase transactions to avoid race conditions on get + update leaderboard
+  await runTransaction(db, async (transaction) => {
+    // get latest leaderboard data again, just in case another player updated best score just now
+    const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
+    if (!latestLeaderboard.exists()) {
+      // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
+      // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
+      // If so, check if set / setDoc plays nicely with transactions.
+      throw "Document does not exist!";
     }
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+    transaction.update(bestAttemptsDrillRef, {
+      [uploadData.uid]: newAttempt,
+    });
+  });
+  console.log("Transaction (leaderboard update) successfully committed!");
 }
 
 /***************************************
