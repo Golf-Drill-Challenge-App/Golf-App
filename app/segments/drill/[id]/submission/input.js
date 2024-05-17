@@ -470,6 +470,11 @@ export default function Input({ setToggleResult, setOutputData }) {
   const navigation = useNavigation();
 
   const { currentUserId } = currentAuthContext();
+  const invalidateKeys = [
+    ["userInfo"], //assignments
+    ["attempts", { userId: currentUserId }], // stats pages
+    ["best_attempts", { drillId }],
+  ];
 
   const { height } = useWindowDimensions();
 
@@ -584,12 +589,6 @@ export default function Input({ setToggleResult, setOutputData }) {
   const handleButtonClick = () => {
     // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
     // useAttempts / useDrillInfo hooks
-    const userId = currentUserId;
-    const invalidateKeys = [
-      ["userInfo"], //assignments
-      ["attempts", { userId }], // stats pages
-      ["best_attempts", { drillId }],
-    ];
 
     //Check if all inputs have been filled in
     if (
@@ -819,7 +818,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 1,
+                    fontSize: 16,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();

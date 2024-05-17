@@ -163,8 +163,6 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         pfp: downloadURL,
       });
-
-      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
       setSnackbarMessage("Successfully uploaded the profile picture!");
       setImageUploading(false);
 

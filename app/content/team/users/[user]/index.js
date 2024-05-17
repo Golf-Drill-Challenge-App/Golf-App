@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -19,7 +19,7 @@ function Index() {
   const userId = useLocalSearchParams()["user"];
   const navigation = useNavigation();
   const {
-    data: userData,
+    data: userInfo,
     error: userError,
     isLoading: userIsLoading,
   } = useUserInfo({ userId });
@@ -64,8 +64,13 @@ function Index() {
     );
   }
   const profileHeader = () => (
-    <View style={styles.profileContainer}>
-      <ProfileCard user={userData} email={userEmail} />
+    <View
+      style={{
+        alignItems: "center",
+        marginBottom: 20,
+      }}
+    >
+      <ProfileCard user={userInfo} email={userEmail} />
     </View>
   );
 
@@ -84,7 +89,7 @@ function Index() {
     <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
-          title={userData["name"] + "'s Profile"}
+          title={userInfo["name"] + "'s Profile"}
           preChildren={
             <Appbar.BackAction
               onPress={() => {
@@ -97,8 +102,8 @@ function Index() {
         {uniqueDrills.length > 0 ? (
           <DrillList
             drillData={uniqueDrills}
-            href={"/content/team/users/" + userData.uid + "/drills/"}
-            userId={userData.uid}
+            href={"/content/team/users/" + userInfo.uid + "/drills/"}
+            userId={userInfo.uid}
             invalidateKeys={invalidateKeys}
           >
             {profileHeader}
@@ -116,29 +121,5 @@ function Index() {
     </PaperWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  profileContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  heading: {
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginBottom: 5,
-  },
-  scrollViewContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  noDrillsText: {
-    marginTop: 20,
-    fontSize: 16,
-    textAlign: "center",
-    color: "gray",
-  },
-});
 
 export default Index;
