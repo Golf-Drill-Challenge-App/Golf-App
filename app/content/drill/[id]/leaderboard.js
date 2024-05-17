@@ -10,6 +10,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAllTimeRecords } from "~/hooks/useAllTimeRecords";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
@@ -82,29 +83,13 @@ export default function Leaderboard() {
   if (
     userIsLoading ||
     drillIsLoading ||
-    attemptIsLoading ||
-    leaderboardIsLoading ||
-    allTimeRecordIsLoading
     leaderboardIsLoading ||
     allTimeRecordIsLoading
   ) {
     return <Loading />;
   }
 
-  if (
-    userError ||
-    drillError ||
-    attemptError ||
-    leaderboardError ||
-    allTimeRecordError
-  ) {
-  if (
-    userError ||
-    drillError ||
-    attemptError ||
-    leaderboardError ||
-    allTimeRecordError
-  ) {
+  if (userError || drillError || leaderboardError || allTimeRecordError) {
     return (
       <ErrorComponent errorList={[userError, drillError, leaderboardError]} />
     );
@@ -151,56 +136,6 @@ export default function Leaderboard() {
       <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
         {prettyTitle[drillInfo.mainOutputAttempt]}
       </Text>
-      <View
-        style={{
-          backgroundColor: themeColors.highlight,
-          borderRadius: 8,
-          padding: 16,
-          margin: 5,
-          width: "90%",
-          justifyContent: "space-between",
-          alignSelf: "center",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <View style={{ width: "15%" }}>
-          <Icon source="trophy-variant-outline" size={40} />
-        </View>
-        <View style={{ width: "60%" }}>
-          <Text
-            style={{
-              fontSize: 12,
-            }}
-          >
-            All Time Record
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            {allTimeInfo.name}
-          </Text>
-          <Text style={{ fontSize: 12 }}>{formatDate(allTimeInfo.time)}</Text>
-        </View>
-
-        <View style={{ width: "25%" }}>
-          <Text style={{ fontSize: 16 }}>
-            {numTrunc(allTimeInfo.value, true)} {allTimeInfo.distanceMeasure}
-          </Text>
-        </View>
-      </View>
-
-      <List.Section
-        style={{
-          backgroundColor: themeColors.highlight,
-          margin: 5,
-          borderRadius: 5,
-        }}
-      >
       <View
         style={{
           backgroundColor: themeColors.highlight,
