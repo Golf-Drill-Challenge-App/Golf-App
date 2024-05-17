@@ -68,7 +68,7 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
         await updateDoc(userRef, { assigned_data: updatedAssignedData });
         console.log("Document updated successfully!");
       } catch (error) {
-        console.error("Error updating document:", error);
+        console.log("Error updating document:", error);
       }
     } else {
       console.log("No such document!");
@@ -108,8 +108,8 @@ async function uploadAttempt(
       await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
     }
   } catch (e) {
-    console.error("Error uploading document: ", e);
-    alert(e);
+    console.log("Error uploading document: ", e);
+    throw e;
   }
 }
 
@@ -190,10 +190,11 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
       console.log("Transaction (leaderboard update) successfully committed!");
     } catch (e) {
       console.log("Transaction (leaderboard update) failed: ", e);
+      throw e;
     }
   } catch (e) {
-    alert(e);
     console.log(e);
+    throw e;
   }
 }
 
@@ -641,11 +642,26 @@ export default function Input({ setToggleResult, setOutputData }) {
         drillId,
         drillInfo,
         currentLeaderboard,
-      ).then(() => {
-        // invalidate cache on button press
-        invalidateMultipleKeys(queryClient, invalidateKeys);
-      });
-      setToggleResult(true);
+      )
+        .then(() => {
+          // invalidate cache on button press
+          invalidateMultipleKeys(queryClient, invalidateKeys);
+          // if there are no errors, go to result screen
+          setToggleResult(true);
+        })
+        .catch((e) => {
+          console.log(e);
+          if (e["code"]) {
+            if (firebaseErrors[e["code"]]) {
+              setDialogMessage(firebaseErrors[e["code"]]);
+            } else {
+              setDialogMessage(e["code"]);
+            }
+          } else {
+            setDialogMessage(String(e));
+          }
+          setDialogVisible(true);
+        });
     } else {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
