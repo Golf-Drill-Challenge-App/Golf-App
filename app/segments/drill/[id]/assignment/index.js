@@ -4,7 +4,10 @@ import { useLocalSearchParams } from "expo-router";
 import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 import { Appbar, Avatar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -34,14 +37,13 @@ export default function Index() {
   if (userInfoError) {
     return <ErrorComponent errorList={[userInfoError]} />;
   }
-  const filteredUserInfo = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(userInfo)
-          .filter(([, value]) => value.role === "player")
-          .sort(([, a], [, b]) => a.name.localeCompare(b.name),
-      ),
-    [userInfo,
+  const filteredUserInfo = useMemo(() =>
+    Object.fromEntries(
+      Object.entries(userInfo)
+        .filter(([, value]) => value.role === "player")
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
+      [userInfo],
+    ),
   );
 
   const allTrue = useMemo(() => {
@@ -116,7 +118,7 @@ export default function Index() {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginRight: 10
+                  marginRight: 10,
                 }}
                 onPress={handleAssignAll}
               >
@@ -146,13 +148,13 @@ export default function Index() {
                         style={{
                           flexDirection: "row",
                           alignItems: "center",
-                          gap: 20
+                          gap: 20,
                         }}
                       >
                         <Avatar.Image
                           size={24}
                           source={{
-                            uri: userData.pfp
+                            uri: userData.pfp,
                           }}
                         />
 
@@ -176,12 +178,12 @@ export default function Index() {
               margin: 10,
               bottom: 30,
               left: 0,
-              right: 0
+              right: 0,
             }}
             labelStyle={{
               fontSize: 20,
               fontWeight: "bold",
-              padding: 5
+              padding: 5,
             }}
             mode="contained"
             buttonColor={themeColors.accent}
