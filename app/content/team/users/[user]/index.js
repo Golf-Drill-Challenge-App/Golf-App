@@ -121,8 +121,8 @@ function Index() {
   //Used for Displaying coach/owner view
   const {
     data: currentUserData,
-    userError: currentUserError,
-    userIsLoading: currentUserIsLoading,
+    error: currentUserError,
+    isLoading: currentUserIsLoading,
   } = useUserInfo({ userId: currentUserId });
 
   const {
@@ -227,27 +227,21 @@ function Index() {
                 anchorPosition="bottom"
                 contentStyle={{ backgroundColor: themeColors.background }}
               >
-                {userData.role === "player" ? (
-                  <Menu.Item
-                    leadingIcon="account-arrow-up-outline"
-                    onPress={() => {
-                      changeRole(userId, "coach");
-                      queryClient.invalidateQueries(["user", { userId }]); //invalidate cache
-                      setMenuVisible(false);
-                    }}
-                    title="Promote"
-                  />
-                ) : (
-                  <Menu.Item
-                    leadingIcon="account-arrow-down-outline"
-                    onPress={() => {
-                      changeRole(userId, "player");
-                      queryClient.invalidateQueries(["user", { userId }]); //invalidate cache
-                      setMenuVisible(false);
-                    }}
-                    title="Demote"
-                  />
-                )}
+                <Menu.Item
+                  leadingIcon={
+                    userData.role === "player"
+                      ? "account-arrow-up-outline"
+                      : "account-arrow-down-outline"
+                  }
+                  onPress={() => {
+                    userData.role === "player"
+                      ? changeRole(userId, "coach")
+                      : changeRole(userId, "player");
+                    queryClient.invalidateQueries(["user", { userId }]); //invalidate cache
+                    setMenuVisible(false);
+                  }}
+                  title={userData.role === "player" ? "Promote" : "Demote"}
+                />
                 <Divider />
                 <Menu.Item
                   leadingIcon="account-cancel-outline"
