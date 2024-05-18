@@ -1,10 +1,27 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 
+function prettyRole(role) {
+  switch (role) {
+    case "coach":
+      return "Coach";
+
+    case "owner":
+      return "Owner";
+
+    case "player":
+      return "Player";
+
+    default:
+      break;
+  }
+}
+
 function ProfileCard(props) {
   return (
     <View style={styles.container}>
       <Image style={styles.profileImage} uri={props.user["pfp"]} />
+      <Text style={styles.role}>{prettyRole(props.user["role"])}</Text>
       <Text style={styles.name}>{props.user["name"]}</Text>
       <Text style={styles.email}>{props.email}</Text>
     </View>
@@ -23,12 +40,16 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 20,
+    color: "#333",
     fontWeight: "bold",
-    marginBottom: 5,
+  },
+  role: {
+    fontSize: 16,
+    color: "#666",
   },
   email: {
     fontSize: 16,
-    color: "gray",
+    color: "#999",
   },
 });
 
