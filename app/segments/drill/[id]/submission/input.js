@@ -103,10 +103,10 @@ async function uploadAttempt(
   try {
     // Upload the data
     await setDoc(newAttemptRef, uploadData);
-    console.log("Document successfully uploaded!");
+    console.log("Attempt Document successfully uploaded!");
 
     //Call function to check for leaderboard update
-    handleLeaderboardUpdate(
+    await handleLeaderboardUpdate(
       uploadData,
       drillInfo,
       currentLeaderboard,
@@ -136,8 +136,8 @@ async function handleLeaderboardUpdate(
   if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    uploadNewLeaderboard(mainOutputAttempt, uploadData);
-    handleRecordUpdate(uploadData, drillInfo, userInfo);
+    await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    await handleRecordUpdate(uploadData, drillInfo, userInfo);
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -153,8 +153,8 @@ async function handleLeaderboardUpdate(
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      uploadNewLeaderboard(mainOutputAttempt, uploadData);
-      handleRecordUpdate(uploadData, drillInfo, userInfo);
+      await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+      await handleRecordUpdate(uploadData, drillInfo, userInfo);
     }
   }
 }
@@ -218,19 +218,25 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
 
   const docSnap = await getDoc(recordRef);
 
+  const currentRecordDoc = docSnap.data();
+
+  //Check if all time record is set
+  if (currentRecordDoc.currentRecord == null) {
+    //Update record
+    await uploadNewRecord(uploadData, drillInfo, currentRecordDoc, userInfo);
+  }
+
   //Determine if lower is better
   const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
 
   //Check if record needs to be updated
-  const currentRecordDoc = docSnap.data();
-
   const isNewAttemptBest = lowerIsBetter
     ? uploadData[mainOutputAttempt] < currentRecordDoc.currentRecord["value"]
     : uploadData[mainOutputAttempt] > currentRecordDoc.currentRecord["value"];
 
   if (isNewAttemptBest) {
     //Update record
-    uploadNewRecord(uploadData, drillInfo, currentRecordDoc, userInfo);
+    await uploadNewRecord(uploadData, drillInfo, currentRecordDoc, userInfo);
   }
 }
 
@@ -241,30 +247,45 @@ async function uploadNewRecord(
   currentRecordDoc,
   userInfo,
 ) {
+  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+
+  const mainOutputAttempt = drillInfo.mainOutputAttempt;
+
+  const distanceMeasure =
+    drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure;
+
   //Create new Record object
   const newRecord = {
     name: userInfo.name,
     value: uploadData[drillInfo.mainOutputAttempt],
     time: uploadData["time"],
-    distanceMeasure: currentRecordDoc.currentRecord["distanceMeasure"],
+    distanceMeasure: distanceMeasure,
   };
 
-  const oldPreviousRecords = currentRecordDoc.previousRecords;
+  let newDocData = null;
 
-  //add old record to previous records
-  const updatedPreviousRecords = [
-    ...oldPreviousRecords,
-    currentRecordDoc.currentRecord,
-  ];
+  //case with no all time record
+  if (currentRecordDoc.currentRecord == null) {
+    newDocData = {
+      currentRecord: newRecord,
+      previousRecords: [],
+    };
+  } else {
+    const oldPreviousRecords = currentRecordDoc.previousRecords;
 
-  const newDocData = {
-    currentRecord: newRecord,
-    previousRecords: updatedPreviousRecords,
-  };
+    //add old record to previous records
+    const updatedPreviousRecords = [
+      ...oldPreviousRecords,
+      currentRecordDoc.currentRecord,
+    ];
+
+    newDocData = {
+      currentRecord: newRecord,
+      previousRecords: updatedPreviousRecords,
+    };
+  }
 
   //Upload new Document Data
-  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
-
   try {
     await setDoc(recordRef, newDocData);
     console.log("New Record has been uploaded!");
@@ -552,6 +573,7 @@ function validateInputs(inputs) {
 
 export default function Input({ setToggleResult, setOutputData }) {
   const { id: drillId, assignedTime } = useLocalSearchParams();
+  const { currentUserId, currentTeamId } = currentAuthContext();
   const {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
@@ -564,11 +586,15 @@ export default function Input({ setToggleResult, setOutputData }) {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo({ drillId: drillId });
 
+  const {
+    data: userInfo,
+    isLoading: userIsLoading,
+    error: userError,
+  } = useUserInfo({ userId: currentUserId });
+
   const queryClient = useQueryClient();
 
   const navigation = useNavigation();
-
-  const { currentUserId, currentTeamId } = currentAuthContext();
 
   const { height } = useWindowDimensions();
 
@@ -580,12 +606,6 @@ export default function Input({ setToggleResult, setOutputData }) {
   const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot to be attempted
-
-  const {
-    data: userInfo,
-    userIsLoading: userIsLoading,
-    userError: userError,
-  } = useUserInfo({ userId: currentUserId });
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);

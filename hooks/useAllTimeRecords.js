@@ -7,7 +7,7 @@ export const useAllTimeRecords = (drillId) => {
   const { currentTeamId } = currentAuthContext();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["all_time_records", { currentTeamId }, { drillId }],
+    queryKey: ["all_time_records", { drillId }],
     queryFn: async () => {
       // Fetch all time records
       const querySnapshot = await getDoc(
@@ -23,7 +23,7 @@ export const useAllTimeRecords = (drillId) => {
 
   return {
     data,
-    allTimeRecordError: error,
-    allTimeRecordIsLoading: isLoading,
+    error,
+    isLoading,
   };
 };
