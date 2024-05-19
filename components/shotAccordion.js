@@ -105,11 +105,7 @@ function ShotAccordion(props) {
           >
             <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                flex: 1,
                 flexGrow: 1,
-                marginRight: 10,
               }}
             >
               <Text style={styles.boldText}>Shot: </Text>
@@ -120,10 +116,7 @@ function ShotAccordion(props) {
             </View>
             <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                flex: 1,
-                flexGrow: 1.5,
+                flexGrow: 1,
               }}
             >
               <Text style={styles.boldText}>
@@ -136,11 +129,7 @@ function ShotAccordion(props) {
             </View>
             <View
               style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                flex: 1,
                 flexGrow: 1,
-                marginLeft: 10,
               }}
             >
               <Text style={styles.boldText}>

@@ -1,10 +1,13 @@
 import { router } from "expo-router";
-import { useState } from "react";
+import { useContext } from "react";
 import { LogBox, SectionList, TouchableOpacity, View } from "react-native";
-import { Icon, List, Text } from "react-native-paper";
+import { Image } from "react-native-expo-image-cache";
+import { Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { formatDate } from "~/Utility";
+import { PlayerContext } from "~/app/content/assignments/context";
+import AssignmentCard from "~/components/assignmentCard";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
@@ -15,7 +18,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
-const AssignmentList = () => {
+export default function Index() {
   const { currentUserId } = currentAuthContext();
 
   const {
@@ -30,8 +33,17 @@ const AssignmentList = () => {
     isLoading: userIsLoading,
   } = useUserInfo({ userId: currentUserId });
 
-  const userId = currentUserId;
-  const invalidateKeys = [["userInfo", { userId }], ["drillInfo"]];
+  const {
+    data: playerInfo,
+    error: playerInfoError,
+    isLoading: playerInfoIsLoading,
+  } = useUserInfo({
+    role: "player",
+    enabled: !userIsLoading && userInfo["role"] !== "player",
+  });
+  const { setPlayerList } = useContext(PlayerContext);
+
+  const invalidateKeys = [["userInfo"], ["drillInfo"]];
 
   // Handle both errors of 'cannot read property "reduce" of undefined' and
   // 'data is undefined' / 'Query data cannot be undefined' (useUserInfo hook error)
@@ -49,17 +61,60 @@ const AssignmentList = () => {
     );
   }
 
-  if (userIsLoading || drillInfoIsLoading) {
+  if (userIsLoading || drillInfoIsLoading || playerInfoIsLoading) {
     return <Loading />;
   }
 
-  if (userInfoError || drillInfoError) {
+  if (userInfoError || drillInfoError || playerInfoError) {
     return <ErrorComponent errorList={[userInfoError, drillInfoError]} />;
   }
 
+  const role = userInfo["role"];
+
   const today = formatDate(Date.now());
+
+  let assigned_data = userInfo.assigned_data;
+
+  if (userInfo["role"] !== "player") {
+    assigned_data = [];
+    const alreadyAddedData = {};
+
+    Object.values(playerInfo).forEach((player) => {
+      player["assigned_data"].forEach((assignment) => {
+        const { assignedTime, drillId, completed, attemptId } = assignment;
+        const { uid, pfp, name: userName } = player;
+
+        if (!alreadyAddedData[assignedTime]) {
+          alreadyAddedData[assignedTime] = {};
+        }
+
+        if (!alreadyAddedData[assignedTime][drillId]) {
+          alreadyAddedData[assignedTime][drillId] = {
+            assignedTime,
+            drillId,
+            players: [],
+          };
+        }
+
+        alreadyAddedData[assignedTime][drillId].players.push({
+          pfp,
+          userName,
+          uid,
+          completed,
+          attemptId,
+        });
+      });
+    });
+
+    Object.values(alreadyAddedData).forEach((assignedSortedByTime) => {
+      Object.values(assignedSortedByTime).forEach((assignedSortedByDrillId) => {
+        assigned_data.push(assignedSortedByDrillId);
+      });
+    });
+  }
+
   // Group the assigned drills by date
-  const groupedData = userInfo.assigned_data.reduce((acc, curr) => {
+  const groupedData = assigned_data.reduce((acc, curr) => {
     const date = formatDate(curr.assignedTime);
     const dateKey = date === today ? "Today" : date;
 
@@ -80,21 +135,56 @@ const AssignmentList = () => {
     (a, b) => new Date(b) - new Date(a),
   );
 
-  // Render the list of drills
-  return sortedDates.length === 0 ? (
-    <EmptyScreen invalidateKeys={invalidateKeys} text={"No drills assigned"} />
-  ) : (
-    <SectionList
-      sections={sortedDates.map((date) => ({
-        title: date,
-        data: groupedData[date],
-      }))}
-      keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
-      renderItem={({ item: assignment }) => (
-        <TouchableOpacity
-          key={`${assignment.assignedTime}-${assignment.drillId}`}
-          disabled={assignment.completed}
-          onPress={() => {
+  if (sortedDates.length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No drills assigned"}
+      />
+    );
+  }
+  const stackedPfp = (playerList) => {
+    const numPfp = Math.min(3, playerList.length);
+
+    const pfpArr = playerList.slice(0, numPfp).map((player, index) => {
+      return (
+        <Image
+          key={player.uid} // Assuming each player has a unique 'uid'
+          uri={player.pfp}
+          style={{
+            width: 24,
+            height: 24,
+            borderRadius: 12,
+            position: "relative",
+            left: -10 * index,
+          }}
+        />
+      );
+    });
+
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          width: 60,
+          margin: 0,
+        }}
+      >
+        {pfpArr}
+      </View>
+    );
+  };
+  const cardPressHandler =
+    role === "player"
+      ? (assignment) => {
+          if (assignment.completed) {
+            router.push({
+              pathname: `content/assignments/attempts/${assignment.attemptId}`,
+              params: {
+                id: assignment.drillId,
+              },
+            });
+          } else {
             router.push({
               pathname: `content/drill`,
               params: {
@@ -103,114 +193,63 @@ const AssignmentList = () => {
                 currentTime: new Date(),
               },
             });
-          }}
-        >
-          <View style={{ marginLeft: 20, marginRight: 20 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                borderWidth: 1,
-                borderColor: "rgba(0,0,0,0.2)",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                height: 65,
-                backgroundColor: themeColors.highlight,
-                borderRadius: 20,
-                marginBottom: 10,
-                paddingLeft: 30,
-                paddingRight: 30,
-                paddingTop: 5,
-                paddingBottom: 5,
-              }}
-            >
-              <View style={{ flexDirection: "column" }}>
-                <Text style={{ fontSize: 20 }}>
-                  {drillInfo[assignment.drillId]["subType"]}
-                </Text>
-                <Text style={{ fontSize: 14, color: "grey" }}>
-                  {drillInfo[assignment.drillId]["drillType"]}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                {assignment.completed && (
-                  <Icon source="check" size={28} color="green" />
-                )}
-                <View style={{ paddingLeft: 10 }}>
-                  <Icon source="chevron-right" size={20} />
-                </View>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      )}
-      renderSectionHeader={({ section: { title } }) => (
-        <Text
-          style={{
-            fontSize: 25,
-            fontWeight: "bold",
-            textAlign: "left",
-            marginLeft: 20,
-            paddingBottom: 3,
-            backgroundColor: themeColors.background,
-          }}
-        >
-          {title}
-        </Text>
-      )}
-      stickySectionHeadersEnabled={true}
-      refreshControl={
-        // handle updating cache for another user list of drills
-        <RefreshInvalidate invalidateKeys={invalidateKeys} />
-      }
-    />
-  );
-};
-
-const CoachView = () => {
-  const {
-    data: drillInfo,
-    error: drillInfoError,
-    isLoading: drillInfoIsLoading,
-  } = useDrillInfo();
-
-  const [expanded, setExpanded] = useState(true);
-
-  const handlePress = () => setExpanded(!expanded);
-  if (drillInfoIsLoading) {
-    return <Loading />;
-  }
-  if (drillInfoError) {
-    return <ErrorComponent errorList={[drillInfoError]} />;
-  }
-  return (
-    <List.Section>
-      <List.Accordion
-        title="Select Drills"
-        left={(props) => <List.Icon {...props} icon="folder" />}
-      >
-        {drillInfo &&
-          Object.values(drillInfo).map((drill) => (
-            <List.Item title={drill.drillType} />
-          ))}
-      </List.Accordion>
-    </List.Section>
-  );
-};
-
-export default function Index() {
+          }
+        }
+      : (assignment) => {
+          setPlayerList(assignment["players"]);
+          router.push({
+            pathname: "content/assignments/players",
+            params: {
+              drillId: assignment.drillId,
+            },
+          });
+        };
   return (
     <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
-
-        <AssignmentList />
+        <SectionList
+          sections={sortedDates.map((date) => ({
+            title: date,
+            data: groupedData[date],
+          }))}
+          keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
+          renderItem={({ item: assignment }) => (
+            <TouchableOpacity
+              key={`${assignment.assignedTime}-${assignment.drillId}`}
+              onPress={() => cardPressHandler(assignment)}
+            >
+              <AssignmentCard
+                mainText={drillInfo[assignment.drillId]["subType"]}
+                subText={drillInfo[assignment.drillId]["drillType"]}
+                // subText={assignment.assignedTime}
+                completed={assignment.completed}
+                pfp={
+                  role === "player" ? null : stackedPfp(assignment["players"])
+                }
+              />
+            </TouchableOpacity>
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text
+              style={{
+                fontSize: 25,
+                fontWeight: "bold",
+                textAlign: "left",
+                marginLeft: 20,
+                paddingBottom: 3,
+                backgroundColor: themeColors.background,
+              }}
+            >
+              {title}
+            </Text>
+          )}
+          stickySectionHeadersEnabled={true}
+          refreshControl={
+            // handle updating cache for another user list of drills
+            <RefreshInvalidate invalidateKeys={invalidateKeys} />
+          }
+        />
       </SafeAreaView>
     </PaperWrapper>
   );
