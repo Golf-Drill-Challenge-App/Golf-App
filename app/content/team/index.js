@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { collection, getDocs, query } from "firebase/firestore";
 import { useState } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
@@ -6,13 +7,32 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Appbar, Icon, List, Menu, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
 import { useUserInfo } from "~/hooks/useUserInfo";
+
+//A function to clear the "best_attemepts" collection
+async function resetLeaderboards() {
+  let bestAttemptQuery = query(collection(db, "teams", "1", "best_attempts"));
+
+  try {
+    const querySnapshot = await getDocs(bestAttemptQuery);
+
+    for (const doc of querySnapshot.docs) {
+      let docData = doc.data();
+
+      //TODO: set documents to null
+    }
+  } catch (e) {
+    console.error("Error getting or updating best_attempts:", e);
+  }
+}
 
 function Index() {
   const { currentUserId } = currentAuthContext();
@@ -34,6 +54,9 @@ function Index() {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
+
+  const [resetDialogVisible, setResetDialogVisible] = useState(false);
+  const hideResetDialog = () => setResetDialogVisible(false);
 
   if (userInfoIsLoading || currentUserIsLoading) return <Loading />;
 
@@ -127,6 +150,7 @@ function Index() {
                       leadingIcon="restart"
                       onPress={() => {
                         console.log("Reset Season Pressed!");
+                        setResetDialogVisible(true);
                         setMenuVisible(false);
                       }}
                       title="Reset Season"
@@ -238,6 +262,21 @@ function Index() {
             </KeyboardAwareScrollView>
           </>
         </TouchableWithoutFeedback>
+        <DialogComponent
+          title={"Alert"}
+          content="Resetting the season will wipe all leaderboards"
+          visible={resetDialogVisible}
+          onHide={hideResetDialog}
+          buttons={["Cancel", "Reset Season"]}
+          buttonsFunctions={[
+            hideResetDialog,
+            () => {
+              console.log("Reset Season not implimented");
+              resetLeaderboards();
+              hideResetDialog();
+            },
+          ]}
+        />
       </SafeAreaView>
     </PaperWrapper>
   );
