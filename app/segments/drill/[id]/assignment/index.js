@@ -17,6 +17,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
@@ -91,8 +92,9 @@ export default function Index() {
       });
     }).then(() => {
       // Invalidate cache after all users are updated
-      selectedUsers.forEach((userId) =>
-        queryClient.invalidateQueries(["user", { teamId: "1", userId }]),
+      invalidateMultipleKeys(
+        queryClient,
+        selectedUsers.map((userId) => ["userInfo", { userId }]),
       );
     });
 

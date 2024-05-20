@@ -38,13 +38,8 @@ function Index() {
 
   const queryClient = useQueryClient();
 
-  if (drillInfoIsLoading || userInfoIsLoading) return <Loading />;
-
-  if (drillInfoError || userInfoError) {
-    return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
-  }
-
   const playerList = useMemo(() => {
+    if (!userInfo) return [];
     return Object.values(userInfo)
       .filter((user) =>
         user.assigned_data.some(
@@ -74,6 +69,12 @@ function Index() {
     return playerList.filter((assignment) => assignment.completed).length;
   }, [playerList]);
 
+  if (drillInfoIsLoading || userInfoIsLoading) return <Loading />;
+
+  if (drillInfoError || userInfoError) {
+    return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
+  }
+
   const handleAssignmentPress = async (assignment) => {
     if (!assignment.attemptId) {
       //terminator code
@@ -102,6 +103,9 @@ function Index() {
     } else {
       router.push({
         pathname: `content/assignments/attempts/${assignment.attemptId}`,
+        params: {
+          id: drillId,
+        },
       });
     }
   };

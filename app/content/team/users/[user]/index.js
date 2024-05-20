@@ -12,6 +12,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
+import { currentAuthContext } from "~/context/Auth";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
@@ -19,12 +20,19 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const userId = useLocalSearchParams()["user"];
+  const { currentUserId } = currentAuthContext();
   const navigation = useNavigation();
   const {
     data: userInfo,
     error: userError,
     isLoading: userIsLoading,
   } = useUserInfo({ userId });
+
+  const {
+    data: currentUserInfo,
+    error: currentUserError,
+    isLoading: currentUserIsLoading,
+  } = useUserInfo({ userId: currentUserId });
 
   const {
     data: userEmail,
@@ -44,21 +52,12 @@ function Index() {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
-  const {
-    data: playerInfo,
-    error: playerInfoError,
-    isLoading: playerInfoIsLoading,
-  } = useUserInfo({
-    role: "player",
-    enabled: !userIsLoading && userInfo["role"] !== "player",
-  });
-
   const [value, setValue] = useState("drills");
 
   const invalidateKeys = [
     ["best_attempts", { userId }],
     ["userInfo", { userId }],
-    ["userInfo", { role: "player" }],
+    ["userInfo", { userId: currentUserId }],
     ["emailInfo", { userId }],
     ["drillInfo"],
   ];
@@ -68,7 +67,7 @@ function Index() {
     userEmailIsLoading ||
     userLeaderboardIsLoading ||
     drillInfoIsLoading ||
-    playerInfoIsLoading
+    currentUserIsLoading
   ) {
     return <Loading />;
   }
@@ -78,7 +77,7 @@ function Index() {
     userEmailError ||
     userLeaderboardError ||
     drillInfoError ||
-    playerInfoError
+    currentUserError
   ) {
     return (
       <ErrorComponent
@@ -87,6 +86,7 @@ function Index() {
           userEmailError,
           userLeaderboardError,
           drillInfoError,
+          currentUserError,
         ]}
       />
     );
@@ -110,7 +110,7 @@ function Index() {
   const segmentButtons = () => {
     return (
       <>
-        {userInfo["role"] !== "player" && (
+        {currentUserInfo["role"] !== "player" && (
           <SegmentedButtons
             value={value}
             onValueChange={setValue}
@@ -163,7 +163,6 @@ function Index() {
   const AssignmentScreen = () => (
     <AssignmentsList
       userId={userId}
-      playerInfo={playerInfo}
       userInfo={userInfo}
       invalidateKeys={invalidateKeys}
       drillInfo={drillInfo}

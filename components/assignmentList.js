@@ -127,7 +127,7 @@ const AssignmentsList = ({
     if (userId) {
       if (assignment.completed) {
         router.push({
-          pathname: `content/assignments/attempts/${assignment.attemptId}`,
+          pathname: `./attempts/${assignment.attemptId}`,
           params: {
             id: assignment.drillId,
           },
