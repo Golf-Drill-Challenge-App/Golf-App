@@ -52,17 +52,17 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
 
   const docSnap = await getDoc(userRef);
 
-    if (docSnap.exists()) {
-      const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((assignment) => {
-        if (
-          assignment.assignedTime == assignedTime &&
-          assignment.drillId === drillId
-        ) {
-          return { ...assignment, completed: true, attemptId: attemptId };
-        }
-        return assignment;
-      });
+  if (docSnap.exists()) {
+    const assignedData = docSnap.data()["assigned_data"];
+    const updatedAssignedData = assignedData.map((assignment) => {
+      if (
+        assignment.assignedTime == assignedTime &&
+        assignment.drillId === drillId
+      ) {
+        return { ...assignment, completed: true, attemptId: attemptId };
+      }
+      return assignment;
+    });
 
     await updateDoc(userRef, { assigned_data: updatedAssignedData });
     console.log("Document updated successfully!");
@@ -97,13 +97,13 @@ async function uploadAttempt(
   await setDoc(newAttemptRef, uploadData);
   console.log("Document successfully uploaded!");
 
-    //Call function to check for leaderboard update
-    await handleLeaderboardUpdate(
-      uploadData,
-      drillInfo,
-      currentLeaderboard,
-      userInfo,
-    );
+  //Call function to check for leaderboard update
+  await handleLeaderboardUpdate(
+    uploadData,
+    drillInfo,
+    currentLeaderboard,
+    userInfo,
+  );
 
   // Check if drill was assigned
   if (assignedTime) {

@@ -1,18 +1,11 @@
-import { router } from "expo-router";
-import { useMemo } from "react";
-import { LogBox, SectionList, TouchableOpacity, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
-import { Text } from "react-native-paper";
+import { LogBox } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { themeColors } from "~/Constants";
-import { formatDate } from "~/Utility";
-import AssignmentCard from "~/components/assignmentCard";
+import AssignmentsList from "~/components/assignmentList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
-import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -72,189 +65,16 @@ export default function Index() {
   }
 
   const role = userInfo["role"];
-
-  const today = formatDate(Date.now());
-
-  let assigned_data = userInfo.assigned_data;
-
-  if (userInfo["role"] !== "player") {
-    assigned_data = [];
-    const alreadyAddedData = {};
-
-    Object.values(playerInfo).forEach((player) => {
-      player["assigned_data"].forEach((assignment) => {
-        const { assignedTime, drillId, completed, attemptId } = assignment;
-        const { uid, pfp, name: userName } = player;
-
-        if (!alreadyAddedData[assignedTime]) {
-          alreadyAddedData[assignedTime] = {};
-        }
-
-        if (!alreadyAddedData[assignedTime][drillId]) {
-          alreadyAddedData[assignedTime][drillId] = {
-            assignedTime,
-            drillId,
-            players: [],
-          };
-        }
-
-        alreadyAddedData[assignedTime][drillId].players.push({
-          pfp,
-          userName,
-          uid,
-          completed,
-          attemptId,
-        });
-      });
-    });
-
-    Object.values(alreadyAddedData).forEach((assignedSortedByTime) => {
-      Object.values(assignedSortedByTime).forEach((assignedSortedByDrillId) => {
-        assigned_data.push(assignedSortedByDrillId);
-      });
-    });
-  }
-
-  // Group the assigned drills by date
-  const groupedData = useMemo(
-    assigned_data.reduce((acc, curr) => {
-      const date = formatDate(curr.assignedTime);
-      const dateKey = date === today ? "Today" : date;
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      if (curr.completed) {
-        acc[dateKey].push(curr);
-      } else {
-        acc[dateKey].unshift(curr);
-      }
-
-      return acc;
-    }, {}),
-    [assigned_data, today],
-  );
-
-  // Sort the dates in descending order
-  const sortedDates = useMemo(
-    Object.keys(groupedData).sort((a, b) => new Date(b) - new Date(a)),
-    [groupedData],
-  );
-
-  if (sortedDates.length === 0) {
-    return (
-      <EmptyScreen
-        invalidateKeys={invalidateKeys}
-        text={"No drills assigned"}
-      />
-    );
-  }
-  const stackedPfp = (playerList) => {
-    const numPfp = Math.min(3, playerList.length);
-
-    const pfpArr = playerList.slice(0, numPfp).map((player, index) => {
-      return (
-        <Image
-          key={player.uid} // Assuming each player has a unique 'uid'
-          uri={player.pfp}
-          style={{
-            width: 24,
-            height: 24,
-            borderRadius: 12,
-            position: "relative",
-            left: -10 * index,
-          }}
-        />
-      );
-    });
-
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          width: 60,
-          margin: 0,
-        }}
-      >
-        {pfpArr}
-      </View>
-    );
-  };
-  const cardPressHandler =
-    role === "player"
-      ? (assignment) => {
-          if (assignment.completed) {
-            router.push({
-              pathname: `content/assignments/attempts/${assignment.attemptId}`,
-              params: {
-                id: assignment.drillId,
-              },
-            });
-          } else {
-            router.push({
-              pathname: `content/drill`,
-              params: {
-                id: `${assignment.drillId}`,
-                assignedTime: assignment.assignedTime,
-                currentTime: new Date(),
-              },
-            });
-          }
-        }
-      : (assignment) => {
-          router.push({
-            pathname: "content/assignments/players",
-            params: {
-              drillId: assignment.drillId,
-              assignedTime: assignment.assignedTime,
-            },
-          });
-        };
   return (
     <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
-        <SectionList
-          sections={sortedDates.map((date) => ({
-            title: date,
-            data: groupedData[date],
-          }))}
-          keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
-          renderItem={({ item: assignment }) => (
-            <TouchableOpacity
-              key={`${assignment.assignedTime}-${assignment.drillId}`}
-              onPress={() => cardPressHandler(assignment)}
-            >
-              <AssignmentCard
-                mainText={drillInfo[assignment.drillId]["subType"]}
-                subText={drillInfo[assignment.drillId]["drillType"]}
-                // subText={assignment.assignedTime}
-                completed={assignment.completed}
-                pfp={
-                  role === "player" ? null : stackedPfp(assignment["players"])
-                }
-              />
-            </TouchableOpacity>
-          )}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text
-              style={{
-                fontSize: 25,
-                fontWeight: "bold",
-                textAlign: "left",
-                marginLeft: 20,
-                paddingBottom: 3,
-                backgroundColor: themeColors.background,
-              }}
-            >
-              {title}
-            </Text>
-          )}
-          stickySectionHeadersEnabled={true}
-          refreshControl={
-            // handle updating cache for another user list of drills
-            <RefreshInvalidate invalidateKeys={invalidateKeys} />
-          }
+        <AssignmentsList
+          userId={role === "player" ? currentUserId : null}
+          playerInfo={playerInfo}
+          userInfo={userInfo}
+          invalidateKeys={invalidateKeys}
+          drillInfo={drillInfo}
         />
       </SafeAreaView>
     </PaperWrapper>

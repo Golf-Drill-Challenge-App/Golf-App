@@ -1,8 +1,10 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { View } from "react-native";
-import { Appbar } from "react-native-paper";
+import { useState } from "react";
+import { FlatList, View } from "react-native";
+import { Appbar, SegmentedButtons } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import AssignmentsList from "~/components/assignmentList";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -42,16 +44,42 @@ function Index() {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
+  const {
+    data: playerInfo,
+    error: playerInfoError,
+    isLoading: playerInfoIsLoading,
+  } = useUserInfo({
+    role: "player",
+    enabled: !userIsLoading && userInfo["role"] !== "player",
+  });
+
+  const [value, setValue] = useState("drills");
+
+  const invalidateKeys = [
+    ["best_attempts", { userId }],
+    ["userInfo", { userId }],
+    ["userInfo", { role: "player" }],
+    ["emailInfo", { userId }],
+    ["drillInfo"],
+  ];
+
   if (
     userIsLoading ||
     userEmailIsLoading ||
     userLeaderboardIsLoading ||
-    drillInfoIsLoading
+    drillInfoIsLoading ||
+    playerInfoIsLoading
   ) {
     return <Loading />;
   }
 
-  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
+  if (
+    userError ||
+    userEmailError ||
+    userLeaderboardError ||
+    drillInfoError ||
+    playerInfoError
+  ) {
     return (
       <ErrorComponent
         errorList={[
@@ -63,6 +91,11 @@ function Index() {
       />
     );
   }
+
+  let uniqueDrills = Object.keys(userLeaderboard).map(
+    (drillId) => drillInfo[drillId],
+  );
+
   const profileHeader = () => (
     <View
       style={{
@@ -74,16 +107,73 @@ function Index() {
     </View>
   );
 
-  const invalidateKeys = [
-    ["best_attempts", { userId }],
-    ["userInfo", { userId }],
-    ["emailInfo", { userId }],
-    ["drillInfo"],
-  ];
+  const segmentButtons = () => {
+    return (
+      <>
+        {userInfo["role"] !== "player" && (
+          <SegmentedButtons
+            value={value}
+            onValueChange={setValue}
+            style={{
+              marginLeft: 10,
+              marginRight: 10,
+              backgroundColor: themeColors.highlight,
+              borderRadius: 20,
+              position: "sticky",
+            }}
+            theme={{
+              colors: {
+                secondaryContainer: themeColors.overlay,
+              },
+            }}
+            buttons={[
+              {
+                value: "drills",
+                label: "Drills",
+              },
+              {
+                value: "assignments",
+                label: "Assignments",
+              },
+            ]}
+          />
+        )}
+      </>
+    );
+  };
 
-  const uniqueDrills = Object.keys(userLeaderboard).map(
-    (drillId) => drillInfo[drillId],
+  const DrillScreen = () => (
+    <>
+      {uniqueDrills.length > 0 ? (
+        <DrillList
+          drillData={uniqueDrills}
+          href={"/content/team/users/" + userInfo.uid + "/drills/"}
+          userId={userInfo.uid}
+          invalidateKeys={invalidateKeys}
+        ></DrillList>
+      ) : (
+        <EmptyScreen
+          invalidateKeys={invalidateKeys}
+          text={"No drills attempted yet."}
+        />
+      )}
+    </>
   );
+
+  const AssignmentScreen = () => (
+    <AssignmentsList
+      userId={userId}
+      playerInfo={playerInfo}
+      userInfo={userInfo}
+      invalidateKeys={invalidateKeys}
+      drillInfo={drillInfo}
+    ></AssignmentsList>
+  );
+
+  const tabComponent = {
+    drills: <DrillScreen />,
+    assignments: <AssignmentScreen />,
+  };
 
   return (
     <PaperWrapper>
@@ -99,24 +189,15 @@ function Index() {
             />
           }
         />
-        {uniqueDrills.length > 0 ? (
-          <DrillList
-            drillData={uniqueDrills}
-            href={"/content/team/users/" + userInfo.uid + "/drills/"}
-            userId={userInfo.uid}
-            invalidateKeys={invalidateKeys}
-          >
-            {profileHeader}
-          </DrillList>
-        ) : (
-          <EmptyScreen
-            invalidateKeys={invalidateKeys}
-            text={"No drills attempted yet."}
-            preChild={() => {
-              profileHeader;
-            }}
-          />
-        )}
+        <FlatList
+          stickyHeaderIndices={[1]}
+          data={[
+            profileHeader(),
+            segmentButtons(),
+            <View>{tabComponent[value]}</View>,
+          ]}
+          renderItem={({ item }) => item}
+        />
       </SafeAreaView>
     </PaperWrapper>
   );
