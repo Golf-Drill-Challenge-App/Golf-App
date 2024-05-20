@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Icon, List, Searchbar, Text } from "react-native-paper";
+import { Appbar, Icon, List, Menu, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
@@ -21,14 +21,24 @@ function Index() {
     isLoading: userInfoIsLoading,
     error: userInfoError,
   } = useUserInfo();
+
+  //Used for Displaying coach/owner view
+  const {
+    data: currentUserData,
+    error: currentUserError,
+    isLoading: currentUserIsLoading,
+  } = useUserInfo({ userId: currentUserId });
+
   const invalidateKeys = [["userInfo"]];
   const [searchQuery, setSearchQuery] = useState("");
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
-  if (userInfoIsLoading) return <Loading />;
+  if (userInfoIsLoading || currentUserIsLoading) return <Loading />;
 
-  if (userInfoError) return <ErrorComponent errorList={[userInfoError]} />;
+  if (userInfoError || currentUserError)
+    return <ErrorComponent errorList={[userInfoError, currentUserError]} />;
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -83,7 +93,50 @@ function Index() {
           accessible={false}
         >
           <>
-            <Header title={"Team"} />
+            <Header
+              title={"Team"}
+              postChildren={
+                currentUserData.role === "owner" ? (
+                  <Menu
+                    visible={menuVisible}
+                    onDismiss={() => {
+                      setMenuVisible(false);
+                    }}
+                    anchor={
+                      <Appbar.Action
+                        icon="dots-horizontal-circle-outline"
+                        onPress={() => {
+                          setMenuVisible(true);
+                        }}
+                        color={themeColors.accent}
+                      />
+                    }
+                    statusBarHeight={45}
+                    anchorPosition="bottom"
+                    contentStyle={{ backgroundColor: themeColors.background }}
+                  >
+                    <Menu.Item
+                      leadingIcon="pencil-outline"
+                      onPress={() => {
+                        console.log("Edit Team Pressed!");
+                        setMenuVisible(false);
+                      }}
+                      title="Edit Team"
+                    />
+                    <Menu.Item
+                      leadingIcon="restart"
+                      onPress={() => {
+                        console.log("Reset Season Pressed!");
+                        setMenuVisible(false);
+                      }}
+                      title="Reset Season"
+                    />
+                  </Menu>
+                ) : (
+                  <></>
+                )
+              }
+            />
             <KeyboardAwareScrollView
               // allows opening links from search results without closing keyboard first
               keyboardShouldPersistTaps="handled"
