@@ -162,7 +162,7 @@ function Index() {
 
   const AssignmentScreen = () => (
     <AssignmentsList
-      userId={userId}
+      role={currentUserInfo["role"]}
       userInfo={userInfo}
       invalidateKeys={invalidateKeys}
       drillInfo={drillInfo}

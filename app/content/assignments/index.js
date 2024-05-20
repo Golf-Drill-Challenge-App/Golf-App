@@ -64,15 +64,14 @@ export default function Index() {
     return <ErrorComponent errorList={[userInfoError, drillInfoError]} />;
   }
 
-  const role = userInfo["role"];
   return (
     <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header title="Assigned Drills" />
         <AssignmentsList
-          userId={role === "player" ? currentUserId : null}
+          role={userInfo["role"]}
           playerInfo={playerInfo}
-          userInfo={userInfo}
+          userInfo={userInfo["role"] === "player" ? userInfo : null}
           invalidateKeys={invalidateKeys}
           drillInfo={drillInfo}
         />

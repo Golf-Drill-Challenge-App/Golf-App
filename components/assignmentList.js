@@ -10,7 +10,7 @@ import EmptyScreen from "~/components/emptyScreen";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
 const AssignmentsList = ({
-  userId,
+  role,
   playerInfo,
   userInfo,
   invalidateKeys,
@@ -19,9 +19,9 @@ const AssignmentsList = ({
 }) => {
   const today = formatDate(Date.now());
 
-  let assigned_data = userId ? userInfo.assigned_data : [];
+  let assigned_data = userInfo ? userInfo.assigned_data : [];
 
-  if (!userId) {
+  if (!userInfo) {
     const alreadyAddedData = {};
 
     Object.values(playerInfo).forEach((player) => {
@@ -124,7 +124,7 @@ const AssignmentsList = ({
   };
 
   const cardPressHandler = (assignment) => {
-    if (userId) {
+    if (userInfo) {
       if (assignment.completed) {
         router.push({
           pathname: `./attempts/${assignment.attemptId}`,
@@ -132,7 +132,7 @@ const AssignmentsList = ({
             id: assignment.drillId,
           },
         });
-      } else {
+      } else if (role === "player") {
         router.push({
           pathname: `content/drill`,
           params: {
@@ -165,12 +165,13 @@ const AssignmentsList = ({
         <TouchableOpacity
           key={`${assignment.assignedTime}-${assignment.drillId}`}
           onPress={() => cardPressHandler(assignment)}
+          disabled={role !== "player" && !assignment.completed}
         >
           <AssignmentCard
             mainText={drillInfo[assignment.drillId]["subType"]}
             subText={drillInfo[assignment.drillId]["drillType"]}
             completed={assignment.completed}
-            pfp={userId ? null : stackedPfp(assignment["players"])}
+            pfp={userInfo ? null : stackedPfp(assignment["players"])}
           />
         </TouchableOpacity>
       )}
