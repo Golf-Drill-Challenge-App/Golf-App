@@ -1,12 +1,11 @@
 import { router } from "expo-router";
-import { useContext } from "react";
+import { useMemo } from "react";
 import { LogBox, SectionList, TouchableOpacity, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { formatDate } from "~/Utility";
-import { PlayerContext } from "~/app/content/assignments/context";
 import AssignmentCard from "~/components/assignmentCard";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -41,9 +40,12 @@ export default function Index() {
     role: "player",
     enabled: !userIsLoading && userInfo["role"] !== "player",
   });
-  const { setPlayerList } = useContext(PlayerContext);
 
-  const invalidateKeys = [["userInfo"], ["drillInfo"]];
+  const invalidateKeys = [
+    ["userInfo", { userId: currentUserId }],
+    ["userInfo", { role: "player" }],
+    ["drillInfo"],
+  ];
 
   // Handle both errors of 'cannot read property "reduce" of undefined' and
   // 'data is undefined' / 'Query data cannot be undefined' (useUserInfo hook error)
@@ -114,25 +116,29 @@ export default function Index() {
   }
 
   // Group the assigned drills by date
-  const groupedData = assigned_data.reduce((acc, curr) => {
-    const date = formatDate(curr.assignedTime);
-    const dateKey = date === today ? "Today" : date;
+  const groupedData = useMemo(
+    assigned_data.reduce((acc, curr) => {
+      const date = formatDate(curr.assignedTime);
+      const dateKey = date === today ? "Today" : date;
 
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
-    if (curr.completed) {
-      acc[dateKey].push(curr);
-    } else {
-      acc[dateKey].unshift(curr);
-    }
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      if (curr.completed) {
+        acc[dateKey].push(curr);
+      } else {
+        acc[dateKey].unshift(curr);
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    }, {}),
+    [assigned_data, today],
+  );
 
   // Sort the dates in descending order
-  const sortedDates = Object.keys(groupedData).sort(
-    (a, b) => new Date(b) - new Date(a),
+  const sortedDates = useMemo(
+    Object.keys(groupedData).sort((a, b) => new Date(b) - new Date(a)),
+    [groupedData],
   );
 
   if (sortedDates.length === 0) {
@@ -196,11 +202,11 @@ export default function Index() {
           }
         }
       : (assignment) => {
-          setPlayerList(assignment["players"]);
           router.push({
             pathname: "content/assignments/players",
             params: {
               drillId: assignment.drillId,
+              assignedTime: assignment.assignedTime,
             },
           });
         };
