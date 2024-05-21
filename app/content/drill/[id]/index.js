@@ -40,12 +40,14 @@ export default function Index() {
     data: userInfo,
     error: userInfoError,
     isLoading: userIsLoading,
-  } = useUserInfo(currentUserId);
+  } = useUserInfo({ userId: currentUserId });
 
   if (drillInfoIsLoading || userIsLoading) return <Loading />;
 
   if (drillInfoError || userInfoError)
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
+
+  console.log("IN DRILL")
 
   return (
     <PaperWrapper>
