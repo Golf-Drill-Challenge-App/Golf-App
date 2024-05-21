@@ -451,7 +451,7 @@ function Index() {
               {uniqueDrills.length > 0 ? (
                 <View
                   style={{
-                    paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
+                    paddingBottom: Platform.OS === "ios" ? 86 + 50 : 86,
                   }}
                 >
                   <DrillList

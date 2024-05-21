@@ -12,7 +12,7 @@ function Row({ name, value }) {
   );
 }
 
-function DataField(field, value) {
+function DataField(drillInfo, field, value) {
   switch (field) {
     case "carry": //compound
       return (
@@ -37,13 +37,24 @@ function DataField(field, value) {
         </View>
       );
     case "target":
-      return (
-        <Row
-          key={field}
-          name={prettyTitle[field]}
-          value={`${numTrunc(value)} yd`}
-        />
-      );
+      switch (drillInfo.requirements[0].type) {
+        case "inputtedPutt":
+          return (
+            <Row
+              key={field}
+              name={prettyTitle[field]}
+              value={`${numTrunc(value)} ft`}
+            />
+          );
+        default:
+          return (
+            <Row
+              key={field}
+              name={prettyTitle[field]}
+              value={`${numTrunc(value)} yd`}
+            />
+          );
+      }
     case "sideLanding":
       return (
         <Row
@@ -133,6 +144,9 @@ function ShotAccordion(props) {
                 {props.shot[props.drillInfo.requirements[0].name]}{" "}
                 {props.drillInfo.requirements[0].distanceMeasure}
               </Text>
+              {props.drillInfo.requirements[0].type === "inputtedPutt" &&
+                <Text>ft</Text>
+              }
             </View>
             <View
               style={{
@@ -182,7 +196,7 @@ function ShotAccordion(props) {
           {props.drillInfo["outputs"].map((field) => {
             switch (field) {
               case "carry":
-                return DataField(field, {
+                return DataField(props.drillInfo, field, {
                   carry: props.shot["carry"],
                   target: props.shot["target"],
                   carryDiff: props.shot["carryDiff"],
@@ -190,7 +204,13 @@ function ShotAccordion(props) {
               case "carryDiff":
                 return null;
               default:
-                return DataField(field, props.shot[field]);
+                switch (props.drillInfo.requirements[0].type) {
+                  case "inputtedPutt":
+                    console.log("Shots", props.shot)
+                    return DataField(props.drillInfo, field, props.shot[field]);
+                  default:
+                    return DataField(props.drillInfo, field, props.shot[field]);
+                }
             }
           })}
         </View>

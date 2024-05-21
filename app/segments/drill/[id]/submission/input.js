@@ -336,6 +336,9 @@ function getShotInfo(drillInfo) {
     case "putt":
       shots = fillPuttTargets(drillInfo);
       break;
+    case "inputtedPutt":
+      shots = fillInputtedPutts(drillInfo);
+      break;
     default:
       console.log("Shots not found");
       break;
@@ -401,6 +404,25 @@ function fillPuttTargets(drillInfo) {
   return shots;
 }
 
+//Helper function for the inputted putt drill type
+function fillInputtedPutts(drillInfo) {
+  let shots = [];
+  for (var i = 0; i < drillInfo.reps; i++) {
+    let target = {};
+    for (var j = 0; j < drillInfo.requirements.length; j++) {
+      target = Object.assign(target, {
+        [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i],
+      });
+    }
+    shots.push({
+      shotNum: i + 1,
+      items: target,
+    });
+  }
+
+  return shots;
+}
+
 /***************************************
  * Output Data Generation
  ***************************************/
@@ -434,7 +456,14 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
       switch (output) {
         case "target":
-          shot.target = attemptShots[j].items.target;
+          switch (drillInfo.requirements[0].type) {
+            case "inputtedPutt":
+              shot.target = inputValues[j].distance;
+              break;
+            default:
+              shot.target = attemptShots[j].items.target;
+              break;
+          }
           break;
 
         case "club":
@@ -472,7 +501,14 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
           break;
 
         case "baseline":
-          shot.baseline = attemptShots[j].baseline;
+          switch (drillInfo.requirements[0].type) {
+            case "inputtedPutt":
+              shot.baseline = lookUpExpectedPutts(inputValues[j].distance);
+              break;
+            default:
+              shot.baseline = attemptShots[j].baseline;
+              break;
+          }
           break;
 
         case "expectedPutts":
@@ -500,8 +536,14 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                 1;
               break;
             case "putt":
-              shot.strokesGained =
-                attemptShots[j].baseline - inputValues[j].strokes;
+              switch (drillInfo.requirements[0].type) {
+                case "inputtedPutt":
+                  shot.strokesGained = lookUpExpectedPutts(inputValues[j].distance) - inputValues[j].strokes;
+                  break;
+                default:
+                  shot.strokesGained = attemptShots[j].baseline - inputValues[j].strokes;
+                  break;
+              }
               break;
             default:
               console.log("Shot type does not exist.");
@@ -934,6 +976,11 @@ export default function Input({ setToggleResult, setOutputData }) {
                               Math.random() * 2 + 1,
                             ).toString();
                             break;
+                          case "distance":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 35 + 5,
+                            ).toString();
+                            break;
                         }
                       });
                     }
@@ -950,7 +997,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 1,
+                    fontSize: 12,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();
