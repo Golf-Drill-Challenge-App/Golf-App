@@ -20,6 +20,8 @@ const prettyTitle = {
   carryDiffAverage: "Carry Difference Average",
   proxHoleAverage: "Proximity-to-hole Average",
   sideLandingAverage: "Side Landing Average",
+  leftSideLandingAverage: "Average Miss Left",
+  rightSideLandingAverage: "Average Miss Right",
   sideLandingTotal: "Side Landing Total",
   strokesGained: "Strokes Gained",
   strokesGainedAverage: "Strokes Gained Average",

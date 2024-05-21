@@ -448,6 +448,10 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
   let sideLandingTotal = 0;
+  let leftSideLandingTotal = 0;
+  let missedLeftShotCount = 0;
+  let rightSideLandingTotal = 0;
+  let missedRightShotCount = 0;
   let carryDiffTotal = 0;
 
   let outputShotData = [];
@@ -489,6 +493,19 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "sideLanding":
           shot.sideLanding = Number(inputValues[j].sideLanding);
+
+          if (inputValues[j].sideLanding > 0) {
+            rightSideLandingTotal += Math.abs(
+              Number(inputValues[j].sideLanding),
+            );
+            missedRightShotCount += 1;
+          }
+          if (inputValues[j].sideLanding < 0) {
+            leftSideLandingTotal += Math.abs(
+              Number(inputValues[j].sideLanding),
+            );
+            missedLeftShotCount += 1;
+          }
           sideLandingTotal += Math.abs(Number(inputValues[j].sideLanding));
           break;
 
@@ -618,6 +635,16 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
       case "strokesGainedAverage":
         outputData.strokesGainedAverage =
           strokesGainedTotal / inputValues.length;
+        break;
+
+      case "leftSideLandingAverage":
+        outputData.leftSideLandingAverage =
+          leftSideLandingTotal / missedLeftShotCount;
+        break;
+
+      case "rightSideLandingAverage":
+        outputData.rightSideLandingAverage =
+          rightSideLandingTotal / missedRightShotCount;
         break;
 
       case "sideLandingTotal":
