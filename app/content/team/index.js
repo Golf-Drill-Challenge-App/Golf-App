@@ -24,7 +24,7 @@ function Index() {
 
   //Used for Displaying coach/owner view
   const {
-    data: currentUserData,
+    data: currentUserInfo,
     error: currentUserError,
     isLoading: currentUserIsLoading,
   } = useUserInfo({ userId: currentUserId });
@@ -39,6 +39,7 @@ function Index() {
 
   if (userInfoError || currentUserError)
     return <ErrorComponent errorList={[userInfoError, currentUserError]} />;
+
   const foundUsers = Object.values(userInfo)
     .filter((user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -92,151 +93,147 @@ function Index() {
           onPress={Keyboard.dismiss}
           accessible={false}
         >
-          <>
-            <Header
-              title={"Team"}
-              postChildren={
-                currentUserData.role === "owner" ? (
-                  <Menu
-                    visible={menuVisible}
-                    onDismiss={() => {
+          <Header
+            title={"Team"}
+            postChildren={
+              currentUserInfo.role === "owner" ? (
+                <Menu
+                  visible={menuVisible}
+                  onDismiss={() => {
+                    setMenuVisible(false);
+                  }}
+                  anchor={
+                    <Appbar.Action
+                      icon="dots-horizontal-circle-outline"
+                      onPress={() => {
+                        setMenuVisible(true);
+                      }}
+                      color={themeColors.accent}
+                    />
+                  }
+                  statusBarHeight={45}
+                  anchorPosition="bottom"
+                  contentStyle={{ backgroundColor: themeColors.background }}
+                >
+                  <Menu.Item
+                    leadingIcon="pencil-outline"
+                    onPress={() => {
+                      console.log("Edit Team Pressed!");
                       setMenuVisible(false);
                     }}
-                    anchor={
-                      <Appbar.Action
-                        icon="dots-horizontal-circle-outline"
-                        onPress={() => {
-                          setMenuVisible(true);
-                        }}
-                        color={themeColors.accent}
-                      />
-                    }
-                    statusBarHeight={45}
-                    anchorPosition="bottom"
-                    contentStyle={{ backgroundColor: themeColors.background }}
-                  >
-                    <Menu.Item
-                      leadingIcon="pencil-outline"
-                      onPress={() => {
-                        console.log("Edit Team Pressed!");
-                        setMenuVisible(false);
-                      }}
-                      title="Edit Team"
-                    />
-                    <Menu.Item
-                      leadingIcon="restart"
-                      onPress={() => {
-                        console.log("Reset Season Pressed!");
-                        setMenuVisible(false);
-                      }}
-                      title="Reset Season"
-                    />
-                  </Menu>
-                ) : (
-                  <></>
-                )
-              }
-            />
-            <KeyboardAwareScrollView
-              // allows opening links from search results without closing keyboard first
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-              stickyHeaderIndices={[3]}
-              refreshControl={
-                <RefreshInvalidate invalidateKeys={invalidateKeys} />
-              }
-            >
-              <View style={{ alignItems: "center" }}>
-                <Image
-                  uri="https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png"
-                  style={{ marginTop: 0, width: 131, height: 75 }}
-                />
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "baseline",
-                  }}
-                >
-                  <Text style={{ marginTop: 0, fontSize: 30, marginRight: 0 }}>
-                    OSU Golf Team
-                  </Text>
-                </View>
-              </View>
-
-              <Text style={{ textAlign: "center", marginBottom: 20 }}>
-                {Object.keys(userInfo).length} members
-              </Text>
+                    title="Edit Team"
+                  />
+                  <Menu.Item
+                    leadingIcon="restart"
+                    onPress={() => {
+                      console.log("Reset Season Pressed!");
+                      setMenuVisible(false);
+                    }}
+                    title="Reset Season"
+                  />
+                </Menu>
+              ) : (
+                <></>
+              )
+            }
+          />
+          <KeyboardAwareScrollView
+            // allows opening links from search results without closing keyboard first
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            stickyHeaderIndices={[3]}
+            refreshControl={
+              <RefreshInvalidate invalidateKeys={invalidateKeys} />
+            }
+          >
+            <View style={{ alignItems: "center" }}>
+              <Image
+                uri="https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png"
+                style={{ marginTop: 0, width: 131, height: 75 }}
+              />
+            </View>
+            <View style={{ alignItems: "center" }}>
               <View
                 style={{
-                  backgroundColor: themeColors.background,
-                  paddingBottom: 10,
-                  paddingTop: 10,
+                  flexDirection: "row",
+                  alignItems: "baseline",
                 }}
               >
-                <Searchbar
-                  onChangeText={onChangeSearch}
-                  value={searchQuery}
-                  style={{
-                    marginLeft: 20,
-                    marginRight: 20,
-                    backgroundColor: themeColors.highlight,
-                    borderWidth: 1,
-                    borderColor: themeColors.border,
-                  }}
-                  placeholder="Search team members"
-                  selectionColor={themeColors.accent}
-                  cursorColor={themeColors.accent}
-                />
+                <Text style={{ marginTop: 0, fontSize: 30, marginRight: 0 }}>
+                  OSU Golf Team
+                </Text>
               </View>
+            </View>
 
-              <List.Section style={{ backgroundColor: themeColors.background }}>
-                {foundUsers.map((user) => {
-                  const userId = user["uid"];
-                  return (
-                    <List.Item
-                      key={userId}
-                      title={user.name}
-                      style={{
-                        paddingLeft: 20,
-                      }}
-                      left={() => (
-                        <Image
+            <Text style={{ textAlign: "center", marginBottom: 20 }}>
+              {Object.keys(userInfo).length} members
+            </Text>
+            <View
+              style={{
+                backgroundColor: themeColors.background,
+                paddingBottom: 10,
+                paddingTop: 10,
+              }}
+            >
+              <Searchbar
+                onChangeText={onChangeSearch}
+                value={searchQuery}
+                style={{
+                  marginLeft: 20,
+                  marginRight: 20,
+                  backgroundColor: themeColors.highlight,
+                  borderWidth: 1,
+                  borderColor: themeColors.border,
+                }}
+                placeholder="Search team members"
+                selectionColor={themeColors.accent}
+                cursorColor={themeColors.accent}
+              />
+            </View>
+
+            <List.Section style={{ backgroundColor: themeColors.background }}>
+              {foundUsers.map((user) => {
+                const userId = user["uid"];
+                return (
+                  <List.Item
+                    key={userId}
+                    title={user.name}
+                    style={{
+                      paddingLeft: 20,
+                    }}
+                    left={() => (
+                      <Image
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: 12,
+                        }}
+                        uri={user.pfp}
+                      />
+                    )}
+                    right={() => (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Text
                           style={{
-                            width: 24,
-                            height: 24,
-                            borderRadius: 12,
-                          }}
-                          uri={user.pfp}
-                        />
-                      )}
-                      right={() => (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
+                            color: roleColor(user),
                           }}
                         >
-                          <Text
-                            style={{
-                              color: roleColor(user),
-                            }}
-                          >
-                            {userId === currentUserId ? "Me!" : user.role}
-                          </Text>
-                          <Icon source="chevron-right" />
-                        </View>
-                      )}
-                      onPress={() =>
-                        router.push(`content/team/users/${userId}`)
-                      }
-                    />
-                  );
-                })}
-              </List.Section>
-            </KeyboardAwareScrollView>
-          </>
+                          {userId === currentUserId ? "Me!" : user.role}
+                        </Text>
+                        <Icon source="chevron-right" />
+                      </View>
+                    )}
+                    onPress={() => router.push(`content/team/users/${userId}`)}
+                  />
+                );
+              })}
+            </List.Section>
+          </KeyboardAwareScrollView>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </PaperWrapper>

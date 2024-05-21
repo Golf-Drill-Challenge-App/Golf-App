@@ -11,7 +11,8 @@ import {
 import { Appbar, Avatar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { themeColors } from "~/Constants";
+import { firebaseErrors, themeColors } from "~/Constants";
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -28,6 +29,10 @@ export default function Index() {
 
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
+
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
 
   const queryClient = useQueryClient();
   const [checkedItems, setCheckedItems] = useState({});
@@ -60,47 +65,63 @@ export default function Index() {
     });
     setCheckedItems(updatedCheckedItems);
   };
+
   const handleAssign = async () => {
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
     const time = new Date().getTime();
+    try {
+      runTransaction(db, async (transaction) => {
+        const updatedAssignedData = {};
 
-    runTransaction(db, async (transaction) => {
-      const updatedAssignedData = {};
-
-      for (const userId of selectedUsers) {
-        const userRef = doc(db, "teams", "1", "users", userId);
-        const docSnap = await transaction.get(userRef);
-        if (docSnap.exists()) {
-          const assignedData = docSnap.data()["assigned_data"];
-          updatedAssignedData[userId] = [
-            { assignedTime: time, completed: false, drillId: id },
-            ...assignedData,
-          ];
-        } else {
-          console.log("No such document!");
+        for (const userId of selectedUsers) {
+          const userRef = doc(db, "teams", "1", "users", userId);
+          const docSnap = await transaction.get(userRef);
+          if (docSnap.exists()) {
+            const assignedData = docSnap.data()["assigned_data"];
+            updatedAssignedData[userId] = [
+              { assignedTime: time, completed: false, drillId: id },
+              ...assignedData,
+            ];
+          } else {
+            console.log("No such document!");
+          }
         }
-      }
-      selectedUsers.forEach((userId) => {
-        const userRef = doc(db, "teams", "1", "users", userId);
+        selectedUsers.forEach((userId) => {
+          const userRef = doc(db, "teams", "1", "users", userId);
 
-        transaction.update(userRef, {
-          assigned_data: updatedAssignedData[userId],
+          transaction.update(userRef, {
+            assigned_data: updatedAssignedData[userId],
+          });
         });
+      }).then(() => {
+        // Invalidate cache after all users are updated
+        selectedUsers.forEach((userId) =>
+          queryClient.invalidateQueries(["user", { teamId: "1", userId }]),
+        );
       });
-    }).then(() => {
-      // Invalidate cache after all users are updated
-      selectedUsers.forEach((userId) =>
-        queryClient.invalidateQueries(["user", { teamId: "1", userId }]),
-      );
-    });
+    } catch (e) {
+      showDialog("Error", firebaseErrors[e.code] || e.message);
+    }
 
     navigation.pop(3);
+  };
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
   };
   return (
     <PaperWrapper>
       <GestureHandlerRootView>
+        <DialogComponent
+          title={dialogTitle}
+          content={dialogMessage}
+          visible={dialogVisible}
+          onHide={() => setDialogVisible(false)}
+        />
         <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
           <Header
             title="assign drill"

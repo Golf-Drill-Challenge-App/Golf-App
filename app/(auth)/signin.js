@@ -18,7 +18,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { firebaseErrors, themeColors } from "~/Constants";
+import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
@@ -47,15 +48,7 @@ export default function SignIn() {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
         console.log(e);
-        if (e["code"]) {
-          if (firebaseErrors[e["code"]]) {
-            setDialogMessage(firebaseErrors[e["code"]]);
-          } else {
-            setDialogMessage(e["code"]);
-          }
-        } else {
-          setDialogMessage(String(e));
-        }
+        setDialogMessage(getErrorString(e));
         setDialogVisible(true);
       }
     }
@@ -69,15 +62,7 @@ export default function SignIn() {
       })
       .catch((e) => {
         console.log(e);
-        if (e["code"]) {
-          if (firebaseErrors[e["code"]]) {
-            setDialogMessage(firebaseErrors[e["code"]]);
-          } else {
-            setDialogMessage(e["code"]);
-          }
-        } else {
-          setDialogMessage(String(e));
-        }
+        setDialogMessage(getErrorString(e));
         setDialogVisible(true);
       });
   }

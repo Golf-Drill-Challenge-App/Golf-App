@@ -163,13 +163,13 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         pfp: downloadURL,
       });
-      setSnackbarMessage("Successfully uploaded the profile picture!");
+      showSnackBar("Successfully uploaded the profile picture!");
       setImageUploading(false);
 
       return downloadURL;
     } catch (e) {
       console.log("Error uploading image to Firebase:", e);
-      setSnackbarMessage("Error uploading profile picture. Please try again.");
+      showSnackBar("Error uploading profile picture. Please try again.");
       setImageUploading(false);
       throw e; // Rethrow the error to handle it at the caller's level if needed
     }
@@ -205,16 +205,7 @@ function Index() {
         })
         .catch((e) => {
           console.log(e);
-          if (e["code"]) {
-            if (firebaseErrors[e["code"]]) {
-              setDialogMessage(firebaseErrors[e["code"]]);
-            } else {
-              setDialogMessage(e["code"]);
-            }
-          } else {
-            setDialogMessage(String(e));
-          }
-          setDialogVisible(true);
+          showDialog("Error", firebaseErrors[e["code"]]);
         });
     }
   };
@@ -243,6 +234,11 @@ function Index() {
     setDialogVisible(true);
   };
 
+  const showSnackBar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
+  };
+
   const handleUpdate = async () => {
     if (newName && newName !== userData.name) {
       // check if they request to update their name to a new one
@@ -251,8 +247,7 @@ function Index() {
       });
       invalidateMultipleKeys(queryClient, [["userInfo"]]);
       bottomSheetModalRef.current.close();
-      setSnackbarMessage("Name field updated successfully");
-      setSnackbarVisible(true); // Show success snackbar
+      showSnackBar("Name field updated successfully");
     }
 
     if (passwordInputVisible && (currentPassword || newPassword)) {
@@ -276,8 +271,7 @@ function Index() {
               setNewPassword("");
               bottomSheetModalRef.current.close();
               setPasswordInputVisible(false);
-              setSnackbarMessage("Password updated successfully");
-              setSnackbarVisible(true); // Show success snackbar
+              showSnackBar("Password updated successfully");
             })
             .catch((e) => {
               // Update failed
