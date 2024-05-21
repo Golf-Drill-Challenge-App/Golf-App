@@ -371,7 +371,12 @@ function fillRandomShotTargets(drillInfo) {
     var target = Math.floor(
       Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
     );
-    var baseline = lookUpBaselineStrokesGained(target);
+    var baseline = -1;
+    if (drillInfo.shotType === "putt") {
+      baseline = lookUpExpectedPutts(target);
+    } else {
+      baseline = lookUpBaselineStrokesGained(target);
+    }
     shots.push({
       shotNum: i + 1,
       items: {
