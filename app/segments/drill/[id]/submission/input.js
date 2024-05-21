@@ -543,10 +543,13 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
             case "putt":
               switch (drillInfo.requirements[0].type) {
                 case "inputtedPutt":
-                  shot.strokesGained = lookUpExpectedPutts(inputValues[j].distance) - inputValues[j].strokes;
+                  shot.strokesGained =
+                    lookUpExpectedPutts(inputValues[j].distance) -
+                    inputValues[j].strokes;
                   break;
                 default:
-                  shot.strokesGained = attemptShots[j].baseline - inputValues[j].strokes;
+                  shot.strokesGained =
+                    attemptShots[j].baseline - inputValues[j].strokes;
                   break;
               }
               break;

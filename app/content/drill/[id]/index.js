@@ -47,7 +47,7 @@ export default function Index() {
   if (drillInfoError || userInfoError)
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
 
-  console.log("IN DRILL")
+  console.log("IN DRILL");
 
   return (
     <PaperWrapper>

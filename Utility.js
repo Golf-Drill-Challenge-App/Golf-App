@@ -96,7 +96,7 @@ export function getIconByKey(key) {
     { carry: "arrow-up" },
     { sideLanding: "arrow-left-right" },
     { strokes: "pound" },
-    { distance: "ruler"}
+    { distance: "ruler" },
   ];
 
   const iconObject = icons.find((icon) => icon[key]);

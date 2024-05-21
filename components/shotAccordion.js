@@ -144,9 +144,9 @@ function ShotAccordion(props) {
                 {props.shot[props.drillInfo.requirements[0].name]}{" "}
                 {props.drillInfo.requirements[0].distanceMeasure}
               </Text>
-              {props.drillInfo.requirements[0].type === "inputtedPutt" &&
+              {props.drillInfo.requirements[0].type === "inputtedPutt" && (
                 <Text>ft</Text>
-              }
+              )}
             </View>
             <View
               style={{
@@ -206,7 +206,7 @@ function ShotAccordion(props) {
               default:
                 switch (props.drillInfo.requirements[0].type) {
                   case "inputtedPutt":
-                    console.log("Shots", props.shot)
+                    console.log("Shots", props.shot);
                     return DataField(props.drillInfo, field, props.shot[field]);
                   default:
                     return DataField(props.drillInfo, field, props.shot[field]);
