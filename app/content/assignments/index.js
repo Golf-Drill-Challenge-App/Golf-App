@@ -37,7 +37,10 @@ const AssignmentList = () => {
   // 'data is undefined' / 'Query data cannot be undefined' (useUserInfo hook error)
   if (
     !currentUserId ||
-    (userInfoError && String(userInfoError).includes("data is undefined"))
+    (userInfoError && String(userInfoError).includes("data is undefined")) ||
+    String(userInfoError).includes(
+      "TypeError: Cannot read property 'assigned_data' of undefined", // handle error from remove player's pov (after being removed by admin user)
+    )
   ) {
     // The logs still show up on the console (which is probably good), just hidden from phone screen
     LogBox.ignoreLogs(["Query data cannot be undefined"]);
