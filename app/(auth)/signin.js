@@ -55,6 +55,11 @@ export default function SignIn() {
   }
 
   async function handleForgotPassword() {
+    if (!email) {
+      setDialogMessage("Please enter an email address to reset your password");
+      setDialogVisible(true);
+      return;
+    }
     sendPasswordResetEmail(getAuth(), email)
       .then(() => {
         setDialogMessage("Password reset email sent");
