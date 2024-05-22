@@ -100,6 +100,20 @@ async function uploadAttempt(
     await setDoc(newAttemptRef, uploadData);
     console.log("Document successfully uploaded!");
 
+    await runTransaction(db, async (transaction) => {
+      const userRef = doc(db, "teams", "1", "users", userId);
+      const userInfo = await transaction.get(userRef);
+
+      const uniqueDrills = userInfo.data().uniqueDrills;
+
+      if (!uniqueDrills.includes(drillId)) {
+        // Add the new item to the array
+        transaction.update(userRef, {
+          ["uniqueDrills"]: [...uniqueDrills, drillId],
+        });
+      }
+    });
+
     // Call function to check for leaderboard update
     await handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
 
