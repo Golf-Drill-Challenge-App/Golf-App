@@ -11,7 +11,8 @@ import {
 import { Appbar, Avatar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { firebaseErrors, themeColors } from "~/Constants";
+import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
@@ -102,7 +103,7 @@ export default function Index() {
         );
       });
     } catch (e) {
-      showDialog("Error", firebaseErrors[e.code] || e.message);
+      showDialog("Error", getErrorString(e));
     }
 
     navigation.pop(3);

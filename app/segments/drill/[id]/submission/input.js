@@ -21,6 +21,7 @@ import { Appbar, Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import {
+  getErrorString,
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
@@ -628,15 +629,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         })
         .catch((e) => {
           console.log(e);
-          if (e["code"]) {
-            if (firebaseErrors[e["code"]]) {
-              setDialogMessage(firebaseErrors[e["code"]]);
-            } else {
-              setDialogMessage(e["code"]);
-            }
-          } else {
-            setDialogMessage(String(e));
-          }
+          setDialogMessage(getErrorString(e));
           setDialogVisible(true);
         });
     } else {
