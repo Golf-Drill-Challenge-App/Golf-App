@@ -58,7 +58,7 @@ const AssignmentList = () => {
     return (
       <EmptyScreen
         invalidateKeys={invalidateKeys}
-        text={"You have been removed as a user, go to Profile Tab to signout"}
+        text={"Unknown account error, go to Profile Tab to signout"}
       />
     );
   }

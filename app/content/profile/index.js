@@ -142,7 +142,7 @@ function Index() {
         </Pressable>
         <EmptyScreen
           invalidateKeys={invalidateKeys}
-          text={"No drills attempted yet (removed user error placeholder)"}
+          text={"Unknown account error, click Sign Out button above to signout"}
         />
       </>
     );

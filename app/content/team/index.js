@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Appbar, Icon, List, Menu, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -49,7 +50,7 @@ function Index() {
     return (
       <EmptyScreen
         invalidateKeys={invalidateKeys}
-        text={"You have been removed as a user, go to Profile Tab to signout"}
+        text={"Unknown account error, go to Profile Tab to signout"}
       />
     );
   }
