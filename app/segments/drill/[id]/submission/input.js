@@ -495,16 +495,23 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const descriptionModalRef = useRef(null);
 
-  /***** Empty Input dialog Stuff *****/
-  const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
-  const hideEmptyDialog = () => setEmptyDialogVisible(false);
-
-  /***** Invalid Input dialog Stuff *****/
-  const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
-  const hideInvalidDialog = () => setInvalidDialogVisible(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
 
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
+
+  const showSnackBar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
+  };
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
@@ -596,11 +603,11 @@ export default function Input({ setToggleResult, setOutputData }) {
       Object.keys(inputValues[displayedShot]).length !== numInputs ||
       checkEmptyInputs(inputValues[displayedShot])
     ) {
-      setEmptyDialogVisible(true);
+      showSnackBar("All inputs must be filled.");
     }
     //check inputs are all numbers
     else if (validateInputs(inputValues[displayedShot])) {
-      setInvalidDialogVisible(true);
+      showSnackBar("All inputs must be numbers.");
     }
     //check for submit button
     else if (submitVisible) {
@@ -629,8 +636,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         })
         .catch((e) => {
           console.log(e);
-          setDialogMessage(getErrorString(e));
-          setDialogVisible(true);
+          showDialog("Error", getErrorString(e));
         });
     } else {
       setDisplayedShot(displayedShot + 1);
@@ -742,26 +748,16 @@ export default function Input({ setToggleResult, setOutputData }) {
                   </BottomSheetView>
                 </BottomSheetWrapper>
 
-                {/* Error Dialog: Empty Input*/}
+                {/* Snackbar Error Dialog */}
                 <DialogComponent
                   type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be filled."
-                  visible={emptyDialogVisible}
-                  onHide={hideEmptyDialog}
-                />
-
-                {/* Error Dialog: Invalid Input*/}
-                <DialogComponent
-                  type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be numbers."
-                  visible={invalidDialogVisible}
-                  onHide={hideInvalidDialog}
+                  visible={snackbarVisible}
+                  content={snackbarMessage}
+                  onHide={() => setSnackbarVisible(false)}
                 />
 
                 <DialogComponent
-                  title={"Error"}
+                  title={dialogTitle}
                   content={dialogMessage}
                   visible={dialogVisible}
                   onHide={() => setDialogVisible(false)}

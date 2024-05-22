@@ -100,6 +100,7 @@ function Index() {
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordCheck, setNewPasswordCheck] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
 
   const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
@@ -198,7 +199,13 @@ function Index() {
     // console.log(imageResult);
 
     if (!imageResult.canceled) {
-      const resizedUri = await resizeImage(imageResult.assets[0].uri);
+      // TODO: fully switch to try / catch block syntax
+      const resizedUri = await resizeImage(imageResult.assets[0].uri).catch(
+        (e) => {
+          console.log(e);
+          showDialog("Error", getErrorString(e));
+        },
+      );
       await firebaseProfileImageUpload(resizedUri)
         .then(() => {
           // invalidate cache on successful image upload
@@ -227,6 +234,7 @@ function Index() {
     setNewName(userData.name);
     setCurrentPassword("");
     setNewPassword("");
+    setNewPasswordCheck("");
   };
 
   const showDialog = (title, message) => {
@@ -241,51 +249,71 @@ function Index() {
   };
 
   const handleUpdate = async () => {
+    if (!newName) {
+      showDialog("Error", "New name has a length of 0");
+    }
+
+    // TODO: Check with team on if it is intended for the user to be able to update username and password with the same button
+    if (newName && newName === userData.name && !passwordInputVisible) {
+      showDialog("Error", "New name is identical to the old name");
+    }
     if (newName && newName !== userData.name) {
       // check if they request to update their name to a new one
       await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
         name: newName,
-      });
-      invalidateMultipleKeys(queryClient, [["userInfo"]]);
-      bottomSheetModalRef.current.close();
-      showSnackBar("Name field updated successfully");
+      })
+        .then(() => {
+          // invalidate cache on successful name update
+          invalidateMultipleKeys(queryClient, [["userInfo"]]);
+          bottomSheetModalRef.current.close();
+          showSnackBar("Name field updated successfully");
+        })
+        .catch((e) => {
+          console.log(e);
+          showDialog("Error", getErrorString(e));
+        });
     }
 
-    if (passwordInputVisible && (currentPassword || newPassword)) {
-      if (!currentPassword || !newPassword) {
-        showDialog("Error", "Please fill out all the fields");
-      } else {
-        // attempt updating the password
-        try {
-          // re-authenticate the user and check if the provided current password is valid
-          const userCredential = await signInWithEmailAndPassword(
-            auth,
-            userEmail,
-            currentPassword,
-          );
-
-          // once re-authenticated, update the password
-          updatePassword(userCredential.user, newPassword)
-            .then(() => {
-              // Update successful
-              setCurrentPassword(""); // Clear password fields
-              setNewPassword("");
-              bottomSheetModalRef.current.close();
-              setPasswordInputVisible(false);
-              showSnackBar("Password updated successfully");
-            })
-            .catch((e) => {
-              // Update failed
-              console.log("password update error:", e.message);
-              showDialog(
-                "New password is too short",
-                "Provided new password must be at least 6 characters long!",
-              );
-            });
-        } catch (e) {
-          showDialog("Error", e.message);
-          console.log(e.message);
+    if (passwordInputVisible && !(currentPassword && newPassword)) {
+      showDialog("Error", "Please fill out all the fields");
+    }
+    if (passwordInputVisible && currentPassword && newPassword) {
+      // attempt updating the password
+      try {
+        if (newPassword !== newPasswordCheck) {
+          throw "Passwords don't match";
         }
+
+        // re-authenticate the user and check if the provided current password is valid
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          userEmail,
+          currentPassword,
+        );
+
+        // once re-authenticated, update the password
+        updatePassword(userCredential.user, newPassword)
+          .then(() => {
+            // Update successful
+            console.log(newPassword);
+            setCurrentPassword(""); // Clear password fields
+            setNewPassword("");
+            setNewPasswordCheck("");
+            bottomSheetModalRef.current.close();
+            setPasswordInputVisible(false);
+            showSnackBar("Password updated successfully");
+          })
+          .catch((e) => {
+            // Update failed
+            console.log("password update error:", e);
+            showDialog(
+              "Error",
+              "New password is too short. Please enter in a new password that is at least 6 characters long!",
+            );
+          });
+      } catch (e) {
+        console.log(e);
+        showDialog("Error", getErrorString(e));
       }
     }
   };
@@ -477,6 +505,10 @@ function Index() {
                         onChangeText={setCurrentPassword}
                         placeholder="Enter your current password"
                         secureTextEntry={true}
+                        // to get rid of ios password suggestions
+                        // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                        // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                        textContentType="oneTimeCode"
                       />
                       <BottomSheetTextInput
                         style={styles.input}
@@ -484,6 +516,15 @@ function Index() {
                         onChangeText={setNewPassword}
                         placeholder="Enter your new password"
                         secureTextEntry={true}
+                        textContentType="newPassword"
+                      />
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={newPasswordCheck}
+                        onChangeText={setNewPasswordCheck}
+                        placeholder="Confirm your new password"
+                        secureTextEntry={true}
+                        textContentType="newPassword"
                       />
                     </>
                   )}

@@ -36,7 +36,14 @@ export default function SignIn() {
   const { height } = useWindowDimensions();
 
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
 
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
@@ -48,27 +55,26 @@ export default function SignIn() {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
         console.log(e);
-        setDialogMessage(getErrorString(e));
-        setDialogVisible(true);
+        showDialog("Error", getErrorString(e));
       }
     }
   }
 
   async function handleForgotPassword() {
     if (!email) {
-      setDialogMessage("Please enter an email address to reset your password");
-      setDialogVisible(true);
+      showDialog(
+        "Error",
+        "Please enter an email address to reset your password",
+      );
       return;
     }
     sendPasswordResetEmail(getAuth(), email)
       .then(() => {
-        setDialogMessage("Password reset email sent");
-        setDialogVisible(true);
+        showDialog("Error", "Password reset email sent");
       })
       .catch((e) => {
         console.log(e);
-        setDialogMessage(getErrorString(e));
-        setDialogVisible(true);
+        showDialog("Error", getErrorString(e));
       });
   }
 
@@ -133,7 +139,7 @@ export default function SignIn() {
         >
           <View style={styles.container}>
             <DialogComponent
-              title={"Error"}
+              title={dialogTitle}
               content={dialogMessage}
               visible={dialogVisible}
               onHide={() => setDialogVisible(false)}

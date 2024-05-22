@@ -35,7 +35,14 @@ export default function SignUp() {
   const { height } = useWindowDimensions();
 
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
 
   async function handleSubmit() {
     try {
@@ -68,8 +75,7 @@ export default function SignUp() {
       // console.log(userCredential.user);
     } catch (e) {
       console.log(e);
-      setDialogMessage(getErrorString(e));
-      setDialogVisible(true);
+      showDialog("Error", getErrorString(e));
     }
   }
 
@@ -130,7 +136,7 @@ export default function SignUp() {
         >
           <View style={styles.container}>
             <DialogComponent
-              title={"Error"}
+              title={dialogTitle}
               content={dialogMessage}
               visible={dialogVisible}
               onHide={() => setDialogVisible(false)}
