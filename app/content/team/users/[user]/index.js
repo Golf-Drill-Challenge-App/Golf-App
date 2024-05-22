@@ -236,19 +236,18 @@ function Index() {
           buttons={["Cancel", "Remove User"]}
           buttonsFunctions={[
             hideRemoveDialog,
-            () => {
-              removeUser(userId)
-                .then(() => {
-                  queryClient.removeQueries(["userInfo", userId]);
-                  invalidateMultipleKeys(queryClient, [
-                    ["userInfo"],
-                    ["best_attempts"],
-                  ]);
-                  navigation.goBack();
-                })
-                .catch((e) => {
-                  console.error("Error removing user:", e);
-                });
+            async () => {
+              try {
+                await removeUser(userId);
+                await queryClient.removeQueries(["userInfo", userId]);
+                invalidateMultipleKeys(queryClient, [
+                  ["userInfo"],
+                  ["best_attempts"],
+                ]);
+                navigation.goBack();
+              } catch {
+                console.error("Error removing user:", e);
+              }
             },
           ]}
         />
