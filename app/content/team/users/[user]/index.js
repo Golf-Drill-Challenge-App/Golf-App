@@ -16,6 +16,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { removeUser } from "~/hooks/removeUser";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -238,6 +239,7 @@ function Index() {
             () => {
               removeUser(userId)
                 .then(() => {
+                  queryClient.removeQueries(["userInfo", userId]);
                   invalidateMultipleKeys(queryClient, [
                     ["userInfo"],
                     ["best_attempts"],
@@ -247,8 +249,6 @@ function Index() {
                 .catch((e) => {
                   console.error("Error removing user:", e);
                 });
-              // TODO: Add a catch block
-              // navigation.goBack();
             },
           ]}
         />
