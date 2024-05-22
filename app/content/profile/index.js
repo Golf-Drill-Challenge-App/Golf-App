@@ -295,7 +295,6 @@ function Index() {
         updatePassword(userCredential.user, newPassword)
           .then(() => {
             // Update successful
-            console.log(newPassword);
             setCurrentPassword(""); // Clear password fields
             setNewPassword("");
             setNewPasswordCheck("");
