@@ -206,7 +206,6 @@ function ShotAccordion(props) {
               default:
                 switch (props.drillInfo.requirements[0].type) {
                   case "inputtedPutt":
-                    console.log("Shots", props.shot);
                     return DataField(props.drillInfo, field, props.shot[field]);
                   default:
                     return DataField(props.drillInfo, field, props.shot[field]);

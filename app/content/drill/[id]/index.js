@@ -47,8 +47,6 @@ export default function Index() {
   if (drillInfoError || userInfoError)
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
 
-  console.log("IN DRILL");
-
   return (
     <PaperWrapper>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>

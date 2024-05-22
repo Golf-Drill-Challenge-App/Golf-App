@@ -13,6 +13,7 @@ import { useAllTimeRecords } from "~/hooks/useAllTimeRecords";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
+import { currentAuthContext } from "~/context/Auth";
 
 function getLeaderboardRanks(
   orderedLeaderboard,
@@ -46,8 +47,8 @@ function getLeaderboardRanks(
 export default function Leaderboard() {
   const drillId = useLocalSearchParams()["id"];
   const currentPath = usePathname();
-  const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
-    useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user
+  const { currentTeamId } = currentAuthContext();
+  const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] = useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user
   const [customMainOutputAttempt, setCustomMainOutputAttempt] = useState("did"); //What is the custom mainOutputAttempt in case defaultMainOutputAttempt is false
 
   const {
