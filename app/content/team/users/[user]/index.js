@@ -1,16 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import {
-  collection,
-  deleteDoc,
-  deleteField,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Divider, Menu } from "react-native-paper";
@@ -26,7 +16,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { removeUser } from "~/hooks/removeUser";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
@@ -42,53 +32,6 @@ async function blacklistUser(userId, userData) {
 
   //remove users data
   removeUser(userId);
-}
-
-async function removeUser(userId) {
-  //Remove all attempts from attempts table with UID == userID
-  let attemptQuery = query(
-    collection(db, "teams", "1", "attempts"),
-    where("uid", "==", userId),
-  );
-
-  try {
-    const querySnapshot = await getDocs(attemptQuery);
-
-    for (const doc of querySnapshot.docs) {
-      await deleteDoc(doc.ref);
-    }
-  } catch (e) {
-    console.error("Error getting attempts:", e);
-  }
-
-  //Remove all entries from best_attempts table with UID == userID
-  let bestAttemptQuery = query(collection(db, "teams", "1", "best_attempts"));
-
-  try {
-    const querySnapshot = await getDocs(bestAttemptQuery);
-
-    for (const doc of querySnapshot.docs) {
-      let docData = doc.data();
-
-      if (docData[userId]) {
-        //Delete the field
-        await updateDoc(doc.ref, {
-          [userId]: deleteField(),
-        });
-      }
-    }
-  } catch (e) {
-    console.error("Error getting or deleting from best_attempts:", e);
-  }
-
-  //Remove user from user table where UID == userID
-  try {
-    const userRef = doc(db, "teams", "1", "users", userId);
-
-    await deleteDoc(userRef);
-  } catch (e) {
-    console.error("Error deleting user from users:", e);
-  }
 }
 
 async function changeRole(userId, newRole) {
@@ -237,7 +180,7 @@ function Index() {
                     userData.role === "player"
                       ? changeRole(userId, "coach")
                       : changeRole(userId, "player");
-                    queryClient.invalidateQueries(["user", { userId }]); //invalidate cache
+                    queryClient.invalidateQueries(["userInfo", { userId }]); //invalidate cache
                     setMenuVisible(false);
                   }}
                   title={userData.role === "player" ? "Promote" : "Demote"}
@@ -293,11 +236,19 @@ function Index() {
           buttonsFunctions={[
             hideRemoveDialog,
             () => {
-              removeUser(userId).then(() => {
-                invalidateMultipleKeys(queryClient, [["userInfo"]]);
-              });
+              removeUser(userId)
+                .then(() => {
+                  invalidateMultipleKeys(queryClient, [
+                    ["userInfo"],
+                    ["best_attempts"],
+                  ]);
+                  navigation.goBack();
+                })
+                .catch((e) => {
+                  console.error("Error removing user:", e);
+                });
               // TODO: Add a catch block
-              navigation.goBack();
+              // navigation.goBack();
             },
           ]}
         />
