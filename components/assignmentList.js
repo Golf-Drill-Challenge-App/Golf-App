@@ -165,7 +165,7 @@ const AssignmentsList = ({
         <TouchableOpacity
           key={`${assignment.assignedTime}-${assignment.drillId}`}
           onPress={() => cardPressHandler(assignment)}
-          disabled={role !== "player" && !assignment.completed}
+          disabled={role !== "player" && assignment.completed}
         >
           <AssignmentCard
             mainText={drillInfo[assignment.drillId]["subType"]}
