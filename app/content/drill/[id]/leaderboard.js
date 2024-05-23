@@ -78,6 +78,7 @@ export default function Leaderboard() {
     ["userInfo"],
     ["drillInfo", { drillId }],
     ["best_attempts", { drillId }],
+    ["all_time_records", { drillId }],
   ];
 
   if (
