@@ -37,24 +37,21 @@ function DataField(drillInfo, field, value) {
         </View>
       );
     case "target":
-      switch (drillInfo.requirements[0].type) {
-        case "inputtedPutt":
-          return (
-            <Row
-              key={field}
-              name={prettyTitle[field]}
-              value={`${numTrunc(value)} ft`}
-            />
-          );
-        default:
-          return (
-            <Row
-              key={field}
-              name={prettyTitle[field]}
-              value={`${numTrunc(value)} yd`}
-            />
-          );
-      }
+      return (
+        <Row
+          key={field}
+          name={prettyTitle[field]}
+          value={`${numTrunc(value)} yd`}
+        />
+      );
+    case "distance":
+      return (
+        <Row
+          key={field}
+          name={prettyTitle[field]}
+          value={`${numTrunc(value)} ft`}
+        />
+      );
     case "sideLanding":
       return (
         <Row
@@ -144,9 +141,6 @@ function ShotAccordion(props) {
                 {props.shot[props.drillInfo.requirements[0].name]}{" "}
                 {props.drillInfo.requirements[0].distanceMeasure}
               </Text>
-              {props.drillInfo.requirements[0].type === "inputtedPutt" && (
-                <Text>ft</Text>
-              )}
             </View>
             <View
               style={{

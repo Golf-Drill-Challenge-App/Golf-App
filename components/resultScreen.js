@@ -85,7 +85,7 @@ export default function ResultScreen({
         </Text>
         <View
           style={{
-            backgroundColor: themeColors.background,
+            backgroundColor: "white",
             borderWidth: 1,
             borderColor: themeColors.border,
             borderRadius: 8,

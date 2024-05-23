@@ -12,6 +12,7 @@ import {
   getDocs,
   runTransaction,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
@@ -205,11 +206,13 @@ async function uploadNewLeaderboard(
       // get latest leaderboard data again, just in case another player updated best score just now
       const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
       if (!latestLeaderboard.exists()) {
-          const allUserInfo = await getDocs(collection(db, "teams", currentTeamId, "users"));
-          const emptyBestAttempt = {};
-          for (const doc of allUserInfo.docs) {
-              emptyBestAttempt[doc.data().uid] = null;
-          }
+        const allUserInfo = await getDocs(
+          collection(db, "teams", currentTeamId, "users"),
+        );
+        const emptyBestAttempt = {};
+        for (const doc of allUserInfo.docs) {
+          emptyBestAttempt[doc.data().uid] = null;
+        }
 
         await transaction.set(bestAttemptsDrillRef, emptyBestAttempt);
       }
@@ -332,13 +335,13 @@ function getShotInfo(drillInfo) {
       shots = fillRandomShotTargets(drillInfo);
       break;
     case "sequence":
-      shots = fillClubTargets(drillInfo);
+      shots = fillSequentialTargets(drillInfo);
       break;
     case "putt":
       shots = fillPuttTargets(drillInfo);
       break;
     case "inputtedPutt":
-      shots = fillInputtedPutts(drillInfo);
+      shots = fillSequentialTargets(drillInfo);
       break;
     default:
       console.log("Shots not found");
@@ -348,8 +351,8 @@ function getShotInfo(drillInfo) {
   return shots;
 }
 
-//Helper function to generate shots for the sequence drill type
-function fillClubTargets(drillInfo) {
+//Helper function for the sequence drill type
+function fillSequentialTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
@@ -410,25 +413,6 @@ function fillPuttTargets(drillInfo) {
   return shots;
 }
 
-//Helper function for the inputted putt drill type
-function fillInputtedPutts(drillInfo) {
-  let shots = [];
-  for (var i = 0; i < drillInfo.reps; i++) {
-    let target = {};
-    for (var j = 0; j < drillInfo.requirements.length; j++) {
-      target = Object.assign(target, {
-        [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i],
-      });
-    }
-    shots.push({
-      shotNum: i + 1,
-      items: target,
-    });
-  }
-
-  return shots;
-}
-
 /***************************************
  * Output Data Generation
  ***************************************/
@@ -461,19 +445,24 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
     let shot = {};
+    if (drillInfo.requirements[0].type === "inputtedPutt") {
+      attemptShots[j].baseline = lookUpExpectedPutts(inputValues[j].distance);
+      attemptShots[j].items.target = inputValues[j].distance;
+    }
     for (let i = 0; i < drillInfo.outputs.length; i++) {
       const output = drillInfo.outputs[i];
 
       switch (output) {
         case "target":
-          switch (drillInfo.requirements[0].type) {
-            case "inputtedPutt":
-              shot.target = inputValues[j].distance;
-              break;
-            default:
-              shot.target = attemptShots[j].items.target;
-              break;
-          }
+          shot.target = attemptShots[j].items.target;
+          break;
+
+        case "distance":
+          shot.distance = inputValues[j].distance;
+          shot.target =
+            attemptShots[j].items.target +
+            " " +
+            drillInfo.inputs.find(({ id }) => id === output).distanceMeasure;
           break;
 
         case "club":
@@ -524,14 +513,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
           break;
 
         case "baseline":
-          switch (drillInfo.requirements[0].type) {
-            case "inputtedPutt":
-              shot.baseline = lookUpExpectedPutts(inputValues[j].distance);
-              break;
-            default:
-              shot.baseline = attemptShots[j].baseline;
-              break;
-          }
+          shot.baseline = attemptShots[j].baseline;
           break;
 
         case "expectedPutts":
@@ -559,17 +541,8 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                 1;
               break;
             case "putt":
-              switch (drillInfo.requirements[0].type) {
-                case "inputtedPutt":
-                  shot.strokesGained =
-                    lookUpExpectedPutts(inputValues[j].distance) -
-                    inputValues[j].strokes;
-                  break;
-                default:
-                  shot.strokesGained =
-                    attemptShots[j].baseline - inputValues[j].strokes;
-                  break;
-              }
+              shot.strokesGained =
+                attemptShots[j].baseline - inputValues[j].strokes;
               break;
             default:
               console.log("Shot type does not exist.");
