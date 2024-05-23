@@ -68,14 +68,13 @@ export default function SignIn() {
       );
       return;
     }
-    sendPasswordResetEmail(getAuth(), email)
-      .then(() => {
-        showDialog("Error", "Password reset email sent");
-      })
-      .catch((e) => {
-        console.log(e);
-        showDialog("Error", getErrorString(e));
-      });
+    try {
+      await sendPasswordResetEmail(getAuth(), email);
+      showDialog("", "Password reset email sent");
+    } catch (e) {
+      console.log(e);
+      showDialog("Error", getErrorString(e));
+    }
   }
 
   const styles = StyleSheet.create({

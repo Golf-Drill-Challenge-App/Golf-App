@@ -76,16 +76,19 @@ export default function BarChartScreen({
     [startIndex, endIndex],
   );
 
-  const data = slicedDrillAttempts.map((value) => {
+  const data = slicedDrillAttempts.map(async (value) => {
     if (isNaN(value[drillInfo["mainOutputAttempt"]])) {
       //the terminator
-      removeAttempt({ currentTeamId, attemptId: value["id"] }).then(() => {
+      try {
+        await removeAttempt({ currentTeamId, attemptId: value["id"] });
         console.log(
           "terminated attempt: ",
           value["id"],
           " due to illegal value",
         );
-      });
+      } catch (e) {
+        console.log("error terminating attempt: ", value["id"], e);
+      }
       return 0;
     }
     return value[aggOutput];

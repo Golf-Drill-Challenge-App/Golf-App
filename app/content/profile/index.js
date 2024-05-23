@@ -27,7 +27,7 @@ import {
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar } from "react-native-paper";
+import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -199,39 +199,28 @@ function Index() {
     // console.log(imageResult);
 
     if (!imageResult.canceled) {
-      // TODO: fully switch to try / catch block syntax
-      const resizedUri = await resizeImage(imageResult.assets[0].uri).catch(
-        (e) => {
-          console.log(e);
-          showDialog("Error", getErrorString(e));
-        },
-      );
-      await firebaseProfileImageUpload(resizedUri)
-        .then(() => {
-          // invalidate cache on successful image upload
-          invalidateMultipleKeys(queryClient, [["userInfo"]]);
-        })
-        .catch((e) => {
-          console.log(e);
-          showDialog("Error", getErrorString(e));
-        });
+      try {
+        const resizedUri = await resizeImage(imageResult.assets[0].uri);
+        await firebaseProfileImageUpload(resizedUri);
+        invalidateMultipleKeys(queryClient, [["userInfo"]]);
+      } catch (e) {
+        console.log(e);
+        showDialog("Error", getErrorString(e));
+      }
     }
   };
 
   async function handleSignOut() {
-    signoutFireBase(auth)
-      .then(() => {
-        // Sign-out successful.
-        signOut();
-      })
-      .catch((e) => {
-        console.log(e);
-        showDialog("Error", getErrorString(e));
-      });
+    try {
+      await signoutFireBase(auth);
+      signOut();
+    } catch (e) {
+      console.log(e);
+      showDialog("Error", getErrorString(e));
+    }
   }
 
   const resetForm = () => {
-    setNewName(userData.name);
     setCurrentPassword("");
     setNewPassword("");
     setNewPasswordCheck("");
@@ -251,39 +240,23 @@ function Index() {
   const handleUpdate = async () => {
     if (!newName) {
       showDialog("Error", "New name has a length of 0");
+      return;
     }
-
-    // TODO: Check with team on if it is intended for the user to be able to update username and password with the same button
-    if (newName && newName === userData.name && !passwordInputVisible) {
+    if (!passwordInputVisible && newName === userData.name) {
       showDialog("Error", "New name is identical to the old name");
+      return;
     }
-    if (newName && newName !== userData.name) {
-      // check if they request to update their name to a new one
-      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
-        name: newName,
-      })
-        .then(() => {
-          // invalidate cache on successful name update
-          invalidateMultipleKeys(queryClient, [["userInfo"]]);
-          bottomSheetModalRef.current.close();
-          showSnackBar("Name field updated successfully");
-        })
-        .catch((e) => {
-          console.log(e);
-          showDialog("Error", getErrorString(e));
-        });
-    }
-
     if (passwordInputVisible && !(currentPassword && newPassword)) {
       showDialog("Error", "Please fill out all the fields");
+      return;
     }
-    if (passwordInputVisible && currentPassword && newPassword) {
-      // attempt updating the password
-      try {
-        if (newPassword !== newPasswordCheck) {
-          throw "Passwords don't match";
-        }
-
+    if (newPassword !== newPasswordCheck) {
+      showDialog("Error", "New passwords do not match");
+      return;
+    }
+    try {
+      if (passwordInputVisible) {
+        // attempt updating the password
         // re-authenticate the user and check if the provided current password is valid
         const userCredential = await signInWithEmailAndPassword(
           auth,
@@ -292,28 +265,29 @@ function Index() {
         );
 
         // once re-authenticated, update the password
-        updatePassword(userCredential.user, newPassword)
-          .then(() => {
-            // Update successful
-            setCurrentPassword(""); // Clear password fields
-            setNewPassword("");
-            setNewPasswordCheck("");
-            bottomSheetModalRef.current.close();
-            setPasswordInputVisible(false);
-            showSnackBar("Password updated successfully");
-          })
-          .catch((e) => {
-            // Update failed
-            console.log("password update error:", e);
-            showDialog(
-              "Error",
-              "New password is too short. Please enter in a new password that is at least 6 characters long!",
-            );
-          });
-      } catch (e) {
-        console.log(e);
-        showDialog("Error", getErrorString(e));
+        await updatePassword(userCredential.user, newPassword);
+
+        // Update successful
+        resetForm();
+        bottomSheetModalRef.current.close();
+        setPasswordInputVisible(false);
+        showSnackBar("Password updated successfully");
       }
+      //doing password first because it checks if the user's entered password is correct, so the form is submitted at once
+      if (newName !== userData.name) {
+        // check if they request to update their name to a new one
+        await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
+          name: newName,
+        });
+
+        // invalidate cache on successful name update
+        invalidateMultipleKeys(queryClient, [["userInfo"]]);
+        bottomSheetModalRef.current.close();
+        showSnackBar("Name field updated successfully");
+      }
+    } catch (e) {
+      console.log(e);
+      showDialog("Error", getErrorString(e));
     }
   };
 
@@ -366,7 +340,7 @@ function Index() {
       borderColor: "gray",
       marginBottom: 20, // Increase margin bottom for more spacing
       width: "80%",
-      padding: 10, // Increase padding for input fields
+      paddingVertical: 10, // Increase padding for input fields
     },
     saveChangesButton: {
       backgroundColor: themeColors.accent,
@@ -385,7 +359,6 @@ function Index() {
     changePasswordButton: {
       color: "black",
       fontSize: 16,
-      marginBottom: 20, // Increase margin bottom for more spacing
     },
     signOutButton: {
       color: themeColors.accent,
@@ -440,6 +413,7 @@ function Index() {
                 ref={bottomSheetModalRef}
                 closeFn={() => {
                   resetForm();
+                  setNewName(userData.name);
                   setPasswordInputVisible(false);
                 }}
               >
@@ -469,6 +443,16 @@ function Index() {
                       </View>
                     </View>
                   </TouchableOpacity>
+                  {/* Display Name */}
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginBottom: 10,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {userData.name}
+                  </Text>
 
                   {/* Display Email */}
                   <View style={styles.emailContainer}>
@@ -476,6 +460,11 @@ function Index() {
                   </View>
 
                   {/* Name Update input field */}
+                  <View style={{ width: "80%", marginBottom: 10 }}>
+                    <Text style={styles.changePasswordButton}>
+                      Update your name
+                    </Text>
+                  </View>
                   <BottomSheetTextInput
                     style={styles.input}
                     value={newName}
@@ -484,16 +473,31 @@ function Index() {
                   />
 
                   {/* Change Password Button */}
-                  <Pressable
-                    onPress={() => {
-                      resetForm();
-                      setPasswordInputVisible(!passwordInputVisible);
+                  <View
+                    style={{
+                      marginBottom: 20, // Increase margin bottom for more spacing
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "80%",
+                      justifyContent: "space-between",
                     }}
                   >
                     <Text style={styles.changePasswordButton}>
                       Change Password
                     </Text>
-                  </Pressable>
+                    <Switch
+                      value={passwordInputVisible}
+                      onValueChange={(newValue) => {
+                        resetForm();
+                        setPasswordInputVisible(newValue);
+                      }}
+                      theme={{
+                        colors: {
+                          primary: themeColors.accent,
+                        },
+                      }}
+                    />
+                  </View>
 
                   {/* Password Input Field */}
                   {passwordInputVisible && (

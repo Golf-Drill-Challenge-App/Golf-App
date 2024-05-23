@@ -594,7 +594,7 @@ export default function Input({ setToggleResult, setOutputData }) {
   };
 
   //Function to handle "Next shot" button click
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
     // useAttempts / useDrillInfo hooks
 
@@ -620,24 +620,24 @@ export default function Input({ setToggleResult, setOutputData }) {
       );
 
       setOutputData(outputData);
-      uploadAttempt(
-        outputData,
-        currentUserId,
-        assignedTime,
-        drillId,
-        drillInfo,
-        currentLeaderboard,
-      )
-        .then(() => {
-          // invalidate cache on button press
-          invalidateMultipleKeys(queryClient, invalidateKeys);
-          // if there are no errors, go to result screen
-          setToggleResult(true);
-        })
-        .catch((e) => {
-          console.log(e);
-          showDialog("Error", getErrorString(e));
-        });
+      try {
+        await uploadAttempt(
+          outputData,
+          currentUserId,
+          assignedTime,
+          drillId,
+          drillInfo,
+          currentLeaderboard,
+        );
+
+        // invalidate cache on button press
+        invalidateMultipleKeys(queryClient, invalidateKeys);
+        // if there are no errors, go to result screen
+        setToggleResult(true);
+      } catch (e) {
+        console.log(e);
+        showDialog("Error", getErrorString(e));
+      }
     } else {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);

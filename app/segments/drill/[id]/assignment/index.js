@@ -19,6 +19,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
@@ -74,7 +75,7 @@ export default function Index() {
     const time = new Date().getTime();
 
     try {
-      runTransaction(db, async (transaction) => {
+      await runTransaction(db, async (transaction) => {
         const updatedAssignedData = {};
 
         for (const userId of selectedUsers) {
@@ -97,12 +98,11 @@ export default function Index() {
             assigned_data: updatedAssignedData[userId],
           });
         });
-      }).then(() => {
-        // Invalidate cache after all users are updated
-        selectedUsers.forEach((userId) =>
-          queryClient.invalidateQueries(["user", { teamId: "1", userId }]),
-        );
       });
+      invalidateMultipleKeys(
+        queryClient,
+        selectedUsers.map((userId) => ["userInfo", { userId }]),
+      );
     } catch (e) {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
       showDialog("Error", getErrorString(e));
