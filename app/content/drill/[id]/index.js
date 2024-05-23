@@ -40,7 +40,7 @@ export default function Index() {
     data: userInfo,
     error: userInfoError,
     isLoading: userIsLoading,
-  } = useUserInfo(currentUserId);
+  } = useUserInfo({ userId: currentUserId });
 
   if (drillInfoIsLoading || userIsLoading) return <Loading />;
 
