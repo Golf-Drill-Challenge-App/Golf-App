@@ -334,14 +334,12 @@ function getShotInfo(drillInfo) {
     case "random":
       shots = fillRandomShotTargets(drillInfo);
       break;
+    case "inputtedPutt":
     case "sequence":
       shots = fillSequentialTargets(drillInfo);
       break;
     case "putt":
       shots = fillPuttTargets(drillInfo);
-      break;
-    case "inputtedPutt":
-      shots = fillSequentialTargets(drillInfo);
       break;
     default:
       console.log("Shots not found");

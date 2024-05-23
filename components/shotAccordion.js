@@ -12,7 +12,7 @@ function Row({ name, value }) {
   );
 }
 
-function DataField(drillInfo, field, value) {
+function DataField(field, value) {
   switch (field) {
     case "carry": //compound
       return (
@@ -190,7 +190,7 @@ function ShotAccordion(props) {
           {props.drillInfo["outputs"].map((field) => {
             switch (field) {
               case "carry":
-                return DataField(props.drillInfo, field, {
+                return DataField(field, {
                   carry: props.shot["carry"],
                   target: props.shot["target"],
                   carryDiff: props.shot["carryDiff"],
@@ -198,12 +198,7 @@ function ShotAccordion(props) {
               case "carryDiff":
                 return null;
               default:
-                switch (props.drillInfo.requirements[0].type) {
-                  case "inputtedPutt":
-                    return DataField(props.drillInfo, field, props.shot[field]);
-                  default:
-                    return DataField(props.drillInfo, field, props.shot[field]);
-                }
+                return DataField(field, props.shot[field]);
             }
           })}
         </View>
@@ -213,17 +208,6 @@ function ShotAccordion(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: themeColors.background,
-    borderWidth: 1,
-    borderColor: themeColors.border,
-    borderRadius: 8,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
   boldText: {
     fontWeight: "bold",
   },
