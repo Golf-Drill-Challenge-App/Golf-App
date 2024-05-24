@@ -255,7 +255,7 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
     const isNewAttemptBest = lowerIsBetter
       ? uploadData[mainOutputAttempt] < currentRecordInfo.currentRecord["value"]
       : uploadData[mainOutputAttempt] >
-      currentRecordInfo.currentRecord["value"];
+        currentRecordInfo.currentRecord["value"];
 
     if (isNewAttemptBest) {
       //Update record
@@ -806,7 +806,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   <Appbar.Action
                     icon="information-outline"
                     onPress={() => {
-                      descriptionModalRef.current ?.present();
+                      descriptionModalRef.current?.present();
                     }}
                     color={themeColors.accent}
                   />
@@ -845,7 +845,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                       prompt={item.prompt}
                       helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[displayedShot] ?.[item.id] || ""}
+                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
@@ -922,8 +922,8 @@ export default function Input({ setToggleResult, setOutputData }) {
                           case "carry":
                             newInputValues[i][item.id] = Math.floor(
                               Math.random() *
-                              attemptShots[displayedShot].items["target"] +
-                              attemptShots[displayedShot].items["target"] / 2,
+                                attemptShots[displayedShot].items["target"] +
+                                attemptShots[displayedShot].items["target"] / 2,
                             ).toString();
                             break;
                           case "sideLanding":
@@ -955,7 +955,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                     fontSize: 1,
                   }}
                   onPress={() => {
-                    navModalRef.current ?.present();
+                    navModalRef.current?.present();
                   }}
                 >
                   View all shots
