@@ -3,7 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useAllTimeRecords = (drillId) => {
+export const useAllTimeRecords = ({ drillId }) => {
   const { currentTeamId } = currentAuthContext();
 
   const { data, error, isLoading } = useQuery({

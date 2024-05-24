@@ -81,7 +81,7 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
 /***************************************
  * A function to upload the outputData to the "attempts" collection.
  * Additionally, this function sets off checks for if a drill is assigned and
- * if the leaderboard needs to be updated.
+ * if the leaderboard needs to be updated then if the all time record needs to be updated.
  ***************************************/
 async function uploadAttempt(
   outputData,
@@ -131,13 +131,18 @@ async function handleLeaderboardUpdate(
   userInfo,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
+  await handleRecordUpdate(uploadData, drillInfo, userInfo);
 
   //check if the user exists on the leaderboard
   if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    await uploadNewLeaderboard(mainOutputAttempt, uploadData);
-    await handleRecordUpdate(uploadData, drillInfo, userInfo);
+    await uploadNewLeaderboard(
+      mainOutputAttempt,
+      uploadData,
+      userInfo,
+      drillInfo,
+    );
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -153,14 +158,23 @@ async function handleLeaderboardUpdate(
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      await uploadNewLeaderboard(mainOutputAttempt, uploadData);
-      await handleRecordUpdate(uploadData, drillInfo, userInfo);
+      await uploadNewLeaderboard(
+        mainOutputAttempt,
+        uploadData,
+        userInfo,
+        drillInfo,
+      );
     }
   }
 }
 
 //A function to update the "best_attempts" collection
-async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
+async function uploadNewLeaderboard(
+  mainOutputAttempt,
+  uploadData,
+  userInfo,
+  drillInfo,
+) {
   const attemptId = uploadData.id;
   const attemptValue = uploadData[mainOutputAttempt];
 
@@ -207,6 +221,7 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
     alert(e);
     console.log(e);
   }
+  await handleRecordUpdate(uploadData, drillInfo, userInfo);
 }
 
 //A function to check if the "all_time_record" collection needs to be updated
@@ -218,25 +233,37 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
 
   const docSnap = await getDoc(recordRef);
 
-  const currentRecordDoc = docSnap.data();
+  const currentRecordInfo = docSnap.data();
 
-  //Check if all time record is set
-  if (currentRecordDoc.currentRecord == null) {
-    //Update record
-    await uploadNewRecord(uploadData, drillInfo, currentRecordDoc, userInfo);
-  }
+  //Check if all time record document exists
+  if (!docSnap.exists()) {
+    console.log("== Record Doc doesn't exist");
 
-  //Determine if lower is better
-  const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
+    //Empty all time record object
+    const newEmptyRecordObject = {
+      currentRecord: {},
+      previousRecords: [],
+    };
 
-  //Check if record needs to be updated
-  const isNewAttemptBest = lowerIsBetter
-    ? uploadData[mainOutputAttempt] < currentRecordDoc.currentRecord["value"]
-    : uploadData[mainOutputAttempt] > currentRecordDoc.currentRecord["value"];
+    //Create all time record Document
+    await setDoc(recordRef, newEmptyRecordObject);
 
-  if (isNewAttemptBest) {
-    //Update record
-    await uploadNewRecord(uploadData, drillInfo, currentRecordDoc, userInfo);
+    //Add all time Record
+    await uploadNewRecord(uploadData, drillInfo, null, userInfo);
+  } else {
+    //Determine if lower is better
+    const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
+
+    //Check if record needs to be updated
+    const isNewAttemptBest = lowerIsBetter
+      ? uploadData[mainOutputAttempt] < currentRecordInfo.currentRecord["value"]
+      : uploadData[mainOutputAttempt] >
+        currentRecordInfo.currentRecord["value"];
+
+    if (isNewAttemptBest) {
+      //Update record
+      await uploadNewRecord(uploadData, drillInfo, currentRecordInfo, userInfo);
+    }
   }
 }
 
@@ -244,7 +271,7 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
 async function uploadNewRecord(
   uploadData,
   drillInfo,
-  currentRecordDoc,
+  currentRecordInfo,
   userInfo,
 ) {
   const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
@@ -262,16 +289,16 @@ async function uploadNewRecord(
     distanceMeasure: distanceMeasure,
   };
 
-  let newDocData = null;
+  let newDocData = {};
 
   //case with no all time record
-  if (currentRecordDoc.currentRecord == null) {
+  if (currentRecordInfo == null) {
     newDocData = {
       currentRecord: newRecord,
       previousRecords: [],
     };
   } else {
-    const oldPreviousRecords = currentRecordDoc.previousRecords;
+    const oldPreviousRecords = currentRecordInfo.previousRecords;
 
     //add old record to previous records
     const updatedPreviousRecords = [
@@ -288,7 +315,7 @@ async function uploadNewRecord(
   //Upload new Document Data
   try {
     await setDoc(recordRef, newDocData);
-    console.log("New Record has been uploaded!");
+    console.log("=Database= New Record has been uploaded!");
   } catch (e) {
     alert(e);
     console.log(e);
@@ -701,7 +728,7 @@ export default function Input({ setToggleResult, setOutputData }) {
       ["userInfo"], //assignments
       ["attempts", { userId }], // stats pages
       ["best_attempts", { drillId }],
-      ["all_time_records", { currentTeamId }, { drillId }],
+      ["all_time_records", { drillId }],
     ];
 
     //Check if all inputs have been filled in

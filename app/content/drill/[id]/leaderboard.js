@@ -66,7 +66,7 @@ export default function Leaderboard() {
     data: allTimeInfo,
     isLoading: allTimeRecordIsLoading,
     error: allTimeRecordError,
-  } = useAllTimeRecords(drillId);
+  } = useAllTimeRecords({ drillId });
 
   const {
     data: leaderboard,
