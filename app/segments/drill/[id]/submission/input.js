@@ -131,7 +131,6 @@ async function handleLeaderboardUpdate(
   userInfo,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
-  await handleRecordUpdate(uploadData, drillInfo, userInfo);
 
   //check if the user exists on the leaderboard
   if (currentLeaderboard[uploadData.uid] == undefined) {
@@ -237,8 +236,6 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
 
   //Check if all time record document exists
   if (!docSnap.exists()) {
-    console.log("== Record Doc doesn't exist");
-
     //Empty all time record object
     const newEmptyRecordObject = {
       currentRecord: {},
@@ -258,7 +255,7 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
     const isNewAttemptBest = lowerIsBetter
       ? uploadData[mainOutputAttempt] < currentRecordInfo.currentRecord["value"]
       : uploadData[mainOutputAttempt] >
-        currentRecordInfo.currentRecord["value"];
+      currentRecordInfo.currentRecord["value"];
 
     if (isNewAttemptBest) {
       //Update record
@@ -315,7 +312,7 @@ async function uploadNewRecord(
   //Upload new Document Data
   try {
     await setDoc(recordRef, newDocData);
-    console.log("=Database= New Record has been uploaded!");
+    console.log("== New Record has been uploaded!");
   } catch (e) {
     alert(e);
     console.log(e);
@@ -809,7 +806,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   <Appbar.Action
                     icon="information-outline"
                     onPress={() => {
-                      descriptionModalRef.current?.present();
+                      descriptionModalRef.current ?.present();
                     }}
                     color={themeColors.accent}
                   />
@@ -848,7 +845,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                       prompt={item.prompt}
                       helperText={item.helperText}
                       distanceMeasure={item.distanceMeasure}
-                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                      inputValue={inputValues[displayedShot] ?.[item.id] || ""}
                       onInputChange={(newText) => {
                         handleInputChange(item.id, newText);
                       }}
@@ -925,8 +922,8 @@ export default function Input({ setToggleResult, setOutputData }) {
                           case "carry":
                             newInputValues[i][item.id] = Math.floor(
                               Math.random() *
-                                attemptShots[displayedShot].items["target"] +
-                                attemptShots[displayedShot].items["target"] / 2,
+                              attemptShots[displayedShot].items["target"] +
+                              attemptShots[displayedShot].items["target"] / 2,
                             ).toString();
                             break;
                           case "sideLanding":
@@ -958,7 +955,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                     fontSize: 1,
                   }}
                   onPress={() => {
-                    navModalRef.current?.present();
+                    navModalRef.current ?.present();
                   }}
                 >
                   View all shots
