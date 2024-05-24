@@ -42,7 +42,7 @@ export default function ResultScreen({
     if (output === "carry" || output === "sideLanding") {
       displayShotTendency = true;
     }
-  })
+  });
 
   if (drillInfoIsLoading || attemptIsLoading) {
     return <Loading />;
@@ -110,7 +110,7 @@ export default function ResultScreen({
           ))}
         </View>
 
-        { displayShotTendency &&
+        {displayShotTendency && (
           <>
             <Text style={styles.sectionTitle}>Shot Tendency</Text>
             <View style={styles.chartSection}>
@@ -132,11 +132,11 @@ export default function ResultScreen({
                   minX={xMin}
                   maxX={xMax}
                   chartWidth={width * 0.9}
-               />
-             </View>
-           </View>
+                />
+              </View>
+            </View>
           </>
-        }
+        )}
 
         <Text style={styles.sectionTitle}>Shot History</Text>
         {attempt["shots"] &&
