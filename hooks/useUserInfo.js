@@ -35,6 +35,7 @@ export const useUserInfo = ({ userId = null } = {}) => {
             role: "",
             uid: "",
             assigned_data: [],
+            uniqueDrills: [],
           };
         }
         const filteredAssignedData = data.assigned_data.filter((assignment) => {
