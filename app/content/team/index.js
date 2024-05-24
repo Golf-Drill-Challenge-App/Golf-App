@@ -10,7 +10,6 @@ import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
-  Platform,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -19,7 +18,15 @@ import {
 import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Appbar, Icon, List, Menu, Searchbar, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Appbar,
+  Icon,
+  List,
+  Menu,
+  Searchbar,
+  Text,
+} from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -79,6 +86,8 @@ function Index() {
 
   const bottomSheetModalRef = useRef(null);
   const queryClient = useQueryClient();
+
+  const teamRef = doc(db, "teams", currentTeamId);
 
   useEffect(() => {
     setNewName(currentTeamData ? currentTeamData.name : "");
@@ -152,8 +161,7 @@ function Index() {
   const styles = StyleSheet.create({
     modalContent: {
       paddingHorizontal: 30, // Increase padding for more spacing
-      paddingBottom:
-        insets.bottom + insets.top + Platform.OS === "android" ? 60 : 110,
+      paddingBottom: insets.bottom + insets.top + 60,
       alignItems: "center",
     },
     profilePictureContainer: {
@@ -296,8 +304,8 @@ function Index() {
                         await handleImageUpload(
                           setImageUploading,
                           setSnackbarMessage,
-                          userId,
-                          userRef,
+                          currentTeamId,
+                          teamRef,
                         );
                         invalidateMultipleKeys(queryClient, [["teamInfo"]]);
                       }}
