@@ -239,19 +239,25 @@ function Index() {
 
   const handleUpdate = async () => {
     if (!newName) {
-      showDialog("Error", "New name has a length of 0");
+      showDialog("Input Needed", "Please enter a new name.");
       return;
     }
     if (!passwordInputVisible && newName === userData.name) {
-      showDialog("Error", "New name is identical to the old name");
+      showDialog(
+        "No Change Detected",
+        "The new name must be different from the current name.",
+      );
       return;
     }
     if (passwordInputVisible && !(currentPassword && newPassword)) {
-      showDialog("Error", "Please fill out all the fields");
+      showDialog("Incomplete Form", "Please fill out all the password fields.");
       return;
     }
     if (newPassword !== newPasswordCheck) {
-      showDialog("Error", "New passwords do not match");
+      showDialog(
+        "Passwords Do Not Match",
+        "The new passwords you entered do not match. Please try again.",
+      );
       return;
     }
     try {
