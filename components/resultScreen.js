@@ -24,6 +24,8 @@ export default function ResultScreen({
     console.log("rendering ResultScreen for: ", attemptId);
   });
   const { width } = useWindowDimensions();
+  let displayShotTendency = false;
+
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
@@ -35,6 +37,12 @@ export default function ResultScreen({
     isLoading: attemptIsLoading,
     error: attemptError,
   } = useAttempts({ attemptId, enabled: !!attemptId });
+
+  drillInfo.outputs.map((output) => {
+    if (output === "carry" || output === "sideLanding") {
+      displayShotTendency = true;
+    }
+  })
 
   if (drillInfoIsLoading || attemptIsLoading) {
     return <Loading />;
@@ -102,29 +110,33 @@ export default function ResultScreen({
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Shot Tendency</Text>
-        <View style={styles.chartSection}>
-          <View style={{ width: width * 0.9 }}>
-            <ScatterChart
-              style={styles.chart}
-              backgroundColor={themeColors.highlight}
-              data={[
-                {
-                  color: "blue",
-                  unit: "%",
-                  values: dots,
-                },
-              ]}
-              horizontalLinesAt={[0]}
-              verticalLinesAt={[0]}
-              minY={yMin}
-              maxY={yMax}
-              minX={xMin}
-              maxX={xMax}
-              chartWidth={width * 0.9}
-            />
-          </View>
-        </View>
+        { displayShotTendency &&
+          <>
+            <Text style={styles.sectionTitle}>Shot Tendency</Text>
+            <View style={styles.chartSection}>
+              <View style={{ width: width * 0.9 }}>
+                <ScatterChart
+                  style={styles.chart}
+                  backgroundColor={themeColors.highlight}
+                  data={[
+                    {
+                      color: "blue",
+                      unit: "%",
+                      values: dots,
+                    },
+                  ]}
+                  horizontalLinesAt={[0]}
+                  verticalLinesAt={[0]}
+                  minY={yMin}
+                  maxY={yMax}
+                  minX={xMin}
+                  maxX={xMax}
+                  chartWidth={width * 0.9}
+               />
+             </View>
+           </View>
+          </>
+        }
 
         <Text style={styles.sectionTitle}>Shot History</Text>
         {attempt["shots"] &&
