@@ -17,7 +17,6 @@ import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import {
-  LogBox,
   Platform,
   Pressable,
   StyleSheet,
@@ -122,30 +121,6 @@ function Index() {
     drillInfoIsLoading
   ) {
     return <Loading />;
-  }
-
-  if (
-    userError && // do we need a check for `!currentUserId` here as well?
-    String(userError).includes(
-      "TypeError: Cannot read property 'assigned_data' of undefined", // handle error from remove user's pov (after being removed by admin user)
-    )
-  ) {
-    // The logs still show up on the console (which is probably good), just hidden from phone screen
-    LogBox.ignoreLogs(["Query data cannot be undefined"]);
-    return (
-      <>
-        <Pressable
-          onPress={handleSignOut}
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          <Text>Sign Out</Text>
-        </Pressable>
-        <EmptyScreen
-          invalidateKeys={invalidateKeys}
-          text={"Unknown account error, click Sign Out button above to signout"}
-        />
-      </>
-    );
   }
 
   if (userError || userEmailError || userLeaderboardError || drillInfoError) {

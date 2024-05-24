@@ -1,6 +1,5 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useMemo } from "react";
-import { LogBox } from "react-native";
 import { Appbar, SegmentedButtons } from "react-native-paper";
 
 import Description from "./description";
@@ -9,7 +8,6 @@ import Stat from "./statistics";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -45,21 +43,6 @@ export default function Index() {
   } = useUserInfo({ userId: currentUserId });
 
   if (drillInfoIsLoading || userIsLoading) return <Loading />;
-
-  if (
-    userInfoError && // do we need a check for `!currentUserId` here as well?
-    String(userInfoError).includes(
-      "TypeError: Cannot read property 'assigned_data' of undefined", // handle error from remove user's pov (after being removed by admin user)
-    )
-  ) {
-    // The logs still show up on the console (which is probably good), just hidden from phone screen
-    LogBox.ignoreLogs(["Query data cannot be undefined"]);
-    return (
-      <EmptyScreen
-        text={"Unknown account error, go to Profile Tab to signout"}
-      />
-    );
-  }
 
   if (drillInfoError || userInfoError)
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;

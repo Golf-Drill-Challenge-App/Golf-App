@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import {
   collection,
   doc,
@@ -10,9 +11,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useUserInfo = ({ userId = null } = {}) => {
-  console.log("fetching userInfo: ", { userId });
-
-  const { currentTeamId } = currentAuthContext();
+  const { currentTeamId, currentUserId } = currentAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
@@ -20,11 +19,24 @@ export const useUserInfo = ({ userId = null } = {}) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["userInfo", { userId }],
     queryFn: async () => {
+      console.log("fetching userInfo: ", { userId });
       if (userId) {
         const querySnapshot = await getDoc(
           doc(db, "teams", currentTeamId, "users", userId),
         );
         const data = querySnapshot.data();
+        if (!data) {
+          if (currentUserId === userId) {
+            router.replace("segments/(team)/chooseTeam");
+          }
+          return {
+            name: "",
+            pfp: "",
+            role: "",
+            uid: "",
+            assigned_data: [],
+          };
+        }
         const filteredAssignedData = data.assigned_data.filter((assignment) => {
           const timeDifference = currentDateTime - assignment.assignedTime;
           return timeDifference <= week_milliseconds;

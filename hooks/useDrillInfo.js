@@ -4,12 +4,11 @@ import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useDrillInfo = ({ drillId = null } = {}) => {
-  console.log("fetching drillInfo: ", { drillId });
-
   const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
     queryKey: ["drillInfo", { drillId }],
     queryFn: async () => {
+      console.log("fetching drillInfo: ", { drillId });
       if (drillId) {
         // Fetch specific drill info
         const docSnapshot = await getDoc(

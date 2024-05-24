@@ -1,12 +1,11 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { Keyboard, LogBox, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Icon, List, Menu, Searchbar, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -37,23 +36,6 @@ function Index() {
   const onChangeSearch = (query) => setSearchQuery(query);
 
   if (userInfoIsLoading || currentUserIsLoading) return <Loading />;
-
-  if (
-    // NOTE: currentUserError can get triggered from removed user's POV even if the removed user was not a coach
-    currentUserError && // do we need a check for `!currentUserId` here as well?
-    String(currentUserError).includes(
-      "TypeError: Cannot read property 'assigned_data' of undefined", // handle error from remove user's pov (after being removed by admin user)
-    )
-  ) {
-    // The logs still show up on the console (which is probably good), just hidden from phone screen
-    LogBox.ignoreLogs(["Query data cannot be undefined"]);
-    return (
-      <EmptyScreen
-        invalidateKeys={invalidateKeys}
-        text={"Unknown account error, go to Profile Tab to signout"}
-      />
-    );
-  }
 
   if (userInfoError || currentUserError)
     return <ErrorComponent errorList={[userInfoError, currentUserError]} />;
