@@ -532,8 +532,6 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
     outputShotData.push(shot);
   }
 
-  console.log("outputShotData", outputShotData);
-
   //get the time stamp
   const timeStamp = Date.now();
 

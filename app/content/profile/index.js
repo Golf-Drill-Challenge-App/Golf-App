@@ -5,8 +5,6 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
-import { SaveFormat, manipulateAsync } from "expo-image-manipulator";
-import { MediaTypeOptions, launchImageLibraryAsync } from "expo-image-picker";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,7 +12,6 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import {
   Platform,
@@ -27,12 +24,13 @@ import {
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar } from "react-native-paper";
+import { ActivityIndicator, Appbar, Avatar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import { getInitials } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -44,6 +42,7 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -109,6 +108,10 @@ function Index() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
 
+  const profilePicSize = 120;
+
+  const userRef = doc(db, "teams", currentTeamId, "users", userId);
+
   useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
@@ -139,72 +142,6 @@ function Index() {
   const uniqueDrills = Object.keys(userLeaderboard).map(
     (drillId) => drillInfo[drillId],
   );
-
-  const firebaseProfileImageUpload = async (uri) => {
-    try {
-      setImageUploading(true);
-      // Fetch the image data from the URI
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      // Get a reference to the Firebase Storage instance
-      const storage = getStorage();
-
-      // Create a reference to the storage location where the image will be stored
-      const storageRef = ref(storage, userId);
-
-      // Upload the image to Firebase Storage
-      const snapshot = await uploadBytes(storageRef, blob);
-
-      console.log("Uploaded the image blob to the Firebase storage:", snapshot);
-
-      // Get the download URL for the uploaded image
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
-        pfp: downloadURL,
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["user", { userId }] });
-      setSnackbarMessage("Successfully uploaded the profile picture!");
-      setImageUploading(false);
-
-      return downloadURL;
-    } catch (error) {
-      console.error("Error uploading image to Firebase:", error);
-      setSnackbarMessage("Error uploading profile picture. Please try again.");
-      setImageUploading(false);
-
-      throw error; // Rethrow the error to handle it at the caller's level if needed
-    }
-  };
-
-  // Function to resize the uploaded image
-  const resizeImage = async (uri) => {
-    const manipResult = await manipulateAsync(
-      uri,
-      [{ resize: { width: 300 } }], // Adjust the width as needed; height is adjusted automatically to maintain aspect ratio.
-      { /*compress: 0.7,*/ format: SaveFormat.JPEG }, // Uncomment the 'compress' property in case we decide to further reduce the quality.
-    );
-    return manipResult.uri;
-  };
-
-  // Function to handle image upload
-  const handleImageUpload = async () => {
-    let imageResult = await launchImageLibraryAsync({
-      mediaTypes: MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    // console.log(imageResult);
-
-    if (!imageResult.canceled) {
-      const resizedUri = await resizeImage(imageResult.assets[0].uri);
-      await firebaseProfileImageUpload(resizedUri);
-      invalidateMultipleKeys(queryClient, [["userInfo"]]);
-    }
-  };
 
   async function handleSignOut() {
     signoutFireBase(auth)
@@ -295,9 +232,9 @@ function Index() {
     },
     profilePictureContainer: {
       position: "relative",
-      width: 120,
-      height: 120,
-      borderRadius: 60,
+      width: profilePicSize,
+      height: profilePicSize,
+      borderRadius: profilePicSize / 2,
       marginBottom: 20,
     },
     profilePicture: {
@@ -414,7 +351,17 @@ function Index() {
                   keyboardShouldPersistTaps="handled"
                 >
                   {/* Profile Picture */}
-                  <TouchableOpacity onPress={handleImageUpload}>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      await handleImageUpload(
+                        setImageUploading,
+                        setSnackbarMessage,
+                        userId,
+                        userRef,
+                      );
+                      invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                    }}
+                  >
                     <View style={styles.profilePictureContainer}>
                       {imageUploading ? (
                         <ActivityIndicator
@@ -423,10 +370,17 @@ function Index() {
                           color={themeColors.accent}
                           style={styles.activityIndicator}
                         />
-                      ) : (
+                      ) : userData.pfp ? (
                         <Image
                           uri={userData.pfp}
                           style={styles.profilePicture}
+                        />
+                      ) : (
+                        <Avatar.Text
+                          size={profilePicSize}
+                          label={getInitials(userData.name)}
+                          color="white"
+                          style={{ backgroundColor: themeColors.avatar }}
                         />
                       )}
                       <View style={styles.penIconContainer}>

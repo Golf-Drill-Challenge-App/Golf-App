@@ -101,3 +101,9 @@ export function getIconByKey(key) {
   const iconObject = icons.find((icon) => icon[key]);
   return iconObject ? iconObject[key] : null;
 }
+
+export function getInitials(fullName) {
+  let nameParts = fullName.trim().split(/\s+/);
+  let initials = nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
+  return initials;
+}

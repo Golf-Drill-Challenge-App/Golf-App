@@ -4,6 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image } from "react-native-expo-image-cache";
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -12,6 +13,7 @@ import { Appbar, Avatar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
+import { getInitials } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -103,7 +105,7 @@ export default function Index() {
       <GestureHandlerRootView>
         <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
           <Header
-            title="assign drill"
+            title="Assign Drill"
             preChildren={
               <Appbar.BackAction
                 onPress={() => {
@@ -151,12 +153,23 @@ export default function Index() {
                           gap: 20,
                         }}
                       >
-                        <Avatar.Image
-                          size={24}
-                          source={{
-                            uri: userData.pfp,
-                          }}
-                        />
+                        {userData["pfp"] ? (
+                          <Image
+                            style={{
+                              height: 24,
+                              width: 24,
+                              borderRadius: 12,
+                            }}
+                            uri={userData["pfp"]}
+                          />
+                        ) : (
+                          <Avatar.Text
+                            size={24}
+                            label={getInitials(userData.name)}
+                            color="white"
+                            style={{ backgroundColor: themeColors.avatar }}
+                          />
+                        )}
 
                         <Text style={styles.title}>{userData.name}</Text>
                       </View>
