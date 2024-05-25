@@ -21,7 +21,7 @@ export default function Description() {
     data: userInfo,
     userError: userInfoError,
     userIsLoading: userIsLoading,
-  } = useUserInfo(currentUserId);
+  } = useUserInfo({ userId: currentUserId });
 
   const {
     data: drillInfo,

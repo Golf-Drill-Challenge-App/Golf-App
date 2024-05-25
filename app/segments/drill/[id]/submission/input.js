@@ -9,8 +9,10 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   runTransaction,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
@@ -91,6 +93,7 @@ async function uploadAttempt(
   drillInfo,
   currentLeaderboard,
   userInfo,
+  currentTeamId,
 ) {
   //create new document
   const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
@@ -111,6 +114,7 @@ async function uploadAttempt(
       drillInfo,
       currentLeaderboard,
       userInfo,
+      currentTeamId,
     );
 
     // Check if drill was assigned
@@ -129,6 +133,7 @@ async function handleLeaderboardUpdate(
   drillInfo,
   currentLeaderboard,
   userInfo,
+  currentTeamId,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -141,6 +146,7 @@ async function handleLeaderboardUpdate(
       uploadData,
       userInfo,
       drillInfo,
+      currentTeamId,
     );
   } else {
     //used if an attempt already exists
@@ -162,6 +168,7 @@ async function handleLeaderboardUpdate(
         uploadData,
         userInfo,
         drillInfo,
+        currentTeamId,
       );
     }
   }
@@ -173,6 +180,7 @@ async function uploadNewLeaderboard(
   uploadData,
   userInfo,
   drillInfo,
+  currentTeamId,
 ) {
   const attemptId = uploadData.id;
   const attemptValue = uploadData[mainOutputAttempt];
@@ -188,37 +196,33 @@ async function uploadNewLeaderboard(
   const bestAttemptsDrillRef = doc(
     db,
     "teams",
-    "1",
+    currentTeamId,
     "best_attempts",
     uploadData.did,
   );
 
   try {
-    console.log("LEADERBOARD UPDATE STARTED");
-
-    // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
-    // firebase transactions to avoid race conditions on get + update leaderboard
-    try {
-      await runTransaction(db, async (transaction) => {
-        // get latest leaderboard data again, just in case another player updated best score just now
-        const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
-        if (!latestLeaderboard.exists()) {
-          // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
-          // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
-          // If so, check if set / setDoc plays nicely with transactions.
-          throw "Document does not exist!";
+    await runTransaction(db, async (transaction) => {
+      // get latest leaderboard data again, just in case another player updated best score just now
+      const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
+      if (!latestLeaderboard.exists()) {
+        const allUserInfo = await getDocs(
+          collection(db, "teams", currentTeamId, "users"),
+        );
+        const emptyBestAttempt = {};
+        for (const doc of allUserInfo.docs) {
+          emptyBestAttempt[doc.data().uid] = null;
         }
-        transaction.update(bestAttemptsDrillRef, {
-          [uploadData.uid]: newAttempt,
-        });
+
+        await transaction.set(bestAttemptsDrillRef, emptyBestAttempt);
+      }
+      transaction.update(bestAttemptsDrillRef, {
+        [uploadData.uid]: newAttempt,
       });
-      console.log("Transaction (leaderboard update) successfully committed!");
-    } catch (e) {
-      console.log("Transaction (leaderboard update) failed: ", e);
-    }
+    });
+    console.log("Transaction (leaderboard update) successfully committed!");
   } catch (e) {
-    alert(e);
-    console.log(e);
+    console.log("Transaction (leaderboard update) failed: ", e);
   }
   await handleRecordUpdate(uploadData, drillInfo, userInfo);
 }
@@ -300,7 +304,7 @@ async function uploadNewRecord(
     //add old record to previous records
     const updatedPreviousRecords = [
       ...oldPreviousRecords,
-      currentRecordDoc.currentRecord,
+      currentRecordInfo.currentRecord,
     ];
 
     newDocData = {
@@ -330,8 +334,9 @@ function getShotInfo(drillInfo) {
     case "random":
       shots = fillRandomShotTargets(drillInfo);
       break;
+    case "inputtedPutt":
     case "sequence":
-      shots = fillClubTargets(drillInfo);
+      shots = fillSequentialTargets(drillInfo);
       break;
     case "putt":
       shots = fillPuttTargets(drillInfo);
@@ -344,8 +349,8 @@ function getShotInfo(drillInfo) {
   return shots;
 }
 
-//Helper function to generate shots for the sequence drill type
-function fillClubTargets(drillInfo) {
+//Helper function for the sequence drill type
+function fillSequentialTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
@@ -368,7 +373,12 @@ function fillRandomShotTargets(drillInfo) {
     var target = Math.floor(
       Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
     );
-    var baseline = lookUpBaselineStrokesGained(target);
+    var baseline = -1;
+    if (drillInfo.shotType === "putt") {
+      baseline = lookUpExpectedPutts(target);
+    } else {
+      baseline = lookUpBaselineStrokesGained(target);
+    }
     shots.push({
       shotNum: i + 1,
       items: {
@@ -421,6 +431,10 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
   let sideLandingTotal = 0;
+  let leftSideLandingTotal = 0;
+  let missedLeftShotCount = 0;
+  let rightSideLandingTotal = 0;
+  let missedRightShotCount = 0;
   let carryDiffTotal = 0;
 
   let outputShotData = [];
@@ -429,12 +443,24 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
     let shot = {};
+    if (drillInfo.requirements[0].type === "inputtedPutt") {
+      attemptShots[j].baseline = lookUpExpectedPutts(inputValues[j].distance);
+      attemptShots[j].items.target = inputValues[j].distance;
+    }
     for (let i = 0; i < drillInfo.outputs.length; i++) {
       const output = drillInfo.outputs[i];
 
       switch (output) {
         case "target":
           shot.target = attemptShots[j].items.target;
+          break;
+
+        case "distance":
+          shot.distance = inputValues[j].distance;
+          shot.target =
+            attemptShots[j].items.target +
+            " " +
+            drillInfo.inputs.find(({ id }) => id === output).distanceMeasure;
           break;
 
         case "club":
@@ -455,6 +481,19 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "sideLanding":
           shot.sideLanding = Number(inputValues[j].sideLanding);
+
+          if (inputValues[j].sideLanding > 0) {
+            rightSideLandingTotal += Math.abs(
+              Number(inputValues[j].sideLanding),
+            );
+            missedRightShotCount += 1;
+          }
+          if (inputValues[j].sideLanding < 0) {
+            leftSideLandingTotal += Math.abs(
+              Number(inputValues[j].sideLanding),
+            );
+            missedLeftShotCount += 1;
+          }
           sideLandingTotal += Math.abs(Number(inputValues[j].sideLanding));
           break;
 
@@ -568,6 +607,16 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
       case "strokesGainedAverage":
         outputData.strokesGainedAverage =
           strokesGainedTotal / inputValues.length;
+        break;
+
+      case "leftSideLandingAverage":
+        outputData.leftSideLandingAverage =
+          leftSideLandingTotal / missedLeftShotCount;
+        break;
+
+      case "rightSideLandingAverage":
+        outputData.rightSideLandingAverage =
+          rightSideLandingTotal / missedRightShotCount;
         break;
 
       case "sideLandingTotal":
@@ -756,6 +805,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         drillInfo,
         currentLeaderboard,
         userInfo,
+        currentTeamId,
       ).then(() => {
         // invalidate cache on button press
         invalidateMultipleKeys(queryClient, invalidateKeys);
@@ -934,6 +984,11 @@ export default function Input({ setToggleResult, setOutputData }) {
                               Math.random() * 2 + 1,
                             ).toString();
                             break;
+                          case "distance":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 35 + 5,
+                            ).toString();
+                            break;
                         }
                       });
                     }
@@ -950,7 +1005,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 1,
+                    fontSize: 12,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();
