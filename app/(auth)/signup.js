@@ -57,6 +57,7 @@ export default function SignUp() {
         role: "player",
         uid: userCredential.user.uid,
         assigned_data: [],
+        uniqueDrills: [],
       });
 
       setCurrentUserId(userCredential.user.uid);
