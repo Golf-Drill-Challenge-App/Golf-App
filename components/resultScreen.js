@@ -56,7 +56,7 @@ export default function ResultScreen({
 
   let dots = attempt["shots"].map((value) => [
     value["sideLanding"] ? value["sideLanding"] : 0,
-    value["carryDiff"] ? value["carryDiff"] : 0,
+    value["carry"] ? value["carry"] : 0,
   ]);
 
   let yValues = dots.map((value) => value[1]);
@@ -66,9 +66,9 @@ export default function ResultScreen({
   yMin += 0.1 * yMin;
 
   let xValues = dots.map((value) => value[0]);
-  let xMax = Math.max(...xValues, 10);
+  let xMax = Math.max(...xValues, 20);
   xMax += 0.1 * xMax;
-  let xMin = Math.min(...xValues, -10);
+  let xMin = Math.min(...xValues, -20);
   xMin += 0.1 * xMin;
 
   function getStyle(idx) {
@@ -125,7 +125,7 @@ export default function ResultScreen({
                       values: dots,
                     },
                   ]}
-                  horizontalLinesAt={[0]}
+                  horizontalLinesAt={[0, 50, 100, 150, 200, 250]}
                   verticalLinesAt={[0]}
                   minY={yMin}
                   maxY={yMax}
