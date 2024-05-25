@@ -372,7 +372,12 @@ function Index() {
                       }}
                     >
                       <Text
-                        style={{ marginTop: 0, fontSize: 30, marginRight: 0, textAlign: "center" }}
+                        style={{
+                          marginTop: 0,
+                          fontSize: 30,
+                          marginRight: 0,
+                          textAlign: "center",
+                        }}
                       >
                         {currentTeamData.name}
                       </Text>
