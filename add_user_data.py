@@ -9,9 +9,9 @@ db = firestore.client()
 
 # Define the assigned_data array
 assigned_data = [
-    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712600157000", "completed": False},
-    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1712531560000", "completed": False},
-    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531460000", "completed": False},
+    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1714093026000", "completed": False},
+    {"drillId": "YtCsaxzscFScnpZYmnKI", "assignedTime": "1714093023000", "completed": False},
+    {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1714083021000", "completed": False},
     {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531360000", "completed": True},
     {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712531260000", "completed": False},
     {"drillId": "SpvYyY94HaulVH2zmVyM", "assignedTime": "1712470455000", "completed": False},
@@ -24,13 +24,14 @@ assigned_data = [
 
 # Get a reference to the user collection
 users_collection = db.collection("teams").document("1").collection("users")
+query = users_collection.where('uid', '==', 'c0nEyjaOMhItMQTLMY0X').get()
 
 
 print(users_collection.stream())
 
 
 # Loop through each document in the collection and update the assigned_data field
-for doc in users_collection.stream():
+for doc in query:
     print(doc)
     doc_ref = users_collection.document(doc.id)
     doc_ref.update({'assigned_data': assigned_data})

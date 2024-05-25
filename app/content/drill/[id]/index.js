@@ -12,7 +12,9 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
+import { currentAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");
@@ -33,10 +35,17 @@ export default function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo({ drillId });
+  const { currentUserId } = currentAuthContext();
+  const {
+    data: userInfo,
+    error: userInfoError,
+    isLoading: userIsLoading,
+  } = useUserInfo(currentUserId);
 
-  if (drillInfoIsLoading) return <Loading />;
+  if (drillInfoIsLoading || userIsLoading) return <Loading />;
 
-  if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
+  if (drillInfoError || userInfoError)
+    return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
 
   return (
     <PaperWrapper>
@@ -68,20 +77,33 @@ export default function Index() {
               secondaryContainer: themeColors.overlay,
             },
           }}
-          buttons={[
-            {
-              value: "description",
-              label: "Description",
-            },
-            {
-              value: "leaderboard",
-              label: "Leaderboard",
-            },
-            {
-              value: "stats",
-              label: "Stats",
-            },
-          ]}
+          buttons={
+            userInfo.role === "player"
+              ? [
+                  {
+                    value: "description",
+                    label: "Description",
+                  },
+                  {
+                    value: "leaderboard",
+                    label: "Leaderboard",
+                  },
+                  {
+                    value: "stats",
+                    label: "Stats",
+                  },
+                ]
+              : [
+                  {
+                    value: "description",
+                    label: "Description",
+                  },
+                  {
+                    value: "leaderboard",
+                    label: "Leaderboard",
+                  },
+                ]
+          }
         />
         {tabComponent[value]}
       </SafeAreaView>
