@@ -304,7 +304,7 @@ async function uploadNewRecord(
     //add old record to previous records
     const updatedPreviousRecords = [
       ...oldPreviousRecords,
-      currentRecordDoc.currentRecord,
+      currentRecordInfo.currentRecord,
     ];
 
     newDocData = {

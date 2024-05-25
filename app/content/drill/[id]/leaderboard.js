@@ -4,12 +4,11 @@ import { ScrollView, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { Avatar, Icon, List, Text } from "react-native-paper";
 import { prettyTitle, themeColors } from "~/Constants";
-import { getInitials, numTrunc } from "~/Utility";
+import { formatDate, getInitials, numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
 import { useAllTimeRecords } from "~/hooks/useAllTimeRecords";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -226,7 +225,7 @@ export default function Leaderboard() {
                     ) : (
                       <Avatar.Text
                         size={24}
-                        label={getInitials(userInfo.name)}
+                        label={getInitials(userInfo[userId].name)}
                         color="white"
                         style={{ backgroundColor: themeColors.avatar }}
                       />
