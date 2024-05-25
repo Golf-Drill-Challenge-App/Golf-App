@@ -57,8 +57,8 @@ function Index() {
   const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
   const hideRemoveDialog = () => setRemoveDialogVisible(false);
 
-  const [blacklistDialogVisible, setBlacklistDialogVisible] = useState(false);
-  const hideBlacklistDialog = () => setBlacklistDialogVisible(false);
+  const [banDialogVisible, setBanDialogVisible] = useState(false);
+  const hideBanDialog = () => setBanDialogVisible(false);
 
   const { currentUserId } = currentAuthContext();
 
@@ -195,15 +195,15 @@ function Index() {
                   }}
                   title="Remove"
                 />
-                {/* <Divider />
+                <Divider />
                 <Menu.Item
                   leadingIcon="account-lock-outline"
                   onPress={() => {
                     setMenuVisible(false);
-                    setBlacklistDialogVisible(true);
+                    setBanDialogVisible(true);
                   }}
-                  title="Blacklist"
-                /> */}
+                  title="Ban"
+                />
               </Menu>
             ) : (
               <></>
@@ -251,22 +251,22 @@ function Index() {
             },
           ]}
         />
-        {/* Blacklist user dialog */}
-        {/* <DialogComponent
+        {/* Ban user dialog */}
+        <DialogComponent
           title={"Alert"}
-          content="Blacklisting this user will delete all their data and prevent them from joining the team again."
-          visible={blacklistDialogVisible}
-          onHide={hideBlacklistDialog}
-          buttons={["Cancel", "Blacklist User"]}
+          content="Banning this user will delete all their data and prevent them from joining the team again."
+          visible={banDialogVisible}
+          onHide={hideBanDialog}
+          buttons={["Cancel", "Ban User"]}
           buttonsFunctions={[
-            hideBlacklistDialog,
+            hideBanDialog,
             () => {
               blacklistUser(userId, userData);
               queryClient.invalidateQueries(["user"]); //invalidate cache
               navigation.goBack();
             },
           ]}
-        /> */}
+        />
       </SafeAreaView>
     </PaperWrapper>
   );
