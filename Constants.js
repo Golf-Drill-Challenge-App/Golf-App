@@ -33,4 +33,10 @@ const shortTitle = {
   sideLandingTotal: "SLT",
 };
 
-export { prettyTitle, shortTitle, themeColors };
+const prettyRole = {
+  coach: "Coach",
+  player: "Player",
+  owner: "Owner",
+};
+
+export { prettyRole, prettyTitle, shortTitle, themeColors };
