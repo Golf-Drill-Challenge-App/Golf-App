@@ -13,16 +13,23 @@ async function resetLeaderboards() {
 
       for (const doc of bestAttemptSnapshot.docs) {
         let docData = doc.data();
+        let keys = Object.keys(docData);
 
-        console.log("best_attempt doc: ", doc.ref);
+        //An empty doc with all player id's set to null
+        let emptyDoc = {};
 
-        //TODO: set documents to null
-        // await transaction.update(doc.ref, null) //not sure if this works yet
+        keys.forEach((key) => {
+          emptyDoc[key] = null;
+        });
+
+        await transaction.update(doc.ref, emptyDoc); //not sure if this works yet
       }
     } catch (e) {
       console.error("Error getting or updating best_attempts:", e);
     }
   });
+
+  console.log("Leaderboards have been reset");
 }
 
 module.exports = { resetLeaderboards };
