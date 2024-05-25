@@ -21,6 +21,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import {
   ActivityIndicator,
   Appbar,
+  Avatar,
   Icon,
   List,
   Menu,
@@ -32,6 +33,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import { getInitials } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
@@ -415,16 +417,25 @@ function Index() {
                           style={{
                             paddingLeft: 20,
                           }}
-                          left={() => (
-                            <Image
-                              style={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: 12,
-                              }}
-                              uri={user.pfp}
-                            />
-                          )}
+                          left={() =>
+                            user.pfp ? (
+                              <Image
+                                uri={user.pfp}
+                                style={{
+                                  width: 24,
+                                  height: 24,
+                                  borderRadius: 12,
+                                }}
+                              />
+                            ) : (
+                              <Avatar.Text
+                                size={24}
+                                label={getInitials(user.name)}
+                                color="white"
+                                style={{ backgroundColor: themeColors.avatar }}
+                              />
+                            )
+                          }
                           right={() => (
                             <View
                               style={{

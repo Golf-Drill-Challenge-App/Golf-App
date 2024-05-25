@@ -24,12 +24,13 @@ import {
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar } from "react-native-paper";
+import { ActivityIndicator, Appbar, Avatar } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import { getInitials } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -106,6 +107,8 @@ function Index() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
+
+  const profilePicSize = 120;
 
   const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
@@ -229,9 +232,9 @@ function Index() {
     },
     profilePictureContainer: {
       position: "relative",
-      width: 120,
-      height: 120,
-      borderRadius: 60,
+      width: profilePicSize,
+      height: profilePicSize,
+      borderRadius: profilePicSize / 2,
       marginBottom: 20,
     },
     profilePicture: {
@@ -367,10 +370,17 @@ function Index() {
                           color={themeColors.accent}
                           style={styles.activityIndicator}
                         />
-                      ) : (
+                      ) : userData.pfp ? (
                         <Image
                           uri={userData.pfp}
                           style={styles.profilePicture}
+                        />
+                      ) : (
+                        <Avatar.Text
+                          size={profilePicSize}
+                          label={getInitials(userData.name)}
+                          color="white"
+                          style={{ backgroundColor: themeColors.avatar }}
                         />
                       )}
                       <View style={styles.penIconContainer}>
