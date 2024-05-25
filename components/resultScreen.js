@@ -24,7 +24,6 @@ export default function ResultScreen({
     console.log("rendering ResultScreen for: ", attemptId);
   });
   const { width } = useWindowDimensions();
-  let displayShotTendency = false;
 
   const {
     data: drillInfo,
@@ -38,11 +37,9 @@ export default function ResultScreen({
     error: attemptError,
   } = useAttempts({ attemptId, enabled: !!attemptId });
 
-  drillInfo.outputs.map((output) => {
-    if (output === "carry" || output === "sideLanding") {
-      displayShotTendency = true;
-    }
-  });
+  const displayShotTendency = drillInfo.outputs.some(
+    (output) => output === "carry" || output === "sideLanding",
+  );
 
   if (drillInfoIsLoading || attemptIsLoading) {
     return <Loading />;
@@ -55,8 +52,8 @@ export default function ResultScreen({
   let attempt = attemptId ? fetchedAttempt : attemptData;
 
   let dots = attempt["shots"].map((value) => [
-    value["sideLanding"] ? value["sideLanding"] : 0,
-    value["carry"] ? value["carry"] : 0,
+    (value["sideLanding"] ? Number(value["sideLanding"]) : 0) + 0.0612,
+    (value["carry"] ? Number(value["carry"]) : 0) + 0.2,
   ]);
 
   let yValues = dots.map((value) => value[1]);
