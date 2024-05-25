@@ -31,9 +31,7 @@ function useProtectedRoute(currentUserId) {
 
   useEffect(() => {
     const inAuthGroup = segments.at(0) === "(auth)";
-    const inTeamGroup = segments.at(1) === "(team)";
-
-    if (!currentUserId && !(inAuthGroup || inTeamGroup)) {
+    if (!currentUserId && !inAuthGroup) {
       router.replace("/signin");
     } else if (currentUserId && inAuthGroup) {
       router.replace("/");
