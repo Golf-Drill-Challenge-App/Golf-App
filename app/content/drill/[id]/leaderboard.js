@@ -114,13 +114,76 @@ export default function Leaderboard() {
         (leaderboard[a][mainOutputAttempt]["value"] -
           leaderboard[b][mainOutputAttempt]["value"]),
     );
+  const AllTimeRecord = () => {
+    if (allTimeInfo) {
+      return (
+        <>
+          <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
+            {prettyTitle[drillInfo.mainOutputAttempt]}
+          </Text>
+
+          <View
+            style={{
+              backgroundColor: themeColors.highlight,
+              borderRadius: 8,
+              padding: 16,
+              margin: 5,
+              width: "90%",
+              justifyContent: "space-between",
+              alignSelf: "center",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ width: "15%" }}>
+              <Icon source="trophy-variant-outline" size={40} />
+            </View>
+            <View style={{ width: "60%" }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                All Time Record
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {allTimeInfo.currentRecord.name}
+              </Text>
+              <Text style={{ fontSize: 12 }}>
+                {formatDate(allTimeInfo.currentRecord.time)}
+              </Text>
+            </View>
+
+            <View style={{ width: "25%" }}>
+              <Text style={{ fontSize: 16 }}>
+                {numTrunc(allTimeInfo.currentRecord.value, true)}{" "}
+                {allTimeInfo.currentRecord.distanceMeasure}
+              </Text>
+            </View>
+          </View>
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  };
 
   if (orderedLeaderboard.length < 1) {
     return (
-      <EmptyScreen
-        invalidateKeys={invalidateKeys}
-        text={"No attempts have been made yet."}
-      />
+      <>
+        <AllTimeRecord />
+
+        <EmptyScreen
+          invalidateKeys={invalidateKeys}
+          text={"No attempts have been made yet."}
+        />
+      </>
     );
   }
 
@@ -134,54 +197,7 @@ export default function Leaderboard() {
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
-      <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
-        {prettyTitle[drillInfo.mainOutputAttempt]}
-      </Text>
-      <View
-        style={{
-          backgroundColor: themeColors.highlight,
-          borderRadius: 8,
-          padding: 16,
-          margin: 5,
-          width: "90%",
-          justifyContent: "space-between",
-          alignSelf: "center",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <View style={{ width: "15%" }}>
-          <Icon source="trophy-variant-outline" size={40} />
-        </View>
-        <View style={{ width: "60%" }}>
-          <Text
-            style={{
-              fontSize: 12,
-            }}
-          >
-            All Time Record
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            {allTimeInfo.currentRecord.name}
-          </Text>
-          <Text style={{ fontSize: 12 }}>
-            {formatDate(allTimeInfo.currentRecord.time)}
-          </Text>
-        </View>
-
-        <View style={{ width: "25%" }}>
-          <Text style={{ fontSize: 16 }}>
-            {numTrunc(allTimeInfo.currentRecord.value, true)}{" "}
-            {allTimeInfo.currentRecord.distanceMeasure}
-          </Text>
-        </View>
-      </View>
+      <AllTimeRecord />
 
       <List.Section
         style={{
