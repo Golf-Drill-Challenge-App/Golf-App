@@ -300,7 +300,7 @@ function Index() {
                     keyboardDismissMode="interactive"
                     keyboardShouldPersistTaps="handled"
                   >
-                    {/* Profile Picture */}
+                    {/* Team Picture */}
                     <TouchableOpacity
                       onPress={async () => {
                         await handleImageUpload(
@@ -372,7 +372,7 @@ function Index() {
                       }}
                     >
                       <Text
-                        style={{ marginTop: 0, fontSize: 30, marginRight: 0 }}
+                        style={{ marginTop: 0, fontSize: 30, marginRight: 0, textAlign: "center" }}
                       >
                         {currentTeamData.name}
                       </Text>
