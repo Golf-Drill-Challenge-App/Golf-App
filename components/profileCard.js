@@ -1,8 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
-import { Avatar } from "react-native-paper";
-import { themeColors } from "~/Constants";
-import { getInitials } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 
 function ProfileCard(props) {
   const profilePicSize = 150;
@@ -30,16 +27,7 @@ function ProfileCard(props) {
 
   return (
     <View style={styles.container}>
-      {props.user.pfp ? (
-        <Image uri={props.user.pfp} style={styles.profileImage} />
-      ) : (
-        <Avatar.Text
-          size={profilePicSize}
-          label={getInitials(props.user.name)}
-          color="white"
-          style={{ backgroundColor: themeColors.avatar }}
-        />
-      )}
+      <ProfilePicture userInfo={props.user} style={styles.profileImage} />
       <Text style={styles.name}>{props.user["name"]}</Text>
       <Text style={styles.email}>{props.email}</Text>
     </View>

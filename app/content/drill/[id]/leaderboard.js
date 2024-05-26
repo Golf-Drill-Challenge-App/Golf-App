@@ -1,10 +1,10 @@
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
-import { Avatar, Icon, List, Text } from "react-native-paper";
+import { Icon, List, Text } from "react-native-paper";
 import { prettyTitle, themeColors } from "~/Constants";
-import { formatDate, getInitials, numTrunc } from "~/Utility";
+import { formatDate, numTrunc } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -229,23 +229,15 @@ export default function Leaderboard() {
                     <Text style={{ width: 30 }}>
                       {leaderboardRanks[idx].toString()}.
                     </Text>
-                    {userInfo[userId]["pfp"] ? (
-                      <Image
-                        style={{
-                          height: 24,
-                          width: 24,
-                          borderRadius: 12,
-                        }}
-                        uri={userInfo[userId]["pfp"]}
-                      />
-                    ) : (
-                      <Avatar.Text
-                        size={24}
-                        label={getInitials(userInfo[userId].name)}
-                        color="white"
-                        style={{ backgroundColor: themeColors.avatar }}
-                      />
-                    )}
+
+                    <ProfilePicture
+                      userInfo={userInfo[userId]}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 12,
+                      }}
+                    />
                   </View>
                 )}
                 right={() => (

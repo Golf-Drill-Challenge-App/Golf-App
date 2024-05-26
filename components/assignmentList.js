@@ -1,10 +1,10 @@
 import { router } from "expo-router";
 import { useMemo } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
 import { Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { formatDate } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 import AssignmentCard from "~/components/assignmentCard";
 import EmptyScreen from "~/components/emptyScreen";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -27,7 +27,7 @@ const AssignmentsList = ({
     Object.values(playerInfo).forEach((player) => {
       player["assigned_data"].forEach((assignment) => {
         const { assignedTime, drillId, completed, attemptId } = assignment;
-        const { uid, pfp, name: userName } = player;
+        const { uid, pfp, name } = player;
 
         if (!alreadyAddedData[assignedTime]) {
           alreadyAddedData[assignedTime] = {};
@@ -43,7 +43,7 @@ const AssignmentsList = ({
 
         alreadyAddedData[assignedTime][drillId].players.push({
           pfp,
-          userName,
+          name,
           uid,
           completed,
           attemptId,
@@ -96,9 +96,7 @@ const AssignmentsList = ({
 
     const pfpArr = playerList.slice(0, numPfp).map((player, index) => {
       return (
-        <Image
-          key={player.uid} // Assuming each player has a unique 'uid'
-          uri={player.pfp}
+        <ProfilePicture
           style={{
             width: 24,
             height: 24,
@@ -106,6 +104,8 @@ const AssignmentsList = ({
             position: "relative",
             left: -10 * index,
           }}
+          userInfo={player}
+          key={player.uid}
         />
       );
     });

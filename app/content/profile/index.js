@@ -22,15 +22,15 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar, Avatar, Switch } from "react-native-paper";
+import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import { getErrorString, getInitials } from "~/Utility";
+import { getErrorString } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -231,8 +231,8 @@ function Index() {
       marginBottom: 20,
     },
     profilePicture: {
-      width: "100%",
-      height: "100%",
+      width: profilePicSize,
+      height: profilePicSize,
       borderRadius: 60,
     },
     penIconContainer: {
@@ -318,7 +318,7 @@ function Index() {
               visible={dialogVisible}
               onHide={() => setDialogVisible(false)}
             />
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
               <Header
                 title={"Personal Profile"}
                 postChildren={
@@ -363,17 +363,10 @@ function Index() {
                           color={themeColors.accent}
                           style={styles.activityIndicator}
                         />
-                      ) : userData.pfp ? (
-                        <Image
-                          uri={userData.pfp}
-                          style={styles.profilePicture}
-                        />
                       ) : (
-                        <Avatar.Text
-                          size={profilePicSize}
-                          label={getInitials(userData.name)}
-                          color="white"
-                          style={{ backgroundColor: themeColors.avatar }}
+                        <ProfilePicture
+                          userInfo={userData}
+                          style={styles.profilePicture}
                         />
                       )}
                       <View style={styles.penIconContainer}>

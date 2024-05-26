@@ -4,16 +4,16 @@ import { useLocalSearchParams } from "expo-router";
 import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
 import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
-import { Appbar, Avatar, Button, List, Text } from "react-native-paper";
+import { Appbar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
-import { getErrorString, getInitials } from "~/Utility";
+import { getErrorString } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
@@ -39,12 +39,6 @@ export default function Index() {
 
   const queryClient = useQueryClient();
   const [checkedItems, setCheckedItems] = useState({});
-  if (userIsLoading) {
-    return <Loading />;
-  }
-  if (userInfoError) {
-    return <ErrorComponent errorList={[userInfoError]} />;
-  }
   const filteredUserInfo = useMemo(() =>
     Object.fromEntries(
       Object.entries(userInfo)
@@ -53,13 +47,18 @@ export default function Index() {
       [userInfo],
     ),
   );
-
   const allTrue = useMemo(() => {
     if (Object.keys(checkedItems).length === 0) {
       return false;
     }
     return Object.values(checkedItems).every((value) => value === true);
   }, [checkedItems]);
+  if (userIsLoading) {
+    return <Loading />;
+  }
+  if (userInfoError) {
+    return <ErrorComponent errorList={[userInfoError]} />;
+  }
 
   const handleAssignAll = () => {
     const updatedCheckedItems = {};
@@ -176,23 +175,14 @@ export default function Index() {
                           gap: 20,
                         }}
                       >
-                        {userData["pfp"] ? (
-                          <Image
-                            style={{
-                              height: 24,
-                              width: 24,
-                              borderRadius: 12,
-                            }}
-                            uri={userData["pfp"]}
-                          />
-                        ) : (
-                          <Avatar.Text
-                            size={24}
-                            label={getInitials(userData.name)}
-                            color="white"
-                            style={{ backgroundColor: themeColors.avatar }}
-                          />
-                        )}
+                        <ProfilePicture
+                          style={{
+                            height: 24,
+                            width: 24,
+                            borderRadius: 12,
+                          }}
+                          userInfo={userData}
+                        />
 
                         <Text style={styles.title}>{userData.name}</Text>
                       </View>

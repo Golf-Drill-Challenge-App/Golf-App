@@ -3,10 +3,10 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useMemo } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
 import { Appbar, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import ProfilePicture from "~/components/ProfilePicture";
 import AssignmentCard from "~/components/assignmentCard";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
@@ -156,8 +156,8 @@ function Index() {
                       mainText={assignment.name}
                       completed={assignment.completed}
                       pfp={
-                        <Image
-                          uri={assignment.pfp}
+                        <ProfilePicture
+                          userInfo={assignment}
                           style={{
                             height: 24,
                             width: 24,

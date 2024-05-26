@@ -15,13 +15,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   ActivityIndicator,
   Appbar,
-  Avatar,
   Icon,
   List,
   Menu,
@@ -33,7 +31,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import { getInitials } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
@@ -167,7 +165,7 @@ function Index() {
   const styles = StyleSheet.create({
     modalContent: {
       paddingHorizontal: 30, // Increase padding for more spacing
-      paddingBottom: insets.bottom + insets.top + 60,
+      paddingBottom: 60,
       alignItems: "center",
     },
     profilePictureContainer: {
@@ -178,8 +176,8 @@ function Index() {
       marginBottom: 20,
     },
     profilePicture: {
-      width: "100%",
-      height: "100%",
+      width: 120,
+      height: 120,
       borderRadius: 60,
     },
     penIconContainer: {
@@ -342,16 +340,41 @@ function Index() {
                             style={styles.activityIndicator}
                           />
                         ) : (
-                          <Image
-                            uri={currentTeamData.pfp}
+                          <ProfilePicture
+                            userInfo={currentTeamData}
                             style={styles.profilePicture}
                           />
                         )}
+
                         <View style={styles.penIconContainer}>
                           <MaterialIcons name="edit" size={24} color="black" />
                         </View>
                       </View>
                     </TouchableOpacity>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          marginTop: 0,
+                          fontSize: 30,
+                          marginRight: 0,
+                          textAlign: "center",
+                        }}
+                      >
+                        {currentTeamData.name}
+                      </Text>
+                    </View>
+                    <View
+                      style={{ width: "80%", marginBottom: 10, marginTop: 20 }}
+                    >
+                      <Text style={styles.changePasswordButton}>
+                        Update the team name
+                      </Text>
+                    </View>
 
                     {/* Name Update input field */}
                     <BottomSheetTextInput
@@ -380,8 +403,8 @@ function Index() {
                   }
                 >
                   <View style={{ alignItems: "center" }}>
-                    <Image
-                      uri={currentTeamData.pfp}
+                    <ProfilePicture
+                      userInfo={currentTeamData}
                       style={{ marginTop: 0, width: 131, height: 75 }}
                     />
                   </View>
@@ -443,25 +466,16 @@ function Index() {
                           style={{
                             paddingLeft: 20,
                           }}
-                          left={() =>
-                            user.pfp ? (
-                              <Image
-                                uri={user.pfp}
-                                style={{
-                                  width: 24,
-                                  height: 24,
-                                  borderRadius: 12,
-                                }}
-                              />
-                            ) : (
-                              <Avatar.Text
-                                size={24}
-                                label={getInitials(user.name)}
-                                color="white"
-                                style={{ backgroundColor: themeColors.avatar }}
-                              />
-                            )
-                          }
+                          left={() => (
+                            <ProfilePicture
+                              userInfo={user}
+                              style={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: 12,
+                              }}
+                            />
+                          )}
                           right={() => (
                             <View
                               style={{

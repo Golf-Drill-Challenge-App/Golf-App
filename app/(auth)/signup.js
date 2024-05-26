@@ -3,7 +3,6 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
-  Image,
   Keyboard,
   Platform,
   Pressable,
@@ -17,6 +16,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
 import DialogComponent from "~/components/dialog";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
@@ -87,9 +87,6 @@ export default function SignUp() {
       justifyContent: "center",
       height: height,
     },
-    image: {
-      marginTop: 0,
-    },
     title: {
       fontSize: 32,
       fontWeight: "bold",
@@ -142,14 +139,11 @@ export default function SignUp() {
               visible={dialogVisible}
               onHide={() => setDialogVisible(false)}
             />
-            <Image
-              source={{
-                uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-                resizeMode: "contain",
-                width: 131,
-                height: 75,
+            <ProfilePicture
+              style={{ width: 131, height: 75, marginTop: 0 }}
+              userInfo={{
+                pfp: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
               }}
-              style={[styles.image]}
             />
             <Text style={[styles.title]}>Oregon State Golf</Text>
             <View style={[styles.inputView]}>

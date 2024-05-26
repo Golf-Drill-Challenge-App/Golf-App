@@ -88,6 +88,10 @@ export default function ResultScreen({
     return styles;
   }
 
+  const sortedAggOutputs = Object.keys(drillInfo["aggOutputs"]).sort((a, b) =>
+    prettyTitle[a].localeCompare(prettyTitle[b]),
+  );
+
   return (
     <>
       <ScrollView
@@ -108,7 +112,7 @@ export default function ResultScreen({
             borderRadius: 8,
           }}
         >
-          {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
+          {sortedAggOutputs.map((output, idx) => (
             <View style={getStyle(idx)} key={output}>
               <Text>{prettyTitle[output]}</Text>
               <Text>
