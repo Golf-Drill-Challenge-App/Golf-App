@@ -98,10 +98,16 @@ export function getIconByKey(key) {
     { carry: "arrow-up" },
     { sideLanding: "arrow-left-right" },
     { strokes: "pound" },
+    { distance: "ruler" },
   ];
 
   const iconObject = icons.find((icon) => icon[key]);
   return iconObject ? iconObject[key] : null;
+}
+
+export function getInitials(fullName) {
+  let nameParts = fullName.trim().split(/\s+/);
+  return nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
 }
 
 export function getErrorString(error) {

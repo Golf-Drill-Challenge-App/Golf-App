@@ -25,6 +25,7 @@ export default function ResultScreen({
     console.log("rendering ResultScreen for: ", attemptId);
   });
   const { width } = useWindowDimensions();
+
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
@@ -36,6 +37,10 @@ export default function ResultScreen({
     isLoading: attemptIsLoading,
     error: attemptError,
   } = useAttempts({ attemptId, enabled: !!attemptId });
+
+  const displayShotTendency = drillInfo.outputs.some(
+    (output) => output === "carry" || output === "sideLanding",
+  );
 
   const invalidateKeys = [
     ["drillInfo", { drillId }],
@@ -53,8 +58,8 @@ export default function ResultScreen({
   let attempt = attemptId ? fetchedAttempt : attemptData;
 
   let dots = attempt["shots"].map((value) => [
-    value["sideLanding"] ? value["sideLanding"] : 0,
-    value["carryDiff"] ? value["carryDiff"] : 0,
+    (value["sideLanding"] ? Number(value["sideLanding"]) : 0) + 0.0612,
+    (value["carry"] ? Number(value["carry"]) : 0) + 0.2,
   ]);
 
   let yValues = dots.map((value) => value[1]);
@@ -64,9 +69,9 @@ export default function ResultScreen({
   yMin += 0.1 * yMin;
 
   let xValues = dots.map((value) => value[0]);
-  let xMax = Math.max(...xValues, 10);
+  let xMax = Math.max(...xValues, 20);
   xMax += 0.1 * xMax;
-  let xMin = Math.min(...xValues, -10);
+  let xMin = Math.min(...xValues, -20);
   xMin += 0.1 * xMin;
 
   function getStyle(idx) {
@@ -97,7 +102,7 @@ export default function ResultScreen({
         </Text>
         <View
           style={{
-            backgroundColor: themeColors.background,
+            backgroundColor: themeColors.highlight,
             borderWidth: 1,
             borderColor: themeColors.border,
             borderRadius: 8,
@@ -114,29 +119,33 @@ export default function ResultScreen({
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Shot Tendency</Text>
-        <View style={styles.chartSection}>
-          <View style={{ width: width * 0.9 }}>
-            <ScatterChart
-              style={styles.chart}
-              backgroundColor={themeColors.highlight}
-              data={[
-                {
-                  color: "blue",
-                  unit: "%",
-                  values: dots,
-                },
-              ]}
-              horizontalLinesAt={[0]}
-              verticalLinesAt={[0]}
-              minY={yMin}
-              maxY={yMax}
-              minX={xMin}
-              maxX={xMax}
-              chartWidth={width * 0.9}
-            />
-          </View>
-        </View>
+        {displayShotTendency && (
+          <>
+            <Text style={styles.sectionTitle}>Shot Tendency</Text>
+            <View style={styles.chartSection}>
+              <View style={{ width: width * 0.9 }}>
+                <ScatterChart
+                  style={styles.chart}
+                  backgroundColor={themeColors.highlight}
+                  data={[
+                    {
+                      color: "blue",
+                      unit: "%",
+                      values: dots,
+                    },
+                  ]}
+                  horizontalLinesAt={[0, 50, 100, 150, 200, 250]}
+                  verticalLinesAt={[0]}
+                  minY={yMin}
+                  maxY={yMax}
+                  minX={xMin}
+                  maxX={xMax}
+                  chartWidth={width * 0.9}
+                />
+              </View>
+            </View>
+          </>
+        )}
 
         <Text style={styles.sectionTitle}>Shot History</Text>
         {attempt["shots"] &&

@@ -2,6 +2,7 @@ const themeColors = {
   accent: "#F24E1E",
   background: "#f2f2f2",
   border: "#ddd",
+  avatar: "#A0A0A0",
   overlay: "rgba(242,78,30,0.38)",
   highlight: "#fff",
 };
@@ -15,9 +16,12 @@ const prettyTitle = {
   strokes: "Strokes",
   break: "Break",
   club: "Club",
+  distance: "Distance",
   carryDiffAverage: "Carry Difference Average",
   proxHoleAverage: "Proximity-to-hole Average",
   sideLandingAverage: "Side Landing Average",
+  leftSideLandingAverage: "Average Miss Left",
+  rightSideLandingAverage: "Average Miss Right",
   sideLandingTotal: "Side Landing Total",
   strokesGained: "Strokes Gained",
   strokesGainedAverage: "Strokes Gained Average",
@@ -33,6 +37,12 @@ const shortTitle = {
   sideLandingTotal: "SLT",
 };
 
+const prettyRole = {
+  coach: "Coach",
+  player: "Player",
+  owner: "Owner",
+};
+
 const firebaseErrors = {
   "auth/email-already-in-use": "Email is already in use",
   "auth/invalid-email": "Invalid email",
@@ -42,4 +52,4 @@ const firebaseErrors = {
   "auth/missing-email": "Missing email",
   "auth/missing-password": "Missing password",
 };
-export { firebaseErrors, prettyTitle, shortTitle, themeColors };
+export { prettyRole,firebaseErrors, prettyTitle, shortTitle, themeColors };

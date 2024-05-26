@@ -9,6 +9,7 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
   runTransaction,
   setDoc,
   updateDoc,
@@ -41,38 +42,46 @@ import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 /***************************************
- * Firebase Upload
+ * Attempt Submission functions
  ***************************************/
 
+//A function to check if a drill was assigned upon completion
 async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   const userRef = doc(db, "teams", "1", "users", userId);
 
   const docSnap = await getDoc(userRef);
 
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
+    if (docSnap.exists()) {
+      const assignedData = docSnap.data()["assigned_data"];
+      const updatedAssignedData = assignedData.map((assignment) => {
+        if (
+          assignment.assignedTime == assignedTime &&
+          assignment.drillId === drillId
+        ) {
+          return { ...assignment, completed: true, attemptId: attemptId };
+        }
+        return assignment;
+      });
 
-    const assignedData = docSnap.data()["assigned_data"];
-    const updatedAssignedData = assignedData.map((assignment) => {
-      if (
-        assignment.assignedTime == assignedTime &&
-        assignment.drillId === drillId
-      ) {
-        return { ...assignment, completed: true, attemptId: attemptId };
+      try {
+        await updateDoc(userRef, { assigned_data: updatedAssignedData });
+        console.log("Assignment Document updated successfully!");
+      } catch (error) {
+        console.error("Error updating assignment document:", error);
       }
-      return assignment;
-    });
-
-    await updateDoc(userRef, { assigned_data: updatedAssignedData });
-    console.log("Document updated successfully!");
-  } else {
-    console.log("No such document!");
-  }
+    } else {
+      console.log("No such assignment document!");
+    }
 }
 
-//A function to upload the outputData to the "attempts" collection
+/***************************************
+ * A function to upload the outputData to the "attempts" collection.
+ * Additionally, this function sets off checks for if a drill is assigned and
+ * if the leaderboard needs to be updated then if the all time record needs to be updated.
+ ***************************************/
 async function uploadAttempt(
   outputData,
   userId,
@@ -80,6 +89,8 @@ async function uploadAttempt(
   drillId,
   drillInfo,
   currentLeaderboard,
+  userInfo,
+  currentTeamId,
 ) {
   //create new document
   const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
@@ -91,10 +102,30 @@ async function uploadAttempt(
   const uploadData = { ...outputData, id: newAttemptRef.id };
   // Upload the data
   await setDoc(newAttemptRef, uploadData);
-  console.log("Document successfully uploaded!");
+  console.log("Attempt Document successfully uploaded!");
 
-  // Call function to check for leaderboard update
-  await handleLeaderboardUpdate(uploadData, drillInfo, currentLeaderboard);
+  await runTransaction(db, async (transaction) => {
+    const userRef = doc(db, "teams", "1", "users", userId);
+    const userInfo = await transaction.get(userRef);
+
+    const uniqueDrills = userInfo.data().uniqueDrills;
+
+    if (!uniqueDrills.includes(drillId)) {
+      // Add the new item to the array
+      transaction.update(userRef, {
+        ["uniqueDrills"]: [...uniqueDrills, drillId],
+      });
+    }
+  });
+
+  //Call function to check for leaderboard update
+  await handleLeaderboardUpdate(
+    uploadData,
+    drillInfo,
+    currentLeaderboard,
+    userInfo,
+    currentTeamId,
+  );
 
   // Check if drill was assigned
   if (assignedTime) {
@@ -107,6 +138,8 @@ async function handleLeaderboardUpdate(
   uploadData,
   drillInfo,
   currentLeaderboard,
+  userInfo,
+  currentTeamId,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -114,7 +147,13 @@ async function handleLeaderboardUpdate(
   if (currentLeaderboard[uploadData.uid] == undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
-    await uploadNewLeaderboard(mainOutputAttempt, uploadData);
+    await uploadNewLeaderboard(
+      mainOutputAttempt,
+      uploadData,
+      userInfo,
+      drillInfo,
+      currentTeamId,
+    );
   } else {
     //used if an attempt already exists
     const currentBest =
@@ -130,14 +169,25 @@ async function handleLeaderboardUpdate(
     if (isNewAttemptBest) {
       console.log("New Best Attempt! Time to upload!");
 
-      await uploadNewLeaderboard(mainOutputAttempt, uploadData);
-    } else {
-      console.log("Didn't update");
+      await uploadNewLeaderboard(
+        mainOutputAttempt,
+        uploadData,
+        userInfo,
+        drillInfo,
+        currentTeamId,
+      );
     }
   }
 }
 
-async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
+//A function to update the "best_attempts" collection
+async function uploadNewLeaderboard(
+  mainOutputAttempt,
+  uploadData,
+  userInfo,
+  drillInfo,
+  currentTeamId,
+) {
   const attemptId = uploadData.id;
   const attemptValue = uploadData[mainOutputAttempt];
 
@@ -152,7 +202,7 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
   const bestAttemptsDrillRef = doc(
     db,
     "teams",
-    "1",
+    currentTeamId,
     "best_attempts",
     uploadData.did,
   );
@@ -165,29 +215,135 @@ async function uploadNewLeaderboard(mainOutputAttempt, uploadData) {
     // get latest leaderboard data again, just in case another player updated best score just now
     const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
     if (!latestLeaderboard.exists()) {
-      // No automation set up to create new leaderboards when new drills (or mainOutputAttempts) are added.
-      // So idk if this error (best_attempts > drill id) needs to be handled better than just a throw.
-      // If so, check if set / setDoc plays nicely with transactions.
-      throw "Document does not exist!";
+      const allUserInfo = await getDocs(
+        collection(db, "teams", currentTeamId, "users"),
+      );
+      const emptyBestAttempt = {};
+      for (const doc of allUserInfo.docs) {
+        emptyBestAttempt[doc.data().uid] = null;
+      }
+
+      await transaction.set(bestAttemptsDrillRef, emptyBestAttempt);
     }
     transaction.update(bestAttemptsDrillRef, {
       [uploadData.uid]: newAttempt,
     });
   });
   console.log("Transaction (leaderboard update) successfully committed!");
+  await handleRecordUpdate(uploadData, drillInfo, userInfo);
 }
+
+//A function to check if the "all_time_record" collection needs to be updated
+async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
+  const mainOutputAttempt = drillInfo.mainOutputAttempt;
+
+  //Fetch All-time Record
+  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+
+  const docSnap = await getDoc(recordRef);
+
+  const currentRecordInfo = docSnap.data();
+
+  //Check if all time record document exists
+  if (!docSnap.exists()) {
+    //Empty all time record object
+    const newEmptyRecordObject = {
+      currentRecord: {},
+      previousRecords: [],
+    };
+
+    //Create all time record Document
+    await setDoc(recordRef, newEmptyRecordObject);
+
+    //Add all time Record
+    await uploadNewRecord(uploadData, drillInfo, null, userInfo);
+  } else {
+    //Determine if lower is better
+    const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
+
+    //Check if record needs to be updated
+    const isNewAttemptBest = lowerIsBetter
+      ? uploadData[mainOutputAttempt] < currentRecordInfo.currentRecord["value"]
+      : uploadData[mainOutputAttempt] >
+      currentRecordInfo.currentRecord["value"];
+
+    if (isNewAttemptBest) {
+      //Update record
+      await uploadNewRecord(uploadData, drillInfo, currentRecordInfo, userInfo);
+    }
+  }
+}
+
+//A function to update the "all_time_record" collection
+async function uploadNewRecord(
+  uploadData,
+  drillInfo,
+  currentRecordInfo,
+  userInfo,
+) {
+  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+
+  const mainOutputAttempt = drillInfo.mainOutputAttempt;
+
+  const distanceMeasure =
+    drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure;
+
+  //Create new Record object
+  const newRecord = {
+    name: userInfo.name,
+    value: uploadData[drillInfo.mainOutputAttempt],
+    time: uploadData["time"],
+    distanceMeasure: distanceMeasure,
+  };
+
+  let newDocData = {};
+
+  //case with no all time record
+  if (currentRecordInfo == null) {
+    newDocData = {
+      currentRecord: newRecord,
+      previousRecords: [],
+    };
+  } else {
+    const oldPreviousRecords = currentRecordInfo.previousRecords;
+
+    //add old record to previous records
+    const updatedPreviousRecords = [
+      ...oldPreviousRecords,
+      currentRecordInfo.currentRecord,
+    ];
+
+    newDocData = {
+      currentRecord: newRecord,
+      previousRecords: updatedPreviousRecords,
+    };
+  }
+
+  //Upload new Document Data
+  try {
+    await setDoc(recordRef, newDocData);
+    console.log("== New Record has been uploaded!");
+  } catch (e) {
+    alert(e);
+    console.log(e);
+  }
+}
+
 
 /***************************************
  * AttemptShots Generation
  ***************************************/
+
+//A function to generate the shots of a given drill based on it's type
 function getShotInfo(drillInfo) {
   let shots = [];
   switch (drillInfo.requirements[0].type) {
     case "random":
       shots = fillRandomShotTargets(drillInfo);
       break;
+    case "inputtedPutt":
     case "sequence":
-      shots = fillClubTargets(drillInfo);
+      shots = fillSequentialTargets(drillInfo);
       break;
     case "putt":
       shots = fillPuttTargets(drillInfo);
@@ -201,7 +357,7 @@ function getShotInfo(drillInfo) {
 }
 
 //Helper function for the sequence drill type
-function fillClubTargets(drillInfo) {
+function fillSequentialTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
     shots.push({
@@ -214,7 +370,7 @@ function fillClubTargets(drillInfo) {
   return shots;
 }
 
-//Helper function for the random drill type
+//Helper function to generate shots for the random drill type
 function fillRandomShotTargets(drillInfo) {
   const minCeiled = Math.ceil(drillInfo.requirements[0].min);
   const maxFloored = Math.floor(drillInfo.requirements[0].max);
@@ -224,7 +380,12 @@ function fillRandomShotTargets(drillInfo) {
     var target = Math.floor(
       Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
     );
-    var baseline = lookUpBaselineStrokesGained(target);
+    var baseline = -1;
+    if (drillInfo.shotType === "putt") {
+      baseline = lookUpExpectedPutts(target);
+    } else {
+      baseline = lookUpBaselineStrokesGained(target);
+    }
     shots.push({
       shotNum: i + 1,
       items: {
@@ -236,7 +397,7 @@ function fillRandomShotTargets(drillInfo) {
   return shots;
 }
 
-//Helper function for the putt drill type
+//Helper function to generate shots for the putt drill type
 function fillPuttTargets(drillInfo) {
   let shots = [];
   for (var i = 0; i < drillInfo.reps; i++) {
@@ -277,6 +438,10 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   let strokesGainedTotal = 0;
   let proxHoleTotal = 0;
   let sideLandingTotal = 0;
+  let leftSideLandingTotal = 0;
+  let missedLeftShotCount = 0;
+  let rightSideLandingTotal = 0;
+  let missedRightShotCount = 0;
   let carryDiffTotal = 0;
 
   let outputShotData = [];
@@ -285,12 +450,24 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
     let shot = {};
+    if (drillInfo.requirements[0].type === "inputtedPutt") {
+      attemptShots[j].baseline = lookUpExpectedPutts(inputValues[j].distance);
+      attemptShots[j].items.target = inputValues[j].distance;
+    }
     for (let i = 0; i < drillInfo.outputs.length; i++) {
       const output = drillInfo.outputs[i];
 
       switch (output) {
         case "target":
           shot.target = attemptShots[j].items.target;
+          break;
+
+        case "distance":
+          shot.distance = inputValues[j].distance;
+          shot.target =
+            attemptShots[j].items.target +
+            " " +
+            drillInfo.inputs.find(({ id }) => id === output).distanceMeasure;
           break;
 
         case "club":
@@ -311,6 +488,19 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
         case "sideLanding":
           shot.sideLanding = Number(inputValues[j].sideLanding);
+
+          if (inputValues[j].sideLanding > 0) {
+            rightSideLandingTotal += Math.abs(
+              Number(inputValues[j].sideLanding),
+            );
+            missedRightShotCount += 1;
+          }
+          if (inputValues[j].sideLanding < 0) {
+            leftSideLandingTotal += Math.abs(
+              Number(inputValues[j].sideLanding),
+            );
+            missedLeftShotCount += 1;
+          }
           sideLandingTotal += Math.abs(Number(inputValues[j].sideLanding));
           break;
 
@@ -388,8 +578,6 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
     outputShotData.push(shot);
   }
 
-  console.log("outputShotData", outputShotData);
-
   //get the time stamp
   const timeStamp = Date.now();
 
@@ -428,6 +616,16 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
           strokesGainedTotal / inputValues.length;
         break;
 
+      case "leftSideLandingAverage":
+        outputData.leftSideLandingAverage =
+          leftSideLandingTotal / missedLeftShotCount;
+        break;
+
+      case "rightSideLandingAverage":
+        outputData.rightSideLandingAverage =
+          rightSideLandingTotal / missedRightShotCount;
+        break;
+
       case "sideLandingTotal":
         outputData.sideLandingTotal = sideLandingTotal;
         break;
@@ -452,8 +650,8 @@ function validateInputs(inputs) {
 }
 
 export default function Input({ setToggleResult, setOutputData }) {
-  //Helper varibles
   const { id: drillId, assignedTime } = useLocalSearchParams();
+  const { currentUserId, currentTeamId } = currentAuthContext();
   const {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
@@ -466,15 +664,21 @@ export default function Input({ setToggleResult, setOutputData }) {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo({ drillId });
 
+  const {
+    data: userInfo,
+    isLoading: userIsLoading,
+    error: userError,
+  } = useUserInfo({ userId: currentUserId });
+
   const queryClient = useQueryClient();
 
   const navigation = useNavigation();
 
-  const { currentUserId } = currentAuthContext();
   const invalidateKeys = [
     ["userInfo"], //assignments
     ["attempts", { userId: currentUserId }], // stats pages
     ["best_attempts", { drillId }],
+    ["all_time_records", { drillId }],
   ];
 
   const { height } = useWindowDimensions();
@@ -486,13 +690,12 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
-  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot
+  const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot to be attempted
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
 
   /***** Description Bottom Sheet Stuff *****/
-
   const descriptionModalRef = useRef(null);
 
   const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
@@ -520,15 +723,6 @@ export default function Input({ setToggleResult, setOutputData }) {
       setInputValues(Array.from({ length: drillInfo.reps }, () => ({})));
     }
   }, [drillInfo]);
-
-  //Loading until an attempt is generated
-  if (leaderboardIsLoading || drillInfoIsLoading || attemptShots.length === 0) {
-    return <Loading />;
-  }
-
-  if (leaderboardError || drillInfoError) {
-    return <ErrorComponent errorList={[leaderboardError, drillInfoError]} />;
-  }
 
   const numInputs = drillInfo.inputs.length;
 
@@ -628,6 +822,8 @@ export default function Input({ setToggleResult, setOutputData }) {
           drillId,
           drillInfo,
           currentLeaderboard,
+          userInfo,
+          currentTeamId,
         );
 
         // invalidate cache on button press
@@ -643,6 +839,23 @@ export default function Input({ setToggleResult, setOutputData }) {
       setCurrentShot(currentShot + 1);
     }
   };
+
+  //Loading until an attempt is generated or hooks are working
+  if (
+    attemptShots.length === 0 ||
+    leaderboardIsLoading ||
+    userIsLoading ||
+    drillInfoIsLoading
+  ) {
+    console.log("Loading");
+    return <Loading />;
+  }
+
+  if (leaderboardError || userError || drillInfoError) {
+    return (
+      <ErrorComponent message={[leaderboardError, userError, drillInfoError]} />
+    );
+  }
 
   return (
     <PaperWrapper>
@@ -791,6 +1004,11 @@ export default function Input({ setToggleResult, setOutputData }) {
                               Math.random() * 2 + 1,
                             ).toString();
                             break;
+                          case "distance":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 35 + 5,
+                            ).toString();
+                            break;
                         }
                       });
                     }
@@ -807,7 +1025,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 16,
+                    fontSize: 12,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();

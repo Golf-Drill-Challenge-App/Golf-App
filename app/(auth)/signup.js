@@ -63,11 +63,12 @@ export default function SignUp() {
       await setDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
         name: name,
         // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-        pfp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        pfp: "",
         // hardcoded "player" role for now, add role selection to profile settings in future PR
         role: "player",
         uid: userCredential.user.uid,
         assigned_data: [],
+        uniqueDrills: [],
       });
 
       setCurrentUserId(userCredential.user.uid);

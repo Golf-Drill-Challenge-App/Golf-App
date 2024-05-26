@@ -5,8 +5,6 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
-import { SaveFormat, manipulateAsync } from "expo-image-manipulator";
-import { MediaTypeOptions, launchImageLibraryAsync } from "expo-image-picker";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,7 +12,6 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import {
   Platform,
@@ -27,13 +24,14 @@ import {
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
+import { ActivityIndicator, Appbar, Avatar, Switch } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
+import { getInitials } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -45,8 +43,8 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -72,12 +70,6 @@ function Index() {
     error: userEmailError,
     isLoading: userEmailIsLoading,
   } = useEmailInfo({ userId });
-
-  const {
-    data: userLeaderboard,
-    error: userLeaderboardError,
-    isLoading: userLeaderboardIsLoading,
-  } = useBestAttempts({ userId });
 
   const {
     data: drillInfo,
@@ -111,34 +103,26 @@ function Index() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
 
+  const profilePicSize = 120;
+
+  const userRef = doc(db, "teams", currentTeamId, "users", userId);
+
   useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
   }, [userData, userEmail]);
 
-  if (
-    userIsLoading ||
-    userEmailIsLoading ||
-    userLeaderboardIsLoading ||
-    drillInfoIsLoading
-  ) {
+  if (userIsLoading || userEmailIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
 
-  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
+  if (userError || userEmailError || drillInfoError) {
     return (
-      <ErrorComponent
-        errorList={[
-          userError,
-          userEmailError,
-          userLeaderboardError,
-          drillInfoError,
-        ]}
-      />
+      <ErrorComponent errorList={[userError, userEmailError, drillInfoError]} />
     );
   }
 
-  const uniqueDrills = Object.keys(userLeaderboard).map(
+  const uniqueDrills = userData["uniqueDrills"].map(
     (drillId) => drillInfo[drillId],
   );
 
@@ -310,9 +294,9 @@ function Index() {
     },
     profilePictureContainer: {
       position: "relative",
-      width: 120,
-      height: 120,
-      borderRadius: 60,
+      width: profilePicSize,
+      height: profilePicSize,
+      borderRadius: profilePicSize / 2,
       marginBottom: 20,
     },
     profilePicture: {
@@ -429,7 +413,17 @@ function Index() {
                   keyboardShouldPersistTaps="handled"
                 >
                   {/* Profile Picture */}
-                  <TouchableOpacity onPress={handleImageUpload}>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      await handleImageUpload(
+                        setImageUploading,
+                        setSnackbarMessage,
+                        userId,
+                        userRef,
+                      );
+                      invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                    }}
+                  >
                     <View style={styles.profilePictureContainer}>
                       {imageUploading ? (
                         <ActivityIndicator
@@ -438,10 +432,17 @@ function Index() {
                           color={themeColors.accent}
                           style={styles.activityIndicator}
                         />
-                      ) : (
+                      ) : userData.pfp ? (
                         <Image
                           uri={userData.pfp}
                           style={styles.profilePicture}
+                        />
+                      ) : (
+                        <Avatar.Text
+                          size={profilePicSize}
+                          label={getInitials(userData.name)}
+                          color="white"
+                          style={{ backgroundColor: themeColors.avatar }}
                         />
                       )}
                       <View style={styles.penIconContainer}>
@@ -555,7 +556,7 @@ function Index() {
               {uniqueDrills.length > 0 ? (
                 <View
                   style={{
-                    paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
+                    paddingBottom: Platform.OS === "ios" ? 86 + 50 : 86,
                   }}
                 >
                   <DrillList
