@@ -110,15 +110,35 @@ const AssignmentsList = ({
       );
     });
 
+    const numLeft = playerList.length - numPfp;
+
     return (
       <View
         style={{
           flexDirection: "row",
-          width: 60,
-          margin: 0,
+          alignItems: "center",
+          width: 85,
         }}
       >
-        {pfpArr}
+        <View
+          style={{
+            flexDirection: "row",
+            width: 55,
+            margin: 0,
+          }}
+        >
+          {pfpArr}
+        </View>
+        {numLeft > 0 && (
+          <Text
+            style={{
+              fontSize: 12,
+              color: "grey",
+            }}
+          >
+            +{numLeft}
+          </Text>
+        )}
       </View>
     );
   };
@@ -178,11 +198,11 @@ const AssignmentsList = ({
       renderSectionHeader={({ section: { title } }) => (
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 18,
             fontWeight: "bold",
             textAlign: "left",
             marginLeft: 20,
-            paddingBottom: 3,
+            paddingVertical: 5,
             backgroundColor: themeColors.background,
           }}
         >

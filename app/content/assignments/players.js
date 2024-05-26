@@ -2,12 +2,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useMemo } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
-import { Appbar, List, Text } from "react-native-paper";
+import { ScrollView, View } from "react-native";
+import { Appbar, Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import ProfilePicture from "~/components/ProfilePicture";
-import AssignmentCard from "~/components/assignmentCard";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -147,27 +146,46 @@ function Index() {
             <List.Section style={{ backgroundColor: themeColors.background }}>
               {playerList.map((assignment) => {
                 return (
-                  <TouchableOpacity
+                  <List.Item
                     key={`${assignment.uid}`}
                     onPress={() => handleAssignmentPress(assignment)}
                     disabled={!assignment.completed}
-                  >
-                    <AssignmentCard
-                      mainText={assignment.name}
-                      completed={assignment.completed}
-                      pfp={
-                        <ProfilePicture
-                          userInfo={assignment}
-                          style={{
-                            height: 24,
-                            width: 24,
-                            borderRadius: 12,
-                            marginRight: 10,
-                          }}
-                        />
-                      }
-                    />
-                  </TouchableOpacity>
+                    style={{
+                      paddingLeft: 20,
+                    }}
+                    left={() => (
+                      <ProfilePicture
+                        userInfo={assignment}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: 12,
+                        }}
+                      />
+                    )}
+                    right={() => (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        {assignment.completed && (
+                          <>
+                            <Text
+                              style={{
+                                color: "green",
+                              }}
+                            >
+                              Completed
+                            </Text>
+                            <Icon size={20} source="chevron-right" />
+                          </>
+                        )}
+                      </View>
+                    )}
+                    title={assignment.name}
+                  />
                 );
               })}
             </List.Section>

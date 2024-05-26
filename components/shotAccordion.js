@@ -114,6 +114,7 @@ function ShotAccordion(props) {
             <View
               style={{
                 flexGrow: 1,
+                width: "30%",
               }}
             >
               <Text style={styles.boldText}>Shot: </Text>
@@ -125,6 +126,7 @@ function ShotAccordion(props) {
             <View
               style={{
                 flexGrow: 1,
+                width: "30%",
               }}
             >
               <Text style={styles.boldText}>
@@ -138,6 +140,7 @@ function ShotAccordion(props) {
             <View
               style={{
                 flexGrow: 1,
+                width: "30%",
               }}
             >
               <Text style={styles.boldText}>

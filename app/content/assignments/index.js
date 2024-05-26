@@ -31,7 +31,7 @@ export default function Index() {
     isLoading: playerInfoIsLoading,
   } = useUserInfo({
     role: "player",
-    enabled: !userIsLoading && userInfo["role"] !== "player",
+    enabled: !userIsLoading && userInfo && userInfo["role"] !== "player",
   });
 
   const invalidateKeys = [
@@ -61,7 +61,11 @@ export default function Index() {
   }
 
   if (userInfoError || drillInfoError || playerInfoError) {
-    return <ErrorComponent errorList={[userInfoError, drillInfoError]} />;
+    return (
+      <ErrorComponent
+        errorList={[userInfoError, drillInfoError, playerInfoError]}
+      />
+    );
   }
 
   return (

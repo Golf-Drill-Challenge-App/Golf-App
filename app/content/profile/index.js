@@ -49,8 +49,7 @@ import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const { signOut } = currentAuthContext();
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { signOut, currentUserId, currentTeamId } = currentAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
 
@@ -104,8 +103,6 @@ function Index() {
 
   const profilePicSize = 120;
 
-  const userRef = doc(db, "teams", currentTeamId, "users", userId);
-
   useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
@@ -120,6 +117,8 @@ function Index() {
       <ErrorComponent errorList={[userError, userEmailError, drillInfoError]} />
     );
   }
+
+  const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
   const uniqueDrills = userData["uniqueDrills"].map(
     (drillId) => drillInfo[drillId],

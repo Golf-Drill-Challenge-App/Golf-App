@@ -39,13 +39,14 @@ export default function Index() {
 
   const queryClient = useQueryClient();
   const [checkedItems, setCheckedItems] = useState({});
-  const filteredUserInfo = useMemo(() =>
-    Object.fromEntries(
-      Object.entries(userInfo)
-        .filter(([, value]) => value.role === "player")
-        .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
-      [userInfo],
-    ),
+  const filteredUserInfo = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(userInfo ?? {})
+          .filter(([, value]) => value.role === "player")
+          .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
+      ),
+    [userInfo],
   );
   const allTrue = useMemo(() => {
     if (Object.keys(checkedItems).length === 0) {
@@ -101,7 +102,7 @@ export default function Index() {
       });
       invalidateMultipleKeys(
         queryClient,
-        selectedUsers.map((userId) => ["userInfo", { userId }]),
+        -selectedUsers.map((userId) => ["userInfo", { userId }]),
       );
     } catch (e) {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
