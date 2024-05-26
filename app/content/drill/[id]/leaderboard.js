@@ -2,9 +2,9 @@ import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
-import { Divider, Icon, List, Text } from "react-native-paper";
+import { Avatar, Icon, List, Text } from "react-native-paper";
 import { prettyTitle, themeColors } from "~/Constants";
-import { formatDate, numTrunc } from "~/Utility";
+import { formatDate, getInitials, numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -209,29 +209,27 @@ export default function Leaderboard() {
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboard[userId][mainOutputAttempt];
           return (
-            <View key={userId}>
-              <Link
-                key={userId}
-                href={{
-                  pathname: `${currentPath}/attempts/${attempt["id"]}`,
-                }}
-                asChild
-                style={{ paddingLeft: 20 }}
-              >
-                <List.Item
-                  title={
-                    userInfo[userId] ? userInfo[userId]["name"] : "Unknown"
-                  }
-                  left={() => (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text style={{ width: 30 }}>
-                        {leaderboardRanks[idx].toString()}.
-                      </Text>
+            <Link
+              key={userId}
+              href={{
+                pathname: `${currentPath}/attempts/${attempt["id"]}`,
+              }}
+              asChild
+              style={{ paddingLeft: 20 }}
+            >
+              <List.Item
+                title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
+                left={() => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ width: 30 }}>
+                      {leaderboardRanks[idx].toString()}.
+                    </Text>
+                    {userInfo[userId]["pfp"] ? (
                       <Image
                         style={{
                           height: 24,
@@ -240,26 +238,27 @@ export default function Leaderboard() {
                         }}
                         uri={userInfo[userId]["pfp"]}
                       />
-                    </View>
-                  )}
-                  right={() => (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text>
-                        {numTrunc(attempt["value"], true)}{" "}
-                        {
-                          drillInfo.aggOutputs[mainOutputAttempt]
-                            .distanceMeasure
-                        }
-                      </Text>
-                      <Icon source="chevron-right" />
-                    </View>
-                  )}
-                />
-              </Link>
-              <Divider />
-            </View>
+                    ) : (
+                      <Avatar.Text
+                        size={24}
+                        label={getInitials(userInfo[userId].name)}
+                        color="white"
+                        style={{ backgroundColor: themeColors.avatar }}
+                      />
+                    )}
+                  </View>
+                )}
+                right={() => (
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text>
+                      {numTrunc(attempt["value"], true)}{" "}
+                      {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
+                    </Text>
+                    <Icon source="chevron-right" />
+                  </View>
+                )}
+              />
+            </Link>
           );
         })}
       </List.Section>
