@@ -168,22 +168,15 @@ function Index() {
       paddingBottom: 60,
       alignItems: "center",
     },
-    profilePictureContainer: {
-      position: "relative",
-      width: 120,
-      height: 120,
-      borderRadius: 60,
-      marginBottom: 20,
-    },
     profilePicture: {
-      width: 120,
+      width: 175,
       height: 120,
-      borderRadius: 60,
+      marginBottom: 10,
     },
     penIconContainer: {
       position: "absolute",
-      top: 0,
-      right: 0,
+      top: 5,
+      right: 5,
       width: 30,
       height: 30,
       borderRadius: 15, // half of the width and height to make it a circle
@@ -331,7 +324,7 @@ function Index() {
                         invalidateMultipleKeys(queryClient, [["teamInfo"]]);
                       }}
                     >
-                      <View style={styles.profilePictureContainer}>
+                      <View>
                         {imageUploading ? (
                           <ActivityIndicator
                             animating={imageUploading}
@@ -342,7 +335,7 @@ function Index() {
                         ) : (
                           <ProfilePicture
                             userInfo={currentTeamData}
-                            style={styles.profilePicture}
+                            style={[styles.profilePicture]}
                           />
                         )}
 
@@ -371,9 +364,7 @@ function Index() {
                     <View
                       style={{ width: "80%", marginBottom: 10, marginTop: 20 }}
                     >
-                      <Text style={styles.changePasswordButton}>
-                        Update the team name
-                      </Text>
+                      <Text style={{ fontSize: 16 }}>Update the team name</Text>
                     </View>
 
                     {/* Name Update input field */}
@@ -405,7 +396,7 @@ function Index() {
                   <View style={{ alignItems: "center" }}>
                     <ProfilePicture
                       userInfo={currentTeamData}
-                      style={{ marginTop: 0, width: 131, height: 75 }}
+                      style={styles.profilePicture}
                     />
                   </View>
                   <View style={{ alignItems: "center" }}>
