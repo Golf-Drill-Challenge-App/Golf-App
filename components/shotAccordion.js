@@ -44,6 +44,14 @@ function DataField(field, value) {
           value={`${numTrunc(value)} yd`}
         />
       );
+    case "distance":
+      return (
+        <Row
+          key={field}
+          name={prettyTitle[field]}
+          value={`${numTrunc(value)} ft`}
+        />
+      );
     case "sideLanding":
       return (
         <Row
@@ -200,17 +208,6 @@ function ShotAccordion(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: themeColors.background,
-    borderWidth: 1,
-    borderColor: themeColors.border,
-    borderRadius: 8,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
   boldText: {
     fontWeight: "bold",
   },

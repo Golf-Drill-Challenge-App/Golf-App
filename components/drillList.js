@@ -1,7 +1,8 @@
 ﻿import { SectionList, Text, View } from "react-native";
-import { Divider } from "react-native-paper";
+import { Divider, Icon } from "react-native-paper";
 
 import { themeColors } from "~/Constants";
+import { getIconByKey } from "~/Utility";
 import DrillCard from "~/components/drillCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
@@ -61,29 +62,19 @@ export default function DrillList({
             flex: 1,
             flexDirection: "row",
             paddingVertical: 5,
+            alignItems: "center",
             backgroundColor: themeColors.background,
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>
-          <Text style={{ color: "#666", paddingHorizontal: 5 }}>
-            {drillData[getDrillIndexByTitle(title)].inputs.map((input) => {
-              let retVal;
-              switch (input.id) {
-                case "carry":
-                  retVal = "↑";
-                  break;
-                case "sideLanding":
-                  retVal = "↔︎";
-                  break;
-                case "strokes":
-                  retVal = "#";
-                  break;
-                default:
-                  retVal = "?";
-              }
-              return retVal;
-            })}
-          </Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title} </Text>
+          {drillData[getDrillIndexByTitle(title)].inputs.map((input) => (
+            <Icon
+              key={input.id}
+              source={getIconByKey(input.id)}
+              size={12}
+              color="#666"
+            />
+          ))}
           <Divider bold={true} />
         </View>
       )}
