@@ -1,3 +1,5 @@
+import { firebaseErrors } from "~/Constants";
+
 export const clampNumber = (num, a, b) =>
   Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
 
@@ -96,8 +98,26 @@ export function getIconByKey(key) {
     { carry: "arrow-up" },
     { sideLanding: "arrow-left-right" },
     { strokes: "pound" },
+    { distance: "ruler" },
   ];
 
   const iconObject = icons.find((icon) => icon[key]);
   return iconObject ? iconObject[key] : null;
+}
+
+export function getInitials(fullName) {
+  let nameParts = fullName.trim().split(/\s+/);
+  return nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
+}
+
+export function getErrorString(error) {
+  if (error.code) {
+    if (firebaseErrors[error.code]) {
+      return firebaseErrors[error.code];
+    } else {
+      return error.code;
+    }
+  } else {
+    return String(error);
+  }
 }

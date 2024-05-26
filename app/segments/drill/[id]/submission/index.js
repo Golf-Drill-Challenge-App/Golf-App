@@ -10,12 +10,21 @@ import DialogComponent from "~/components/dialog";
 export default function Index() {
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
-  const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
-  const hideLeaveDialog = () => setLeaveDialogVisible(false);
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+  const hideLeaveDialog = () => setDialogVisible(false);
 
   const [exitAction, setExitAction] = useState(null);
   // Navigation
   const navigation = useNavigation();
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
 
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: toggleResult });
@@ -32,7 +41,7 @@ export default function Index() {
       setExitAction(e.data.action);
 
       // Prompt the user before leaving the screen
-      setLeaveDialogVisible(true);
+      showDialog("Alert", "All inputs will be lost.");
     });
   }, [toggleResult]);
 
@@ -57,9 +66,9 @@ export default function Index() {
 
       {/* Leave Drill Dialog */}
       <DialogComponent
-        title={"Alert"}
-        content="All inputs will be lost."
-        visible={leaveDialogVisible}
+        title={dialogTitle}
+        content={dialogMessage}
+        visible={dialogVisible}
         onHide={hideLeaveDialog}
         buttons={["Cancel", "Leave Drill"]}
         buttonsFunctions={[

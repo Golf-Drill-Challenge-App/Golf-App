@@ -5,8 +5,6 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
-import { SaveFormat, manipulateAsync } from "expo-image-manipulator";
-import { MediaTypeOptions, launchImageLibraryAsync } from "expo-image-picker";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,7 +12,6 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
 import {
   Platform,
@@ -27,12 +24,13 @@ import {
 } from "react-native";
 import { Image } from "react-native-expo-image-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ActivityIndicator, Appbar } from "react-native-paper";
+import { ActivityIndicator, Appbar, Avatar, Switch } from "react-native-paper";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { firebaseErrors, themeColors } from "~/Constants";
+import { themeColors } from "~/Constants";
+import { getErrorString, getInitials } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -44,8 +42,8 @@ import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -73,12 +71,6 @@ function Index() {
   } = useEmailInfo({ userId });
 
   const {
-    data: userLeaderboard,
-    error: userLeaderboardError,
-    isLoading: userLeaderboardIsLoading,
-  } = useBestAttempts({ userId });
-
-  const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
@@ -99,6 +91,7 @@ function Index() {
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordCheck, setNewPasswordCheck] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
 
   const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
@@ -109,132 +102,43 @@ function Index() {
   const [dialogMessage, setDialogMessage] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
 
+  const profilePicSize = 120;
+
+  const userRef = doc(db, "teams", currentTeamId, "users", userId);
+
   useEffect(() => {
     setNewName(userData ? userData.name : "");
     setEmail(userEmail);
   }, [userData, userEmail]);
 
-  if (
-    userIsLoading ||
-    userEmailIsLoading ||
-    userLeaderboardIsLoading ||
-    drillInfoIsLoading
-  ) {
+  if (userIsLoading || userEmailIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
 
-  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
+  if (userError || userEmailError || drillInfoError) {
     return (
-      <ErrorComponent
-        errorList={[
-          userError,
-          userEmailError,
-          userLeaderboardError,
-          drillInfoError,
-        ]}
-      />
+      <ErrorComponent errorList={[userError, userEmailError, drillInfoError]} />
     );
   }
 
-  const uniqueDrills = Object.keys(userLeaderboard).map(
+  const uniqueDrills = userData["uniqueDrills"].map(
     (drillId) => drillInfo[drillId],
   );
 
-  const firebaseProfileImageUpload = async (uri) => {
-    try {
-      setImageUploading(true);
-      // Fetch the image data from the URI
-      const response = await fetch(uri);
-      const blob = await response.blob();
-
-      // Get a reference to the Firebase Storage instance
-      const storage = getStorage();
-
-      // Create a reference to the storage location where the image will be stored
-      const storageRef = ref(storage, userId);
-
-      // Upload the image to Firebase Storage
-      const snapshot = await uploadBytes(storageRef, blob);
-
-      console.log("Uploaded the image blob to the Firebase storage:", snapshot);
-
-      // Get the download URL for the uploaded image
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
-        pfp: downloadURL,
-      });
-      setSnackbarMessage("Successfully uploaded the profile picture!");
-      setImageUploading(false);
-
-      return downloadURL;
-    } catch (e) {
-      console.log("Error uploading image to Firebase:", e);
-      setSnackbarMessage("Error uploading profile picture. Please try again.");
-      setImageUploading(false);
-      throw e; // Rethrow the error to handle it at the caller's level if needed
-    }
-  };
-
-  // Function to resize the uploaded image
-  const resizeImage = async (uri) => {
-    const manipResult = await manipulateAsync(
-      uri,
-      [{ resize: { width: 300 } }], // Adjust the width as needed; height is adjusted automatically to maintain aspect ratio.
-      { /*compress: 0.7,*/ format: SaveFormat.JPEG }, // Uncomment the 'compress' property in case we decide to further reduce the quality.
-    );
-    return manipResult.uri;
-  };
-
-  // Function to handle image upload
-  const handleImageUpload = async () => {
-    let imageResult = await launchImageLibraryAsync({
-      mediaTypes: MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    // console.log(imageResult);
-
-    if (!imageResult.canceled) {
-      const resizedUri = await resizeImage(imageResult.assets[0].uri);
-      await firebaseProfileImageUpload(resizedUri)
-        .then(() => {
-          // invalidate cache on successful image upload
-          invalidateMultipleKeys(queryClient, [["userInfo"]]);
-        })
-        .catch((e) => {
-          console.log(e);
-          if (e["code"]) {
-            if (firebaseErrors[e["code"]]) {
-              setDialogMessage(firebaseErrors[e["code"]]);
-            } else {
-              setDialogMessage(e["code"]);
-            }
-          } else {
-            setDialogMessage(String(e));
-          }
-          setDialogVisible(true);
-        });
-    }
-  };
-
   async function handleSignOut() {
-    signoutFireBase(auth)
-      .then(() => {
-        // Sign-out successful.
-        signOut();
-      })
-      .catch((e) => {
-        console.log(e);
-        showDialog("Error", firebaseErrors[e["code"]]);
-      });
+    try {
+      await signoutFireBase(auth);
+      signOut();
+    } catch (e) {
+      console.log(e);
+      showDialog("Error", getErrorString(e));
+    }
   }
 
   const resetForm = () => {
-    setNewName(userData.name);
     setCurrentPassword("");
     setNewPassword("");
+    setNewPasswordCheck("");
   };
 
   const showDialog = (title, message) => {
@@ -243,55 +147,68 @@ function Index() {
     setDialogVisible(true);
   };
 
+  const showSnackBar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
+  };
+
   const handleUpdate = async () => {
-    if (newName && newName !== userData.name) {
-      // check if they request to update their name to a new one
-      await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
-        name: newName,
-      });
-      invalidateMultipleKeys(queryClient, [["userInfo"]]);
-      bottomSheetModalRef.current.close();
-      setSnackbarMessage("Name field updated successfully");
-      setSnackbarVisible(true); // Show success snackbar
+    if (!newName) {
+      showDialog("Input Needed", "Please enter a new name.");
+      return;
     }
-
-    if (passwordInputVisible && (currentPassword || newPassword)) {
-      if (!currentPassword || !newPassword) {
-        showDialog("Error", "Please fill out all the fields");
-      } else {
+    if (!passwordInputVisible && newName === userData.name) {
+      showDialog(
+        "No Change Detected",
+        "The new name must be different from the current name.",
+      );
+      return;
+    }
+    if (passwordInputVisible && !(currentPassword && newPassword)) {
+      showDialog("Incomplete Form", "Please fill out all the password fields.");
+      return;
+    }
+    if (newPassword !== newPasswordCheck) {
+      showDialog(
+        "Passwords Do Not Match",
+        "The new passwords you entered do not match. Please try again.",
+      );
+      return;
+    }
+    try {
+      if (passwordInputVisible) {
         // attempt updating the password
-        try {
-          // re-authenticate the user and check if the provided current password is valid
-          const userCredential = await signInWithEmailAndPassword(
-            auth,
-            userEmail,
-            currentPassword,
-          );
+        // re-authenticate the user and check if the provided current password is valid
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          userEmail,
+          currentPassword,
+        );
 
-          // once re-authenticated, update the password
-          updatePassword(userCredential.user, newPassword)
-            .then(() => {
-              // Update successful
-              setCurrentPassword(""); // Clear password fields
-              setNewPassword("");
-              bottomSheetModalRef.current.close();
-              setPasswordInputVisible(false);
-              setSnackbarMessage("Password updated successfully");
-              setSnackbarVisible(true); // Show success snackbar
-            })
-            .catch((e) => {
-              // Update failed
-              console.log("password update error:", e.message);
-              showDialog(
-                "New password is too short",
-                "Provided new password must be at least 6 characters long!",
-              );
-            });
-        } catch (e) {
-          showDialog("Error", e.message);
-          console.log(e.message);
-        }
+        // once re-authenticated, update the password
+        await updatePassword(userCredential.user, newPassword);
+
+        // Update successful
+        resetForm();
+        bottomSheetModalRef.current.close();
+        setPasswordInputVisible(false);
+        showSnackBar("Password updated successfully");
       }
+      //doing password first because it checks if the user's entered password is correct, so the form is submitted at once
+      if (newName !== userData.name) {
+        // check if they request to update their name to a new one
+        await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
+          name: newName,
+        });
+
+        // invalidate cache on successful name update
+        invalidateMultipleKeys(queryClient, [["userInfo"]]);
+        bottomSheetModalRef.current.close();
+        showSnackBar("Name field updated successfully");
+      }
+    } catch (e) {
+      console.log(e);
+      showDialog("Error", getErrorString(e));
     }
   };
 
@@ -308,9 +225,9 @@ function Index() {
     },
     profilePictureContainer: {
       position: "relative",
-      width: 120,
-      height: 120,
-      borderRadius: 60,
+      width: profilePicSize,
+      height: profilePicSize,
+      borderRadius: profilePicSize / 2,
       marginBottom: 20,
     },
     profilePicture: {
@@ -344,7 +261,7 @@ function Index() {
       borderColor: "gray",
       marginBottom: 20, // Increase margin bottom for more spacing
       width: "80%",
-      padding: 10, // Increase padding for input fields
+      paddingVertical: 10, // Increase padding for input fields
     },
     saveChangesButton: {
       backgroundColor: themeColors.accent,
@@ -363,7 +280,6 @@ function Index() {
     changePasswordButton: {
       color: "black",
       fontSize: 16,
-      marginBottom: 20, // Increase margin bottom for more spacing
     },
     signOutButton: {
       color: themeColors.accent,
@@ -418,6 +334,7 @@ function Index() {
                 ref={bottomSheetModalRef}
                 closeFn={() => {
                   resetForm();
+                  setNewName(userData.name);
                   setPasswordInputVisible(false);
                 }}
               >
@@ -427,7 +344,17 @@ function Index() {
                   keyboardShouldPersistTaps="handled"
                 >
                   {/* Profile Picture */}
-                  <TouchableOpacity onPress={handleImageUpload}>
+                  <TouchableOpacity
+                    onPress={async () => {
+                      await handleImageUpload(
+                        setImageUploading,
+                        setSnackbarMessage,
+                        userId,
+                        userRef,
+                      );
+                      invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                    }}
+                  >
                     <View style={styles.profilePictureContainer}>
                       {imageUploading ? (
                         <ActivityIndicator
@@ -436,10 +363,17 @@ function Index() {
                           color={themeColors.accent}
                           style={styles.activityIndicator}
                         />
-                      ) : (
+                      ) : userData.pfp ? (
                         <Image
                           uri={userData.pfp}
                           style={styles.profilePicture}
+                        />
+                      ) : (
+                        <Avatar.Text
+                          size={profilePicSize}
+                          label={getInitials(userData.name)}
+                          color="white"
+                          style={{ backgroundColor: themeColors.avatar }}
                         />
                       )}
                       <View style={styles.penIconContainer}>
@@ -447,6 +381,16 @@ function Index() {
                       </View>
                     </View>
                   </TouchableOpacity>
+                  {/* Display Name */}
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginBottom: 10,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {userData.name}
+                  </Text>
 
                   {/* Display Email */}
                   <View style={styles.emailContainer}>
@@ -454,6 +398,11 @@ function Index() {
                   </View>
 
                   {/* Name Update input field */}
+                  <View style={{ width: "80%", marginBottom: 10 }}>
+                    <Text style={styles.changePasswordButton}>
+                      Update your name
+                    </Text>
+                  </View>
                   <BottomSheetTextInput
                     style={styles.input}
                     value={newName}
@@ -462,16 +411,31 @@ function Index() {
                   />
 
                   {/* Change Password Button */}
-                  <Pressable
-                    onPress={() => {
-                      resetForm();
-                      setPasswordInputVisible(!passwordInputVisible);
+                  <View
+                    style={{
+                      marginBottom: 20, // Increase margin bottom for more spacing
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "80%",
+                      justifyContent: "space-between",
                     }}
                   >
                     <Text style={styles.changePasswordButton}>
                       Change Password
                     </Text>
-                  </Pressable>
+                    <Switch
+                      value={passwordInputVisible}
+                      onValueChange={(newValue) => {
+                        resetForm();
+                        setPasswordInputVisible(newValue);
+                      }}
+                      theme={{
+                        colors: {
+                          primary: themeColors.accent,
+                        },
+                      }}
+                    />
+                  </View>
 
                   {/* Password Input Field */}
                   {passwordInputVisible && (
@@ -482,6 +446,10 @@ function Index() {
                         onChangeText={setCurrentPassword}
                         placeholder="Enter your current password"
                         secureTextEntry={true}
+                        // to get rid of ios password suggestions
+                        // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                        // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                        textContentType="oneTimeCode"
                       />
                       <BottomSheetTextInput
                         style={styles.input}
@@ -489,6 +457,15 @@ function Index() {
                         onChangeText={setNewPassword}
                         placeholder="Enter your new password"
                         secureTextEntry={true}
+                        textContentType="newPassword"
+                      />
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={newPasswordCheck}
+                        onChangeText={setNewPasswordCheck}
+                        placeholder="Confirm your new password"
+                        secureTextEntry={true}
+                        textContentType="newPassword"
                       />
                     </>
                   )}
@@ -510,7 +487,7 @@ function Index() {
               {uniqueDrills.length > 0 ? (
                 <View
                   style={{
-                    paddingBottom: Platform.OS === "ios" ? 64 + 50 : 64,
+                    paddingBottom: Platform.OS === "ios" ? 86 + 50 : 86,
                   }}
                 >
                   <DrillList

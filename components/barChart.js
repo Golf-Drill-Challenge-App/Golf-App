@@ -19,7 +19,6 @@ import { prettyTitle, shortTitle, themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { currentAuthContext } from "~/context/Auth";
-import { removeAttempt } from "~/hooks/removeAttempt";
 import EmptyScreen from "./emptyScreen";
 
 export default function BarChartScreen({
@@ -76,20 +75,7 @@ export default function BarChartScreen({
     [startIndex, endIndex],
   );
 
-  const data = slicedDrillAttempts.map((value) => {
-    if (isNaN(value[drillInfo["mainOutputAttempt"]])) {
-      //the terminator
-      removeAttempt({ currentTeamId, attemptId: value["id"] }).then(() => {
-        console.log(
-          "terminated attempt: ",
-          value["id"],
-          " due to illegal value",
-        );
-      });
-      return 0;
-    }
-    return value[aggOutput];
-  });
+  const data = slicedDrillAttempts.map((value) => value[aggOutput]);
 
   const yMin = Math.min(...data, 0); //For when minimum data is larger than 0
   const yMax = Math.max(...data, 0); //For when maximum data is smaller than 0, like when every input is negative

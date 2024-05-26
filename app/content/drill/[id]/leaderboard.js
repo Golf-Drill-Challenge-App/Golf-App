@@ -2,9 +2,9 @@ import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
-import { Divider, Icon, List, Text } from "react-native-paper";
+import { Avatar, Icon, List, Text } from "react-native-paper";
 import { prettyTitle, themeColors } from "~/Constants";
-import { formatDate, numTrunc } from "~/Utility";
+import { formatDate, getInitials, numTrunc } from "~/Utility";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -114,13 +114,76 @@ export default function Leaderboard() {
         (leaderboard[a][mainOutputAttempt]["value"] -
           leaderboard[b][mainOutputAttempt]["value"]),
     );
+  const AllTimeRecord = () => {
+    if (allTimeInfo) {
+      return (
+        <>
+          <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
+            {prettyTitle[drillInfo.mainOutputAttempt]}
+          </Text>
+
+          <View
+            style={{
+              backgroundColor: themeColors.highlight,
+              borderRadius: 8,
+              padding: 16,
+              margin: 5,
+              width: "90%",
+              justifyContent: "space-between",
+              alignSelf: "center",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ width: "15%" }}>
+              <Icon source="trophy-variant-outline" size={40} />
+            </View>
+            <View style={{ width: "60%" }}>
+              <Text
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                All Time Record
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {allTimeInfo.currentRecord.name}
+              </Text>
+              <Text style={{ fontSize: 12 }}>
+                {formatDate(allTimeInfo.currentRecord.time)}
+              </Text>
+            </View>
+
+            <View style={{ width: "25%" }}>
+              <Text style={{ fontSize: 16 }}>
+                {numTrunc(allTimeInfo.currentRecord.value, true)}{" "}
+                {allTimeInfo.currentRecord.distanceMeasure}
+              </Text>
+            </View>
+          </View>
+        </>
+      );
+    } else {
+      return <></>;
+    }
+  };
 
   if (orderedLeaderboard.length < 1) {
     return (
-      <EmptyScreen
-        invalidateKeys={invalidateKeys}
-        text={"No attempts have been made yet."}
-      />
+      <>
+        <AllTimeRecord />
+
+        <EmptyScreen
+          invalidateKeys={invalidateKeys}
+          text={"No attempts have been made this season."}
+        />
+      </>
     );
   }
 
@@ -134,54 +197,7 @@ export default function Leaderboard() {
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
-      <Text style={{ fontSize: 18, alignSelf: "center", paddingTop: 15 }}>
-        {prettyTitle[drillInfo.mainOutputAttempt]}
-      </Text>
-      <View
-        style={{
-          backgroundColor: themeColors.highlight,
-          borderRadius: 8,
-          padding: 16,
-          margin: 5,
-          width: "90%",
-          justifyContent: "space-between",
-          alignSelf: "center",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <View style={{ width: "15%" }}>
-          <Icon source="trophy-variant-outline" size={40} />
-        </View>
-        <View style={{ width: "60%" }}>
-          <Text
-            style={{
-              fontSize: 12,
-            }}
-          >
-            All Time Record
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            {allTimeInfo.currentRecord.name}
-          </Text>
-          <Text style={{ fontSize: 12 }}>
-            {formatDate(allTimeInfo.currentRecord.time)}
-          </Text>
-        </View>
-
-        <View style={{ width: "25%" }}>
-          <Text style={{ fontSize: 16 }}>
-            {numTrunc(allTimeInfo.currentRecord.value, true)}{" "}
-            {allTimeInfo.currentRecord.distanceMeasure}
-          </Text>
-        </View>
-      </View>
+      <AllTimeRecord />
 
       <List.Section
         style={{
@@ -193,29 +209,27 @@ export default function Leaderboard() {
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboard[userId][mainOutputAttempt];
           return (
-            <View key={userId}>
-              <Link
-                key={userId}
-                href={{
-                  pathname: `${currentPath}/attempts/${attempt["id"]}`,
-                }}
-                asChild
-                style={{ paddingLeft: 20 }}
-              >
-                <List.Item
-                  title={
-                    userInfo[userId] ? userInfo[userId]["name"] : "Unknown"
-                  }
-                  left={() => (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Text style={{ width: 30 }}>
-                        {leaderboardRanks[idx].toString()}.
-                      </Text>
+            <Link
+              key={userId}
+              href={{
+                pathname: `${currentPath}/attempts/${attempt["id"]}`,
+              }}
+              asChild
+              style={{ paddingLeft: 20 }}
+            >
+              <List.Item
+                title={userInfo[userId] ? userInfo[userId]["name"] : "Unknown"}
+                left={() => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ width: 30 }}>
+                      {leaderboardRanks[idx].toString()}.
+                    </Text>
+                    {userInfo[userId]["pfp"] ? (
                       <Image
                         style={{
                           height: 24,
@@ -224,26 +238,27 @@ export default function Leaderboard() {
                         }}
                         uri={userInfo[userId]["pfp"]}
                       />
-                    </View>
-                  )}
-                  right={() => (
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text>
-                        {numTrunc(attempt["value"], true)}{" "}
-                        {
-                          drillInfo.aggOutputs[mainOutputAttempt]
-                            .distanceMeasure
-                        }
-                      </Text>
-                      <Icon source="chevron-right" />
-                    </View>
-                  )}
-                />
-              </Link>
-              <Divider />
-            </View>
+                    ) : (
+                      <Avatar.Text
+                        size={24}
+                        label={getInitials(userInfo[userId].name)}
+                        color="white"
+                        style={{ backgroundColor: themeColors.avatar }}
+                      />
+                    )}
+                  </View>
+                )}
+                right={() => (
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text>
+                      {numTrunc(attempt["value"], true)}{" "}
+                      {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
+                    </Text>
+                    <Icon source="chevron-right" />
+                  </View>
+                )}
+              />
+            </Link>
           );
         })}
       </List.Section>

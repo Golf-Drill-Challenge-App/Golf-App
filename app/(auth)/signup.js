@@ -15,7 +15,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { firebaseErrors, themeColors } from "~/Constants";
+import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
@@ -34,7 +35,14 @@ export default function SignUp() {
   const { height } = useWindowDimensions();
 
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
 
   async function handleSubmit() {
     try {
@@ -55,11 +63,12 @@ export default function SignUp() {
       await setDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
         name: name,
         // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-        pfp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        pfp: "",
         // hardcoded "player" role for now, add role selection to profile settings in future PR
         role: "player",
         uid: userCredential.user.uid,
         assigned_data: [],
+        uniqueDrills: [],
       });
 
       setCurrentUserId(userCredential.user.uid);
@@ -67,16 +76,7 @@ export default function SignUp() {
       // console.log(userCredential.user);
     } catch (e) {
       console.log(e);
-      if (e["code"]) {
-        if (firebaseErrors[e["code"]]) {
-          setDialogMessage(firebaseErrors[e["code"]]);
-        } else {
-          setDialogMessage(e["code"]);
-        }
-      } else {
-        setDialogMessage(String(e));
-      }
-      setDialogVisible(true);
+      showDialog("Error", getErrorString(e));
     }
   }
 
@@ -137,7 +137,7 @@ export default function SignUp() {
         >
           <View style={styles.container}>
             <DialogComponent
-              title={"Error"}
+              title={dialogTitle}
               content={dialogMessage}
               visible={dialogVisible}
               onHide={() => setDialogVisible(false)}

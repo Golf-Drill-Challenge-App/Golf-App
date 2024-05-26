@@ -41,12 +41,6 @@ function Index() {
   } = useEmailInfo({ userId });
 
   const {
-    data: userLeaderboard,
-    error: userLeaderboardError,
-    isLoading: userLeaderboardIsLoading,
-  } = useBestAttempts({ userId });
-
-  const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
@@ -55,47 +49,24 @@ function Index() {
   const [value, setValue] = useState("drills");
 
   const invalidateKeys = [
-    ["best_attempts", { userId }],
     ["userInfo", { userId }],
     ["userInfo", { userId: currentUserId }],
     ["emailInfo", { userId }],
     ["drillInfo"],
   ];
 
-  if (
-    userIsLoading ||
-    userEmailIsLoading ||
-    userLeaderboardIsLoading ||
-    drillInfoIsLoading ||
-    currentUserIsLoading
-  ) {
+  if (userIsLoading || userEmailIsLoading || drillInfoIsLoading ||
+    currentUserIsLoading) {
     return <Loading />;
   }
 
-  if (
-    userError ||
-    userEmailError ||
-    userLeaderboardError ||
-    drillInfoError ||
-    currentUserError
-  ) {
+  if (userError || userEmailError || drillInfoError ||
+    currentUserError) {
     return (
-      <ErrorComponent
-        errorList={[
-          userError,
-          userEmailError,
-          userLeaderboardError,
-          drillInfoError,
-          currentUserError,
-        ]}
-      />
+      <ErrorComponent errorList={[userError, userEmailError, drillInfoError,
+        currentUserError,]} />
     );
   }
-
-  let uniqueDrills = Object.keys(userLeaderboard).map(
-    (drillId) => drillInfo[drillId],
-  );
-
   const profileHeader = () => (
     <View
       style={{
@@ -107,6 +78,9 @@ function Index() {
     </View>
   );
 
+  const uniqueDrills = userInfo["uniqueDrills"].map(
+    (drillId) => drillInfo[drillId],
+  );
   const segmentButtons = () => {
     return (
       <>
