@@ -10,7 +10,6 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -31,36 +30,18 @@ function Index() {
   } = useEmailInfo({ userId });
 
   const {
-    data: userLeaderboard,
-    error: userLeaderboardError,
-    isLoading: userLeaderboardIsLoading,
-  } = useBestAttempts({ userId });
-
-  const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo();
 
-  if (
-    userIsLoading ||
-    userEmailIsLoading ||
-    userLeaderboardIsLoading ||
-    drillInfoIsLoading
-  ) {
+  if (userIsLoading || userEmailIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
 
-  if (userError || userEmailError || userLeaderboardError || drillInfoError) {
+  if (userError || userEmailError || drillInfoError) {
     return (
-      <ErrorComponent
-        errorList={[
-          userError,
-          userEmailError,
-          userLeaderboardError,
-          drillInfoError,
-        ]}
-      />
+      <ErrorComponent errorList={[userError, userEmailError, drillInfoError]} />
     );
   }
   const profileHeader = () => (
@@ -76,7 +57,7 @@ function Index() {
     ["drillInfo"],
   ];
 
-  const uniqueDrills = Object.keys(userLeaderboard).map(
+  const uniqueDrills = userData["uniqueDrills"].map(
     (drillId) => drillInfo[drillId],
   );
 
