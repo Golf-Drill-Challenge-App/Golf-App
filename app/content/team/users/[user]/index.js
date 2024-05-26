@@ -13,7 +13,6 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -55,16 +54,25 @@ function Index() {
     ["drillInfo"],
   ];
 
-  if (userIsLoading || userEmailIsLoading || drillInfoIsLoading ||
-    currentUserIsLoading) {
+  if (
+    userIsLoading ||
+    userEmailIsLoading ||
+    drillInfoIsLoading ||
+    currentUserIsLoading
+  ) {
     return <Loading />;
   }
 
-  if (userError || userEmailError || drillInfoError ||
-    currentUserError) {
+  if (userError || userEmailError || drillInfoError || currentUserError) {
     return (
-      <ErrorComponent errorList={[userError, userEmailError, drillInfoError,
-        currentUserError,]} />
+      <ErrorComponent
+        errorList={[
+          userError,
+          userEmailError,
+          drillInfoError,
+          currentUserError,
+        ]}
+      />
     );
   }
   const profileHeader = () => (

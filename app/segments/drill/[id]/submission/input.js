@@ -230,11 +230,22 @@ async function uploadNewLeaderboard(
 }
 
 //A function to check if the "all_time_record" collection needs to be updated
-async function handleRecordUpdate(uploadData, drillInfo, userInfo, currentTeamId) {
+async function handleRecordUpdate(
+  uploadData,
+  drillInfo,
+  userInfo,
+  currentTeamId,
+) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
   //Fetch All-time Record
-  const recordRef = doc(db, "teams", currentTeamId, "all_time_records", uploadData.did);
+  const recordRef = doc(
+    db,
+    "teams",
+    currentTeamId,
+    "all_time_records",
+    uploadData.did,
+  );
 
   const docSnap = await getDoc(recordRef);
 
