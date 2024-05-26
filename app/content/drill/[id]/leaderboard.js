@@ -181,7 +181,7 @@ export default function Leaderboard() {
 
         <EmptyScreen
           invalidateKeys={invalidateKeys}
-          text={"No attempts have been made yet."}
+          text={"No attempts have been made this season."}
         />
       </>
     );
