@@ -69,7 +69,7 @@ export default function Index() {
         title={dialogTitle}
         content={dialogMessage}
         visible={dialogVisible}
-        onHide={() => setDialogVisible(false)}
+        onHide={hideLeaveDialog}
         buttons={["Cancel", "Leave Drill"]}
         buttonsFunctions={[
           hideLeaveDialog,

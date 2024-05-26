@@ -1,4 +1,4 @@
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Image } from "react-native-expo-image-cache";
@@ -45,6 +45,7 @@ function getLeaderboardRanks(
 
 export default function Leaderboard() {
   const drillId = useLocalSearchParams()["id"];
+  const currentPath = usePathname();
   const [defaultMainOutputAttempt, setDefaultMainOutputAttempt] =
     useState(true); //whether mainOutputAttempt is the default set on drills or has been changed by user
   const [customMainOutputAttempt, setCustomMainOutputAttempt] = useState("did"); //What is the custom mainOutputAttempt in case defaultMainOutputAttempt is false
@@ -211,7 +212,7 @@ export default function Leaderboard() {
             <Link
               key={userId}
               href={{
-                pathname: `./attempts/${attempt["id"]}`,
+                pathname: `${currentPath}/attempts/${attempt["id"]}`,
               }}
               asChild
               style={{ paddingLeft: 20 }}

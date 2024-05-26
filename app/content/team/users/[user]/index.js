@@ -62,7 +62,7 @@ function Index() {
     ["drillInfo"],
   ];
 
-  const uniqueDrills = userData["uniqueDrills"].map(
+  const uniqueDrills = userInfo["uniqueDrills"].map(
     (drillId) => drillInfo[drillId],
   );
 

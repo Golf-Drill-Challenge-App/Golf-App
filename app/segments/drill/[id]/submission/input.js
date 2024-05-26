@@ -54,27 +54,27 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
 
   const docSnap = await getDoc(userRef);
 
-    if (docSnap.exists()) {
-      const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((assignment) => {
-        if (
-          assignment.assignedTime == assignedTime &&
-          assignment.drillId === drillId
-        ) {
-          return { ...assignment, completed: true, attemptId: attemptId };
-        }
-        return assignment;
-      });
-
-      try {
-        await updateDoc(userRef, { assigned_data: updatedAssignedData });
-        console.log("Assignment Document updated successfully!");
-      } catch (error) {
-        console.error("Error updating assignment document:", error);
+  if (docSnap.exists()) {
+    const assignedData = docSnap.data()["assigned_data"];
+    const updatedAssignedData = assignedData.map((assignment) => {
+      if (
+        assignment.assignedTime == assignedTime &&
+        assignment.drillId === drillId
+      ) {
+        return { ...assignment, completed: true, attemptId: attemptId };
       }
-    } else {
-      console.log("No such assignment document!");
+      return assignment;
+    });
+
+    try {
+      await updateDoc(userRef, { assigned_data: updatedAssignedData });
+      console.log("Assignment Document updated successfully!");
+    } catch (error) {
+      console.error("Error updating assignment document:", error);
     }
+  } else {
+    console.log("No such assignment document!");
+  }
 }
 
 /***************************************
@@ -207,10 +207,6 @@ async function uploadNewLeaderboard(
     uploadData.did,
   );
 
-  console.log("LEADERBOARD UPDATE STARTED");
-
-  // https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
-  // firebase transactions to avoid race conditions on get + update leaderboard
   await runTransaction(db, async (transaction) => {
     // get latest leaderboard data again, just in case another player updated best score just now
     const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
@@ -265,7 +261,7 @@ async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
     const isNewAttemptBest = lowerIsBetter
       ? uploadData[mainOutputAttempt] < currentRecordInfo.currentRecord["value"]
       : uploadData[mainOutputAttempt] >
-      currentRecordInfo.currentRecord["value"];
+        currentRecordInfo.currentRecord["value"];
 
     if (isNewAttemptBest) {
       //Update record
@@ -328,7 +324,6 @@ async function uploadNewRecord(
     console.log(e);
   }
 }
-
 
 /***************************************
  * AttemptShots Generation
