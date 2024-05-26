@@ -52,4 +52,4 @@ const firebaseErrors = {
   "auth/missing-email": "Missing email",
   "auth/missing-password": "Missing password",
 };
-export { prettyRole,firebaseErrors, prettyTitle, shortTitle, themeColors };
+export { firebaseErrors, prettyRole, prettyTitle, shortTitle, themeColors };
