@@ -45,6 +45,7 @@ import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { resetLeaderboards } from "~/hooks/resetLeaderboards";
 import { useTeamInfo } from "~/hooks/useTeamInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
@@ -83,6 +84,9 @@ function Index() {
   const [imageUploading, setImageUploading] = useState(false);
 
   const onChangeSearch = (query) => setSearchQuery(query);
+
+  const [resetDialogVisible, setResetDialogVisible] = useState(false);
+  const hideResetDialog = () => setResetDialogVisible(false);
 
   const [newName, setNewName] = useState("");
 
@@ -230,6 +234,22 @@ function Index() {
             content={snackbarMessage}
             onHide={() => setSnackbarVisible(false)}
           />
+          <DialogComponent
+            title={"Alert"}
+            content="Resetting the season will wipe all leaderboards"
+            visible={resetDialogVisible}
+            onHide={hideResetDialog}
+            buttons={["Cancel", "Reset Season"]}
+            buttonsFunctions={[
+              hideResetDialog,
+              async () => {
+                console.log("Reset Season not implimented");
+                await resetLeaderboards();
+                invalidateMultipleKeys(queryClient, [["best_attempts"]]);
+                hideResetDialog();
+              },
+            ]}
+          />
           <SafeAreaView
             // flex: without this the scrollview automatically scrolls back up when finger no longer held down
             style={{ flex: 1 }}
@@ -280,6 +300,7 @@ function Index() {
                           onPress={() => {
                             console.log("Reset Season Pressed!");
                             setMenuVisible(false);
+                            setResetDialogVisible(true);
                           }}
                           title="Reset Season"
                         />
