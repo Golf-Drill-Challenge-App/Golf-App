@@ -242,9 +242,10 @@ function Index() {
             buttons={["Cancel", "Reset Season"]}
             buttonsFunctions={[
               hideResetDialog,
-              () => {
+              async () => {
                 console.log("Reset Season not implimented");
-                resetLeaderboards();
+                await resetLeaderboards();
+                invalidateMultipleKeys(queryClient, [["best_attempts"]]);
                 hideResetDialog();
               },
             ]}
@@ -299,6 +300,7 @@ function Index() {
                           onPress={() => {
                             console.log("Reset Season Pressed!");
                             setMenuVisible(false);
+                            setResetDialogVisible(true);
                           }}
                           title="Reset Season"
                         />
