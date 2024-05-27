@@ -1087,12 +1087,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     padding: 10,
   },
-  title: {
-    fontSize: 20,
-  },
-  subTitle: {
-    fontSize: 12,
-  },
   shotNumber: {
     fontSize: 32,
     fontWeight: "bold",

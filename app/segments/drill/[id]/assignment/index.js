@@ -8,7 +8,14 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
-import { Appbar, Button, List, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Appbar,
+  Button,
+  List,
+  Portal,
+  Text,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
@@ -36,6 +43,8 @@ export default function Index() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
   const [checkedItems, setCheckedItems] = useState({});
@@ -70,6 +79,7 @@ export default function Index() {
   };
 
   const handleAssign = async () => {
+    setLoading(true);
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
@@ -100,15 +110,13 @@ export default function Index() {
           });
         });
       });
-      invalidateMultipleKeys(queryClient, [
-        ...selectedUsers.map((userId) => ["userInfo", { userId }]),
-        ["userInfo", { role: "player" }],
-      ]);
+      invalidateMultipleKeys(queryClient, [["userInfo"]]);
     } catch (e) {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
       showDialog("Error", getErrorString(e));
     }
 
+    setLoading(false);
     navigation.pop(3);
   };
 
@@ -126,6 +134,24 @@ export default function Index() {
           visible={dialogVisible}
           onHide={() => setDialogVisible(false)}
         />
+        <Portal>
+          {loading && (
+            <View
+              style={{
+                backgroundColor: "rgba(0,0,0,0.5)",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                animating={true}
+                size="large"
+                color={themeColors.accent}
+              />
+            </View>
+          )}
+        </Portal>
         <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
           <Header
             title="Assign Drill"

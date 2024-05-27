@@ -9,6 +9,7 @@ export const useAllTimeRecords = ({ drillId }) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["all_time_records", { drillId }],
     queryFn: async () => {
+      console.log("fetching all_time_records: ", { drillId });
       // Fetch all time records
       const querySnapshot = await getDoc(
         doc(db, "teams", currentTeamId, "all_time_records", drillId),

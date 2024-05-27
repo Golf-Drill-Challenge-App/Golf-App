@@ -17,7 +17,6 @@ export const useUserInfo = ({
   role = null,
   enabled = true,
 } = {}) => {
-
   const { currentTeamId, currentUserId } = currentAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
