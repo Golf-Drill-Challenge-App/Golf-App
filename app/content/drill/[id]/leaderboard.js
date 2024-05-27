@@ -148,14 +148,23 @@ export default function Leaderboard() {
                     <Text style={{ width: 30 }}>
                       {leaderboardRanks[idx].toString()}.
                     </Text>
-                    <Image
-                      style={{
-                        height: 24,
-                        width: 24,
-                        borderRadius: 12,
-                      }}
-                      uri={userInfo[userId]["pfp"]}
-                    />
+                    {userInfo[userId]["pfp"] ? (
+                      <Image
+                        style={{
+                          height: 24,
+                          width: 24,
+                          borderRadius: 12,
+                        }}
+                        uri={userInfo[userId]["pfp"]}
+                      />
+                    ) : (
+                      <Avatar.Text
+                        size={24}
+                        label={getInitials(userInfo[userId].name)}
+                        color="white"
+                        style={{ backgroundColor: themeColors.avatar }}
+                      />
+                    )}
                   </View>
                 )}
                 right={() => (
