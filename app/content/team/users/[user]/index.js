@@ -15,6 +15,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
@@ -172,13 +173,9 @@ function Index() {
           drillData={uniqueDrills}
           href={"/content/team/users/" + userInfo.uid + "/drills/"}
           userId={userInfo.uid}
-          invalidateKeys={invalidateKeys}
         ></DrillList>
       ) : (
-        <EmptyScreen
-          invalidateKeys={invalidateKeys}
-          text={"No drills attempted yet."}
-        />
+        <EmptyScreen text={"No drills attempted yet."} />
       )}
     </>
   );
@@ -187,7 +184,6 @@ function Index() {
     <AssignmentsList
       role={currentUserInfo["role"]}
       userInfo={userInfo}
-      invalidateKeys={invalidateKeys}
       drillInfo={drillInfo}
     ></AssignmentsList>
   );
@@ -236,14 +232,13 @@ function Index() {
                       ? "account-arrow-up-outline"
                       : "account-arrow-down-outline"
                   }
-                  onPress={() => {
-                    userInfo.role === "player"
-                      ? changeRole(userId, "coach")
-                      : changeRole(userId, "player");
-                    invalidateMultipleKeys(queryClient, [
-                      "userInfo",
-                      { userId },
-                    ]); //invalidate cache
+                  onPress={async () => {
+                    if (userInfo.role === "player") {
+                      await changeRole(userId, "coach");
+                    } else {
+                      await changeRole(userId, "player");
+                    }
+                    invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
                     setMenuVisible(false);
                   }}
                   title={userInfo.role === "player" ? "Promote" : "Demote"}
@@ -273,6 +268,7 @@ function Index() {
           }
         />
         <FlatList
+          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
           stickyHeaderIndices={[1]}
           data={[
             profileHeader(),
@@ -316,7 +312,11 @@ function Index() {
             hideBanDialog,
             async () => {
               await blacklistUser(userId, userInfo);
-              invalidateMultipleKeys(queryClient, ["user"]); //invalidate cache
+              await queryClient.removeQueries(["userInfo", userId]);
+              invalidateMultipleKeys(queryClient, [
+                ["userInfo"],
+                ["best_attempts"],
+              ]); //invalidate cache
               navigation.goBack();
             },
           ]}

@@ -493,10 +493,10 @@ function Index() {
                 </View>
               ) : (
                 <>
-                  {profileHeader}
                   <EmptyScreen
                     invalidateKeys={invalidateKeys}
                     text={"No drills attempted yet"}
+                    preChild={() => profileHeader}
                   />
                 </>
               )}
