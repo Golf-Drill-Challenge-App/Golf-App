@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import ProfilePicture from "~/components/ProfilePicture";
-import { prettyRole } from "../Constants";
+import { prettyRole } from "~/Constants";
 
 function ProfileCard(props) {
   const profilePicSize = 150;

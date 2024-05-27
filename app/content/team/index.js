@@ -26,10 +26,7 @@ import {
   Searchbar,
   Text,
 } from "react-native-paper";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
@@ -49,7 +46,6 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { currentUserId, currentTeamId } = currentAuthContext();
-  const insets = useSafeAreaInsets();
 
   const {
     data: userInfo,
@@ -170,7 +166,7 @@ function Index() {
     },
     profilePicture: {
       width: 175,
-      height: 120,
+      height: 100,
       marginBottom: 10,
     },
     penIconContainer: {

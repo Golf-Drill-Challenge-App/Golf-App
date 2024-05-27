@@ -28,7 +28,6 @@ const BottomSheetWrapper = forwardRef(
         {/* Close Button */}
         <Pressable
           onPress={() => {
-            console.log("ref.current");
             ref.current.close();
             closeFn();
           }}

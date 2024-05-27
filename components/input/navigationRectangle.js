@@ -16,8 +16,6 @@ export default function NavigationRectangle({
   currentShot,
   pressFunction,
 }) {
-  // console.log("inputValues", inputValues);
-  const keys = Object.keys(inputValues);
   return (
     <Surface
       style={{

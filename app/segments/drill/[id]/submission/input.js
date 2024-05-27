@@ -303,7 +303,7 @@ async function uploadNewRecord(
     distanceMeasure: distanceMeasure,
   };
 
-  let newDocData = {};
+  let newDocData;
 
   //case with no all time record
   if (currentRecordInfo == null) {
@@ -365,7 +365,7 @@ function getShotInfo(drillInfo) {
 //Helper function to generate shots for the sequence drill type
 function fillSequentialTargets(drillInfo) {
   let shots = [];
-  for (var i = 0; i < drillInfo.reps; i++) {
+  for (let i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
       items: {
@@ -382,11 +382,11 @@ function fillRandomShotTargets(drillInfo) {
   const maxFloored = Math.floor(drillInfo.requirements[0].max);
   let shots = [];
 
-  for (var i = 0; i < drillInfo.reps; i++) {
-    var target = Math.floor(
+  for (let i = 0; i < drillInfo.reps; i++) {
+    const target = Math.floor(
       Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
     );
-    var baseline = -1;
+    let baseline;
     if (drillInfo.shotType === "putt") {
       baseline = lookUpExpectedPutts(target);
     } else {
@@ -406,10 +406,10 @@ function fillRandomShotTargets(drillInfo) {
 //Helper function to generate shots for the putt drill type
 function fillPuttTargets(drillInfo) {
   let shots = [];
-  for (var i = 0; i < drillInfo.reps; i++) {
-    var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
+  for (let i = 0; i < drillInfo.reps; i++) {
+    const baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
     let target = {};
-    for (var j = 0; j < drillInfo.requirements.length; j++) {
+    for (let j = 0; j < drillInfo.requirements.length; j++) {
       target = Object.assign(target, {
         [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i],
       });
@@ -433,6 +433,7 @@ function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
   return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
+
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
   return Math.abs(carry - target);

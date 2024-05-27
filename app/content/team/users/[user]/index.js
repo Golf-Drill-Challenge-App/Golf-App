@@ -1,16 +1,13 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useState } from "react";
-import { FlatList, View } from "react-native";
-import { Appbar, SegmentedButtons } from "react-native-paper";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Appbar, Divider, Menu } from "react-native-paper";
+import { FlatList, View } from "react-native";
+import { Appbar, Divider, Menu, SegmentedButtons } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
-import DialogComponent from "~/components/dialog";
 import AssignmentsList from "~/components/assignmentList";
+import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -19,11 +16,9 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
-import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { removeUser } from "~/hooks/removeUser";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -245,7 +240,10 @@ function Index() {
                     userInfo.role === "player"
                       ? changeRole(userId, "coach")
                       : changeRole(userId, "player");
-                    invalidateMultipleKeys(queryClient, ["userInfo", { userId }]); //invalidate cache
+                    invalidateMultipleKeys(queryClient, [
+                      "userInfo",
+                      { userId },
+                    ]); //invalidate cache
                     setMenuVisible(false);
                   }}
                   title={userInfo.role === "player" ? "Promote" : "Demote"}
@@ -282,7 +280,8 @@ function Index() {
             <View>{tabComponent[value]}</View>,
           ]}
           renderItem={({ item }) => item}
-        />{/* Remove user dialog */}
+        />
+        {/* Remove user dialog */}
         <DialogComponent
           title={"Alert"}
           content="All data will be lost when this user is removed."

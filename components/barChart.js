@@ -18,7 +18,6 @@ import { Button } from "react-native-paper";
 import { prettyTitle, shortTitle, themeColors } from "~/Constants";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
-import { currentAuthContext } from "~/context/Auth";
 import EmptyScreen from "./emptyScreen";
 
 export default function BarChartScreen({
@@ -52,8 +51,6 @@ export default function BarChartScreen({
       };
     }),
   );
-
-  const { currentTeamId } = currentAuthContext();
 
   useEffect(() => {
     scrollViewRef.current.scrollToEnd({ animated: false });
