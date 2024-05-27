@@ -42,14 +42,15 @@ function ChooseTeam() {
         //See if the user is on blacklist
         setBlacklist(docSnap.exists());
       } catch (err) {
-        console.error("Error fetching document: ", err);
         setError(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBlacklistDoc();
+    if (currentUserId) {
+      fetchBlacklistDoc();
+    }
   }, [currentUserId]);
 
   if (loading) {
