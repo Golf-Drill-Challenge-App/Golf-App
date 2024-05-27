@@ -2,7 +2,6 @@ import * as scale from "d3-scale";
 import * as shape from "d3-shape";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  LogBox,
   ScrollView,
   StyleSheet,
   Text,
