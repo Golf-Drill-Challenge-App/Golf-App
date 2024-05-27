@@ -41,7 +41,7 @@ export default function Description() {
         refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
         style={{ paddingTop: 10 }}
       >
-        <DrillDescription drillData={drillInfo} />
+        <DrillDescription drillInfo={drillInfo} />
       </ScrollView>
       <Link
         href={{

@@ -16,6 +16,8 @@ const prettyTitle = {
   strokes: "Strokes",
   break: "Break",
   club: "Club",
+  carry: "Carry",
+  carryDiff: "Carry Difference",
   distance: "Distance",
   carryDiffAverage: "Carry Difference Average",
   proxHoleAverage: "Proximity-to-hole Average",

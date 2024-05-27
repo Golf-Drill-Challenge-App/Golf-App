@@ -948,7 +948,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                     <Text style={{ marginLeft: 10 }} variant="headlineLarge">
                       Description
                     </Text>
-                    <DrillDescription drillData={drillInfo} />
+                    <DrillDescription drillInfo={drillInfo} />
                   </BottomSheetView>
                 </BottomSheetWrapper>
 
