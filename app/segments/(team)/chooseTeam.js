@@ -98,7 +98,7 @@ function ChooseTeam() {
                   await setDoc(doc(db, "teams", "1", "users", currentUserId), {
                     name: currentUserInfo["displayName"],
                     // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-                    pfp: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                    pfp: "",
                     // hardcoded "player" role for now, add role selection to profile settings in future PR
                     role: "player",
                     uid: currentUserId,
