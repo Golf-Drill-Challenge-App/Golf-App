@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Dimensions,
   Image,
@@ -6,9 +6,9 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-    View,
+  View,
 } from "react-native";
-import { List, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { prettyTitle } from "~/Constants";
 
 export default function DrillDescription({ drillInfo }) {
@@ -39,7 +39,10 @@ export default function DrillDescription({ drillInfo }) {
           <>
             <Text style={styles.header}>Inputs</Text>
             {drillInfo.inputs.map((input) => (
-              <Text key={input.id} style={styles.bodyText}>{`\u2022\t${prettyTitle[input.id]}`}</Text>
+              <Text
+                key={input.id}
+                style={styles.bodyText}
+              >{`\u2022\t${prettyTitle[input.id]}`}</Text>
             ))}
           </>
         )}
@@ -47,7 +50,10 @@ export default function DrillDescription({ drillInfo }) {
           <>
             <Text style={styles.header}>Outputted Data</Text>
             {drillInfo.outputs.map((output) => (
-              <Text key={output} style={styles.bodyText}>{`\u2022\t${prettyTitle[output]}`}</Text>
+              <Text
+                key={output}
+                style={styles.bodyText}
+              >{`\u2022\t${prettyTitle[output]}`}</Text>
             ))}
           </>
         )}
@@ -62,18 +68,15 @@ export default function DrillDescription({ drillInfo }) {
               }}
             >
               {images.map((image, index) => (
-                <TouchableOpacity
-                key={index}
-                onPress={() => openModal(index)}
-                >
-                <Image
+                <TouchableOpacity key={index} onPress={() => openModal(index)}>
+                  <Image
                     style={{
-                    width: windowWidth / 3 - 10,
-                    height: windowWidth / 3 - 10,
-                    marginBottom: 15,
+                      width: windowWidth / 3 - 10,
+                      height: windowWidth / 3 - 10,
+                      marginBottom: 15,
                     }}
                     source={image}
-                />
+                  />
                 </TouchableOpacity>
               ))}
             </View>
@@ -135,5 +138,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingLeft: 5,
     paddingBottom: 5,
-  }
+  },
 });
