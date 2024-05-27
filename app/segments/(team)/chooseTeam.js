@@ -121,6 +121,7 @@ function ChooseTeam() {
                   style={{
                     color: themeColors.highlight,
                     fontSize: 18,
+                    fontSize: 18,
                     textAlign: "center",
                   }}
                 >
@@ -147,6 +148,7 @@ function ChooseTeam() {
               <Text
                 style={{
                   color: themeColors.highlight,
+                  fontSize: 18,
                   fontSize: 18,
                   textAlign: "center",
                 }}
