@@ -7,6 +7,8 @@ import { Text, View } from "react-native";
 import { Button, PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { currentAuthContext } from "~/context/Auth";
@@ -23,13 +25,23 @@ function ChooseTeam() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
+
   async function handleSignOut() {
     try {
       await signoutFireBase(auth);
       signOut();
     } catch (e) {
-      alert(e);
       console.log(e);
+      showDialog("Error", getErrorString(e));
     }
   }
 
@@ -41,8 +53,8 @@ function ChooseTeam() {
 
         //See if the user is on blacklist
         setBlacklist(docSnap.exists());
-      } catch (err) {
-        setError(err);
+      } catch (e) {
+        setError(e);
       } finally {
         setLoading(false);
       }
@@ -63,6 +75,12 @@ function ChooseTeam() {
 
   return (
     <PaperProvider>
+      <DialogComponent
+        title={dialogTitle}
+        content={dialogMessage}
+        visible={dialogVisible}
+        onHide={() => setDialogVisible(false)}
+      />
       <SafeAreaView
         style={{
           flex: 1,

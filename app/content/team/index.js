@@ -28,6 +28,7 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DialogComponent from "~/components/dialog";
@@ -76,6 +77,16 @@ function Index() {
   const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
   const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
   const [imageUploading, setImageUploading] = useState(false);
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
@@ -215,6 +226,14 @@ function Index() {
     <PaperWrapper>
       <GestureHandlerRootView>
         <BottomSheetModalProvider>
+          {/* Generic Error dialog */}
+          <DialogComponent
+            title={dialogTitle}
+            content={dialogMessage}
+            visible={dialogVisible}
+            onHide={() => setDialogVisible(false)}
+          />
+          {/* Snackbar Error Dialog */}
           <DialogComponent
             type={"snackbar"}
             visible={snackbarVisible}
@@ -230,10 +249,14 @@ function Index() {
             buttonsFunctions={[
               hideResetDialog,
               async () => {
-                console.log("Reset Season not implimented");
-                await resetLeaderboards();
-                invalidateMultipleKeys(queryClient, [["best_attempts"]]);
-                hideResetDialog();
+                try {
+                  await resetLeaderboards();
+                  invalidateMultipleKeys(queryClient, [["best_attempts"]]);
+                  hideResetDialog();
+                } catch (e) {
+                  console.log("Error resetting season:", e);
+                  showDialog("Error", getErrorString(e));
+                }
               },
             ]}
           />
