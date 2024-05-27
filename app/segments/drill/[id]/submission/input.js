@@ -1031,7 +1031,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 12,
+                    fontSize: 16,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();
