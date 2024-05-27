@@ -170,6 +170,10 @@ export default function SignUp() {
                 secureTextEntry={true}
                 onChangeText={setPassword}
                 style={[styles.input]}
+                // to get rid of ios password suggestions
+                // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                textContentType="oneTimeCode"
               />
               <Text style={[styles.placeholderText]}>Confirm Password</Text>
               <TextInput
@@ -179,6 +183,10 @@ export default function SignUp() {
                 secureTextEntry={true}
                 onChangeText={setPasswordCheck}
                 style={[styles.input]}
+                // to get rid of ios password suggestions
+                // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                textContentType="oneTimeCode"
               />
               <Pressable
                 style={[styles.button]}
