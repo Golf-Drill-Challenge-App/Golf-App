@@ -2,7 +2,12 @@ import { ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 import RefreshInvalidate from "./refreshInvalidate";
 
-function EmptyScreen({ invalidateKeys, text, preChild = () => {} }) {
+function EmptyScreen({
+  invalidateKeys,
+  text,
+  preChild = () => {},
+  postChild = () => {},
+}) {
   if (typeof preChild === "object") {
     const preChildObj = preChild;
     preChild = () => {
@@ -20,7 +25,7 @@ function EmptyScreen({ invalidateKeys, text, preChild = () => {} }) {
       {preChild()}
       <View
         style={{
-          flex: 1,
+          flexGrow: 1,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -35,6 +40,7 @@ function EmptyScreen({ invalidateKeys, text, preChild = () => {} }) {
           {text}
         </Text>
       </View>
+      {postChild()}
     </ScrollView>
   );
 }

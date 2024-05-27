@@ -13,8 +13,12 @@ const AuthContext = createContext({
   setCurrentTeamId() {
     return;
   },
+  setCurrentUserInfo() {
+    return;
+  },
   currentUserId: null,
   currentTeamId: null,
+  currentUserInfo: null,
 });
 
 export function currentAuthContext() {
@@ -27,7 +31,6 @@ function useProtectedRoute(currentUserId) {
 
   useEffect(() => {
     const inAuthGroup = segments.at(0) === "(auth)";
-
     if (!currentUserId && !inAuthGroup) {
       router.replace("/signin");
     } else if (currentUserId && inAuthGroup) {
@@ -38,13 +41,14 @@ function useProtectedRoute(currentUserId) {
 
 export const AuthProvider = ({ children }) => {
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentUserInfo, setCurrentUserInfo] = useState(null);
   const [currentTeamId, setCurrentTeamId] = useState("1");
 
   useProtectedRoute(currentUserId);
 
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
-    onAuthStateChanged(auth, (currentUserId) => {
+    onAuthStateChanged(auth, (newlyLoggedInUser) => {
       // test user login (yarn test)
       // If you sign out, reload or click "sign in" to login as test user
       // Signout functionality for test user is buggy, chance of auto-logging back in
@@ -55,9 +59,10 @@ export const AuthProvider = ({ children }) => {
 
       // regular user login
       else {
-        if (currentUserId) {
-          setCurrentUserId(currentUserId["uid"] ?? "Error (uid)");
-          console.log("user changed. userId:", currentUserId["uid"]);
+        if (newlyLoggedInUser) {
+          setCurrentUserId(newlyLoggedInUser["uid"] ?? "Error (uid)");
+          setCurrentUserInfo(newlyLoggedInUser ?? {});
+          console.log("user changed. userId:", newlyLoggedInUser["uid"]);
         }
       }
     });
@@ -65,15 +70,22 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        currentUserId: currentUserId,
+        currentUserId,
         setCurrentUserId: (uidvar) => {
           setCurrentUserId(uidvar ?? "Error (uid)");
         },
-        signOut: () => setCurrentUserId(null),
+        signOut: () => {
+          setCurrentUserId(null);
+          setCurrentUserInfo({});
+        },
         currentTeamId,
         setCurrentTeamId: (tidvar) => {
           setCurrentTeamId(tidvar ?? "Error (tid)");
         },
+        setCurrentUserInfo(userInfo) {
+          setCurrentUserInfo(userInfo);
+        },
+        currentUserInfo,
       }}
     >
       {children}

@@ -26,7 +26,7 @@ const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
 
 export default function SignUp() {
-  const { setCurrentUserId } = currentAuthContext();
+  const { setCurrentUserId, setCurrentUserInfo } = currentAuthContext();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -72,6 +72,7 @@ export default function SignUp() {
       });
 
       setCurrentUserId(userCredential.user.uid);
+      setCurrentUserInfo(userCredential.user);
 
       // console.log(userCredential.user);
     } catch (e) {

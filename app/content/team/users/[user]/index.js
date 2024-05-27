@@ -1,9 +1,15 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
 import { Appbar, SegmentedButtons } from "react-native-paper";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Appbar, Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import DialogComponent from "~/components/dialog";
 import AssignmentsList from "~/components/assignmentList";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
@@ -13,14 +19,54 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import { currentAuthContext } from "~/context/Auth";
+import { currentAuthContext } from "~/context/Auth";
+import { db } from "~/firebaseConfig";
+import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { removeUser } from "~/hooks/removeUser";
+import { useBestAttempts } from "~/hooks/useBestAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
+//A function to add a user to the blacklist table with a timestamp
+async function blacklistUser(userId, userInfo) {
+  //Create new document with userId as the id and a time field
+  await setDoc(doc(db, "teams", "1", "blacklist", userId), {
+    time: Date.now(),
+    name: userInfo["name"],
+  });
+
+  //remove users data
+  await removeUser(userId);
+}
+
+async function changeRole(userId, newRole) {
+  const userRef = doc(db, "teams", "1", "users", userId);
+
+  try {
+    await updateDoc(userRef, { role: newRole });
+    console.log("Document updated successfully!");
+  } catch (error) {
+    console.error("Error updating document:", error);
+  }
+}
+
 function Index() {
   const userId = useLocalSearchParams()["user"];
-  const { currentUserId } = currentAuthContext();
   const navigation = useNavigation();
+
+  const queryClient = useQueryClient();
+
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
+  const hideRemoveDialog = () => setRemoveDialogVisible(false);
+
+  const [banDialogVisible, setBanDialogVisible] = useState(false);
+  const hideBanDialog = () => setBanDialogVisible(false);
+
+  const { currentUserId } = currentAuthContext();
+
   const {
     data: userInfo,
     error: userError,
@@ -169,6 +215,64 @@ function Index() {
               color={themeColors.accent}
             />
           }
+          postChildren={
+            currentUserInfo.role === "owner" && userInfo.role != "owner" ? (
+              <Menu
+                visible={menuVisible}
+                onDismiss={() => {
+                  setMenuVisible(false);
+                }}
+                anchor={
+                  <Appbar.Action
+                    icon="dots-horizontal-circle-outline"
+                    onPress={() => {
+                      setMenuVisible(true);
+                    }}
+                    color={themeColors.accent}
+                  />
+                }
+                statusBarHeight={45}
+                anchorPosition="bottom"
+                contentStyle={{ backgroundColor: themeColors.background }}
+              >
+                <Menu.Item
+                  leadingIcon={
+                    userInfo.role === "player"
+                      ? "account-arrow-up-outline"
+                      : "account-arrow-down-outline"
+                  }
+                  onPress={() => {
+                    userInfo.role === "player"
+                      ? changeRole(userId, "coach")
+                      : changeRole(userId, "player");
+                    invalidateMultipleKeys(queryClient, ["userInfo", { userId }]); //invalidate cache
+                    setMenuVisible(false);
+                  }}
+                  title={userInfo.role === "player" ? "Promote" : "Demote"}
+                />
+                <Divider />
+                <Menu.Item
+                  leadingIcon="account-cancel-outline"
+                  onPress={() => {
+                    setMenuVisible(false);
+                    setRemoveDialogVisible(true);
+                  }}
+                  title="Remove"
+                />
+                <Divider />
+                <Menu.Item
+                  leadingIcon="account-lock-outline"
+                  onPress={() => {
+                    setMenuVisible(false);
+                    setBanDialogVisible(true);
+                  }}
+                  title="Ban"
+                />
+              </Menu>
+            ) : (
+              <></>
+            )
+          }
         />
         <FlatList
           stickyHeaderIndices={[1]}
@@ -178,6 +282,45 @@ function Index() {
             <View>{tabComponent[value]}</View>,
           ]}
           renderItem={({ item }) => item}
+        />{/* Remove user dialog */}
+        <DialogComponent
+          title={"Alert"}
+          content="All data will be lost when this user is removed."
+          visible={removeDialogVisible}
+          onHide={hideRemoveDialog}
+          buttons={["Cancel", "Remove User"]}
+          buttonsFunctions={[
+            hideRemoveDialog,
+            async () => {
+              try {
+                await removeUser(userId);
+                await queryClient.removeQueries(["userInfo", userId]);
+                invalidateMultipleKeys(queryClient, [
+                  ["userInfo"],
+                  ["best_attempts"],
+                ]);
+                navigation.goBack();
+              } catch {
+                console.error("Error removing user:", e);
+              }
+            },
+          ]}
+        />
+        {/* Ban user dialog */}
+        <DialogComponent
+          title={"Alert"}
+          content="Banning this user will delete all their data and prevent them from joining the team again."
+          visible={banDialogVisible}
+          onHide={hideBanDialog}
+          buttons={["Cancel", "Ban User"]}
+          buttonsFunctions={[
+            hideBanDialog,
+            async () => {
+              await blacklistUser(userId, userInfo);
+              invalidateMultipleKeys(queryClient, ["user"]); //invalidate cache
+              navigation.goBack();
+            },
+          ]}
         />
       </SafeAreaView>
     </PaperWrapper>

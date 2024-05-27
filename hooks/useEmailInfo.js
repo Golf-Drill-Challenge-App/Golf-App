@@ -3,10 +3,10 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
 export const useEmailInfo = ({ userId = null } = {}) => {
-  console.log("fetching userEmail: ", { userId });
   const { data, error, isLoading } = useQuery({
     queryKey: ["userEmail", { userId }],
     queryFn: async () => {
+      console.log("fetching userEmail: ", { userId });
       if (userId) {
         const querySnapshot = await getDoc(doc(db, "users", userId));
         return querySnapshot.data().email;
