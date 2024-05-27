@@ -32,7 +32,7 @@ async function blacklistUser(userId, userData) {
   });
 
   //remove users data
-  await removeUser(userId);
+  removeUser(userId);
 }
 
 async function changeRole(userId, newRole) {
@@ -260,9 +260,9 @@ function Index() {
           buttons={["Cancel", "Ban User"]}
           buttonsFunctions={[
             hideBanDialog,
-            async () => {
-              await blacklistUser(userId, userData);
-              invalidateMultipleKeys(queryClient, ["user"]); //invalidate cache
+            () => {
+              blacklistUser(userId, userData);
+              queryClient.invalidateQueries(["user"]); //invalidate cache
               navigation.goBack();
             },
           ]}
