@@ -30,6 +30,12 @@ export default function DrillDescription({ drillInfo }) {
 
   const windowWidth = Dimensions.get("window").width;
 
+  const sortedInputs = drillInfo.inputs.sort((a, b) => a.id > b.id);
+
+  const sortedOutputs = drillInfo.outputs.sort();
+
+  console.log("sortedOutputs", sortedOutputs);
+
   return (
     <View style={{ margin: 10 }}>
       <ScrollView style={{ paddingLeft: 10 }}>
@@ -38,7 +44,7 @@ export default function DrillDescription({ drillInfo }) {
         {drillInfo.inputs && (
           <>
             <Text style={styles.header}>Inputs</Text>
-            {drillInfo.inputs.map((input) => (
+            {sortedInputs.map((input) => (
               <Text
                 key={input.id}
                 style={styles.bodyText}
@@ -49,7 +55,7 @@ export default function DrillDescription({ drillInfo }) {
         {drillInfo.outputs && (
           <>
             <Text style={styles.header}>Outputted Data</Text>
-            {drillInfo.outputs.map((output) => (
+            {sortedOutputs.map((output) => (
               <Text
                 key={output}
                 style={styles.bodyText}
