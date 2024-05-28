@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useMemo } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Avatar, Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { formatDate } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -93,6 +93,7 @@ const AssignmentsList = ({
 
   const stackedPfp = (playerList) => {
     const numPfp = Math.min(3, playerList.length);
+    const numLeft = playerList.length - numPfp;
 
     const pfpArr = playerList.slice(0, numPfp).map((player, index) => {
       return (
@@ -110,7 +111,23 @@ const AssignmentsList = ({
       );
     });
 
-    const numLeft = playerList.length - numPfp;
+    if (numLeft > 0) {
+      pfpArr.push(
+        <Avatar.Text
+          size={24}
+          label={`+${numLeft}`}
+          color="grey"
+          style={{
+            backgroundColor: themeColors.background,
+            position: "relative",
+            left: -30,
+            borderWidth: 0.2,
+            borderColor: "grey",
+          }}
+          key="numLeft"
+        />,
+      );
+    }
 
     return (
       <View
@@ -129,7 +146,7 @@ const AssignmentsList = ({
         >
           {pfpArr}
         </View>
-        {numLeft > 0 && (
+        {/*{numLeft > 0 && (
           <Text
             style={{
               fontSize: 12,
@@ -138,7 +155,7 @@ const AssignmentsList = ({
           >
             +{numLeft}
           </Text>
-        )}
+        )}*/}
       </View>
     );
   };
