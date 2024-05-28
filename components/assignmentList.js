@@ -103,7 +103,7 @@ const AssignmentsList = ({
             height: 24,
             borderRadius: 12,
             position: "relative",
-            left: -10 * index,
+            left: -5 * index,
           }}
           userInfo={player}
           key={player.uid}
@@ -116,11 +116,11 @@ const AssignmentsList = ({
         <Avatar.Text
           size={24}
           label={`+${numLeft}`}
-          color="grey"
+          color="white"
           style={{
-            backgroundColor: themeColors.background,
+            backgroundColor: themeColors.avatar,
             position: "relative",
-            left: -30,
+            left: -15,
             borderWidth: 0.2,
             borderColor: "grey",
           }}
@@ -135,6 +135,8 @@ const AssignmentsList = ({
           flexDirection: "row",
           alignItems: "center",
           width: 85,
+          position: "relative",
+          left: -10,
         }}
       >
         <View

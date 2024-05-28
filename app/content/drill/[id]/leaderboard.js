@@ -176,14 +176,11 @@ export default function Leaderboard() {
 
   if (orderedLeaderboard.length < 1) {
     return (
-      <>
-        <AllTimeRecord />
-
-        <EmptyScreen
-          invalidateKeys={invalidateKeys}
-          text={"No attempts have been made this season."}
-        />
-      </>
+      <EmptyScreen
+        preChild={<AllTimeRecord />}
+        invalidateKeys={invalidateKeys}
+        text={"No attempts have been made this season."}
+      />
     );
   }
 
