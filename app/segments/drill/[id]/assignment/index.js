@@ -4,10 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-  GestureHandlerRootView,
-  ScrollView,
-} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   ActivityIndicator,
   Appbar,
@@ -21,11 +18,10 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
-import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
+import { useAlertContext } from "~/context/Alert";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -40,13 +36,12 @@ export default function Index() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
 
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
+
+  const { showDialog } = useAlertContext();
+
   const [checkedItems, setCheckedItems] = useState({});
   const filteredUserInfo = useMemo(
     () =>
@@ -120,134 +115,119 @@ export default function Index() {
     navigation.pop(3);
   };
 
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
   return (
-    <PaperWrapper>
-      <GestureHandlerRootView>
-        <DialogComponent
-          title={dialogTitle}
-          content={dialogMessage}
-          visible={dialogVisible}
-          onHide={() => setDialogVisible(false)}
-        />
-        <Portal>
-          {loading && (
-            <View
-              style={{
-                backgroundColor: "rgba(0,0,0,0.5)",
-                height: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator
-                animating={true}
-                size="large"
-                color={themeColors.accent}
-              />
-            </View>
-          )}
-        </Portal>
-        <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-          <Header
-            title="Assign Drill"
-            preChildren={
-              <Appbar.BackAction
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                color={themeColors.accent}
-              />
-            }
-            postChildren={
-              <Button
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginRight: 10,
-                }}
-                onPress={handleAssignAll}
-              >
-                <Text style={{ color: themeColors.accent, fontSize: 17 }}>
-                  {allTrue ? "Unassign All" : "Assign All"}
-                </Text>
-              </Button>
-            }
-          />
-          <View style={{ flex: 1 }}>
-            <ScrollView style={{ flex: 1, marginBottom: 30 }}>
-              <List.Section style={{ paddingHorizontal: 20, height: "100%" }}>
-                {Object.entries(filteredUserInfo).map(([uid, userData]) => (
-                  <TouchableOpacity
-                    key={uid}
-                    style={styles.cardContainer}
-                    activeOpacity={0.5}
-                    onPress={() =>
-                      setCheckedItems({
-                        ...checkedItems,
-                        [uid]: !checkedItems[uid],
-                      })
-                    }
-                  >
-                    <View style={styles.cardContent}>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 20,
-                        }}
-                      >
-                        <ProfilePicture
-                          style={{
-                            height: 24,
-                            width: 24,
-                            borderRadius: 12,
-                          }}
-                          userInfo={userData}
-                        />
-
-                        <Text style={styles.title}>{userData.name}</Text>
-                      </View>
-                      <View style={styles.specContainer}>
-                        {checkedItems[uid] ? (
-                          <Icon name="checkbox-outline" size={20} />
-                        ) : (
-                          <Icon name="checkbox-blank-outline" size={20} />
-                        )}
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </List.Section>
-            </ScrollView>
+    <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+      <Portal>
+        {loading && (
+          <View
+            style={{
+              backgroundColor: "rgba(0,0,0,0.5)",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ActivityIndicator
+              animating={true}
+              size="large"
+              color={themeColors.accent}
+            />
           </View>
+        )}
+      </Portal>
+      <Header
+        title="Assign Drill"
+        preChildren={
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={themeColors.accent}
+          />
+        }
+        postChildren={
           <Button
             style={{
-              margin: 10,
-              bottom: 30,
-              left: 0,
-              right: 0,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 10,
             }}
-            labelStyle={{
-              fontSize: 20,
-              fontWeight: "bold",
-              padding: 5,
-            }}
-            mode="contained"
-            buttonColor={themeColors.accent}
-            textColor="white"
-            onPress={handleAssign}
+            onPress={handleAssignAll}
           >
-            Assign
+            <Text style={{ color: themeColors.accent, fontSize: 17 }}>
+              {allTrue ? "Unassign All" : "Assign All"}
+            </Text>
           </Button>
-        </SafeAreaView>
-      </GestureHandlerRootView>
-    </PaperWrapper>
+        }
+      />
+      <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1, marginBottom: 30 }}>
+          <List.Section style={{ paddingHorizontal: 20, height: "100%" }}>
+            {Object.entries(filteredUserInfo).map(([uid, userData]) => (
+              <TouchableOpacity
+                key={uid}
+                style={styles.cardContainer}
+                activeOpacity={0.5}
+                onPress={() =>
+                  setCheckedItems({
+                    ...checkedItems,
+                    [uid]: !checkedItems[uid],
+                  })
+                }
+              >
+                <View style={styles.cardContent}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 20,
+                    }}
+                  >
+                    <ProfilePicture
+                      style={{
+                        height: 24,
+                        width: 24,
+                        borderRadius: 12,
+                      }}
+                      userInfo={userData}
+                    />
+
+                    <Text style={styles.title}>{userData.name}</Text>
+                  </View>
+                  <View style={styles.specContainer}>
+                    {checkedItems[uid] ? (
+                      <Icon name="checkbox-outline" size={20} />
+                    ) : (
+                      <Icon name="checkbox-blank-outline" size={20} />
+                    )}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </List.Section>
+        </ScrollView>
+      </View>
+      <Button
+        style={{
+          margin: 10,
+          bottom: 30,
+          left: 0,
+          right: 0,
+        }}
+        labelStyle={{
+          fontSize: 20,
+          fontWeight: "bold",
+          padding: 5,
+        }}
+        mode="contained"
+        buttonColor={themeColors.accent}
+        textColor="white"
+        onPress={handleAssign}
+      >
+        Assign
+      </Button>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({

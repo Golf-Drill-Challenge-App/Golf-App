@@ -17,32 +17,23 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
-import DialogComponent from "~/components/dialog";
-import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
 
 export default function SignUp() {
-  const { setCurrentUserId, setCurrentUserInfo } = currentAuthContext();
+  const { setCurrentUserId, setCurrentUserInfo } = useAuthContext();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
+  const { showDialog } = useAlertContext();
+
   const { height } = useWindowDimensions();
-
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
 
   async function handleSubmit() {
     try {
@@ -127,87 +118,79 @@ export default function SignUp() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <PaperWrapper>
-        <KeyboardAwareScrollView
-          // allows opening links from search results without closing keyboard first
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.container}>
-            <DialogComponent
-              title={dialogTitle}
-              content={dialogMessage}
-              visible={dialogVisible}
-              onHide={() => setDialogVisible(false)}
+      <KeyboardAwareScrollView
+        // allows opening links from search results without closing keyboard first
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <ProfilePicture
+            style={{ width: 131, height: 75, marginTop: 0 }}
+            userInfo={{
+              pfp: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+            }}
+          />
+          <Text style={[styles.title]}>Oregon State Golf</Text>
+          <View style={[styles.inputView]}>
+            <Text style={[styles.placeholderText]}>Name</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="name"
+              onChangeText={setName}
+              style={[styles.input]}
             />
-            <ProfilePicture
-              style={{ width: 131, height: 75, marginTop: 0 }}
-              userInfo={{
-                pfp: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-              }}
+            <Text style={[styles.placeholderText]}>Email</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect={false}
+              onChangeText={setEmail}
+              style={[styles.input]}
             />
-            <Text style={[styles.title]}>Oregon State Golf</Text>
-            <View style={[styles.inputView]}>
-              <Text style={[styles.placeholderText]}>Name</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoComplete="name"
-                onChangeText={setName}
-                style={[styles.input]}
-              />
-              <Text style={[styles.placeholderText]}>Email</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                onChangeText={setEmail}
-                style={[styles.input]}
-              />
-              <Text style={[styles.placeholderText]}>Password</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoComplete="new-password"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                style={[styles.input]}
-                // to get rid of ios password suggestions
-                // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
-                // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
-                textContentType="oneTimeCode"
-              />
-              <Text style={[styles.placeholderText]}>Confirm Password</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoComplete="new-password"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPasswordCheck}
-                style={[styles.input]}
-                // to get rid of ios password suggestions
-                // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
-                // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
-                textContentType="oneTimeCode"
-              />
-              <Pressable
-                style={[styles.button]}
-                onPress={handleSubmit}
-                backgroundColor={themeColors.accent}
-              >
-                <Text style={styles.buttonText}>Submit</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button]}
-                backgroundColor={themeColors.accent}
-              >
-                <Link asChild href={"/signin"}>
-                  <Text style={styles.buttonText}>Back to Login</Text>
-                </Link>
-              </Pressable>
-            </View>
+            <Text style={[styles.placeholderText]}>Password</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="new-password"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={setPassword}
+              style={[styles.input]}
+              // to get rid of ios password suggestions
+              // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+              // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+              textContentType="oneTimeCode"
+            />
+            <Text style={[styles.placeholderText]}>Confirm Password</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="new-password"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={setPasswordCheck}
+              style={[styles.input]}
+              // to get rid of ios password suggestions
+              // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+              // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+              textContentType="oneTimeCode"
+            />
+            <Pressable
+              style={[styles.button]}
+              onPress={handleSubmit}
+              backgroundColor={themeColors.accent}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button]}
+              backgroundColor={themeColors.accent}
+            >
+              <Link asChild href={"/signin"}>
+                <Text style={styles.buttonText}>Back to Login</Text>
+              </Link>
+            </Pressable>
           </View>
-        </KeyboardAwareScrollView>
-      </PaperWrapper>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }

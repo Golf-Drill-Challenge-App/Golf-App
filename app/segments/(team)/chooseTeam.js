@@ -4,36 +4,28 @@ import { signOut as signoutFireBase } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { Button, PaperProvider } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
-import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import { currentAuthContext } from "~/context/Auth";
+import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 
 function ChooseTeam() {
   const { signOut, currentUserId, currentUserInfo, setCurrentUserId } =
-    currentAuthContext();
+    useAuthContext();
   const queryClient = useQueryClient();
+
+  const { showDialog } = useAlertContext();
 
   const [blacklist, setBlacklist] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
 
   async function handleSignOut() {
     try {
@@ -74,79 +66,29 @@ function ChooseTeam() {
   }
 
   return (
-    <PaperProvider>
-      <DialogComponent
-        title={dialogTitle}
-        content={dialogMessage}
-        visible={dialogVisible}
-        onHide={() => setDialogVisible(false)}
-      />
-      <SafeAreaView
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: "center",
+      }}
+    >
+      <View
         style={{
-          flex: 1,
           justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {blacklist ? (
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: "center",
-                color: "gray",
-              }}
-            >
-              You've been banned from this team.
-            </Text>
-          ) : (
-            <View
-              style={{
-                flexGrow: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                onPress={async () => {
-                  await setDoc(doc(db, "teams", "1", "users", currentUserId), {
-                    name: currentUserInfo["displayName"],
-                    // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-                    pfp: "",
-                    // hardcoded "player" role for now, add role selection to profile settings in future PR
-                    role: "player",
-                    uid: currentUserId,
-                    assigned_data: [],
-                    uniqueDrills: [],
-                  });
-                  setCurrentUserId(currentUserId);
-                  invalidateMultipleKeys(queryClient, [
-                    ["userInfo", { userId: currentUserId }],
-                  ]);
-                  router.replace("/");
-                }}
-                style={{
-                  backgroundColor: themeColors.accent,
-                  borderRadius: 12,
-                  marginTop: 20,
-                }}
-              >
-                <Text
-                  style={{
-                    color: themeColors.highlight,
-                    fontSize: 18,
-                    textAlign: "center",
-                  }}
-                >
-                  Join Team
-                </Text>
-              </Button>
-            </View>
-          )}
+        {blacklist ? (
+          <Text
+            style={{
+              fontSize: 16,
+              textAlign: "center",
+              color: "gray",
+            }}
+          >
+            You've been banned from this team.
+          </Text>
+        ) : (
           <View
             style={{
               flexGrow: 1,
@@ -155,7 +97,23 @@ function ChooseTeam() {
             }}
           >
             <Button
-              onPress={handleSignOut}
+              onPress={async () => {
+                await setDoc(doc(db, "teams", "1", "users", currentUserId), {
+                  name: currentUserInfo["displayName"],
+                  // hardcoded pfp string for now, add pfp upload to profile settings in future PR
+                  pfp: "",
+                  // hardcoded "player" role for now, add role selection to profile settings in future PR
+                  role: "player",
+                  uid: currentUserId,
+                  assigned_data: [],
+                  uniqueDrills: [],
+                });
+                setCurrentUserId(currentUserId);
+                invalidateMultipleKeys(queryClient, [
+                  ["userInfo", { userId: currentUserId }],
+                ]);
+                router.replace("/");
+              }}
               style={{
                 backgroundColor: themeColors.accent,
                 borderRadius: 12,
@@ -169,13 +127,39 @@ function ChooseTeam() {
                   textAlign: "center",
                 }}
               >
-                Sign Out
+                Join Team
               </Text>
             </Button>
           </View>
+        )}
+        <View
+          style={{
+            flexGrow: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            onPress={handleSignOut}
+            style={{
+              backgroundColor: themeColors.accent,
+              borderRadius: 12,
+              marginTop: 20,
+            }}
+          >
+            <Text
+              style={{
+                color: themeColors.highlight,
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Sign Out
+            </Text>
+          </Button>
         </View>
-      </SafeAreaView>
-    </PaperProvider>
+      </View>
+    </SafeAreaView>
   );
 }
 

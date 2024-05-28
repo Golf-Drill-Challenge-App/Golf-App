@@ -5,13 +5,12 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId } = useAuthContext();
 
   const {
     data: drillInfo,
@@ -69,17 +68,15 @@ export default function Index() {
   }
 
   return (
-    <PaperWrapper>
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Header title="Assigned Drills" />
-        <AssignmentsList
-          role={userInfo["role"]}
-          playerInfo={playerInfo}
-          userInfo={userInfo["role"] === "player" ? userInfo : null}
-          invalidateKeys={invalidateKeys}
-          drillInfo={drillInfo}
-        />
-      </SafeAreaView>
-    </PaperWrapper>
+    <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+      <Header title="Assigned Drills" />
+      <AssignmentsList
+        role={userInfo["role"]}
+        playerInfo={playerInfo}
+        userInfo={userInfo["role"] === "player" ? userInfo : null}
+        invalidateKeys={invalidateKeys}
+        drillInfo={drillInfo}
+      />
+    </SafeAreaView>
   );
 }

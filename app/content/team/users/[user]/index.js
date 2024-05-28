@@ -14,10 +14,10 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
+import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { removeUser } from "~/hooks/removeUser";
@@ -68,25 +68,9 @@ function Index() {
   const [banDialogVisible, setBanDialogVisible] = useState(false);
   const hideBanDialog = () => setBanDialogVisible(false);
 
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
+  const { showDialog, showSnackBar } = useAlertContext();
 
-  const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
-
-  const showSnackBar = (message) => {
-    setSnackbarMessage(message);
-    setSnackbarVisible(true);
-  };
-
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId } = useAuthContext();
 
   const {
     data: userInfo,
@@ -219,167 +203,150 @@ function Index() {
   };
 
   return (
-    <PaperWrapper>
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Header
-          title={userInfo["name"] + "'s Profile"}
-          preChildren={
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.goBack();
+    <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+      <Header
+        title={userInfo["name"] + "'s Profile"}
+        preChildren={
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={themeColors.accent}
+          />
+        }
+        postChildren={
+          currentUserInfo.role === "owner" && userInfo.role != "owner" ? (
+            <Menu
+              visible={menuVisible}
+              onDismiss={() => {
+                setMenuVisible(false);
               }}
-              color={themeColors.accent}
-            />
-          }
-          postChildren={
-            currentUserInfo.role === "owner" && userInfo.role != "owner" ? (
-              <Menu
-                visible={menuVisible}
-                onDismiss={() => {
+              anchor={
+                <Appbar.Action
+                  icon="dots-horizontal-circle-outline"
+                  onPress={() => {
+                    setMenuVisible(true);
+                  }}
+                  color={themeColors.accent}
+                />
+              }
+              statusBarHeight={45}
+              anchorPosition="bottom"
+              contentStyle={{ backgroundColor: themeColors.background }}
+            >
+              <Menu.Item
+                leadingIcon={
+                  userInfo.role === "player"
+                    ? "account-arrow-up-outline"
+                    : "account-arrow-down-outline"
+                }
+                onPress={async () => {
+                  if (userInfo.role === "player") {
+                    try {
+                      await changeRole(userId, "coach");
+                    } catch (e) {
+                      console.log(e);
+                      showDialog("Error", getErrorString(e));
+                    }
+                  } else {
+                    try {
+                      await changeRole(userId, "player");
+                    } catch (e) {
+                      console.log(e);
+                      showDialog("Error", getErrorString(e));
+                    }
+                  }
+                  invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
+                  showSnackBar("User role changed successfully!");
                   setMenuVisible(false);
                 }}
-                anchor={
-                  <Appbar.Action
-                    icon="dots-horizontal-circle-outline"
-                    onPress={() => {
-                      setMenuVisible(true);
-                    }}
-                    color={themeColors.accent}
-                  />
-                }
-                statusBarHeight={45}
-                anchorPosition="bottom"
-                contentStyle={{ backgroundColor: themeColors.background }}
-              >
-                <Menu.Item
-                  leadingIcon={
-                    userInfo.role === "player"
-                      ? "account-arrow-up-outline"
-                      : "account-arrow-down-outline"
-                  }
-                  onPress={async () => {
-                    if (userInfo.role === "player") {
-                      try {
-                        await changeRole(userId, "coach");
-                      } catch (e) {
-                        console.log(e);
-                        showDialog("Error", getErrorString(e));
-                      }
-                    } else {
-                      try {
-                        await changeRole(userId, "player");
-                      } catch (e) {
-                        console.log(e);
-                        showDialog("Error", getErrorString(e));
-                      }
-                    }
-                    invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
-                    showSnackBar("User role changed successfully!");
-                    setMenuVisible(false);
-                  }}
-                  title={userInfo.role === "player" ? "Promote" : "Demote"}
-                />
-                <Divider />
-                <Menu.Item
-                  leadingIcon="account-cancel-outline"
-                  onPress={() => {
-                    setMenuVisible(false);
-                    setRemoveDialogVisible(true);
-                  }}
-                  title="Remove"
-                />
-                <Divider />
-                <Menu.Item
-                  leadingIcon="account-lock-outline"
-                  onPress={() => {
-                    setMenuVisible(false);
-                    setBanDialogVisible(true);
-                  }}
-                  title="Ban"
-                />
-              </Menu>
-            ) : (
-              <></>
-            )
-          }
-        />
-        <FlatList
-          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
-          stickyHeaderIndices={[1]}
-          data={[
-            profileHeader(),
-            segmentButtons(),
-            <View>{tabComponent[value]}</View>,
-          ]}
-          renderItem={({ item }) => item}
-        />
-        {/* Generic Error dialog */}
-        <DialogComponent
-          title={dialogTitle}
-          content={dialogMessage}
-          visible={dialogVisible}
-          onHide={() => setDialogVisible(false)}
-        />
-
-        {/* Snackbar Error Dialog */}
-        <DialogComponent
-          type={"snackbar"}
-          visible={snackbarVisible}
-          content={snackbarMessage}
-          onHide={() => setSnackbarVisible(false)}
-        />
-        {/* Remove user dialog */}
-        <DialogComponent
-          title={"Alert"}
-          content="All data will be lost when this user is removed."
-          visible={removeDialogVisible}
-          onHide={hideRemoveDialog}
-          buttons={["Cancel", "Remove User"]}
-          buttonsFunctions={[
-            hideRemoveDialog,
-            async () => {
-              try {
-                await removeUser(userId);
-                await queryClient.removeQueries(["userInfo", userId]);
-                invalidateMultipleKeys(queryClient, [
-                  ["userInfo"],
-                  ["best_attempts"],
-                ]);
-                navigation.goBack();
-              } catch (e) {
-                console.log("Error removing user:", e);
-                showDialog("Error", getErrorString(e));
-              }
-            },
-          ]}
-        />
-        {/* Ban user dialog */}
-        <DialogComponent
-          title={"Alert"}
-          content="Banning this user will delete all their data and prevent them from joining the team again."
-          visible={banDialogVisible}
-          onHide={hideBanDialog}
-          buttons={["Cancel", "Ban User"]}
-          buttonsFunctions={[
-            hideBanDialog,
-            async () => {
-              try {
-                await blacklistUser(userId, userInfo);
-                await queryClient.removeQueries(["userInfo", userId]);
-                invalidateMultipleKeys(queryClient, [
-                  ["userInfo"],
-                  ["best_attempts"],
-                ]); //invalidate cache
-                navigation.goBack();
-              } catch (e) {
-                console.log("Error banning user:", e);
-                showDialog("Error", getErrorString(e));
-              }
-            },
-          ]}
-        />
-      </SafeAreaView>
-    </PaperWrapper>
+                title={userInfo.role === "player" ? "Promote" : "Demote"}
+              />
+              <Divider />
+              <Menu.Item
+                leadingIcon="account-cancel-outline"
+                onPress={() => {
+                  setMenuVisible(false);
+                  setRemoveDialogVisible(true);
+                }}
+                title="Remove"
+              />
+              <Divider />
+              <Menu.Item
+                leadingIcon="account-lock-outline"
+                onPress={() => {
+                  setMenuVisible(false);
+                  setBanDialogVisible(true);
+                }}
+                title="Ban"
+              />
+            </Menu>
+          ) : (
+            <></>
+          )
+        }
+      />
+      <FlatList
+        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+        stickyHeaderIndices={[1]}
+        data={[
+          profileHeader(),
+          segmentButtons(),
+          <View>{tabComponent[value]}</View>,
+        ]}
+        renderItem={({ item }) => item}
+      />
+      {/* Remove user dialog */}
+      <DialogComponent
+        title={"Alert"}
+        content="All data will be lost when this user is removed."
+        visible={removeDialogVisible}
+        onHide={hideRemoveDialog}
+        buttons={["Cancel", "Remove User"]}
+        buttonsFunctions={[
+          hideRemoveDialog,
+          async () => {
+            try {
+              await removeUser(userId);
+              await queryClient.removeQueries(["userInfo", userId]);
+              invalidateMultipleKeys(queryClient, [
+                ["userInfo"],
+                ["best_attempts"],
+              ]);
+              navigation.goBack();
+            } catch (e) {
+              console.log("Error removing user:", e);
+              showDialog("Error", getErrorString(e));
+            }
+          },
+        ]}
+      />
+      {/* Ban user dialog */}
+      <DialogComponent
+        title={"Alert"}
+        content="Banning this user will delete all their data and prevent them from joining the team again."
+        visible={banDialogVisible}
+        onHide={hideBanDialog}
+        buttons={["Cancel", "Ban User"]}
+        buttonsFunctions={[
+          hideBanDialog,
+          async () => {
+            try {
+              await blacklistUser(userId, userInfo);
+              await queryClient.removeQueries(["userInfo", userId]);
+              invalidateMultipleKeys(queryClient, [
+                ["userInfo"],
+                ["best_attempts"],
+              ]); //invalidate cache
+              navigation.goBack();
+            } catch (e) {
+              console.log("Error banning user:", e);
+              showDialog("Error", getErrorString(e));
+            }
+          },
+        ]}
+      />
+    </SafeAreaView>
   );
 }
 

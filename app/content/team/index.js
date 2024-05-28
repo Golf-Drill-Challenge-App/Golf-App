@@ -15,7 +15,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   ActivityIndicator,
@@ -35,9 +34,9 @@ import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
+import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
@@ -46,7 +45,7 @@ import { useTeamInfo } from "~/hooks/useTeamInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = useAuthContext();
 
   const {
     data: userInfo,
@@ -74,19 +73,9 @@ function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [menuVisible, setMenuVisible] = useState(false);
 
-  const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
   const [imageUploading, setImageUploading] = useState(false);
 
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
+  const { showDialog, showSnackBar } = useAlertContext();
 
   const onChangeSearch = (query) => setSearchQuery(query);
 
@@ -157,8 +146,7 @@ function Index() {
       });
       invalidateMultipleKeys(queryClient, [["teamInfo"]]);
       bottomSheetModalRef.current.close();
-      setSnackbarMessage("Name field updated successfully");
-      setSnackbarVisible(true); // Show success snackbar
+      showSnackBar("Name field updated successfully");
     }
   };
 
@@ -223,300 +211,278 @@ function Index() {
   });
 
   return (
-    <PaperWrapper>
-      <GestureHandlerRootView>
-        <BottomSheetModalProvider>
-          {/* Generic Error dialog */}
-          <DialogComponent
-            title={dialogTitle}
-            content={dialogMessage}
-            visible={dialogVisible}
-            onHide={() => setDialogVisible(false)}
-          />
-          {/* Snackbar Error Dialog */}
-          <DialogComponent
-            type={"snackbar"}
-            visible={snackbarVisible}
-            content={snackbarMessage}
-            onHide={() => setSnackbarVisible(false)}
-          />
-          <DialogComponent
-            title={"Alert"}
-            content="Resetting the season will wipe all leaderboards"
-            visible={resetDialogVisible}
-            onHide={hideResetDialog}
-            buttons={["Cancel", "Reset Season"]}
-            buttonsFunctions={[
-              hideResetDialog,
-              async () => {
-                try {
-                  await resetLeaderboards();
-                  invalidateMultipleKeys(queryClient, [["best_attempts"]]);
-                  hideResetDialog();
-                } catch (e) {
-                  console.log("Error resetting season:", e);
-                  showDialog("Error", getErrorString(e));
-                }
-              },
-            ]}
-          />
-          <SafeAreaView
-            // flex: without this the scrollview automatically scrolls back up when finger no longer held down
-            style={{ flex: 1 }}
-            forceInset={{ top: "always" }}
-            // edges: to remove bottom padding above tabbar. Maybe move this (and PaperProvider) into app/_layout.js?
-            edges={["right", "top", "left"]}
-          >
-            <TouchableWithoutFeedback
-              // dismiss keyboard after tapping outside of search bar input
-              onPress={Keyboard.dismiss}
-              accessible={false}
-            >
-              <>
-                <Header
-                  title={"Team"}
-                  postChildren={
-                    currentUserInfo.role === "owner" ? (
-                      <Menu
-                        visible={menuVisible}
-                        onDismiss={() => {
-                          setMenuVisible(false);
+    <BottomSheetModalProvider>
+      <DialogComponent
+        title={"Alert"}
+        content="Resetting the season will wipe all leaderboards"
+        visible={resetDialogVisible}
+        onHide={hideResetDialog}
+        buttons={["Cancel", "Reset Season"]}
+        buttonsFunctions={[
+          hideResetDialog,
+          async () => {
+            try {
+              await resetLeaderboards();
+              invalidateMultipleKeys(queryClient, [["best_attempts"]]);
+              hideResetDialog();
+            } catch (e) {
+              console.log("Error resetting season:", e);
+              showDialog("Error", getErrorString(e));
+            }
+          },
+        ]}
+      />
+      <SafeAreaView
+        // flex: without this the scrollview automatically scrolls back up when finger no longer held down
+        style={{ flex: 1 }}
+        forceInset={{ top: "always" }}
+        // edges: to remove bottom padding above tabbar. Maybe move this (and PaperProvider) into app/_layout.js?
+        edges={["right", "top", "left"]}
+      >
+        <TouchableWithoutFeedback
+          // dismiss keyboard after tapping outside of search bar input
+          onPress={Keyboard.dismiss}
+          accessible={false}
+        >
+          <>
+            <Header
+              title={"Team"}
+              postChildren={
+                currentUserInfo.role === "owner" ? (
+                  <Menu
+                    visible={menuVisible}
+                    onDismiss={() => {
+                      setMenuVisible(false);
+                    }}
+                    anchor={
+                      <Appbar.Action
+                        icon="dots-horizontal-circle-outline"
+                        onPress={() => {
+                          setMenuVisible(true);
                         }}
-                        anchor={
-                          <Appbar.Action
-                            icon="dots-horizontal-circle-outline"
-                            onPress={() => {
-                              setMenuVisible(true);
-                            }}
-                            color={themeColors.accent}
-                          />
-                        }
-                        statusBarHeight={45}
-                        anchorPosition="bottom"
-                        contentStyle={{
-                          backgroundColor: themeColors.background,
-                        }}
-                      >
-                        <Menu.Item
-                          leadingIcon="pencil-outline"
-                          onPress={() => {
-                            bottomSheetModalRef.current?.present();
-                            setMenuVisible(false);
-                          }}
-                          title="Edit Team"
-                        />
-                        <Menu.Item
-                          leadingIcon="restart"
-                          onPress={() => {
-                            console.log("Reset Season Pressed!");
-                            setMenuVisible(false);
-                            setResetDialogVisible(true);
-                          }}
-                          title="Reset Season"
-                        />
-                      </Menu>
-                    ) : (
-                      <></>
-                    )
-                  }
-                />
-                <BottomSheetWrapper
-                  ref={bottomSheetModalRef}
-                  closeFn={() => {
-                    resetForm();
-                  }}
-                >
-                  <BottomSheetScrollView
-                    contentContainerStyle={styles.modalContent}
-                    keyboardDismissMode="interactive"
-                    keyboardShouldPersistTaps="handled"
-                  >
-                    {/* Team Picture */}
-                    <TouchableOpacity
-                      onPress={async () => {
-                        await handleImageUpload(
-                          setImageUploading,
-                          setSnackbarMessage,
-                          currentTeamId,
-                          teamRef,
-                        );
-                        invalidateMultipleKeys(queryClient, [["teamInfo"]]);
-                      }}
-                    >
-                      <View>
-                        {imageUploading ? (
-                          <ActivityIndicator
-                            animating={imageUploading}
-                            size="large"
-                            color={themeColors.accent}
-                            style={styles.activityIndicator}
-                          />
-                        ) : (
-                          <ProfilePicture
-                            userInfo={currentTeamData}
-                            style={[styles.profilePicture]}
-                          />
-                        )}
-
-                        <View style={styles.penIconContainer}>
-                          <MaterialIcons name="edit" size={24} color="black" />
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "baseline",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          marginTop: 0,
-                          fontSize: 30,
-                          marginRight: 0,
-                          textAlign: "center",
-                        }}
-                      >
-                        {currentTeamData.name}
-                      </Text>
-                    </View>
-                    <View
-                      style={{ width: "80%", marginBottom: 10, marginTop: 20 }}
-                    >
-                      <Text style={{ fontSize: 16 }}>Update the team name</Text>
-                    </View>
-
-                    {/* Name Update input field */}
-                    <BottomSheetTextInput
-                      style={styles.input}
-                      value={newName}
-                      onChangeText={(text) => setNewName(text)}
-                      placeholder="Update team name"
-                    />
-
-                    {/* Save Button */}
-                    <TouchableOpacity
-                      style={styles.saveChangesButton}
-                      onPress={handleUpdate}
-                    >
-                      <Text style={styles.saveChangesButtonText}>Update</Text>
-                    </TouchableOpacity>
-                  </BottomSheetScrollView>
-                </BottomSheetWrapper>
-                <KeyboardAwareScrollView
-                  // allows opening links from search results without closing keyboard first
-                  keyboardShouldPersistTaps="handled"
-                  showsVerticalScrollIndicator={false}
-                  stickyHeaderIndices={[3]}
-                  refreshControl={
-                    <RefreshInvalidate invalidateKeys={invalidateKeys} />
-                  }
-                >
-                  <View style={{ alignItems: "center" }}>
-                    <ProfilePicture
-                      userInfo={currentTeamData}
-                      style={styles.profilePicture}
-                    />
-                  </View>
-                  <View style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "baseline",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          marginTop: 0,
-                          fontSize: 30,
-                          marginRight: 0,
-                          textAlign: "center",
-                        }}
-                      >
-                        {currentTeamData.name}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <Text style={{ textAlign: "center", marginBottom: 20 }}>
-                    {Object.keys(userInfo).length} members
-                  </Text>
-                  <View
-                    style={{
+                        color={themeColors.accent}
+                      />
+                    }
+                    statusBarHeight={45}
+                    anchorPosition="bottom"
+                    contentStyle={{
                       backgroundColor: themeColors.background,
-                      paddingBottom: 10,
-                      paddingTop: 10,
                     }}
                   >
-                    <Searchbar
-                      onChangeText={onChangeSearch}
-                      value={searchQuery}
-                      style={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                        backgroundColor: themeColors.highlight,
-                        borderWidth: 1,
-                        borderColor: themeColors.border,
+                    <Menu.Item
+                      leadingIcon="pencil-outline"
+                      onPress={() => {
+                        bottomSheetModalRef.current?.present();
+                        setMenuVisible(false);
                       }}
-                      placeholder="Search team members"
-                      selectionColor={themeColors.accent}
-                      cursorColor={themeColors.accent}
+                      title="Edit Team"
                     />
-                  </View>
+                    <Menu.Item
+                      leadingIcon="restart"
+                      onPress={() => {
+                        console.log("Reset Season Pressed!");
+                        setMenuVisible(false);
+                        setResetDialogVisible(true);
+                      }}
+                      title="Reset Season"
+                    />
+                  </Menu>
+                ) : (
+                  <></>
+                )
+              }
+            />
+            <BottomSheetWrapper
+              ref={bottomSheetModalRef}
+              closeFn={() => {
+                resetForm();
+              }}
+            >
+              <BottomSheetScrollView
+                contentContainerStyle={styles.modalContent}
+                keyboardDismissMode="interactive"
+                keyboardShouldPersistTaps="handled"
+              >
+                {/* Team Picture */}
+                <TouchableOpacity
+                  onPress={async () => {
+                    await handleImageUpload(
+                      setImageUploading,
+                      showSnackBar,
+                      currentTeamId,
+                      teamRef,
+                    );
+                    invalidateMultipleKeys(queryClient, [["teamInfo"]]);
+                  }}
+                >
+                  <View>
+                    {imageUploading ? (
+                      <ActivityIndicator
+                        animating={imageUploading}
+                        size="large"
+                        color={themeColors.accent}
+                        style={styles.activityIndicator}
+                      />
+                    ) : (
+                      <ProfilePicture
+                        userInfo={currentTeamData}
+                        style={[styles.profilePicture]}
+                      />
+                    )}
 
-                  <List.Section
-                    style={{ backgroundColor: themeColors.background }}
+                    <View style={styles.penIconContainer}>
+                      <MaterialIcons name="edit" size={24} color="black" />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <Text
+                    style={{
+                      marginTop: 0,
+                      fontSize: 30,
+                      marginRight: 0,
+                      textAlign: "center",
+                    }}
                   >
-                    {foundUsers.map((user) => {
-                      const userId = user["uid"];
-                      return (
-                        <List.Item
-                          key={userId}
-                          title={user.name}
+                    {currentTeamData.name}
+                  </Text>
+                </View>
+                <View style={{ width: "80%", marginBottom: 10, marginTop: 20 }}>
+                  <Text style={{ fontSize: 16 }}>Update the team name</Text>
+                </View>
+
+                {/* Name Update input field */}
+                <BottomSheetTextInput
+                  style={styles.input}
+                  value={newName}
+                  onChangeText={(text) => setNewName(text)}
+                  placeholder="Update team name"
+                />
+
+                {/* Save Button */}
+                <TouchableOpacity
+                  style={styles.saveChangesButton}
+                  onPress={handleUpdate}
+                >
+                  <Text style={styles.saveChangesButtonText}>Update</Text>
+                </TouchableOpacity>
+              </BottomSheetScrollView>
+            </BottomSheetWrapper>
+            <KeyboardAwareScrollView
+              // allows opening links from search results without closing keyboard first
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              stickyHeaderIndices={[3]}
+              refreshControl={
+                <RefreshInvalidate invalidateKeys={invalidateKeys} />
+              }
+            >
+              <View style={{ alignItems: "center" }}>
+                <ProfilePicture
+                  userInfo={currentTeamData}
+                  style={styles.profilePicture}
+                />
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "baseline",
+                  }}
+                >
+                  <Text
+                    style={{
+                      marginTop: 0,
+                      fontSize: 30,
+                      marginRight: 0,
+                      textAlign: "center",
+                    }}
+                  >
+                    {currentTeamData.name}
+                  </Text>
+                </View>
+              </View>
+
+              <Text style={{ textAlign: "center", marginBottom: 20 }}>
+                {Object.keys(userInfo).length} members
+              </Text>
+              <View
+                style={{
+                  backgroundColor: themeColors.background,
+                  paddingBottom: 10,
+                  paddingTop: 10,
+                }}
+              >
+                <Searchbar
+                  onChangeText={onChangeSearch}
+                  value={searchQuery}
+                  style={{
+                    marginLeft: 20,
+                    marginRight: 20,
+                    backgroundColor: themeColors.highlight,
+                    borderWidth: 1,
+                    borderColor: themeColors.border,
+                  }}
+                  placeholder="Search team members"
+                  selectionColor={themeColors.accent}
+                  cursorColor={themeColors.accent}
+                />
+              </View>
+
+              <List.Section style={{ backgroundColor: themeColors.background }}>
+                {foundUsers.map((user) => {
+                  const userId = user["uid"];
+                  return (
+                    <List.Item
+                      key={userId}
+                      title={user.name}
+                      style={{
+                        paddingLeft: 20,
+                      }}
+                      left={() => (
+                        <ProfilePicture
+                          userInfo={user}
                           style={{
-                            paddingLeft: 20,
+                            width: 24,
+                            height: 24,
+                            borderRadius: 12,
                           }}
-                          left={() => (
-                            <ProfilePicture
-                              userInfo={user}
-                              style={{
-                                width: 24,
-                                height: 24,
-                                borderRadius: 12,
-                              }}
-                            />
-                          )}
-                          right={() => (
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  color: roleColor(user),
-                                }}
-                              >
-                                {userId === currentUserId ? "Me!" : user.role}
-                              </Text>
-                              <Icon source="chevron-right" />
-                            </View>
-                          )}
-                          onPress={() =>
-                            router.push(`content/team/users/${userId}`)
-                          }
                         />
-                      );
-                    })}
-                  </List.Section>
-                </KeyboardAwareScrollView>
-              </>
-            </TouchableWithoutFeedback>
-          </SafeAreaView>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    </PaperWrapper>
+                      )}
+                      right={() => (
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: roleColor(user),
+                            }}
+                          >
+                            {userId === currentUserId ? "Me!" : user.role}
+                          </Text>
+                          <Icon source="chevron-right" />
+                        </View>
+                      )}
+                      onPress={() =>
+                        router.push(`content/team/users/${userId}`)
+                      }
+                    />
+                  );
+                })}
+              </List.Section>
+            </KeyboardAwareScrollView>
+          </>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    </BottomSheetModalProvider>
   );
 }
 

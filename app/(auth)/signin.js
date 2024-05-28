@@ -20,9 +20,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
-import DialogComponent from "~/components/dialog";
-import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
@@ -31,19 +30,11 @@ const INPUT_WIDTH = 200;
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setCurrentUserId } = currentAuthContext();
+  const { setCurrentUserId } = useAuthContext();
 
   const { height } = useWindowDimensions();
 
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
+  const { showDialog } = useAlertContext();
 
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
@@ -127,67 +118,59 @@ export default function SignIn() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <PaperWrapper>
-        <KeyboardAwareScrollView
-          // allows opening links from search results without closing keyboard first
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.container}>
-            <DialogComponent
-              title={dialogTitle}
-              content={dialogMessage}
-              visible={dialogVisible}
-              onHide={() => setDialogVisible(false)}
+      <KeyboardAwareScrollView
+        // allows opening links from search results without closing keyboard first
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <ProfilePicture
+            style={{ width: 131, height: 75, marginTop: 0 }}
+            userInfo={{
+              pfp: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+            }}
+          />
+          <Text style={styles.title}>Oregon State Golf</Text>
+          <View style={styles.inputView}>
+            <Text style={styles.placeholderText}>Email</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect={false}
+              onChangeText={setEmail}
+              style={styles.input}
             />
-            <ProfilePicture
-              style={{ width: 131, height: 75, marginTop: 0 }}
-              userInfo={{
-                pfp: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-              }}
+            <Text style={styles.placeholderText}>Password</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="current-password"
+              autoCorrect={false}
+              secureTextEntry={true}
+              onChangeText={setPassword}
+              style={styles.input}
             />
-            <Text style={styles.title}>Oregon State Golf</Text>
-            <View style={styles.inputView}>
-              <Text style={styles.placeholderText}>Email</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                onChangeText={setEmail}
-                style={styles.input}
-              />
-              <Text style={styles.placeholderText}>Password</Text>
-              <TextInput
-                autoCapitalize="none"
-                autoComplete="current-password"
-                autoCorrect={false}
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                style={styles.input}
-              />
-              <Pressable style={styles.button} onPress={handleForgotPassword}>
-                <Text style={styles.forgotPassword}>Forgot your password?</Text>
-              </Pressable>
+            <Pressable style={styles.button} onPress={handleForgotPassword}>
+              <Text style={styles.forgotPassword}>Forgot your password?</Text>
+            </Pressable>
 
-              <Pressable
-                style={styles.button}
-                onPress={handleSignIn}
-                backgroundColor={themeColors.accent}
-              >
-                <Text style={styles.buttonText}>Login</Text>
-              </Pressable>
-              <Pressable
-                style={styles.button}
-                backgroundColor={themeColors.accent}
-              >
-                <Link asChild href={"/signup"}>
-                  <Text style={styles.buttonText}>Sign Up</Text>
-                </Link>
-              </Pressable>
-            </View>
+            <Pressable
+              style={styles.button}
+              onPress={handleSignIn}
+              backgroundColor={themeColors.accent}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </Pressable>
+            <Pressable
+              style={styles.button}
+              backgroundColor={themeColors.accent}
+            >
+              <Link asChild href={"/signup"}>
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </Link>
+            </Pressable>
           </View>
-        </KeyboardAwareScrollView>
-      </PaperWrapper>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }

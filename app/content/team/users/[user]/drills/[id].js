@@ -6,7 +6,6 @@ import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
@@ -39,26 +38,24 @@ export default function Stat() {
   }
 
   return (
-    <PaperWrapper>
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Header
-          title={"Statistics"}
-          preChildren={
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={themeColors.accent}
-            />
-          }
-        />
+    <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+      <Header
+        title={"Statistics"}
+        preChildren={
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={themeColors.accent}
+          />
+        }
+      />
 
-        <BarChartScreen
-          drillAttempts={drillAttempts}
-          drillInfo={drillInfo}
-          invalidateKeys={invalidateKeys}
-        />
-      </SafeAreaView>
-    </PaperWrapper>
+      <BarChartScreen
+        drillAttempts={drillAttempts}
+        drillInfo={drillInfo}
+        invalidateKeys={invalidateKeys}
+      />
+    </SafeAreaView>
   );
 }
