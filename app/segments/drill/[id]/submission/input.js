@@ -69,8 +69,8 @@ async function completeAssigned(userId, assignedTime, drillId, attemptId) {
     try {
       await updateDoc(userRef, { assigned_data: updatedAssignedData });
       console.log("Assignment Document updated successfully!");
-    } catch (error) {
-      console.error("Error updating assignment document:", error);
+    } catch (e) {
+      console.log("Error updating assignment document:", e);
     }
   } else {
     console.log("No such assignment document!");
@@ -331,8 +331,8 @@ async function uploadNewRecord(
     await setDoc(recordRef, newDocData);
     console.log("== New Record has been uploaded!");
   } catch (e) {
-    alert(e);
     console.log(e);
+    showDialog("Error", getErrorString(e));
   }
 }
 
@@ -975,6 +975,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   onHide={() => setSnackbarVisible(false)}
                 />
 
+                {/* Generic Error Dialog */}
                 <DialogComponent
                   title={dialogTitle}
                   content={dialogMessage}

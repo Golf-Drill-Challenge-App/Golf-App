@@ -6,6 +6,7 @@ import { FlatList, View } from "react-native";
 import { Appbar, Divider, Menu, SegmentedButtons } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
 import AssignmentsList from "~/components/assignmentList";
 import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
@@ -27,23 +28,29 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 //A function to add a user to the blacklist table with a timestamp
 async function blacklistUser(userId, userInfo) {
   //Create new document with userId as the id and a time field
-  await setDoc(doc(db, "teams", "1", "blacklist", userId), {
-    time: Date.now(),
-    name: userInfo["name"],
-  });
 
-  //remove users data
-  await removeUser(userId);
+  try {
+    await setDoc(doc(db, "teams", "1", "blacklist", userId), {
+      time: Date.now(),
+      name: userInfo["name"],
+    });
+    //remove users data
+    await removeUser(userId);
+    console.log("User Removed successfully!");
+  } catch (e) {
+    console.log("Error removing user:", e);
+    throw e; // Rethrow the error to handle it at the caller's level if needed
+  }
 }
 
 async function changeRole(userId, newRole) {
   const userRef = doc(db, "teams", "1", "users", userId);
-
   try {
     await updateDoc(userRef, { role: newRole });
-    console.log("Document updated successfully!");
-  } catch (error) {
-    console.error("Error updating document:", error);
+    console.log("User Role Changed successfully!");
+  } catch (e) {
+    console.log("Error changing user role:", e);
+    throw e; // Rethrow the error to handle it at the caller's level if needed
   }
 }
 
@@ -60,6 +67,16 @@ function Index() {
 
   const [banDialogVisible, setBanDialogVisible] = useState(false);
   const hideBanDialog = () => setBanDialogVisible(false);
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
 
   const { currentUserId } = currentAuthContext();
 
@@ -234,9 +251,19 @@ function Index() {
                   }
                   onPress={async () => {
                     if (userInfo.role === "player") {
-                      await changeRole(userId, "coach");
+                      try {
+                        await changeRole(userId, "coach");
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
                     } else {
-                      await changeRole(userId, "player");
+                      try {
+                        await changeRole(userId, "player");
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
                     }
                     invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
                     setMenuVisible(false);
@@ -277,6 +304,13 @@ function Index() {
           ]}
           renderItem={({ item }) => item}
         />
+        {/* Generic Error dialog */}
+        <DialogComponent
+          title={dialogTitle}
+          content={dialogMessage}
+          visible={dialogVisible}
+          onHide={() => setDialogVisible(false)}
+        />
         {/* Remove user dialog */}
         <DialogComponent
           title={"Alert"}
@@ -295,8 +329,9 @@ function Index() {
                   ["best_attempts"],
                 ]);
                 navigation.goBack();
-              } catch {
-                console.error("Error removing user:", e);
+              } catch (e) {
+                console.log("Error removing user:", e);
+                showDialog("Error", getErrorString(e));
               }
             },
           ]}
@@ -311,13 +346,18 @@ function Index() {
           buttonsFunctions={[
             hideBanDialog,
             async () => {
-              await blacklistUser(userId, userInfo);
-              await queryClient.removeQueries(["userInfo", userId]);
-              invalidateMultipleKeys(queryClient, [
-                ["userInfo"],
-                ["best_attempts"],
-              ]); //invalidate cache
-              navigation.goBack();
+              try {
+                await blacklistUser(userId, userInfo);
+                await queryClient.removeQueries(["userInfo", userId]);
+                invalidateMultipleKeys(queryClient, [
+                  ["userInfo"],
+                  ["best_attempts"],
+                ]); //invalidate cache
+                navigation.goBack();
+              } catch (e) {
+                console.log("Error banning user:", e);
+                showDialog("Error", getErrorString(e));
+              }
             },
           ]}
         />

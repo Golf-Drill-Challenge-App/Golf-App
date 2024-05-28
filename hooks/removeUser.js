@@ -50,7 +50,8 @@ async function removeUser(userId) {
       console.log(" Remove User Transaction has completed");
     });
   } catch (e) {
-    console.error("Remove User Transaction failed: ", e);
+    console.log("Remove User Transaction failed: ", e);
+    throw e; // Rethrow the error to handle it at the caller's level if needed
   }
 }
 

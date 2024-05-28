@@ -99,7 +99,7 @@ export default function Index() {
               ...assignedData,
             ];
           } else {
-            console.log("No such document!");
+            console.log("No such Assigned Data document!");
           }
         }
         selectedUsers.forEach((userId) => {

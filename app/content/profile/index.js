@@ -304,6 +304,7 @@ function Index() {
       <View style={{ height: height, width: width }}>
         <GestureHandlerRootView>
           <BottomSheetModalProvider>
+            {/* Snackbar Error Dialog */}
             <DialogComponent
               type={"snackbar"}
               visible={snackbarVisible}
@@ -311,6 +312,7 @@ function Index() {
               onHide={() => setSnackbarVisible(false)}
             />
 
+            {/* Generic Error dialog */}
             <DialogComponent
               title={dialogTitle}
               content={dialogMessage}
