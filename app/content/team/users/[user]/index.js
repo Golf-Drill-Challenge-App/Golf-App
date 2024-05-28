@@ -72,10 +72,18 @@ function Index() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
 
+  const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
+
   const showDialog = (title, message) => {
     setDialogTitle(title);
     setDialogMessage(message);
     setDialogVisible(true);
+  };
+
+  const showSnackBar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
   };
 
   const { currentUserId } = currentAuthContext();
@@ -266,6 +274,7 @@ function Index() {
                       }
                     }
                     invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
+                    showSnackBar("User role changed successfully!");
                     setMenuVisible(false);
                   }}
                   title={userInfo.role === "player" ? "Promote" : "Demote"}
@@ -310,6 +319,14 @@ function Index() {
           content={dialogMessage}
           visible={dialogVisible}
           onHide={() => setDialogVisible(false)}
+        />
+
+        {/* Snackbar Error Dialog */}
+        <DialogComponent
+          type={"snackbar"}
+          visible={snackbarVisible}
+          content={snackbarMessage}
+          onHide={() => setSnackbarVisible(false)}
         />
         {/* Remove user dialog */}
         <DialogComponent
