@@ -336,15 +336,20 @@ function Index() {
                     {/* Team Picture */}
                     <TouchableOpacity
                       onPress={async () => {
-                        await handleImageUpload(
-                          setImageUploading,
-                          setSnackbarMessage,
-                          currentTeamId,
-                          teamRef,
-                        );
-                        await invalidateMultipleKeys(queryClient, [
-                          ["teamInfo"],
-                        ]);
+                        try {
+                          await handleImageUpload(
+                            setImageUploading,
+                            setSnackbarMessage,
+                            currentTeamId,
+                            teamRef,
+                          );
+                          await invalidateMultipleKeys(queryClient, [
+                            ["teamInfo"],
+                          ]);
+                        } catch (e) {
+                          console.log("Error updating team picture:", e);
+                          showDialog("Error", getErrorString(e));
+                        }
                       }}
                     >
                       <View>
@@ -401,7 +406,14 @@ function Index() {
                     {/* Save Button */}
                     <TouchableOpacity
                       style={styles.saveChangesButton}
-                      onPress={handleUpdate}
+                      onPress={async () => {
+                        try {
+                          await handleUpdate();
+                        } catch (e) {
+                          console.log("Error updating team name:", e);
+                          showDialog("Error", getErrorString(e));
+                        }
+                      }}
                     >
                       <Text style={styles.saveChangesButtonText}>Update</Text>
                     </TouchableOpacity>

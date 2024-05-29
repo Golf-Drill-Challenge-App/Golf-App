@@ -347,13 +347,20 @@ function Index() {
                   {/* Profile Picture */}
                   <TouchableOpacity
                     onPress={async () => {
-                      await handleImageUpload(
-                        setImageUploading,
-                        setSnackbarMessage,
-                        userId,
-                        userRef,
-                      );
-                      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                      try {
+                        await handleImageUpload(
+                          setImageUploading,
+                          setSnackbarMessage,
+                          userId,
+                          userRef,
+                        );
+                        await invalidateMultipleKeys(queryClient, [
+                          ["userInfo"],
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
                     }}
                   >
                     <View style={styles.profilePictureContainer}>
