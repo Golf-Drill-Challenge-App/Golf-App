@@ -5,11 +5,11 @@
 {
   "plugins": [
     // Also added "eslint-plugin-react" to package.json just in case it helps in the future, but for now we are not using it
-    "eslint-plugin-react-hooks"
+    "react-hooks"
   ],
   "rules": {
     // Your custom rules
-    "eslint-plugin-react-hooks/rules-of-hooks": "error"
+    "react-hooks/rules-of-hooks": "error"
     // "react-hooks/exhaustive-deps": "warn"
   },
   "parserOptions": {

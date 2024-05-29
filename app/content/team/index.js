@@ -155,7 +155,7 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId), {
         name: newName,
       });
-      invalidateMultipleKeys(queryClient, [["teamInfo"]]);
+      await invalidateMultipleKeys(queryClient, [["teamInfo"]]);
       bottomSheetModalRef.current.close();
       setSnackbarMessage("Name field updated successfully");
       setSnackbarVisible(true); // Show success snackbar
@@ -251,7 +251,9 @@ function Index() {
               async () => {
                 try {
                   await resetLeaderboards();
-                  invalidateMultipleKeys(queryClient, [["best_attempts"]]);
+                  await invalidateMultipleKeys(queryClient, [
+                    ["best_attempts"],
+                  ]);
                   hideResetDialog();
                 } catch (e) {
                   console.log("Error resetting season:", e);
@@ -340,7 +342,9 @@ function Index() {
                           currentTeamId,
                           teamRef,
                         );
-                        invalidateMultipleKeys(queryClient, [["teamInfo"]]);
+                        await invalidateMultipleKeys(queryClient, [
+                          ["teamInfo"],
+                        ]);
                       }}
                     >
                       <View>

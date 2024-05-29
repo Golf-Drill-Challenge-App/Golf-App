@@ -19,71 +19,76 @@ Any mentions of "active Query Key" below, such as in input arguments of checkLis
 query.queryKey
 */
 
-export const invalidateMultipleKeys = (queryClient, invalidateKeys) => {
-  console.log("invalidateKeys requested: ", invalidateKeys);
-  console.log("These query keys (cache) were successfully invalidated:");
-  const alreadyInvalidated = [];
-  queryClient.invalidateQueries({
-    predicate: (query) => {
-      for (let i = 0; i < invalidateKeys.length; i++) {
-        // If the first query key argument (e.g. "userInfo") does not match up between invalidateKeys[i] and query.queryKey,
-        // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
-        if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {
-          function checkLists(invalidateKey, activeQueryKey) {
-            for (let invalidateKeyArg of invalidateKey) {
-              if (typeof invalidateKeyArg === "string") {
-                // If arg of invalidateKeys[i] is a string, check if it also exists (as a string) in query.queryKey
-                if (!activeQueryKey.includes(invalidateKeyArg)) {
-                  return false;
-                }
-              } else if (typeof invalidateKeyArg === "object") {
-                // If arg of invalidateKeys[i] is an object, check if it exists as a subset of another (object) arg in
-                // query.queryKey
-                let found = false;
-                for (let activeQueryKeyArg of activeQueryKey) {
-                  if (isObjectSubset(invalidateKeyArg, activeQueryKeyArg)) {
-                    found = true;
-                    break;
+export const invalidateMultipleKeys = async (queryClient, invalidateKeys) => {
+  try {
+    console.log("invalidateKeys requested: ", invalidateKeys);
+    console.log("These query keys (cache) were successfully invalidated:");
+    const alreadyInvalidated = [];
+    queryClient.invalidateQueries({
+      predicate: (query) => {
+        for (let i = 0; i < invalidateKeys.length; i++) {
+          // If the first query key argument (e.g. "userInfo") does not match up between invalidateKeys[i] and query.queryKey,
+          // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
+          if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {
+            function checkLists(invalidateKey, activeQueryKey) {
+              for (let invalidateKeyArg of invalidateKey) {
+                if (typeof invalidateKeyArg === "string") {
+                  // If arg of invalidateKeys[i] is a string, check if it also exists (as a string) in query.queryKey
+                  if (!activeQueryKey.includes(invalidateKeyArg)) {
+                    return false;
+                  }
+                } else if (typeof invalidateKeyArg === "object") {
+                  // If arg of invalidateKeys[i] is an object, check if it exists as a subset of another (object) arg in
+                  // query.queryKey
+                  let found = false;
+                  for (let activeQueryKeyArg of activeQueryKey) {
+                    if (isObjectSubset(invalidateKeyArg, activeQueryKeyArg)) {
+                      found = true;
+                      break;
+                    }
+                  }
+                  if (!found) {
+                    return false;
                   }
                 }
-                if (!found) {
+              }
+              return true;
+            }
+
+            function isObjectSubset(subset, superset) {
+              // Check if superset is an object
+              if (typeof superset !== "object" || superset === null) {
+                return false;
+              }
+
+              // Check if each key-value pair in the subset exists in the superset
+              for (let key in subset) {
+                if (!(key in superset && superset[key] === subset[key])) {
                   return false;
                 }
               }
+              return true;
             }
-            return true;
-          }
-
-          function isObjectSubset(subset, superset) {
-            // Check if superset is an object
-            if (typeof superset !== "object" || superset === null) {
-              return false;
-            }
-
-            // Check if each key-value pair in the subset exists in the superset
-            for (let key in subset) {
-              if (!(key in superset && superset[key] === subset[key])) {
-                return false;
-              }
-            }
-            return true;
-          }
-          // Uncomment the 3 logs below for more comprehensive debug
-          /*
+            // Uncomment the 3 logs below for more comprehensive debug
+            /*
           console.log(invalidateKeys[i]);
           console.log(query.queryKey);
           console.log(checkLists(invalidateKeys[i], query.queryKey));
           */
-          if (
-            checkLists(invalidateKeys[i], query.queryKey) &&
-            !alreadyInvalidated.includes(query.queryKey)
-          ) {
-            alreadyInvalidated.push(query.queryKey);
-            console.log(query.queryKey);
+            if (
+              checkLists(invalidateKeys[i], query.queryKey) &&
+              !alreadyInvalidated.includes(query.queryKey)
+            ) {
+              alreadyInvalidated.push(query.queryKey);
+              console.log(query.queryKey);
+            }
+            return checkLists(invalidateKeys[i], query.queryKey);
           }
-          return checkLists(invalidateKeys[i], query.queryKey);
         }
-      }
-    },
-  });
+      },
+    });
+  } catch (e) {
+    console.log("Error in invalidateMultipleKeys: ", e);
+    throw e; // Rethrow the error to handle it at the caller's level if needed
+  }
 };

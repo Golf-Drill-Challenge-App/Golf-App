@@ -201,7 +201,7 @@ function Index() {
         });
 
         // invalidate cache on successful name update
-        invalidateMultipleKeys(queryClient, [["userInfo"]]);
+        await invalidateMultipleKeys(queryClient, [["userInfo"]]);
         bottomSheetModalRef.current.close();
         showSnackBar("Name field updated successfully");
       }
@@ -353,7 +353,7 @@ function Index() {
                         userId,
                         userRef,
                       );
-                      invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
                     }}
                   >
                     <View style={styles.profilePictureContainer}>
