@@ -5,14 +5,7 @@ import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  ActivityIndicator,
-  Appbar,
-  Button,
-  List,
-  Portal,
-  Text,
-} from "react-native-paper";
+import { Appbar, Button, List, Portal, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
@@ -35,8 +28,6 @@ export default function Index() {
 
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
-
-  const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -74,13 +65,13 @@ export default function Index() {
   };
 
   const handleAssign = async () => {
-    setLoading(true);
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
     const time = new Date().getTime();
 
     try {
+      navigation.pop(3);
       await runTransaction(db, async (transaction) => {
         const updatedAssignedData = {};
 
@@ -110,31 +101,11 @@ export default function Index() {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
       showDialog("Error", getErrorString(e));
     }
-
-    setLoading(false);
-    navigation.pop(3);
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-      <Portal>
-        {loading && (
-          <View
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <ActivityIndicator
-              animating={true}
-              size="large"
-              color={themeColors.accent}
-            />
-          </View>
-        )}
-      </Portal>
+      <Portal></Portal>
       <Header
         title="Assign Drill"
         preChildren={
