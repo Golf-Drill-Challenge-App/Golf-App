@@ -5,7 +5,7 @@ import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Appbar, Button, List, Portal, Text } from "react-native-paper";
+import { Appbar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";

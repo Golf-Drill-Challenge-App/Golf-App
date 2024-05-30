@@ -320,9 +320,7 @@ function Index() {
                       userId,
                       userRef,
                     );
-                    await invalidateMultipleKeys(queryClient, [
-                      ["userInfo"],
-                    ]);
+                    await invalidateMultipleKeys(queryClient, [["userInfo"]]);
                   } catch (e) {
                     console.log(e);
                     showDialog("Error", getErrorString(e));
