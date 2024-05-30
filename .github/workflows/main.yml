@@ -18,5 +18,9 @@ jobs:
         #run eslint
       - name: Install eslint
         run: yarn add eslint --dev
+          yarn add eslint-config-prettier --dev
+          yarn add eslint-plugin-prettier --dev
+          yarn add eslint-plugin-react --dev
+          yarn add eslint-plugin-react-hooks --dev
       - name: Check code formatting
         run: yarn eslint .

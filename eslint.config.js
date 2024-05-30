@@ -1,6 +1,7 @@
 const reactNativeConfig = require("@react-native/eslint-config");
 const babelParser = require("@babel/eslint-parser");
 const reactHooksPlugin = require("eslint-plugin-react-hooks");
+const eslintConfigPrettier = require("eslint-config-prettier");
 
 module.exports = [
   {
@@ -21,6 +22,7 @@ module.exports = [
     plugins: {
       "react-hooks": reactHooksPlugin,
       reactNativeConfig,
+      eslintConfigPrettier,
     },
     rules: {
       "prefer-const": "error",
