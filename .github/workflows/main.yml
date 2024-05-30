@@ -15,3 +15,8 @@ jobs:
         run: yarn add prettier --dev
       - name: Check code formatting
         run: yarn pretty:check
+        #run eslint
+      - name: Install eslint
+        run: yarn add eslint --dev
+      - name: Check code formatting
+        run: yarn eslint .
