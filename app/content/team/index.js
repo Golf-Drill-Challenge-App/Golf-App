@@ -202,12 +202,6 @@ function Index() {
       fontWeight: "bold",
       alignSelf: "center",
     },
-    activityIndicator: {
-      alignSelf: "center",
-      width: "100%",
-      height: "100%",
-      borderRadius: 60,
-    },
   });
 
   return (
@@ -326,7 +320,7 @@ function Index() {
                         animating={imageUploading}
                         size="large"
                         color={themeColors.accent}
-                        style={styles.activityIndicator}
+                        style={styles.profilePicture}
                       />
                     ) : (
                       <ProfilePicture
