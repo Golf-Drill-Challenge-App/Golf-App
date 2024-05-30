@@ -9,8 +9,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "pretty": "prettier --write .",
-    "pretty:check": "prettier --check .",
+    "pretty": "prettier --write . && eslint . --fix",
+    "pretty:check": "prettier --check . && eslint .",
     "lint": "eslint .",
     "python": "./venv/bin/python",
     "firestore": "firebase emulators:start --only firestore"
