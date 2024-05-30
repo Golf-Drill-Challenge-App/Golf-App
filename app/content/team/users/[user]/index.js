@@ -210,6 +210,7 @@ function Index() {
       role={currentUserInfo["role"]}
       userInfo={userInfo}
       drillInfo={drillInfo}
+      disableCriteria={(completed) => !completed}
     ></AssignmentsList>
   );
 
@@ -298,16 +299,28 @@ function Index() {
             )
           }
         />
-        <FlatList
-          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
-          stickyHeaderIndices={[1]}
-          data={[
-            profileHeader(),
-            segmentButtons(),
-            <View>{tabComponent[value]}</View>,
-          ]}
-          renderItem={({ item }) => item}
-        />
+        {userInfo.role === "player" ? (
+          <FlatList
+            refreshControl={
+              <RefreshInvalidate invalidateKeys={invalidateKeys} />
+            }
+            stickyHeaderIndices={[1]}
+            data={[
+              profileHeader(),
+              segmentButtons(),
+              <View>{tabComponent[value]}</View>,
+            ]}
+            renderItem={({ item }) => item}
+          />
+        ) : (
+          <FlatList
+            data={[profileHeader()]}
+            renderItem={({ item }) => item}
+            refreshControl={
+              <RefreshInvalidate invalidateKeys={invalidateKeys} />
+            }
+          />
+        )}
         {/* Generic Error dialog */}
         <DialogComponent
           title={dialogTitle}

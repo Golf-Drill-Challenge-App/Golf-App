@@ -16,6 +16,7 @@ const AssignmentsList = ({
   invalidateKeys,
   drillInfo,
   children,
+  disableCriteria = () => false,
 }) => {
   const today = formatDate(Date.now());
 
@@ -205,20 +206,24 @@ const AssignmentsList = ({
       }))}
       keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
       ListHeaderComponent={children}
-      renderItem={({ item: assignment }) => (
-        <TouchableOpacity
-          key={`${assignment.assignedTime}-${assignment.drillId}`}
-          onPress={() => cardPressHandler(assignment)}
-          disabled={role !== "player" && assignment.completed}
-        >
-          <AssignmentCard
-            mainText={drillInfo[assignment.drillId]["subType"]}
-            subText={drillInfo[assignment.drillId]["drillType"]}
-            completed={assignment.completed}
-            pfp={userInfo ? null : stackedPfp(assignment["players"])}
-          />
-        </TouchableOpacity>
-      )}
+      renderItem={({ item: assignment }) => {
+        const disabled = disableCriteria(!!assignment.completed);
+        return (
+          <TouchableOpacity
+            key={`${assignment.assignedTime}-${assignment.drillId}`}
+            onPress={() => cardPressHandler(assignment)}
+            disabled={disabled}
+          >
+            <AssignmentCard
+              mainText={drillInfo[assignment.drillId]["subType"]}
+              subText={drillInfo[assignment.drillId]["drillType"]}
+              completed={assignment.completed}
+              pfp={userInfo ? null : stackedPfp(assignment["players"])}
+              disabled={disabled}
+            />
+          </TouchableOpacity>
+        );
+      }}
       renderSectionHeader={({ section: { title } }) => (
         <Text
           style={{
