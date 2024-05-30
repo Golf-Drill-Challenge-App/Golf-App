@@ -96,7 +96,7 @@ export default function Index() {
           });
         });
       });
-      invalidateMultipleKeys(queryClient, [["userInfo"]]);
+      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
     } catch (e) {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
       showDialog("Error", getErrorString(e));
@@ -105,7 +105,6 @@ export default function Index() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-      <Portal></Portal>
       <Header
         title="Assign Drill"
         preChildren={

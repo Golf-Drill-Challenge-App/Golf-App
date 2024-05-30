@@ -10,9 +10,8 @@ import DialogComponent from "~/components/dialog";
 export default function Index() {
   const [outputData, setOutputData] = useState([]);
   const [toggleResult, setToggleResult] = useState(false);
-
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const hideLeaveDialog = () => setDialogVisible(false);
+  const [leaveDialogVisible, setLeaveDialogVisible] = useState(false);
+  const hideLeaveDialog = () => setLeaveDialogVisible(false);
 
   const [exitAction, setExitAction] = useState(null);
   // Navigation
@@ -33,7 +32,7 @@ export default function Index() {
       setExitAction(e.data.action);
 
       // Prompt the user before leaving the screen
-      setDialogVisible(true);
+      setLeaveDialogVisible(true);
     });
   }, [toggleResult]);
 
@@ -60,7 +59,7 @@ export default function Index() {
       <DialogComponent
         title={"Alert"}
         content={"All inputs will be lost."}
-        visible={dialogVisible}
+        visible={leaveDialogVisible}
         onHide={hideLeaveDialog}
         buttons={["Cancel", "Leave Drill"]}
         buttonsFunctions={[

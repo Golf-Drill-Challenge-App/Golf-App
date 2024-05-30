@@ -811,7 +811,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         );
 
         // invalidate cache on button press
-        invalidateMultipleKeys(queryClient, invalidateKeys);
+        await invalidateMultipleKeys(queryClient, invalidateKeys);
         // if there are no errors, go to result screen
         setToggleResult(true);
       } catch (e) {

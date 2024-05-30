@@ -37,6 +37,7 @@ function ChooseTeam() {
     }
   }
 
+  // TODO: make an actual hook for this? Shouldn't be related tho, as is coach pov?
   useEffect(() => {
     const fetchBlacklistDoc = async () => {
       try {
@@ -109,7 +110,7 @@ function ChooseTeam() {
                   uniqueDrills: [],
                 });
                 setCurrentUserId(currentUserId);
-                invalidateMultipleKeys(queryClient, [
+                await invalidateMultipleKeys(queryClient, [
                   ["userInfo", { userId: currentUserId }],
                 ]);
                 router.replace("/");

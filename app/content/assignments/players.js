@@ -95,7 +95,7 @@ function Index() {
 
           await updateDoc(userRef, { assigned_data: updatedAssignedData });
           console.log("Assigned Data Document updated successfully!");
-          invalidateMultipleKeys(queryClient, invalidateKeys);
+          await invalidateMultipleKeys(queryClient, invalidateKeys);
         } else {
           console.log("No such Assigned Data Document!");
         }

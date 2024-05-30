@@ -144,7 +144,7 @@ function Index() {
       await updateDoc(doc(db, "teams", currentTeamId), {
         name: newName,
       });
-      invalidateMultipleKeys(queryClient, [["teamInfo"]]);
+      await invalidateMultipleKeys(queryClient, [["teamInfo"]]);
       bottomSheetModalRef.current.close();
       showSnackBar("Name field updated successfully");
     }
@@ -223,7 +223,7 @@ function Index() {
           async () => {
             try {
               await resetLeaderboards();
-              invalidateMultipleKeys(queryClient, [["best_attempts"]]);
+              await invalidateMultipleKeys(queryClient, [["best_attempts"]]);
               hideResetDialog();
             } catch (e) {
               console.log("Error resetting season:", e);
@@ -306,14 +306,18 @@ function Index() {
                 {/* Team Picture */}
                 <TouchableOpacity
                   onPress={async () => {
+                    try{
                     await handleImageUpload(
                       setImageUploading,
                       showSnackBar,
                       currentTeamId,
                       teamRef,
                     );
-                    invalidateMultipleKeys(queryClient, [["teamInfo"]]);
-                  }}
+                    await invalidateMultipleKeys(queryClient, [["teamInfo"]]);
+                  } catch (e) {
+                      console.log("Error updating team picture:", e);
+                      showDialog("Error", getErrorString(e));
+                    }}}
                 >
                   <View>
                     {imageUploading ? (
@@ -364,49 +368,56 @@ function Index() {
                   placeholder="Update team name"
                 />
 
-                {/* Save Button */}
-                <TouchableOpacity
-                  style={styles.saveChangesButton}
-                  onPress={handleUpdate}
+                    {/* Save Button */}
+                    <TouchableOpacity
+                      style={styles.saveChangesButton}
+                      onPress={async () => {
+                        try {
+                          await handleUpdate();
+                        } catch (e) {
+                          console.log("Error updating team name:", e);
+                          showDialog("Error", getErrorString(e));
+                        }
+                      }}
+                    >
+                      <Text style={styles.saveChangesButtonText}>Update</Text>
+                    </TouchableOpacity>
+                  </BottomSheetScrollView>
+                </BottomSheetWrapper>
+                <KeyboardAwareScrollView
+                  // allows opening links from search results without closing keyboard first
+                  keyboardShouldPersistTaps="handled"
+                  showsVerticalScrollIndicator={false}
+                  stickyHeaderIndices={[3]}
+                  refreshControl={
+                    <RefreshInvalidate invalidateKeys={invalidateKeys} />
+                  }
                 >
-                  <Text style={styles.saveChangesButtonText}>Update</Text>
-                </TouchableOpacity>
-              </BottomSheetScrollView>
-            </BottomSheetWrapper>
-            <KeyboardAwareScrollView
-              // allows opening links from search results without closing keyboard first
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-              stickyHeaderIndices={[3]}
-              refreshControl={
-                <RefreshInvalidate invalidateKeys={invalidateKeys} />
-              }
-            >
-              <View style={{ alignItems: "center" }}>
-                <ProfilePicture
-                  userInfo={currentTeamData}
-                  style={styles.profilePicture}
-                />
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "baseline",
-                  }}
-                >
-                  <Text
-                    style={{
-                      marginTop: 0,
-                      fontSize: 30,
-                      marginRight: 0,
-                      textAlign: "center",
-                    }}
-                  >
-                    {currentTeamData.name}
-                  </Text>
-                </View>
-              </View>
+                  <View style={{ alignItems: "center" }}>
+                    <ProfilePicture
+                      userInfo={currentTeamData}
+                      style={styles.profilePicture}
+                    />
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "baseline",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          marginTop: 0,
+                          fontSize: 30,
+                          marginRight: 0,
+                          textAlign: "center",
+                        }}
+                      >
+                        {currentTeamData.name}
+                      </Text>
+                    </View>
+                  </View>
 
               <Text style={{ textAlign: "center", marginBottom: 20 }}>
                 {Object.keys(userInfo).length} members

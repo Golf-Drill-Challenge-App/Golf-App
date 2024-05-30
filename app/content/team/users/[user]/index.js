@@ -241,24 +241,19 @@ function Index() {
                     : "account-arrow-down-outline"
                 }
                 onPress={async () => {
-                  if (userInfo.role === "player") {
-                    try {
+                  try {
+                    if (userInfo.role === "player") {
                       await changeRole(userId, "coach");
-                    } catch (e) {
-                      console.log(e);
-                      showDialog("Error", getErrorString(e));
-                    }
-                  } else {
-                    try {
+                    } else {
                       await changeRole(userId, "player");
-                    } catch (e) {
-                      console.log(e);
-                      showDialog("Error", getErrorString(e));
                     }
+                    await invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
+                    showSnackBar("User role changed successfully!");
+                    setMenuVisible(false);
+                  } catch (e) {
+                    console.log(e);
+                    showDialog("Error", getErrorString(e));
                   }
-                  invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
-                  showSnackBar("User role changed successfully!");
-                  setMenuVisible(false);
                 }}
                 title={userInfo.role === "player" ? "Promote" : "Demote"}
               />
@@ -334,7 +329,7 @@ function Index() {
             try {
               await blacklistUser(userId, userInfo);
               await queryClient.removeQueries(["userInfo", userId]);
-              invalidateMultipleKeys(queryClient, [
+              await invalidateMultipleKeys(queryClient, [
                 ["userInfo"],
                 ["best_attempts"],
               ]); //invalidate cache

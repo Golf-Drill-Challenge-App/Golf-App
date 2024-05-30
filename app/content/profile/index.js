@@ -184,7 +184,7 @@ function Index() {
         });
 
         // invalidate cache on successful name update
-        invalidateMultipleKeys(queryClient, [["userInfo"]]);
+        await invalidateMultipleKeys(queryClient, [["userInfo"]]);
         bottomSheetModalRef.current.close();
         showSnackBar("Name field updated successfully");
       }
@@ -313,13 +313,20 @@ function Index() {
               {/* Profile Picture */}
               <TouchableOpacity
                 onPress={async () => {
-                  await handleImageUpload(
-                    setImageUploading,
-                    showSnackBar,
-                    userId,
-                    userRef,
-                  );
-                  invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                  try {
+                    await handleImageUpload(
+                      setImageUploading,
+                      setSnackbarMessage,
+                      userId,
+                      userRef,
+                    );
+                    await invalidateMultipleKeys(queryClient, [
+                      ["userInfo"],
+                    ]);
+                  } catch (e) {
+                    console.log(e);
+                    showDialog("Error", getErrorString(e));
+                  }
                 }}
               >
                 <View style={styles.profilePictureContainer}>
