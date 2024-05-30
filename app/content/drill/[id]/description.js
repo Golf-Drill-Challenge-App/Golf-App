@@ -8,7 +8,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
@@ -16,7 +16,7 @@ export default function Description() {
   const drillId = useLocalSearchParams()["id"];
   const assignedTime = useLocalSearchParams()["assignedTime"];
 
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId } = useAuthContext();
   const {
     data: userInfo,
     error: userInfoError,

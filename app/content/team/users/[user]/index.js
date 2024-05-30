@@ -17,7 +17,7 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { removeUser } from "~/hooks/removeUser";
@@ -86,7 +86,7 @@ function Index() {
     setSnackbarVisible(true);
   };
 
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId } = useAuthContext();
 
   const {
     data: userInfo,

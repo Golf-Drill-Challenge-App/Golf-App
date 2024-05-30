@@ -7,14 +7,14 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
   const navigation = useNavigation();
   const drillId = useLocalSearchParams()["id"];
-  const { currentUserId: userId } = currentAuthContext();
+  const { currentUserId: userId } = useAuthContext();
 
   const {
     data: drillInfo,

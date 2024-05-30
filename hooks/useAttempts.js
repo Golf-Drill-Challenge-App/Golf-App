@@ -7,7 +7,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 //this code scares me
@@ -17,7 +17,7 @@ export const useAttempts = ({
   drillId = null,
   enabled = true,
 } = {}) => {
-  const { currentTeamId } = currentAuthContext();
+  const { currentTeamId } = useAuthContext();
   const { data, error, isLoading } = useQuery({
     queryKey: ["attempts", { attemptId, userId, drillId }],
     queryFn: async () => {

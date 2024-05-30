@@ -31,7 +31,7 @@ export const invalidateMultipleKeys = async (queryClient, invalidateKeys) => {
           // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
           if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {
             function checkLists(invalidateKey, activeQueryKey) {
-              for (let invalidateKeyArg of invalidateKey) {
+              for (const invalidateKeyArg of invalidateKey) {
                 if (typeof invalidateKeyArg === "string") {
                   // If arg of invalidateKeys[i] is a string, check if it also exists (as a string) in query.queryKey
                   if (!activeQueryKey.includes(invalidateKeyArg)) {
@@ -41,7 +41,7 @@ export const invalidateMultipleKeys = async (queryClient, invalidateKeys) => {
                   // If arg of invalidateKeys[i] is an object, check if it exists as a subset of another (object) arg in
                   // query.queryKey
                   let found = false;
-                  for (let activeQueryKeyArg of activeQueryKey) {
+                  for (const activeQueryKeyArg of activeQueryKey) {
                     if (isObjectSubset(invalidateKeyArg, activeQueryKeyArg)) {
                       found = true;
                       break;
@@ -62,7 +62,7 @@ export const invalidateMultipleKeys = async (queryClient, invalidateKeys) => {
               }
 
               // Check if each key-value pair in the subset exists in the superset
-              for (let key in subset) {
+              for (const key in subset) {
                 if (!(key in superset && superset[key] === subset[key])) {
                   return false;
                 }

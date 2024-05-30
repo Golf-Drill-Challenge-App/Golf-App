@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { useMemo } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
 import { Avatar, Text } from "react-native-paper";
@@ -19,7 +19,12 @@ const AssignmentsList = ({
 }) => {
   const today = formatDate(Date.now());
 
-  let assigned_data = userInfo ? userInfo.assigned_data : [];
+  const currentPath = usePathname();
+
+  const assigned_data = useMemo(
+    () => (userInfo ? userInfo.assigned_data : []),
+    [userInfo],
+  );
 
   if (!userInfo) {
     const alreadyAddedData = {};
@@ -166,7 +171,7 @@ const AssignmentsList = ({
     if (userInfo) {
       if (assignment.completed) {
         router.push({
-          pathname: `./attempts/${assignment.attemptId}`,
+          pathname: `${currentPath}/attempts/${assignment.attemptId}`,
           params: {
             id: assignment.drillId,
           },

@@ -9,7 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useUserInfo = ({
@@ -17,7 +17,7 @@ export const useUserInfo = ({
   role = null,
   enabled = true,
 } = {}) => {
-  const { currentTeamId, currentUserId } = currentAuthContext();
+  const { currentTeamId, currentUserId } = useAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
@@ -62,7 +62,7 @@ export const useUserInfo = ({
         }
         return data;
       } else if (role) {
-        let q = query(
+        const q = query(
           collection(db, "teams", currentTeamId, "users"),
           where("role", "==", role),
         );
