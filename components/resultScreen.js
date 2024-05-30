@@ -43,6 +43,11 @@ export default function ResultScreen({
     ["attempts", { attemptId }],
   ];
 
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["attempts", { attemptId }],
+  ];
+
   if (drillInfoIsLoading || attemptIsLoading) {
     return <Loading />;
   }
