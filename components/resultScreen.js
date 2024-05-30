@@ -11,6 +11,7 @@ import { prettyTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -40,6 +41,11 @@ export default function ResultScreen({
   const displayShotTendency = drillInfo.outputs.some(
     (output) => output === "carry" || output === "sideLanding",
   );
+
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["attempts", { attemptId }],
+  ];
 
   if (drillInfoIsLoading || attemptIsLoading) {
     return <Loading />;
@@ -82,9 +88,19 @@ export default function ResultScreen({
     return styles;
   }
 
+  const sortedAggOutputs = Object.keys(drillInfo["aggOutputs"]).sort((a, b) =>
+    prettyTitle[a].localeCompare(prettyTitle[b]),
+  );
+
   return (
     <>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={
+          // handle updating cache for another user list of drills
+          <RefreshInvalidate invalidateKeys={invalidateKeys} />
+        }
+      >
         <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
           Aggregate Data
         </Text>
@@ -96,7 +112,7 @@ export default function ResultScreen({
             borderRadius: 8,
           }}
         >
-          {Object.keys(drillInfo["aggOutputs"]).map((output, idx) => (
+          {sortedAggOutputs.map((output, idx) => (
             <View style={getStyle(idx)} key={output}>
               <Text>{prettyTitle[output]}</Text>
               <Text>

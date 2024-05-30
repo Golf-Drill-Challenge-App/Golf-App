@@ -4,8 +4,8 @@ import { db } from "~/firebaseConfig";
 
 //A function to clear the "best_attemepts" collection
 async function resetLeaderboards() {
-  await runTransaction(db, async (transaction) => {
-    try {
+  try {
+    await runTransaction(db, async (transaction) => {
       let bestAttemptQuery = query(
         collection(db, "teams", "1", "best_attempts"),
       );
@@ -24,12 +24,13 @@ async function resetLeaderboards() {
 
         await transaction.update(doc.ref, emptyDoc); //not sure if this works yet
       }
-    } catch (e) {
-      console.error("Error getting or updating best_attempts:", e);
-    }
-  });
+    });
 
-  console.log("Leaderboards have been reset");
+    console.log("Leaderboards have been reset");
+  } catch (e) {
+    console.log("Error getting or updating best_attempts: ", e);
+    throw e; // Rethrow the error to handle it at the caller's level if needed
+  }
 }
 
 module.exports = { resetLeaderboards };

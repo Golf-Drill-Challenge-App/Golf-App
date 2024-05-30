@@ -31,7 +31,6 @@ Info below subject to change
   - The current database on Firestore, as well as the local test data in [drill_data.json](drill_data.json), follows the schema starting on line 29 (`teams` object) of `db_spec.jsonc`
     - May be moving drill attempts out of `teams` and into a separate data object soon
 - Currently, some pages in profile, team, drill submission still use the local data from `drill_data.json`, but the rest are connected to Firestore
-- Login / Signup functionality is not implemented yet on the main `layout` branch
 
 ## Commands
 

@@ -17,7 +17,6 @@ export const useAttempts = ({
   drillId = null,
   enabled = true,
 } = {}) => {
-  console.log("fetching attempts: ", { attemptId, userId, drillId, enabled });
   const { currentTeamId } = currentAuthContext();
   const { data, error, isLoading } = useQuery({
     queryKey: ["attempts", { attemptId, userId, drillId }],

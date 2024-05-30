@@ -10,9 +10,7 @@ export const useTeamInfo = ({ teamId = null } = {}) => {
     queryFn: async () => {
       if (teamId) {
         const querySnapshot = await getDoc(doc(db, "teams", teamId));
-        const data = querySnapshot.data();
-
-        return data;
+        return querySnapshot.data();
       } else {
         const newTeamInfo = {};
         const querySnapshot = await getDocs(collection(db, "teams"));

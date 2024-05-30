@@ -37,12 +37,12 @@ const firebaseProfileImageUpload = async (
     setImageUploading(false);
 
     return downloadURL;
-  } catch (error) {
-    console.error("Error uploading image to Firebase:", error);
+  } catch (e) {
+    console.log("Error uploading image to Firebase:", e);
     setSnackbarMessage("Error uploading profile picture. Please try again.");
     setImageUploading(false);
 
-    throw error; // Rethrow the error to handle it at the caller's level if needed
+    throw e; // Rethrow the error to handle it at the caller's level if needed
   }
 };
 

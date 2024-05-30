@@ -3,14 +3,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import PaperWrapper from "./paperWrapper";
 
 function ErrorComponent({ errorList }) {
-  const displayMessage = errorList.map((error) => {
-    var errorMessage = "No error message found.";
-    if (error && error.message) {
-      errorMessage = error.message;
-    }
-    return errorMessage;
-  });
-
+  const displayMessage = errorList
+    .map((error) => (error && error.message ? error.message : "Unknown error"))
+    .join("\n");
   return (
     <PaperWrapper>
       <SafeAreaView>
