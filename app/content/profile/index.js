@@ -316,7 +316,7 @@ function Index() {
                   try {
                     await handleImageUpload(
                       setImageUploading,
-                      setSnackbarMessage,
+                      showSnackBar,
                       userId,
                       userRef,
                     );
