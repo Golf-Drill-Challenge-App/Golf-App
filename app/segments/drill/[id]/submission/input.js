@@ -263,7 +263,7 @@ async function handleRecordUpdate(
     await setDoc(recordRef, newEmptyRecordObject);
 
     //Add all time Record
-    await uploadNewRecord(uploadData, drillInfo, null, userInfo);
+    await uploadNewRecord(uploadData, drillInfo, null, userInfo, currentTeamId);
   } else {
     //Determine if lower is better
     const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
@@ -276,7 +276,7 @@ async function handleRecordUpdate(
 
     if (isNewAttemptBest) {
       //Update record
-      await uploadNewRecord(uploadData, drillInfo, currentRecordInfo, userInfo);
+      await uploadNewRecord(uploadData, drillInfo, currentRecordInfo, userInfo, currentTeamId);
     }
   }
 }
@@ -287,8 +287,9 @@ async function uploadNewRecord(
   drillInfo,
   currentRecordInfo,
   userInfo,
+  currentTeamId,
 ) {
-  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+  const recordRef = doc(db, "teams", currentTeamId, "all_time_records", uploadData.did);
 
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
