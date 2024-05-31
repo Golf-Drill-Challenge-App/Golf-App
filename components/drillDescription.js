@@ -30,11 +30,13 @@ export default function DrillDescription({ drillInfo }) {
 
   const windowWidth = Dimensions.get("window").width;
 
-  const sortedInputs = drillInfo.inputs.sort((a, b) => a.id > b.id);
+  const prettyInputs = drillInfo.inputs.map((input) => prettyTitle[input.id]);
+  const sortedInputs = prettyInputs.sort();
 
-  const sortedOutputs = drillInfo.outputs.sort();
-
-  console.log("sortedOutputs", sortedOutputs);
+  const prettyOutputs = Object.keys(drillInfo.aggOutputs).map(
+    (output) => prettyTitle[output],
+  );
+  const sortedOutputs = prettyOutputs.sort();
 
   return (
     <View style={{ margin: 10 }}>
@@ -46,9 +48,9 @@ export default function DrillDescription({ drillInfo }) {
             <Text style={styles.header}>Inputs</Text>
             {sortedInputs.map((input) => (
               <Text
-                key={input.id}
+                key={input}
                 style={styles.bodyText}
-              >{`\u2022\t${prettyTitle[input.id]}`}</Text>
+              >{`\u2022\t${input}`}</Text>
             ))}
           </>
         )}
@@ -59,7 +61,7 @@ export default function DrillDescription({ drillInfo }) {
               <Text
                 key={output}
                 style={styles.bodyText}
-              >{`\u2022\t${prettyTitle[output]}`}</Text>
+              >{`\u2022\t${output}`}</Text>
             ))}
           </>
         )}
