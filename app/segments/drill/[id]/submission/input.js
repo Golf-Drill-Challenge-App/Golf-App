@@ -49,8 +49,8 @@ import { useUserInfo } from "~/hooks/useUserInfo";
  ***************************************/
 
 //A function to check if a drill was assigned upon completion
-async function completeAssigned(userId, assignedTime, drillId, attemptId) {
-  const userRef = doc(db, "teams", "1", "users", userId);
+async function completeAssigned(userId, assignedTime, drillId, attemptId, currentTeamId) {
+  const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
   const docSnap = await getDoc(userRef);
 
@@ -93,7 +93,7 @@ async function uploadAttempt(
   currentTeamId,
 ) {
   //create new document
-  const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+  const newAttemptRef = doc(collection(db, "teams", currentTeamId, "attempts"));
 
   //Newly created doc Id. Useful for finding upload data in testing.
   console.log("New Attempt Ref ID: ", newAttemptRef.id);
@@ -105,7 +105,7 @@ async function uploadAttempt(
   console.log("Attempt Document successfully uploaded!");
 
   await runTransaction(db, async (transaction) => {
-    const userRef = doc(db, "teams", "1", "users", userId);
+    const userRef = doc(db, "teams", currentTeamId, "users", userId);
     const userInfo = await transaction.get(userRef);
 
     const uniqueDrills = userInfo.data().uniqueDrills;
@@ -129,7 +129,7 @@ async function uploadAttempt(
 
   // Check if drill was assigned
   if (assignedTime) {
-    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
+    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id, currentTeamId);
   }
 }
 
