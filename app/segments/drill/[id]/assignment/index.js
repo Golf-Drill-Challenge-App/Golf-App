@@ -44,9 +44,13 @@ export default function Index() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
 
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
+
   const [loading, setLoading] = useState(false);
 
   const queryClient = useQueryClient();
+
   const [checkedItems, setCheckedItems] = useState({});
   const filteredUserInfo = useMemo(
     () =>
@@ -111,19 +115,25 @@ export default function Index() {
         });
       });
       await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+      showSnackBar("Assignment Successful");
+      navigation.pop(3);
     } catch (e) {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
       showDialog("Error", getErrorString(e));
     }
 
     setLoading(false);
-    navigation.pop(3);
   };
 
   const showDialog = (title, message) => {
     setDialogTitle(title);
     setDialogMessage(message);
     setDialogVisible(true);
+  };
+
+  const showSnackBar = (message) => {
+    setSnackBarMessage(message);
+    setSnackBarVisible(true);
   };
   return (
     <PaperWrapper>
@@ -133,6 +143,13 @@ export default function Index() {
           content={dialogMessage}
           visible={dialogVisible}
           onHide={() => setDialogVisible(false)}
+        />
+        {/* Snackbar Error Dialog */}
+        <DialogComponent
+          type={"snackbar"}
+          visible={snackBarVisible}
+          content={snackBarMessage}
+          onHide={() => setSnackBarVisible(false)}
         />
         <Portal>
           {loading && (
