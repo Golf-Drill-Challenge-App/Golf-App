@@ -133,6 +133,44 @@ async function uploadAttempt(
   }
 }
 
+async function uploadTextDrill(
+    userId,
+    assignedTime,
+    drillId,
+    currentTeamId,
+) {
+  //create new document
+  const newAttemptRef = doc(collection(db, "teams", currentTeamId, "attempts"));                    //ERROR FROM HERE "indexOf is not a function"
+
+  //Newly created doc Id. Useful for finding upload data in testing.
+  console.log("New Attempt Ref ID: ", newAttemptRef.id);
+
+  //add id of new document into the data
+  const uploadData = { id: newAttemptRef.id };
+  // Upload the data
+  await setDoc(newAttemptRef, uploadData);
+  console.log("Attempt Document successfully uploaded!");
+
+  await runTransaction(db, async (transaction) => {
+    const userRef = doc(db, "teams", currentTeamId, "users", userId);
+    const userInfo = await transaction.get(userRef);
+
+    const uniqueDrills = userInfo.data().uniqueDrills;
+
+    if (!uniqueDrills.includes(drillId)) {
+      // Add the new item to the array
+      transaction.update(userRef, {
+        ["uniqueDrills"]: [...uniqueDrills, drillId],
+      });
+    }
+  });
+
+  // Check if drill was assigned
+  if (assignedTime) {
+    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id, currentTeamId);
+  }
+}
+
 //A function to check leaderboard and update if needed
 async function handleLeaderboardUpdate(
   uploadData,
@@ -354,6 +392,9 @@ function getShotInfo(drillInfo) {
       break;
     case "putt":
       shots = fillPuttTargets(drillInfo);
+      break;
+    case "text":
+      shots = [];
       break;
     default:
       console.log("Shots not found");
@@ -735,7 +776,7 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   //Varible to store if Submit button is active
   const submitVisible =
-    currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1;
+    currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1 || drillInfo.reps === 0;
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
@@ -800,6 +841,7 @@ export default function Input({ setToggleResult, setOutputData }) {
     // useAttempts / useDrillInfo hooks
 
     //Check if all inputs have been filled in
+    if (drillInfo.reps !== 0) {
     if (
       Object.keys(inputValues[displayedShot]).length !== numInputs ||
       checkEmptyInputs(inputValues[displayedShot])
@@ -845,11 +887,31 @@ export default function Input({ setToggleResult, setOutputData }) {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
     }
+    } else {
+      try {
+        await uploadTextDrill(
+          currentUserId,
+          assignedTime,
+          drillId,
+          drillInfo,
+          userInfo,
+          currentTeamId,
+        )
+        // invalidate cache on button press
+        await invalidateMultipleKeys(queryClient, invalidateKeys);
+        // if there are no errors, go to result screen
+        setToggleResult(true);
+      }
+      catch (e) {
+        console.log(e);
+        showDialog("Error", getErrorString(e));
+      }
+    }
+    
   };
 
   //Loading until an attempt is generated or hooks are working
   if (
-    attemptShots.length === 0 ||
     leaderboardIsLoading ||
     userIsLoading ||
     drillInfoIsLoading
@@ -893,6 +955,8 @@ export default function Input({ setToggleResult, setOutputData }) {
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
+                {attemptShots.length !== 0 && (
+                <>
                 <View style={styles.shotNumContainer}>
                   <Text style={styles.shotNumber}>
                     Shot {attemptShots[displayedShot].shotNum}
@@ -932,6 +996,8 @@ export default function Input({ setToggleResult, setOutputData }) {
                     />
                   ))}
                 </View>
+                </>
+                )}
 
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetWrapper ref={navModalRef}>
