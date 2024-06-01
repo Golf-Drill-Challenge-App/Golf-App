@@ -13,8 +13,8 @@ import {
   Appbar,
   Button,
   List,
-  Portal,
   Text,
+  TouchableRipple,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -151,24 +151,6 @@ export default function Index() {
           content={snackBarMessage}
           onHide={() => setSnackBarVisible(false)}
         />
-        <Portal>
-          {loading && (
-            <View
-              style={{
-                backgroundColor: "rgba(0,0,0,0.5)",
-                height: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator
-                animating={true}
-                size="large"
-                color={themeColors.accent}
-              />
-            </View>
-          )}
-        </Portal>
         <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
           <Header
             title="Assign Drill"
@@ -243,25 +225,32 @@ export default function Index() {
               </List.Section>
             </ScrollView>
           </View>
-          <Button
+          <TouchableRipple
+            rippleColor="rgba(256, 256, 256, 0.2)"
+            borderless={true}
             style={{
               margin: 10,
               bottom: 30,
               left: 0,
               right: 0,
+              backgroundColor: themeColors.accent,
+              padding: 10,
+              justifyContent: "center",
+              borderRadius: 20,
+              flexDirection: "row",
             }}
-            labelStyle={{
-              fontSize: 20,
-              fontWeight: "bold",
-              padding: 5,
-            }}
-            mode="contained"
-            buttonColor={themeColors.accent}
-            textColor="white"
             onPress={handleAssign}
           >
-            Assign
-          </Button>
+            {loading ? (
+              <ActivityIndicator animating={true} color={"#FFF"} />
+            ) : (
+              <Text
+                style={{ color: "white", fontSize: 20, fontWeight: "bold" }}
+              >
+                Assign
+              </Text>
+            )}
+          </TouchableRipple>
         </SafeAreaView>
       </GestureHandlerRootView>
     </PaperWrapper>
