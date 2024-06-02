@@ -93,76 +93,89 @@ export default function ResultScreen({
   );
 
   return (
-    <>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        refreshControl={
-          // handle updating cache for another user list of drills
-          <RefreshInvalidate invalidateKeys={invalidateKeys} />
-        }
-      >
-        <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
-          Aggregate Data
-        </Text>
-        <View
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        // handle updating cache for another user list of drills
+        <RefreshInvalidate invalidateKeys={invalidateKeys} />
+      }
+    >
+      {!attempt.shots ? (
+        <>
+          <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
+            Aggregate Data
+          </Text>
+          <View
+            style={{
+              backgroundColor: themeColors.highlight,
+              borderWidth: 1,
+              borderColor: themeColors.border,
+              borderRadius: 8,
+            }}
+          >
+            {sortedAggOutputs.map((output, idx) => (
+              <View style={getStyle(idx)} key={output}>
+                <Text>{prettyTitle[output]}</Text>
+                <Text>
+                  {numTrunc(attempt[output])}{" "}
+                  {drillInfo.aggOutputs[output].distanceMeasure}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          {displayShotTendency && (
+            <>
+              <Text style={styles.sectionTitle}>Shot Tendency</Text>
+              <View style={styles.chartSection}>
+                <View style={{ width: width * 0.9 }}>
+                  <ScatterChart
+                    style={styles.chart}
+                    backgroundColor={themeColors.highlight}
+                    data={[
+                      {
+                        color: "blue",
+                        unit: "%",
+                        values: dots,
+                      },
+                    ]}
+                    horizontalLinesAt={[0, 50, 100, 150, 200, 250]}
+                    verticalLinesAt={[0]}
+                    minY={yMin}
+                    maxY={yMax}
+                    minX={xMin}
+                    maxX={xMax}
+                    chartWidth={width * 0.9}
+                  />
+                </View>
+              </View>
+            </>
+          )}
+
+          <Text style={styles.sectionTitle}>Shot History</Text>
+          {attempt["shots"] &&
+            attempt["shots"].map((shot) => (
+              <ShotAccordion
+                key={shot["sid"]}
+                shot={shot}
+                drillInfo={drillInfo}
+                total={numTrunc(attempt["shots"].length)}
+              />
+            ))}
+        </>
+      ) : (
+        <Text
           style={{
-            backgroundColor: themeColors.highlight,
-            borderWidth: 1,
-            borderColor: themeColors.border,
-            borderRadius: 8,
+            alignSelf: "center",
+            fontSize: 26,
+            fontWeight: "bold",
+            margin: 50,
           }}
         >
-          {sortedAggOutputs.map((output, idx) => (
-            <View style={getStyle(idx)} key={output}>
-              <Text>{prettyTitle[output]}</Text>
-              <Text>
-                {numTrunc(attempt[output])}{" "}
-                {drillInfo.aggOutputs[output].distanceMeasure}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {displayShotTendency && (
-          <>
-            <Text style={styles.sectionTitle}>Shot Tendency</Text>
-            <View style={styles.chartSection}>
-              <View style={{ width: width * 0.9 }}>
-                <ScatterChart
-                  style={styles.chart}
-                  backgroundColor={themeColors.highlight}
-                  data={[
-                    {
-                      color: "blue",
-                      unit: "%",
-                      values: dots,
-                    },
-                  ]}
-                  horizontalLinesAt={[0, 50, 100, 150, 200, 250]}
-                  verticalLinesAt={[0]}
-                  minY={yMin}
-                  maxY={yMax}
-                  minX={xMin}
-                  maxX={xMax}
-                  chartWidth={width * 0.9}
-                />
-              </View>
-            </View>
-          </>
-        )}
-
-        <Text style={styles.sectionTitle}>Shot History</Text>
-        {attempt["shots"] &&
-          attempt["shots"].map((shot) => (
-            <ShotAccordion
-              key={shot["sid"]}
-              shot={shot}
-              drillInfo={drillInfo}
-              total={numTrunc(attempt["shots"].length)}
-            />
-          ))}
-      </ScrollView>
-    </>
+          No data to be displayed
+        </Text>
+      )}
+    </ScrollView>
   );
 }
 
