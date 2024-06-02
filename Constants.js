@@ -25,7 +25,7 @@ const prettyTitle = {
   leftSideLandingAverage: "Average Miss Left",
   rightSideLandingAverage: "Average Miss Right",
   sideLandingTotal: "Side Landing Total",
-  strokesGained: "Strokes Gained",
+  strokesGained: "Strokes Gained Total",
   strokesGainedAverage: "Strokes Gained Average",
 };
 

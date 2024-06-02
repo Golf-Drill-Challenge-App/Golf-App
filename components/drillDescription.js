@@ -33,9 +33,13 @@ export default function DrillDescription({ drillInfo }) {
   const prettyInputs = drillInfo.inputs.map((input) => prettyTitle[input.id]);
   const sortedInputs = prettyInputs.sort();
 
-  const prettyOutputs = Object.keys(drillInfo.aggOutputs).map(
-    (output) => prettyTitle[output],
-  );
+  const prettyOutputs = Object.keys(drillInfo.aggOutputs).map((output) => {
+    let prettyOutput = prettyTitle[output];
+    if (output === drillInfo.mainOutputAttempt) {
+      prettyOutput += " (main)";
+    }
+    return prettyOutput;
+  });
   const sortedOutputs = prettyOutputs.sort();
 
   return (
@@ -43,9 +47,9 @@ export default function DrillDescription({ drillInfo }) {
       <ScrollView style={{ paddingLeft: 10 }}>
         <Text style={styles.header}>Description</Text>
         <Text style={styles.bodyText}>{drillInfo["description"]}</Text>
-        {drillInfo.inputs && (
+        {drillInfo.inputs.length !== 0 && (
           <>
-            <Text style={styles.header}>Inputs</Text>
+            <Text style={styles.header}>Inputs (per shot)</Text>
             {sortedInputs.map((input) => (
               <Text
                 key={input}
@@ -54,7 +58,7 @@ export default function DrillDescription({ drillInfo }) {
             ))}
           </>
         )}
-        {drillInfo.outputs && (
+        {drillInfo.outputs.length !== 0 && (
           <>
             <Text style={styles.header}>Outputted Data</Text>
             {sortedOutputs.map((output) => (
