@@ -279,7 +279,10 @@ export default function BarChartScreen({
             items={aggOutputValues}
             open={aggOutputDropdownOpen}
             setOpen={setAggOutputDropdownOpen}
-            maxHeight={40 * aggOutputValues.length}
+            maxHeight={45 * aggOutputValues.length}
+            scrollViewProps={{
+              showsVerticalScrollIndicator: false,
+            }}
             containerStyle={[
               styles.dropDownContainer,
               {
