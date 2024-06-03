@@ -13,7 +13,7 @@ async function removeUser(userId) {
   try {
     await runTransaction(db, async (transaction) => {
       //Remove all attempts from attempts table with UID == userID
-      let attemptQuery = query(
+      const attemptQuery = query(
         collection(db, "teams", "1", "attempts"),
         where("uid", "==", userId),
       );
@@ -25,14 +25,14 @@ async function removeUser(userId) {
       }
 
       //Remove all entries from best_attempts table with UID == userID
-      let bestAttemptQuery = query(
+      const bestAttemptQuery = query(
         collection(db, "teams", "1", "best_attempts"),
       );
 
       const bestAttemptSnapshot = await getDocs(bestAttemptQuery);
 
       for (const doc of bestAttemptSnapshot.docs) {
-        let docData = doc.data();
+        const docData = doc.data();
 
         if (docData[userId]) {
           //Delete the field

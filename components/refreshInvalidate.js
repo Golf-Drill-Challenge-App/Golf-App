@@ -11,7 +11,7 @@ function RefreshInvalidate({ invalidateKeys = [], ...props }) {
     setRefreshing(true);
     await invalidateMultipleKeys(queryClient, invalidateKeys);
     setRefreshing(false);
-  }, [queryClient]);
+  }, [invalidateKeys, queryClient]);
   return (
     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...props} />
   );

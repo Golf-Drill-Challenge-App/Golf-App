@@ -22,7 +22,7 @@ import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import DialogComponent from "~/components/dialog";
 import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
 const BUTTON_WIDTH = 150;
@@ -31,7 +31,7 @@ const INPUT_WIDTH = 200;
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setCurrentUserId } = currentAuthContext();
+  const { setCurrentUserId } = useAuthContext();
 
   const { height } = useWindowDimensions();
 

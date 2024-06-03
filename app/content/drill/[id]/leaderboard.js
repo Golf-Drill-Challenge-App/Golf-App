@@ -19,7 +19,7 @@ function getLeaderboardRanks(
   leaderboardAttempts,
   mainOutputAttempt,
 ) {
-  let leaderboardRanks = [];
+  const leaderboardRanks = [];
   let currentRank = 1;
   let prevAttemptValue = 0;
 
@@ -184,7 +184,7 @@ export default function Leaderboard() {
     );
   }
 
-  let leaderboardRanks = getLeaderboardRanks(
+  const leaderboardRanks = getLeaderboardRanks(
     orderedLeaderboard,
     leaderboard,
     mainOutputAttempt,

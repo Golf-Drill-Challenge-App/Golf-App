@@ -2,7 +2,13 @@ import { View } from "react-native";
 import { Icon, Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
 
-export default function AssignmentCard({ mainText, subText, completed, pfp }) {
+export default function AssignmentCard({
+  mainText,
+  subText,
+  completed,
+  pfp,
+  disabled,
+}) {
   return (
     <View style={{ marginLeft: 20, marginRight: 20 }}>
       <View
@@ -13,7 +19,9 @@ export default function AssignmentCard({ mainText, subText, completed, pfp }) {
           alignItems: "center",
           width: "100%",
           minHeight: 65,
-          backgroundColor: themeColors.highlight,
+          backgroundColor: disabled
+            ? themeColors.background
+            : themeColors.highlight,
           borderRadius: 20,
           marginBottom: 10,
           paddingLeft: 30,
@@ -48,9 +56,11 @@ export default function AssignmentCard({ mainText, subText, completed, pfp }) {
           ) : (
             completed !== undefined && <View style={{ width: 28 }} />
           )}
-          <View style={{ paddingLeft: 10 }}>
-            <Icon source="chevron-right" size={20} />
-          </View>
+          {!disabled && (
+            <View style={{ paddingLeft: 10 }}>
+              <Icon source="chevron-right" size={20} />
+            </View>
+          )}
         </View>
       </View>
     </View>

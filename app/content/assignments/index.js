@@ -6,12 +6,12 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId } = useAuthContext();
 
   const {
     data: drillInfo,

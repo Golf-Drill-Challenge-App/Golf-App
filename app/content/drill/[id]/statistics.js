@@ -2,13 +2,13 @@ import { useLocalSearchParams } from "expo-router";
 import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { useAttempts } from "~/hooks/useAttempts";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
-  const { currentUserId: userId } = currentAuthContext();
+  const { currentUserId: userId } = useAuthContext();
 
   const {
     data: drillInfo,
