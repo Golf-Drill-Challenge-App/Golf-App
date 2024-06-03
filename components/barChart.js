@@ -89,6 +89,23 @@ export default function BarChartScreen({
 
   const [aggOutputDropdownOpen, setAggOutputDropdownOpen] = useState(false);
 
+  //some clever logic to close the dropdowns when the other one is open
+  useEffect(() => {
+    if (movingAvgRangeDropdownOpen) {
+      if (aggOutputDropdownOpen) {
+        setAggOutputDropdownOpen(false);
+      }
+    }
+  }, [movingAvgRangeDropdownOpen]);
+
+  useEffect(() => {
+    if (aggOutputDropdownOpen) {
+      if (movingAvgRangeDropdownOpen) {
+        setMovingAvgRangeDropdownOpen(false);
+      }
+    }
+  }, [aggOutputDropdownOpen]);
+
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState(0);
 
