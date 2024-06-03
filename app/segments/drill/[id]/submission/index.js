@@ -17,6 +17,10 @@ export default function Index() {
   // Navigation
   const navigation = useNavigation();
 
+  const showDialog = (title, message) => {
+    setLeaveDialogVisible(true);
+  };
+
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: toggleResult });
   }, [navigation, toggleResult]);
@@ -32,7 +36,7 @@ export default function Index() {
       setExitAction(e.data.action);
 
       // Prompt the user before leaving the screen
-      setLeaveDialogVisible(true);
+      showDialog();
     });
   }, [navigation, toggleResult]);
 
