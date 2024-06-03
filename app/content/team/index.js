@@ -37,7 +37,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
@@ -46,7 +46,7 @@ import { useTeamInfo } from "~/hooks/useTeamInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = useAuthContext();
 
   const {
     data: userInfo,

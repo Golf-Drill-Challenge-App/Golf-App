@@ -6,17 +6,17 @@ import { db } from "~/firebaseConfig";
 async function resetLeaderboards() {
   try {
     await runTransaction(db, async (transaction) => {
-      let bestAttemptQuery = query(
+      const bestAttemptQuery = query(
         collection(db, "teams", "1", "best_attempts"),
       );
       const bestAttemptSnapshot = await getDocs(bestAttemptQuery);
 
       for (const doc of bestAttemptSnapshot.docs) {
-        let docData = doc.data();
-        let keys = Object.keys(docData);
+        const docData = doc.data();
+        const keys = Object.keys(docData);
 
         //An empty doc with all player id's set to null
-        let emptyDoc = {};
+        const emptyDoc = {};
 
         keys.forEach((key) => {
           emptyDoc[key] = null;

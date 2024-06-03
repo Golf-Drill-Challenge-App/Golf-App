@@ -11,13 +11,13 @@ import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { auth, db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 
 function ChooseTeam() {
   const { signOut, currentUserId, currentUserInfo, setCurrentUserId } =
-    currentAuthContext();
+    useAuthContext();
   const queryClient = useQueryClient();
 
   const [blacklist, setBlacklist] = useState(false);

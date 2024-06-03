@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useDrillInfo = ({ drillId = null } = {}) => {
-  const { currentTeamId } = currentAuthContext();
+  const { currentTeamId } = useAuthContext();
   const { data, error, isLoading } = useQuery({
     queryKey: ["drillInfo", { drillId }],
     queryFn: async () => {

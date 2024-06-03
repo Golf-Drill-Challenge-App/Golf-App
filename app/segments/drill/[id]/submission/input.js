@@ -37,7 +37,7 @@ import DrillTarget from "~/components/input/drillTarget";
 import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useBestAttempts } from "~/hooks/useBestAttempts";
@@ -364,7 +364,7 @@ function getShotInfo(drillInfo) {
 
 //Helper function to generate shots for the sequence drill type
 function fillSequentialTargets(drillInfo) {
-  let shots = [];
+  const shots = [];
   for (let i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
@@ -380,7 +380,7 @@ function fillSequentialTargets(drillInfo) {
 function fillRandomShotTargets(drillInfo) {
   const minCeiled = Math.ceil(drillInfo.requirements[0].min);
   const maxFloored = Math.floor(drillInfo.requirements[0].max);
-  let shots = [];
+  const shots = [];
 
   for (let i = 0; i < drillInfo.reps; i++) {
     const target = Math.floor(
@@ -405,7 +405,7 @@ function fillRandomShotTargets(drillInfo) {
 
 //Helper function to generate shots for the putt drill type
 function fillPuttTargets(drillInfo) {
-  let shots = [];
+  const shots = [];
   for (let i = 0; i < drillInfo.reps; i++) {
     const baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
     let target = {};
@@ -430,7 +430,7 @@ function fillPuttTargets(drillInfo) {
 
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
-  let carryDiff = calculateCarryDiff(target, carry);
+  const carryDiff = calculateCarryDiff(target, carry);
   return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
 
@@ -451,12 +451,12 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   let missedRightShotCount = 0;
   let carryDiffTotal = 0;
 
-  let outputShotData = [];
+  const outputShotData = [];
 
   //Generate the shots array for output data
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
-    let shot = {};
+    const shot = {};
     if (drillInfo.requirements[0].type === "inputtedPutt") {
       attemptShots[j].baseline = lookUpExpectedPutts(inputValues[j].distance);
       attemptShots[j].items.target = inputValues[j].distance;
@@ -658,7 +658,7 @@ function validateInputs(inputs) {
 
 export default function Input({ setToggleResult, setOutputData }) {
   const { id: drillId, assignedTime } = useLocalSearchParams();
-  const { currentUserId, currentTeamId } = currentAuthContext();
+  const { currentUserId, currentTeamId } = useAuthContext();
   const {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
@@ -811,7 +811,7 @@ export default function Input({ setToggleResult, setOutputData }) {
     }
     //check for submit button
     else if (submitVisible) {
-      let outputData = createOutputData(
+      const outputData = createOutputData(
         drillInfo,
         inputValues,
         attemptShots,
