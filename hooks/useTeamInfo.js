@@ -3,11 +3,10 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
 export const useTeamInfo = ({ teamId = null } = {}) => {
-  console.log("fetching teamInfo: ", { teamId });
-
   const { data, error, isLoading } = useQuery({
     queryKey: ["teamInfo", { teamId }],
     queryFn: async () => {
+      console.log("fetching teamInfo: ", { teamId });
       if (teamId) {
         const querySnapshot = await getDoc(doc(db, "teams", teamId));
         return querySnapshot.data();

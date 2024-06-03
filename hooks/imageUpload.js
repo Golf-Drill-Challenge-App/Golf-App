@@ -63,7 +63,7 @@ export const handleImageUpload = async (
   id,
   reference,
 ) => {
-  let imageResult = await launchImageLibraryAsync({
+  const imageResult = await launchImageLibraryAsync({
     mediaTypes: MediaTypeOptions.Images,
     allowsEditing: true,
     aspect: [1, 1],

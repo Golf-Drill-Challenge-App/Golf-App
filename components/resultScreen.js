@@ -39,10 +39,6 @@ export default function ResultScreen({
     error: attemptError,
   } = useAttempts({ attemptId, enabled: !!attemptId });
 
-  const displayShotTendency = drillInfo.outputs.some(
-    (output) => output === "carry" || output === "sideLanding",
-  );
-
   const invalidateKeys = [
     ["drillInfo", { drillId }],
     ["attempts", { attemptId }],
@@ -56,20 +52,24 @@ export default function ResultScreen({
     return <ErrorComponent errorList={[drillInfoError, attemptError]} />;
   }
 
-  let attempt = attemptId ? fetchedAttempt : attemptData;
+  const displayShotTendency = drillInfo.outputs.some(
+    (output) => output === "carry" || output === "sideLanding",
+  );
 
-  let dots = attempt["shots"].map((value) => [
+  const attempt = attemptId ? fetchedAttempt : attemptData;
+
+  const dots = attempt["shots"].map((value) => [
     (value["sideLanding"] ? Number(value["sideLanding"]) : 0) + 0.0612,
     (value["carry"] ? Number(value["carry"]) : 0) + 0.2,
   ]);
 
-  let yValues = dots.map((value) => value[1]);
+  const yValues = dots.map((value) => value[1]);
   let yMax = Math.max(...yValues, 10) + 10;
   yMax += 0.1 * yMax;
   let yMin = Math.min(...yValues, -10) - 10;
   yMin += 0.1 * yMin;
 
-  let xValues = dots.map((value) => value[0]);
+  const xValues = dots.map((value) => value[0]);
   let xMax = Math.max(...xValues, 20);
   xMax += 0.1 * xMax;
   let xMin = Math.min(...xValues, -20);
@@ -80,7 +80,7 @@ export default function ResultScreen({
   });
 
   function getStyle(idx) {
-    let styles = {
+    const styles = {
       paddingVertical: 8,
       paddingHorizontal: 10,
       flexDirection: "row",

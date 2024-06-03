@@ -17,7 +17,7 @@ import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { removeUser } from "~/hooks/removeUser";
@@ -86,7 +86,7 @@ function Index() {
     setSnackbarVisible(true);
   };
 
-  const { currentUserId } = currentAuthContext();
+  const { currentUserId } = useAuthContext();
 
   const {
     data: userInfo,
@@ -210,6 +210,7 @@ function Index() {
       role={currentUserInfo["role"]}
       userInfo={userInfo}
       drillInfo={drillInfo}
+      disableCriteria={(completed) => !completed}
     ></AssignmentsList>
   );
 
@@ -298,16 +299,28 @@ function Index() {
             )
           }
         />
-        <FlatList
-          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
-          stickyHeaderIndices={[1]}
-          data={[
-            profileHeader(),
-            segmentButtons(),
-            <View>{tabComponent[value]}</View>,
-          ]}
-          renderItem={({ item }) => item}
-        />
+        {userInfo.role === "player" ? (
+          <FlatList
+            refreshControl={
+              <RefreshInvalidate invalidateKeys={invalidateKeys} />
+            }
+            stickyHeaderIndices={[1]}
+            data={[
+              profileHeader(),
+              segmentButtons(),
+              <View>{tabComponent[value]}</View>,
+            ]}
+            renderItem={({ item }) => item}
+          />
+        ) : (
+          <FlatList
+            data={[profileHeader()]}
+            renderItem={({ item }) => item}
+            refreshControl={
+              <RefreshInvalidate invalidateKeys={invalidateKeys} />
+            }
+          />
+        )}
         {/* Generic Error dialog */}
         <DialogComponent
           title={dialogTitle}

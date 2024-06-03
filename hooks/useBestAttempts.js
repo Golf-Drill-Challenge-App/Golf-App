@@ -7,11 +7,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
 export const useBestAttempts = ({ drillId = null, userId = null } = {}) => {
-  const { currentTeamId } = currentAuthContext();
+  const { currentTeamId } = useAuthContext();
   const { data, error, isLoading } = useQuery({
     queryKey: ["best_attempts", { drillId, userId }],
     queryFn: async () => {

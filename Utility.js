@@ -99,14 +99,14 @@ export function getIconByKey(key) {
     sideLanding: "arrow-left-right",
     strokes: "pound",
     distance: "ruler",
-    completed: "check",
+    default: "help",
   };
 
-  return icons[key] || null;
+  return icons[key] || icons.default;
 }
 
 export function getInitials(fullName) {
-  let nameParts = fullName.trim().split(/\s+/);
+  const nameParts = fullName.trim().split(/\s+/);
   return nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
 }
 

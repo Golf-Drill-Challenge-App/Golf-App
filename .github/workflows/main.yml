@@ -11,7 +11,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "21" # Use whatever node version your project requires
-      - name: Install Prettier
-        run: yarn add prettier --dev
+      - name: Install Packages
+        run: yarn add prettier eslint@8.56 --dev
       - name: Check code formatting
         run: yarn pretty:check

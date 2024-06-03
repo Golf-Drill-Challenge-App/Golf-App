@@ -40,7 +40,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
-import { currentAuthContext } from "~/context/Auth";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { handleImageUpload } from "~/hooks/imageUpload";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
@@ -49,7 +49,7 @@ import { useEmailInfo } from "~/hooks/useEmailInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
-  const { signOut, currentUserId, currentTeamId } = currentAuthContext();
+  const { signOut, currentUserId, currentTeamId } = useAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
 
@@ -100,6 +100,8 @@ function Index() {
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogMessage, setDialogMessage] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
+
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   const profilePicSize = 120;
 
@@ -152,6 +154,7 @@ function Index() {
   };
 
   const handleUpdate = async () => {
+    setUpdateLoading(true);
     if (!newName) {
       showDialog("Input Needed", "Please enter a new name.");
       return;
@@ -209,6 +212,7 @@ function Index() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
+    setUpdateLoading(false);
   };
 
   const styles = StyleSheet.create({
@@ -476,7 +480,15 @@ function Index() {
                     style={styles.saveChangesButton}
                     onPress={handleUpdate}
                   >
-                    <Text style={styles.saveChangesButtonText}>Update</Text>
+                    {updateLoading ? (
+                      <ActivityIndicator
+                        animating={true}
+                        size={16}
+                        color={"#FFF"}
+                      />
+                    ) : (
+                      <Text style={styles.saveChangesButtonText}>Update</Text>
+                    )}
                   </TouchableOpacity>
 
                   {/* Sign Out Button */}

@@ -21,7 +21,7 @@ const AuthContext = createContext({
   currentUserInfo: null,
 });
 
-export function currentAuthContext() {
+export function useAuthContext() {
   return useContext(AuthContext);
 }
 
@@ -34,9 +34,9 @@ function useProtectedRoute(currentUserId) {
     if (!currentUserId && !inAuthGroup) {
       router.replace("/signin");
     } else if (currentUserId && inAuthGroup) {
-      router.replace("/");
+      router.replace("/content/assignments");
     }
-  }, [currentUserId, segments]);
+  }, [currentUserId, router, segments]);
 }
 
 export const AuthProvider = ({ children }) => {

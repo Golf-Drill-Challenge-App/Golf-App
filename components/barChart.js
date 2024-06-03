@@ -28,15 +28,7 @@ export default function BarChartScreen({
   useEffect(() => {
     console.log("rendering barchart for: ", drillInfo["did"]);
     LogBox.ignoreLogs(["VirtualizedLists"]);
-  }, []);
-  if (drillAttempts.length === 0) {
-    return (
-      <EmptyScreen
-        invalidateKeys={invalidateKeys}
-        text={"No attempts have been made yet."}
-      />
-    );
-  }
+  }, [drillInfo]);
 
   const scrollViewRef = useRef();
 
@@ -53,7 +45,8 @@ export default function BarChartScreen({
   );
 
   useEffect(() => {
-    scrollViewRef.current.scrollToEnd({ animated: false });
+    if (scrollViewRef && scrollViewRef.current)
+      scrollViewRef.current.scrollToEnd({ animated: false });
   }, [page]);
 
   const sortedDrillAttempts = useMemo(
@@ -69,7 +62,7 @@ export default function BarChartScreen({
 
   const slicedDrillAttempts = useMemo(
     () => sortedDrillAttempts.slice(startIndex, endIndex),
-    [startIndex, endIndex],
+    [sortedDrillAttempts, startIndex, endIndex],
   );
 
   const data = slicedDrillAttempts.map((value) => value[aggOutput]);
@@ -89,6 +82,23 @@ export default function BarChartScreen({
 
   const [aggOutputDropdownOpen, setAggOutputDropdownOpen] = useState(false);
 
+  //some clever logic to close the dropdowns when the other one is open
+  useEffect(() => {
+    if (movingAvgRangeDropdownOpen) {
+      if (aggOutputDropdownOpen) {
+        setAggOutputDropdownOpen(false);
+      }
+    }
+  }, [movingAvgRangeDropdownOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (aggOutputDropdownOpen) {
+      if (movingAvgRangeDropdownOpen) {
+        setMovingAvgRangeDropdownOpen(false);
+      }
+    }
+  }, [aggOutputDropdownOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState(0);
 
@@ -107,8 +117,9 @@ export default function BarChartScreen({
   };
 
   useEffect(() => {
-    console.log("Selected attemptID: ", sortedDrillAttempts[selected]["id"]);
-  }, [selected]);
+    if (sortedDrillAttempts && sortedDrillAttempts[selected])
+      console.log("Selected attemptID: ", sortedDrillAttempts[selected]["id"]);
+  }, [selected, sortedDrillAttempts]);
 
   const processedData = data.map((value, index) => ({
     value: value,
@@ -147,18 +158,32 @@ export default function BarChartScreen({
     setSelected(selectedBar(event.nativeEvent.contentOffset.x));
   };
 
-  const shotAccordionList = useMemo(
-    () =>
-      sortedDrillAttempts[selected]["shots"].map((shot) => (
-        <ShotAccordion
-          key={shot["sid"]}
-          shot={shot}
-          drillInfo={drillInfo}
-          total={sortedDrillAttempts[selected]["shots"].length}
-        />
-      )),
-    [sortedDrillAttempts, drillInfo, selected],
-  );
+  const shotAccordionList = useMemo(() => {
+    if (
+      !sortedDrillAttempts ||
+      !sortedDrillAttempts[selected] ||
+      !sortedDrillAttempts[selected]["shots"]
+    ) {
+      return [];
+    }
+    return sortedDrillAttempts[selected]["shots"].map((shot) => (
+      <ShotAccordion
+        key={shot["sid"]}
+        shot={shot}
+        drillInfo={drillInfo}
+        total={sortedDrillAttempts[selected]["shots"].length}
+      />
+    ));
+  }, [sortedDrillAttempts, drillInfo, selected]);
+
+  if (drillAttempts.length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No attempts have been made yet."}
+      />
+    );
+  }
 
   const styles = StyleSheet.create({
     dropDownSection: {
@@ -265,6 +290,7 @@ export default function BarChartScreen({
             items={movingAvgRangeValues}
             open={movingAvgRangeDropdownOpen}
             setOpen={setMovingAvgRangeDropdownOpen}
+            maxHeight={40 * aggOutputValues.length}
             containerStyle={[styles.dropDownContainer, { width: 80 }]}
             style={styles.dropdown}
           />
@@ -278,6 +304,10 @@ export default function BarChartScreen({
             items={aggOutputValues}
             open={aggOutputDropdownOpen}
             setOpen={setAggOutputDropdownOpen}
+            maxHeight={45 * aggOutputValues.length}
+            scrollViewProps={{
+              showsVerticalScrollIndicator: false,
+            }}
             containerStyle={[
               styles.dropDownContainer,
               {
