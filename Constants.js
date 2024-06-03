@@ -16,6 +16,8 @@ const prettyTitle = {
   strokes: "Strokes",
   break: "Break",
   club: "Club",
+  carry: "Carry",
+  carryDiff: "Carry Difference",
   distance: "Distance",
   carryDiffAverage: "Carry Difference Average",
   proxHoleAverage: "Proximity-to-hole Average",
@@ -23,7 +25,7 @@ const prettyTitle = {
   leftSideLandingAverage: "Average Miss Left",
   rightSideLandingAverage: "Average Miss Right",
   sideLandingTotal: "Side Landing Total",
-  strokesGained: "Strokes Gained",
+  strokesGained: "Strokes Gained Total",
   strokesGainedAverage: "Strokes Gained Average",
 };
 
