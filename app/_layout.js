@@ -4,11 +4,11 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
 import { useState } from "react";
+import DropDownPicker from "react-native-dropdown-picker";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import DialogComponent from "~/components/dialog";
 import PaperWrapper from "~/components/paperWrapper";
 import { AlertContext } from "~/context/Alert";
-import DropDownPicker from "react-native-dropdown-picker";
 import { AuthProvider } from "~/context/Auth";
 
 // Create a client
