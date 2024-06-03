@@ -71,7 +71,11 @@ export default function Description() {
           buttonColor={themeColors.accent}
           textColor="white"
         >
-          {userInfo.role == "player" ? "Start Drill" : "Assign Drill"}
+          {userInfo.role == "player"
+            ? assignedTime
+              ? "Start Assignment"
+              : "Start Drill"
+            : "Assign Drill"}
         </Button>
       </Link>
     </>

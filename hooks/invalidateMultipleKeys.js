@@ -19,72 +19,57 @@ Any mentions of "active Query Key" below, such as in input arguments of checkLis
 query.queryKey
 */
 
+const isObjectSubset = (subset, superset) => {
+  if (typeof superset !== "object" || superset === null) {
+    return false;
+  }
+
+  for (const key in subset) {
+    if (!(key in superset && superset[key] === subset[key])) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const checkLists = (invalidateKey, activeQueryKey) => {
+  for (const invalidateKeyArg of invalidateKey) {
+    if (typeof invalidateKeyArg === "string") {
+      if (!activeQueryKey.includes(invalidateKeyArg)) {
+        return false;
+      }
+    } else if (typeof invalidateKeyArg === "object") {
+      let found = false;
+      for (const activeQueryKeyArg of activeQueryKey) {
+        if (isObjectSubset(invalidateKeyArg, activeQueryKeyArg)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
 export const invalidateMultipleKeys = async (queryClient, invalidateKeys) => {
   try {
     console.log("invalidateKeys requested: ", invalidateKeys);
     console.log("These query keys (cache) were successfully invalidated:");
-    const alreadyInvalidated = [];
-    queryClient.invalidateQueries({
+
+    await queryClient.invalidateQueries({
       predicate: (query) => {
-        for (let i = 0; i < invalidateKeys.length; i++) {
-          // If the first query key argument (e.g. "userInfo") does not match up between invalidateKeys[i] and query.queryKey,
-          // it's safe to assume there will not be a match between the 2 keys, and we don't have to check the rest.
-          if (invalidateKeys[i] && invalidateKeys[i][0] === query.queryKey[0]) {
-            function checkLists(invalidateKey, activeQueryKey) {
-              for (const invalidateKeyArg of invalidateKey) {
-                if (typeof invalidateKeyArg === "string") {
-                  // If arg of invalidateKeys[i] is a string, check if it also exists (as a string) in query.queryKey
-                  if (!activeQueryKey.includes(invalidateKeyArg)) {
-                    return false;
-                  }
-                } else if (typeof invalidateKeyArg === "object") {
-                  // If arg of invalidateKeys[i] is an object, check if it exists as a subset of another (object) arg in
-                  // query.queryKey
-                  let found = false;
-                  for (const activeQueryKeyArg of activeQueryKey) {
-                    if (isObjectSubset(invalidateKeyArg, activeQueryKeyArg)) {
-                      found = true;
-                      break;
-                    }
-                  }
-                  if (!found) {
-                    return false;
-                  }
-                }
-              }
-              return true;
-            }
-
-            function isObjectSubset(subset, superset) {
-              // Check if superset is an object
-              if (typeof superset !== "object" || superset === null) {
-                return false;
-              }
-
-              // Check if each key-value pair in the subset exists in the superset
-              for (const key in subset) {
-                if (!(key in superset && superset[key] === subset[key])) {
-                  return false;
-                }
-              }
-              return true;
-            }
-            // Uncomment the 3 logs below for more comprehensive debug
-            /*
-          console.log(invalidateKeys[i]);
-          console.log(query.queryKey);
-          console.log(checkLists(invalidateKeys[i], query.queryKey));
-          */
-            if (
-              checkLists(invalidateKeys[i], query.queryKey) &&
-              !alreadyInvalidated.includes(query.queryKey)
-            ) {
-              alreadyInvalidated.push(query.queryKey);
+        for (const invalidateKey of invalidateKeys) {
+          if (invalidateKey && invalidateKey[0] === query.queryKey[0]) {
+            if (checkLists(invalidateKey, query.queryKey)) {
               console.log(query.queryKey);
+              return true;
             }
-            return checkLists(invalidateKeys[i], query.queryKey);
           }
         }
+        return false;
       },
     });
   } catch (e) {
