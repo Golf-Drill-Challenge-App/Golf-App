@@ -12,6 +12,6 @@ jobs:
         with:
           node-version: "21" # Use whatever node version your project requires
       - name: Install Packages
-        run: yarn add prettier eslint --dev
+        run: yarn add prettier eslint@8.56 --dev
       - name: Check code formatting
         run: yarn pretty:check
