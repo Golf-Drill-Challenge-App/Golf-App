@@ -931,60 +931,60 @@ export default function Input({ setToggleResult, setOutputData }) {
               </BottomSheetScrollView>
             </BottomSheetWrapper>
 
-                {/* Description Bottom Sheet */}
-                <BottomSheetWrapper ref={descriptionModalRef}>
-                  <BottomSheetView style={{ paddingBottom: 50 }}>
-                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                      Description
-                    </Text>
-                    <DrillDescription drillInfo={drillInfo} />
-                  </BottomSheetView>
-                </BottomSheetWrapper>
-              </KeyboardAwareScrollView>
-              {/* Navigation */}
-              <View style={styles.navigationContainer}>
-                <Text
-                  onPress={() => {
-                    const newInputValues = Array.from(
-                      { length: attemptShots.length },
-                      () => ({}),
-                    );
-                    for (let i = 0; i < attemptShots.length; i++) {
-                      drillInfo.inputs.forEach((item) => {
-                        switch (item.id) {
-                          case "carry":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() *
-                                attemptShots[displayedShot].items["target"] +
-                                attemptShots[displayedShot].items["target"] / 2,
-                            ).toString();
-                            break;
-                          case "sideLanding":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 21 - 10,
-                            ).toString();
-                            break;
-                          case "strokes":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 2 + 1,
-                            ).toString();
-                            break;
-                          case "distance":
-                            newInputValues[i][item.id] = Math.floor(
-                              Math.random() * 35 + 5,
-                            ).toString();
-                            break;
-                        }
-                      });
-                    }
-                    setInputValues(newInputValues);
-                    setDisplayedShot(attemptShots.length - 1);
-                    setCurrentShot(attemptShots.length - 1);
-                  }}
-                >
-                  Fill in all inputs
+            {/* Description Bottom Sheet */}
+            <BottomSheetWrapper ref={descriptionModalRef}>
+              <BottomSheetView style={{ paddingBottom: 50 }}>
+                <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                  Description
                 </Text>
-                {buttonDisplayHandler()}
+                <DrillDescription drillInfo={drillInfo} />
+              </BottomSheetView>
+            </BottomSheetWrapper>
+          </KeyboardAwareScrollView>
+          {/* Navigation */}
+          <View style={styles.navigationContainer}>
+            <Text
+              onPress={() => {
+                const newInputValues = Array.from(
+                  { length: attemptShots.length },
+                  () => ({}),
+                );
+                for (let i = 0; i < attemptShots.length; i++) {
+                  drillInfo.inputs.forEach((item) => {
+                    switch (item.id) {
+                      case "carry":
+                        newInputValues[i][item.id] = Math.floor(
+                          Math.random() *
+                            attemptShots[displayedShot].items["target"] +
+                            attemptShots[displayedShot].items["target"] / 2,
+                        ).toString();
+                        break;
+                      case "sideLanding":
+                        newInputValues[i][item.id] = Math.floor(
+                          Math.random() * 21 - 10,
+                        ).toString();
+                        break;
+                      case "strokes":
+                        newInputValues[i][item.id] = Math.floor(
+                          Math.random() * 2 + 1,
+                        ).toString();
+                        break;
+                      case "distance":
+                        newInputValues[i][item.id] = Math.floor(
+                          Math.random() * 35 + 5,
+                        ).toString();
+                        break;
+                    }
+                  });
+                }
+                setInputValues(newInputValues);
+                setDisplayedShot(attemptShots.length - 1);
+                setCurrentShot(attemptShots.length - 1);
+              }}
+            >
+              Fill in all inputs
+            </Text>
+            {buttonDisplayHandler()}
 
             <Text
               style={{

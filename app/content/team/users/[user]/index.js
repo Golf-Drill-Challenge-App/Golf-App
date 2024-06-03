@@ -284,9 +284,7 @@ function Index() {
       />
       {userInfo.role === "player" ? (
         <FlatList
-          refreshControl={
-            <RefreshInvalidate invalidateKeys={invalidateKeys} />
-          }
+          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
           stickyHeaderIndices={[1]}
           data={[
             profileHeader(),
@@ -299,9 +297,7 @@ function Index() {
         <FlatList
           data={[profileHeader()]}
           renderItem={({ item }) => item}
-          refreshControl={
-            <RefreshInvalidate invalidateKeys={invalidateKeys} />
-          }
+          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
         />
       )}
       {/* Remove user dialog */}

@@ -17,7 +17,7 @@ export default function Index() {
   // Navigation
   const navigation = useNavigation();
 
-  const showDialog = (title, message) => {
+  const showDialog = () => {
     setLeaveDialogVisible(true);
   };
 

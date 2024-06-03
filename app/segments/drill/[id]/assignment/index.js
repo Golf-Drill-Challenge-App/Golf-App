@@ -6,8 +6,13 @@ import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
-
-  TouchableRipple,ActivityIndicator,Appbar, Button, List, Text } from "react-native-paper";
+  ActivityIndicator,
+  Appbar,
+  Button,
+  List,
+  Text,
+  TouchableRipple,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
@@ -171,48 +176,46 @@ export default function Index() {
                       userInfo={userData}
                     />
 
-                        <Text style={styles.title}>{userData.name}</Text>
-                      </View>
-                      <View style={styles.specContainer}>
-                        {checkedItems[uid] ? (
-                          <Icon name="checkbox-outline" size={20} />
-                        ) : (
-                          <Icon name="checkbox-blank-outline" size={20} />
-                        )}
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </List.Section>
-            </ScrollView>
-          </View>
-          <TouchableRipple
-            rippleColor="rgba(256, 256, 256, 0.2)"
-            borderless={true}
-            style={{
-              margin: 10,
-              bottom: 30,
-              left: 0,
-              right: 0,
-              backgroundColor: themeColors.accent,
-              padding: 10,
-              justifyContent: "center",
-              borderRadius: 20,
-              flexDirection: "row",
-            }}
-            onPress={handleAssign}
-          >
-            {loading ? (
-              <ActivityIndicator animating={true} color={"#FFF"} />
-            ) : (
-              <Text
-                style={{ color: "white", fontSize: 20, fontWeight: "bold" }}
-              >
-                Assign
-              </Text>
-            )}
-          </TouchableRipple>
-        </SafeAreaView>
+                    <Text style={styles.title}>{userData.name}</Text>
+                  </View>
+                  <View style={styles.specContainer}>
+                    {checkedItems[uid] ? (
+                      <Icon name="checkbox-outline" size={20} />
+                    ) : (
+                      <Icon name="checkbox-blank-outline" size={20} />
+                    )}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </List.Section>
+        </ScrollView>
+      </View>
+      <TouchableRipple
+        rippleColor="rgba(256, 256, 256, 0.2)"
+        borderless={true}
+        style={{
+          margin: 10,
+          bottom: 30,
+          left: 0,
+          right: 0,
+          backgroundColor: themeColors.accent,
+          padding: 10,
+          justifyContent: "center",
+          borderRadius: 20,
+          flexDirection: "row",
+        }}
+        onPress={handleAssign}
+      >
+        {loading ? (
+          <ActivityIndicator animating={true} color={"#FFF"} />
+        ) : (
+          <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
+            Assign
+          </Text>
+        )}
+      </TouchableRipple>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({

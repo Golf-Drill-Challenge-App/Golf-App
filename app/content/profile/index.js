@@ -437,21 +437,21 @@ function Index() {
                 </>
               )}
 
-                  {/* Save Button */}
-                  <TouchableOpacity
-                    style={styles.saveChangesButton}
-                    onPress={handleUpdate}
-                  >
-                    {updateLoading ? (
-                      <ActivityIndicator
-                        animating={true}
-                        size={16}
-                        color={"#FFF"}
-                      />
-                    ) : (
-                      <Text style={styles.saveChangesButtonText}>Update</Text>
-                    )}
-                  </TouchableOpacity>
+              {/* Save Button */}
+              <TouchableOpacity
+                style={styles.saveChangesButton}
+                onPress={handleUpdate}
+              >
+                {updateLoading ? (
+                  <ActivityIndicator
+                    animating={true}
+                    size={16}
+                    color={"#FFF"}
+                  />
+                ) : (
+                  <Text style={styles.saveChangesButtonText}>Update</Text>
+                )}
+              </TouchableOpacity>
 
               {/* Sign Out Button */}
               <Pressable onPress={handleSignOut}>
