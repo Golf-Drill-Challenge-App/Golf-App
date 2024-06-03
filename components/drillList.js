@@ -44,6 +44,20 @@ export default function DrillList({
     return 0;
   });
 
+  drills.forEach(section => {
+    section.data.sort((a, b) => {
+      const subTypeA = a.subType;
+      const subTypeB = b.subType;
+      if (subTypeA < subTypeB) {
+        return -1;
+      }
+      if (subTypeA > subTypeB) {
+        return 1;
+      }
+      return 0;
+    });
+  });
+
   function getDrillIndexByTitle(title) {
     return drillData.findIndex((item) => item.drillType === title);
   }

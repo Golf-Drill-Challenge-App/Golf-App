@@ -125,13 +125,15 @@ async function uploadAttempt(
   });
 
   //Call function to check for leaderboard update
-  await handleLeaderboardUpdate(
-    uploadData,
-    drillInfo,
-    currentLeaderboard,
-    userInfo,
-    currentTeamId,
-  );
+  if (drillInfo.reps !== 0) {
+    await handleLeaderboardUpdate(
+      uploadData,
+      drillInfo,
+      currentLeaderboard,
+      userInfo,
+      currentTeamId,
+    );
+  }
 
   // Check if drill was assigned
   if (assignedTime) {
@@ -412,14 +414,12 @@ function getShotInfo(drillInfo) {
       shots = fillRandomShotTargets(drillInfo);
       break;
     case "inputtedPutt":
+    case "text":
     case "sequence":
       shots = fillSequentialTargets(drillInfo);
       break;
     case "putt":
       shots = fillPuttTargets(drillInfo);
-      break;
-    case "text":
-      shots = [];
       break;
     default:
       console.log("Shots not found");
@@ -789,8 +789,10 @@ export default function Input({ setToggleResult, setOutputData }) {
     setSnackbarVisible(true);
   };
 
+  console.log("drillInfo", drillInfo)
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
+      console.log("In useEffect")
     if (drillInfo) {
       setattemptShots(getShotInfo(drillInfo));
       setInputValues(Array.from({ length: drillInfo.reps }, () => ({})));
@@ -800,10 +802,7 @@ export default function Input({ setToggleResult, setOutputData }) {
   const numInputs = drillInfo.inputs.length;
 
   //Varible to store if Submit button is active
-  const submitVisible =
-    (currentShot === drillInfo.reps - 1 &&
-      displayedShot === drillInfo.reps - 1) ||
-    drillInfo.reps === 0;
+  const submitVisible = currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
@@ -868,7 +867,7 @@ export default function Input({ setToggleResult, setOutputData }) {
     // useAttempts / useDrillInfo hooks
 
     //Check if all inputs have been filled in
-    if (drillInfo.reps !== 0) {
+    
       if (
         Object.keys(inputValues[displayedShot]).length !== numInputs ||
         checkEmptyInputs(inputValues[displayedShot])
@@ -914,34 +913,6 @@ export default function Input({ setToggleResult, setOutputData }) {
         setDisplayedShot(displayedShot + 1);
         setCurrentShot(currentShot + 1);
       }
-    } else {
-      try {
-        let outputData = createOutputData(
-          drillInfo,
-          inputValues,
-          attemptShots,
-          currentUserId,
-          drillId,
-        );
-
-        setOutputData(outputData);
-
-        await uploadTextDrill(
-          currentUserId,
-          assignedTime,
-          drillId,
-          currentTeamId,
-        );
-
-        // invalidate cache on button press
-        await invalidateMultipleKeys(queryClient, invalidateKeys);
-        // if there are no errors, go to result screen
-        setToggleResult(true);
-      } catch (e) {
-        console.log(e);
-        showDialog("Error", getErrorString(e));
-      }
-    }
   };
 
   //Loading until an attempt is generated or hooks are working
@@ -985,8 +956,6 @@ export default function Input({ setToggleResult, setOutputData }) {
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
-                {attemptShots.length !== 0 && (
-                  <>
                     <View style={styles.shotNumContainer}>
                       <Text style={styles.shotNumber}>
                         Shot {attemptShots[displayedShot].shotNum}
@@ -1032,8 +1001,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                         />
                       ))}
                     </View>
-                  </>
-                )}
+                  
 
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetWrapper ref={navModalRef}>

@@ -12,6 +12,7 @@ export default function DrillInput({
   currentShot,
   displayedShot,
 }) {
+    console.log("inputValue", inputValue)
   return (
     <View style={styles.item}>
       <Text style={styles.description}>
@@ -20,6 +21,7 @@ export default function DrillInput({
       </Text>
 
       <View style={styles.horizontalContainer}>
+        
         <TextInput
           mode="outlined"
           placeholder=""
