@@ -4,12 +4,14 @@ import {
   Image,
   Modal,
   ScrollView,
+  StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
 import { Text } from "react-native-paper";
+import { prettyTitle } from "~/Constants";
 
-export default function DrillScreen(props) {
+export default function DrillDescription({ drillInfo }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -28,10 +30,46 @@ export default function DrillScreen(props) {
 
   const windowWidth = Dimensions.get("window").width;
 
+  const prettyInputs = drillInfo.inputs.map((input) => prettyTitle[input.id]);
+  const sortedInputs = prettyInputs.sort();
+
+  const prettyOutputs = Object.keys(drillInfo.aggOutputs).map((output) => {
+    let prettyOutput = prettyTitle[output];
+    if (output === drillInfo.mainOutputAttempt) {
+      prettyOutput += " (main)";
+    }
+    return prettyOutput;
+  });
+  const sortedOutputs = prettyOutputs.sort();
+
   return (
     <View style={{ margin: 10 }}>
-      <ScrollView style={{ paddingLeft: 5 }}>
-        <Text variant="bodyMedium">{props.drillData["description"]}</Text>
+      <ScrollView style={{ paddingLeft: 10 }}>
+        <Text style={styles.header}>Description</Text>
+        <Text style={styles.bodyText}>{drillInfo["description"]}</Text>
+        {drillInfo.inputs.length !== 0 && (
+          <>
+            <Text style={styles.header}>Inputs (per shot)</Text>
+            {sortedInputs.map((input) => (
+              <Text
+                key={input}
+                style={styles.bodyText}
+              >{`\u2022\t${input}`}</Text>
+            ))}
+          </>
+        )}
+        {drillInfo.outputs.length !== 0 && (
+          <>
+            <Text style={styles.header}>Outputted Data</Text>
+            {sortedOutputs.map((output) => (
+              <Text
+                key={output}
+                style={styles.bodyText}
+              >{`\u2022\t${output}`}</Text>
+            ))}
+          </>
+        )}
+
         {hasImages && (
           <View style={{ marginTop: 10 }}>
             <View
@@ -41,22 +79,18 @@ export default function DrillScreen(props) {
                 justifyContent: "space-between",
               }}
             >
-              {hasImages &&
-                images.map((image, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => openModal(index)}
-                  >
-                    <Image
-                      style={{
-                        width: windowWidth / 3 - 10,
-                        height: windowWidth / 3 - 10,
-                        marginBottom: 15,
-                      }}
-                      source={image}
-                    />
-                  </TouchableOpacity>
-                ))}
+              {images.map((image, index) => (
+                <TouchableOpacity key={index} onPress={() => openModal(index)}>
+                  <Image
+                    style={{
+                      width: windowWidth / 3 - 10,
+                      height: windowWidth / 3 - 10,
+                      marginBottom: 15,
+                    }}
+                    source={image}
+                  />
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
         )}
@@ -105,3 +139,16 @@ export default function DrillScreen(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingVertical: 5,
+  },
+  bodyText: {
+    fontSize: 14,
+    paddingLeft: 5,
+    paddingBottom: 5,
+  },
+});

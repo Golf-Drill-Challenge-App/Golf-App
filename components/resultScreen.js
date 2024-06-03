@@ -74,6 +74,10 @@ export default function ResultScreen({
   let xMin = Math.min(...xValues, -20);
   xMin += 0.1 * xMin;
 
+  const sortedAggOutputs = Object.keys(drillInfo.aggOutputs).sort((a, b) => {
+    return prettyTitle[a].localeCompare(prettyTitle[b]);
+  });
+
   function getStyle(idx) {
     let styles = {
       paddingVertical: 8,
@@ -81,16 +85,12 @@ export default function ResultScreen({
       flexDirection: "row",
       justifyContent: "space-between",
     };
-    if (idx !== Object.keys(drillInfo["aggOutputs"]).length - 1) {
+    if (idx !== sortedAggOutputs.length - 1) {
       styles.borderColor = themeColors.border;
       styles.borderBottomWidth = 1;
     }
     return styles;
   }
-
-  const sortedAggOutputs = Object.keys(drillInfo["aggOutputs"]).sort((a, b) =>
-    prettyTitle[a].localeCompare(prettyTitle[b]),
-  );
 
   return (
     <ScrollView
