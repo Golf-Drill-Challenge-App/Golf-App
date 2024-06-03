@@ -89,7 +89,7 @@ export default function BarChartScreen({
         setAggOutputDropdownOpen(false);
       }
     }
-  }, [movingAvgRangeDropdownOpen]);
+  }, [movingAvgRangeDropdownOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (aggOutputDropdownOpen) {
@@ -97,7 +97,7 @@ export default function BarChartScreen({
         setMovingAvgRangeDropdownOpen(false);
       }
     }
-  }, [aggOutputDropdownOpen]);
+  }, [aggOutputDropdownOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState(0);
