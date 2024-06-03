@@ -1,8 +1,7 @@
 ﻿import { SectionList, Text, View } from "react-native";
-import { Divider, Icon } from "react-native-paper";
+import { Divider } from "react-native-paper";
 
 import { themeColors } from "~/Constants";
-import { getIconByKey } from "~/Utility";
 import DrillCard from "~/components/drillCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 
@@ -44,7 +43,7 @@ export default function DrillList({
     return 0;
   });
 
-  drills.forEach(section => {
+  drills.forEach((section) => {
     section.data.sort((a, b) => {
       const subTypeA = a.subType;
       const subTypeB = b.subType;
@@ -57,10 +56,6 @@ export default function DrillList({
       return 0;
     });
   });
-
-  function getDrillIndexByTitle(title) {
-    return drillData.findIndex((item) => item.drillType === title);
-  }
 
   return (
     <SectionList
@@ -80,15 +75,7 @@ export default function DrillList({
             backgroundColor: themeColors.background,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title} </Text>
-          {drillData[getDrillIndexByTitle(title)].inputs.map((input) => (
-            <Icon
-              key={input.id}
-              source={getIconByKey(input.id)}
-              size={12}
-              color="#666"
-            />
-          ))}
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title}</Text>
           <Divider bold={true} />
         </View>
       )}

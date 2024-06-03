@@ -125,7 +125,7 @@ async function uploadAttempt(
   });
 
   //Call function to check for leaderboard update
-  if (drillInfo.reps !== 0) {
+  if (drillInfo.requirements[0].type !== "text") {
     await handleLeaderboardUpdate(
       uploadData,
       drillInfo,
@@ -789,10 +789,8 @@ export default function Input({ setToggleResult, setOutputData }) {
     setSnackbarVisible(true);
   };
 
-  console.log("drillInfo", drillInfo)
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
-      console.log("In useEffect")
     if (drillInfo) {
       setattemptShots(getShotInfo(drillInfo));
       setInputValues(Array.from({ length: drillInfo.reps }, () => ({})));
@@ -802,7 +800,8 @@ export default function Input({ setToggleResult, setOutputData }) {
   const numInputs = drillInfo.inputs.length;
 
   //Varible to store if Submit button is active
-  const submitVisible = currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1
+  const submitVisible =
+    currentShot === drillInfo.reps - 1 && displayedShot === drillInfo.reps - 1;
 
   //Changes the button depending on the current shot and shot index
   const buttonDisplayHandler = () => {
@@ -867,56 +866,60 @@ export default function Input({ setToggleResult, setOutputData }) {
     // useAttempts / useDrillInfo hooks
 
     //Check if all inputs have been filled in
-    
-      if (
-        Object.keys(inputValues[displayedShot]).length !== numInputs ||
-        checkEmptyInputs(inputValues[displayedShot])
-      ) {
-        showSnackBar("All inputs must be filled.");
-      }
-      //check inputs are all numbers
-      else if (validateInputs(inputValues[displayedShot])) {
-        showSnackBar("All inputs must be numbers.");
-      }
-      //check for submit button
-      else if (submitVisible) {
-        let outputData = createOutputData(
-          drillInfo,
-          inputValues,
-          attemptShots,
+    if (
+      Object.keys(inputValues[displayedShot]).length !== numInputs ||
+      checkEmptyInputs(inputValues[displayedShot])
+    ) {
+      showSnackBar("All inputs must be filled.");
+    }
+    //check inputs are all numbers
+    else if (validateInputs(inputValues[displayedShot])) {
+      showSnackBar("All inputs must be numbers.");
+    }
+    //check for submit button
+    else if (submitVisible) {
+      let outputData = createOutputData(
+        drillInfo,
+        inputValues,
+        attemptShots,
+        currentUserId,
+        drillId,
+      );
+
+      setOutputData(outputData);
+      try {
+        await uploadAttempt(
+          outputData,
           currentUserId,
+          assignedTime,
           drillId,
+          drillInfo,
+          currentLeaderboard,
+          userInfo,
+          currentTeamId,
         );
 
-        setOutputData(outputData);
-        try {
-          await uploadAttempt(
-            outputData,
-            currentUserId,
-            assignedTime,
-            drillId,
-            drillInfo,
-            currentLeaderboard,
-            userInfo,
-            currentTeamId,
-          );
-
-          // invalidate cache on button press
-          await invalidateMultipleKeys(queryClient, invalidateKeys);
-          // if there are no errors, go to result screen
-          setToggleResult(true);
-        } catch (e) {
-          console.log(e);
-          showDialog("Error", getErrorString(e));
-        }
-      } else {
-        setDisplayedShot(displayedShot + 1);
-        setCurrentShot(currentShot + 1);
+        // invalidate cache on button press
+        await invalidateMultipleKeys(queryClient, invalidateKeys);
+        // if there are no errors, go to result screen
+        setToggleResult(true);
+      } catch (e) {
+        console.log(e);
+        showDialog("Error", getErrorString(e));
       }
+    } else {
+      setDisplayedShot(displayedShot + 1);
+      setCurrentShot(currentShot + 1);
+    }
   };
 
   //Loading until an attempt is generated or hooks are working
-  if (leaderboardIsLoading || userIsLoading || drillInfoIsLoading) {
+  if (
+    leaderboardIsLoading ||
+    userIsLoading ||
+    drillInfoIsLoading ||
+    attemptShots.length === 0
+  ) {
     console.log("Loading");
     return <Loading />;
   }
@@ -956,52 +959,43 @@ export default function Input({ setToggleResult, setOutputData }) {
 
               <KeyboardAwareScrollView>
                 {/* Shot Number / Total shots */}
-                    <View style={styles.shotNumContainer}>
-                      <Text style={styles.shotNumber}>
-                        Shot {attemptShots[displayedShot].shotNum}
-                        <Text style={styles.shotTotal}>
-                          /{attemptShots.length}
-                        </Text>
-                      </Text>
-                    </View>
+                <View style={styles.shotNumContainer}>
+                  <Text style={styles.shotNumber}>
+                    Shot {attemptShots[displayedShot].shotNum}
+                    <Text style={styles.shotTotal}>/{attemptShots.length}</Text>
+                  </Text>
+                </View>
 
-                    <View style={styles.container}>
-                      {/* Instruction */}
+                <View style={styles.container}>
+                  {/* Instruction */}
 
-                      <View style={styles.horizontalContainer}>
-                        {drillInfo.requirements.map((item, id) => (
-                          <DrillTarget
-                            key={id}
-                            prompt={item.prompt}
-                            distanceMeasure={item.distanceMeasure}
-                            target={
-                              attemptShots[displayedShot].items[item.name]
-                            }
-                          />
-                        ))}
-                      </View>
+                  <View style={styles.horizontalContainer}>
+                    {drillInfo.requirements.map((item, id) => (
+                      <DrillTarget
+                        key={id}
+                        prompt={item.prompt}
+                        distanceMeasure={item.distanceMeasure}
+                        target={attemptShots[displayedShot].items[item.name]}
+                      />
+                    ))}
+                  </View>
 
-                      {/* Inputs */}
+                  {/* Inputs */}
 
-                      {drillInfo.inputs.map((item, id) => (
-                        <DrillInput
-                          key={id}
-                          icon={getIconByKey(item.id)}
-                          prompt={item.prompt}
-                          helperText={item.helperText}
-                          distanceMeasure={item.distanceMeasure}
-                          inputValue={
-                            inputValues[displayedShot]?.[item.id] || ""
-                          }
-                          onInputChange={(newText) => {
-                            handleInputChange(item.id, newText);
-                          }}
-                          currentShot={currentShot}
-                          displayedShot={displayedShot}
-                        />
-                      ))}
-                    </View>
-                  
+                  {drillInfo.inputs.map((item, id) => (
+                    <DrillInput
+                      key={id}
+                      icon={getIconByKey(item.id)}
+                      input={item}
+                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                      onInputChange={(newText) => {
+                        handleInputChange(item.id, newText);
+                      }}
+                      currentShot={currentShot}
+                      displayedShot={displayedShot}
+                    />
+                  ))}
+                </View>
 
                 {/*Navigation Bottom Sheet */}
                 <BottomSheetWrapper ref={navModalRef}>

@@ -6,6 +6,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
 import { prettyTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
@@ -100,7 +101,7 @@ export default function ResultScreen({
         <RefreshInvalidate invalidateKeys={invalidateKeys} />
       }
     >
-      {!attempt.shots ? (
+      {drillInfo.requirements[0].type !== "text" ? (
         <>
           <Text style={[styles.sectionTitle, { marginTop: 10 }]}>
             Aggregate Data
@@ -164,16 +165,26 @@ export default function ResultScreen({
             ))}
         </>
       ) : (
-        <Text
+        <View
           style={{
-            alignSelf: "center",
-            fontSize: 26,
-            fontWeight: "bold",
-            margin: 50,
+            flex: 1,
+            flexDirection: "column",
+            alignItems: "center",
+            marginVertical: 150,
           }}
         >
-          No data to be displayed
-        </Text>
+          <Text
+            style={{
+              alignSelf: "center",
+              fontSize: 26,
+              fontWeight: "bold",
+              padding: 20,
+            }}
+          >
+            Drill Submitted!
+          </Text>
+          <Icon source="check" size={100} color="green" />
+        </View>
       )}
     </ScrollView>
   );

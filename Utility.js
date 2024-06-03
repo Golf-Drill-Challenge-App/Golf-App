@@ -99,7 +99,7 @@ export function getIconByKey(key) {
     sideLanding: "arrow-left-right",
     strokes: "pound",
     distance: "ruler",
-    completed: "pound",
+    completed: "check",
   };
 
   return icons[key] || null;
