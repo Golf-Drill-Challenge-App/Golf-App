@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Image } from "react-native-expo-image-cache";
-import { Avatar } from "react-native-paper";
-import { themeColors } from "~/Constants";
-import { getInitials } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
+import { prettyRole } from "~/Constants";
 
 function ProfileCard(props) {
   const profilePicSize = 150;
+
+  const roleColor = props.user["role"] === "owner" ? "#3366ff" : "#222";
 
   const styles = StyleSheet.create({
     container: {
@@ -22,6 +22,9 @@ function ProfileCard(props) {
       fontWeight: "bold",
       marginBottom: 5,
     },
+    role: {
+      fontSize: 16,
+    },
     email: {
       fontSize: 16,
       color: "gray",
@@ -30,16 +33,10 @@ function ProfileCard(props) {
 
   return (
     <View style={styles.container}>
-      {props.user.pfp ? (
-        <Image uri={props.user.pfp} style={styles.profileImage} />
-      ) : (
-        <Avatar.Text
-          size={profilePicSize}
-          label={getInitials(props.user.name)}
-          color="white"
-          style={{ backgroundColor: themeColors.avatar }}
-        />
-      )}
+      <ProfilePicture userInfo={props.user} style={styles.profileImage} />
+      <Text style={[styles.role, { color: roleColor }]}>
+        {prettyRole[props.user["role"]]}
+      </Text>
       <Text style={styles.name}>{props.user["name"]}</Text>
       <Text style={styles.email}>{props.email}</Text>
     </View>

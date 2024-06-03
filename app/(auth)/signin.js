@@ -6,7 +6,6 @@ import {
 } from "firebase/auth";
 import { useState } from "react";
 import {
-  Image,
   Keyboard,
   Platform,
   Pressable,
@@ -19,6 +18,10 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { themeColors } from "~/Constants";
+import { getErrorString } from "~/Utility";
+import ProfilePicture from "~/components/ProfilePicture";
+import DialogComponent from "~/components/dialog";
+import PaperWrapper from "~/components/paperWrapper";
 import { currentAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
 
@@ -32,6 +35,16 @@ export default function SignIn() {
 
   const { height } = useWindowDimensions();
 
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
+
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
       // Only allow login as test user while using `yarn test` to reduce errors
@@ -41,29 +54,26 @@ export default function SignIn() {
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
-        alert(e);
         console.log(e);
+        showDialog("Error", getErrorString(e));
       }
     }
   }
 
   async function handleForgotPassword() {
+    if (!email) {
+      showDialog(
+        "Error",
+        "Please enter an email address to reset your password",
+      );
+      return;
+    }
     try {
-      if (email === "") {
-        throw "Please enter an email address for password reset";
-      }
-      sendPasswordResetEmail(getAuth(), email)
-        .then(() => {
-          alert("Password reset email sent");
-        })
-        .catch((e) => {
-          alert(e);
-          console.log(e);
-        });
+      await sendPasswordResetEmail(getAuth(), email);
+      showDialog("", "Password reset email sent");
     } catch (e) {
-      // dual catch but had to handle empty email
-      alert(e);
       console.log(e);
+      showDialog("Error", getErrorString(e));
     }
   }
 
@@ -73,9 +83,6 @@ export default function SignIn() {
       alignItems: "center",
       justifyContent: "center",
       height: height,
-    },
-    image: {
-      marginTop: 0,
     },
     title: {
       fontSize: 32,
@@ -120,62 +127,67 @@ export default function SignIn() {
       onPress={Keyboard.dismiss}
       accessible={false}
     >
-      <KeyboardAwareScrollView
-        // allows opening links from search results without closing keyboard first
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <Image
-            source={{
-              uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
-              resizeMode: "contain",
-              width: 131,
-              height: 75,
-            }}
-            style={styles.image}
-          />
-          <Text style={styles.title}>Oregon State Golf</Text>
-          <View style={styles.inputView}>
-            <Text style={styles.placeholderText}>Email</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-              onChangeText={setEmail}
-              style={styles.input}
+      <PaperWrapper>
+        <KeyboardAwareScrollView
+          // allows opening links from search results without closing keyboard first
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <DialogComponent
+              title={dialogTitle}
+              content={dialogMessage}
+              visible={dialogVisible}
+              onHide={() => setDialogVisible(false)}
             />
-            <Text style={styles.placeholderText}>Password</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="current-password"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={setPassword}
-              style={styles.input}
+            <ProfilePicture
+              style={{ width: 131, height: 75, marginTop: 0 }}
+              userInfo={{
+                pfp: "https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1200px-Oregon_State_Beavers_logo.svg.png",
+              }}
             />
-            <Pressable style={styles.button} onPress={handleForgotPassword}>
-              <Text style={styles.forgotPassword}>Forgot your password?</Text>
-            </Pressable>
+            <Text style={styles.title}>Oregon State Golf</Text>
+            <View style={styles.inputView}>
+              <Text style={styles.placeholderText}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
+                onChangeText={setEmail}
+                style={styles.input}
+              />
+              <Text style={styles.placeholderText}>Password</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="current-password"
+                autoCorrect={false}
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                style={styles.input}
+              />
+              <Pressable style={styles.button} onPress={handleForgotPassword}>
+                <Text style={styles.forgotPassword}>Forgot your password?</Text>
+              </Pressable>
 
-            <Pressable
-              style={styles.button}
-              onPress={handleSignIn}
-              backgroundColor={themeColors.accent}
-            >
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
-            <Pressable
-              style={styles.button}
-              backgroundColor={themeColors.accent}
-            >
-              <Link asChild href={"/signup"}>
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </Link>
-            </Pressable>
+              <Pressable
+                style={styles.button}
+                onPress={handleSignIn}
+                backgroundColor={themeColors.accent}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </Pressable>
+              <Pressable
+                style={styles.button}
+                backgroundColor={themeColors.accent}
+              >
+                <Link asChild href={"/signup"}>
+                  <Text style={styles.buttonText}>Sign Up</Text>
+                </Link>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </PaperWrapper>
     </TouchableWithoutFeedback>
   );
 }

@@ -27,7 +27,7 @@ export default function Index() {
       description: <Description />,
       stats: <Stat />,
     }),
-    [drillId],
+    [],
   ); // Recreate pages only if drillId changes
 
   const {

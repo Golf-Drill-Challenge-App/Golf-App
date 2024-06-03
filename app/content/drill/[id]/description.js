@@ -19,8 +19,8 @@ export default function Description() {
   const { currentUserId } = currentAuthContext();
   const {
     data: userInfo,
-    userError: userInfoError,
-    userIsLoading: userIsLoading,
+    error: userInfoError,
+    isLoading: userIsLoading,
   } = useUserInfo({ userId: currentUserId });
 
   const {
@@ -29,11 +29,15 @@ export default function Description() {
     isLoading: drillInfoIsLoading,
   } = useDrillInfo({ drillId });
 
-  const invalidateKeys = [["drillInfo", { drillId }]];
+  const invalidateKeys = [
+    ["drillInfo", { drillId }],
+    ["userInfo", { userId: currentUserId }],
+  ];
 
   if (drillInfoIsLoading || userIsLoading) return <Loading />;
 
-  if (drillInfoError) return <ErrorComponent errorList={[drillInfoError]} />;
+  if (drillInfoError || userInfoError)
+    return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
 
   return (
     <>

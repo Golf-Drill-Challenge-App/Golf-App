@@ -7,14 +7,10 @@ import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 function RefreshInvalidate({ invalidateKeys = [], ...props }) {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    const refresh = async () => {
-      // keep refresh spinner spinning, until the query invalidation completes
-      await invalidateMultipleKeys(queryClient, invalidateKeys);
-      setRefreshing(false);
-    };
-    refresh();
+    await invalidateMultipleKeys(queryClient, invalidateKeys);
+    setRefreshing(false);
   }, [queryClient]);
   return (
     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...props} />

@@ -66,7 +66,7 @@ export default function DrillList({
             backgroundColor: themeColors.background,
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title} </Text>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title} </Text>
           {drillData[getDrillIndexByTitle(title)].inputs.map((input) => (
             <Icon
               key={input.id}

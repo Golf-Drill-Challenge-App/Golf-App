@@ -22,6 +22,7 @@ import { Appbar, Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import {
+  getErrorString,
   getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
@@ -51,33 +52,29 @@ import { useUserInfo } from "~/hooks/useUserInfo";
 async function completeAssigned(userId, assignedTime, drillId, attemptId) {
   const userRef = doc(db, "teams", "1", "users", userId);
 
-  const getDocument = async () => {
-    const docSnap = await getDoc(userRef);
+  const docSnap = await getDoc(userRef);
 
-    if (docSnap.exists()) {
-      const assignedData = docSnap.data()["assigned_data"];
-      const updatedAssignedData = assignedData.map((assignment) => {
-        if (
-          assignment.assignedTime == assignedTime &&
-          assignment.drillId === drillId
-        ) {
-          return { ...assignment, completed: true, attemptId: attemptId };
-        }
-        return assignment;
-      });
-
-      try {
-        await updateDoc(userRef, { assigned_data: updatedAssignedData });
-        console.log("Assignment Document updated successfully!");
-      } catch (error) {
-        console.error("Error updating assignment document:", error);
+  if (docSnap.exists()) {
+    const assignedData = docSnap.data()["assigned_data"];
+    const updatedAssignedData = assignedData.map((assignment) => {
+      if (
+        assignment.assignedTime == assignedTime &&
+        assignment.drillId === drillId
+      ) {
+        return { ...assignment, completed: true, attemptId: attemptId };
       }
-    } else {
-      console.log("No such assignment document!");
-    }
-  };
+      return assignment;
+    });
 
-  await getDocument();
+    try {
+      await updateDoc(userRef, { assigned_data: updatedAssignedData });
+      console.log("Assignment Document updated successfully!");
+    } catch (e) {
+      console.log("Error updating assignment document:", e);
+    }
+  } else {
+    console.log("No such assignment document!");
+  }
 }
 
 /***************************************
@@ -103,41 +100,36 @@ async function uploadAttempt(
 
   //add id of new document into the data
   const uploadData = { ...outputData, id: newAttemptRef.id };
-  try {
-    // Upload the data
-    await setDoc(newAttemptRef, uploadData);
-    console.log("Attempt Document successfully uploaded!");
+  // Upload the data
+  await setDoc(newAttemptRef, uploadData);
+  console.log("Attempt Document successfully uploaded!");
 
-    await runTransaction(db, async (transaction) => {
-      const userRef = doc(db, "teams", "1", "users", userId);
-      const userInfo = await transaction.get(userRef);
+  await runTransaction(db, async (transaction) => {
+    const userRef = doc(db, "teams", "1", "users", userId);
+    const userInfo = await transaction.get(userRef);
 
-      const uniqueDrills = userInfo.data().uniqueDrills;
+    const uniqueDrills = userInfo.data().uniqueDrills;
 
-      if (!uniqueDrills.includes(drillId)) {
-        // Add the new item to the array
-        transaction.update(userRef, {
-          ["uniqueDrills"]: [...uniqueDrills, drillId],
-        });
-      }
-    });
-
-    //Call function to check for leaderboard update
-    await handleLeaderboardUpdate(
-      uploadData,
-      drillInfo,
-      currentLeaderboard,
-      userInfo,
-      currentTeamId,
-    );
-
-    // Check if drill was assigned
-    if (assignedTime) {
-      await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
+    if (!uniqueDrills.includes(drillId)) {
+      // Add the new item to the array
+      transaction.update(userRef, {
+        ["uniqueDrills"]: [...uniqueDrills, drillId],
+      });
     }
-  } catch (e) {
-    console.error("Error uploading document: ", e);
-    alert(e);
+  });
+
+  //Call function to check for leaderboard update
+  await handleLeaderboardUpdate(
+    uploadData,
+    drillInfo,
+    currentLeaderboard,
+    userInfo,
+    currentTeamId,
+  );
+
+  // Check if drill was assigned
+  if (assignedTime) {
+    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
   }
 }
 
@@ -215,38 +207,45 @@ async function uploadNewLeaderboard(
     uploadData.did,
   );
 
-  try {
-    await runTransaction(db, async (transaction) => {
-      // get latest leaderboard data again, just in case another player updated best score just now
-      const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
-      if (!latestLeaderboard.exists()) {
-        const allUserInfo = await getDocs(
-          collection(db, "teams", currentTeamId, "users"),
-        );
-        const emptyBestAttempt = {};
-        for (const doc of allUserInfo.docs) {
-          emptyBestAttempt[doc.data().uid] = null;
-        }
-
-        await transaction.set(bestAttemptsDrillRef, emptyBestAttempt);
+  await runTransaction(db, async (transaction) => {
+    // get latest leaderboard data again, just in case another player updated best score just now
+    const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
+    if (!latestLeaderboard.exists()) {
+      const allUserInfo = await getDocs(
+        collection(db, "teams", currentTeamId, "users"),
+      );
+      const emptyBestAttempt = {};
+      for (const doc of allUserInfo.docs) {
+        emptyBestAttempt[doc.data().uid] = null;
       }
-      transaction.update(bestAttemptsDrillRef, {
-        [uploadData.uid]: newAttempt,
-      });
+
+      await transaction.set(bestAttemptsDrillRef, emptyBestAttempt);
+    }
+    transaction.update(bestAttemptsDrillRef, {
+      [uploadData.uid]: newAttempt,
     });
-    console.log("Transaction (leaderboard update) successfully committed!");
-  } catch (e) {
-    console.log("Transaction (leaderboard update) failed: ", e);
-  }
-  await handleRecordUpdate(uploadData, drillInfo, userInfo);
+  });
+  console.log("Transaction (leaderboard update) successfully committed!");
+  await handleRecordUpdate(uploadData, drillInfo, userInfo, currentTeamId);
 }
 
 //A function to check if the "all_time_record" collection needs to be updated
-async function handleRecordUpdate(uploadData, drillInfo, userInfo) {
+async function handleRecordUpdate(
+  uploadData,
+  drillInfo,
+  userInfo,
+  currentTeamId,
+) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
   //Fetch All-time Record
-  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+  const recordRef = doc(
+    db,
+    "teams",
+    currentTeamId,
+    "all_time_records",
+    uploadData.did,
+  );
 
   const docSnap = await getDoc(recordRef);
 
@@ -304,7 +303,7 @@ async function uploadNewRecord(
     distanceMeasure: distanceMeasure,
   };
 
-  let newDocData = {};
+  let newDocData;
 
   //case with no all time record
   if (currentRecordInfo == null) {
@@ -332,8 +331,8 @@ async function uploadNewRecord(
     await setDoc(recordRef, newDocData);
     console.log("== New Record has been uploaded!");
   } catch (e) {
-    alert(e);
     console.log(e);
+    showDialog("Error", getErrorString(e));
   }
 }
 
@@ -363,10 +362,10 @@ function getShotInfo(drillInfo) {
   return shots;
 }
 
-//Helper function for the sequence drill type
+//Helper function to generate shots for the sequence drill type
 function fillSequentialTargets(drillInfo) {
   let shots = [];
-  for (var i = 0; i < drillInfo.reps; i++) {
+  for (let i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
       items: {
@@ -383,11 +382,11 @@ function fillRandomShotTargets(drillInfo) {
   const maxFloored = Math.floor(drillInfo.requirements[0].max);
   let shots = [];
 
-  for (var i = 0; i < drillInfo.reps; i++) {
-    var target = Math.floor(
+  for (let i = 0; i < drillInfo.reps; i++) {
+    const target = Math.floor(
       Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
     );
-    var baseline = -1;
+    let baseline;
     if (drillInfo.shotType === "putt") {
       baseline = lookUpExpectedPutts(target);
     } else {
@@ -407,10 +406,10 @@ function fillRandomShotTargets(drillInfo) {
 //Helper function to generate shots for the putt drill type
 function fillPuttTargets(drillInfo) {
   let shots = [];
-  for (var i = 0; i < drillInfo.reps; i++) {
-    var baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
+  for (let i = 0; i < drillInfo.reps; i++) {
+    const baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
     let target = {};
-    for (var j = 0; j < drillInfo.requirements.length; j++) {
+    for (let j = 0; j < drillInfo.requirements.length; j++) {
       target = Object.assign(target, {
         [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i],
       });
@@ -434,6 +433,7 @@ function calculateProxHole(target, carry, sideLanding) {
   let carryDiff = calculateCarryDiff(target, carry);
   return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
+
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateCarryDiff(target, carry) {
   return Math.abs(carry - target);
@@ -663,13 +663,13 @@ export default function Input({ setToggleResult, setOutputData }) {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
-  } = useBestAttempts({ drillId: drillId });
+  } = useBestAttempts({ drillId });
 
   const {
     data: drillInfo,
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
-  } = useDrillInfo({ drillId: drillId });
+  } = useDrillInfo({ drillId });
 
   const {
     data: userInfo,
@@ -680,6 +680,12 @@ export default function Input({ setToggleResult, setOutputData }) {
   const queryClient = useQueryClient();
 
   const navigation = useNavigation();
+
+  const invalidateKeys = [
+    ["userInfo"], //assignments
+    ["best_attempts", { drillId }],
+    ["all_time_records", { drillId }],
+  ];
 
   const { height } = useWindowDimensions();
 
@@ -698,13 +704,23 @@ export default function Input({ setToggleResult, setOutputData }) {
   /***** Description Bottom Sheet Stuff *****/
   const descriptionModalRef = useRef(null);
 
-  /***** Empty Input dialog Stuff *****/
-  const [emptyDialogVisible, setEmptyDialogVisible] = useState(false);
-  const hideEmptyDialog = () => setEmptyDialogVisible(false);
+  const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
 
-  /***** Invalid Input dialog Stuff *****/
-  const [invalidDialogVisible, setInvalidDialogVisible] = useState(false);
-  const hideInvalidDialog = () => setInvalidDialogVisible(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setDialogVisible(true);
+  };
+
+  const showSnackBar = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarVisible(true);
+  };
 
   //useEffectHook to set the attempts shot requirements
   useEffect(() => {
@@ -778,27 +794,20 @@ export default function Input({ setToggleResult, setOutputData }) {
   };
 
   //Function to handle "Next shot" button click
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
     // useAttempts / useDrillInfo hooks
-    const userId = currentUserId;
-    const invalidateKeys = [
-      ["userInfo"], //assignments
-      ["attempts", { userId }], // stats pages
-      ["best_attempts", { drillId }],
-      ["all_time_records", { drillId }],
-    ];
 
     //Check if all inputs have been filled in
     if (
       Object.keys(inputValues[displayedShot]).length !== numInputs ||
       checkEmptyInputs(inputValues[displayedShot])
     ) {
-      setEmptyDialogVisible(true);
+      showSnackBar("All inputs must be filled.");
     }
     //check inputs are all numbers
     else if (validateInputs(inputValues[displayedShot])) {
-      setInvalidDialogVisible(true);
+      showSnackBar("All inputs must be numbers.");
     }
     //check for submit button
     else if (submitVisible) {
@@ -811,20 +820,26 @@ export default function Input({ setToggleResult, setOutputData }) {
       );
 
       setOutputData(outputData);
-      uploadAttempt(
-        outputData,
-        currentUserId,
-        assignedTime,
-        drillId,
-        drillInfo,
-        currentLeaderboard,
-        userInfo,
-        currentTeamId,
-      ).then(() => {
+      try {
+        await uploadAttempt(
+          outputData,
+          currentUserId,
+          assignedTime,
+          drillId,
+          drillInfo,
+          currentLeaderboard,
+          userInfo,
+          currentTeamId,
+        );
+
         // invalidate cache on button press
-        invalidateMultipleKeys(queryClient, invalidateKeys);
-      });
-      setToggleResult(true);
+        await invalidateMultipleKeys(queryClient, invalidateKeys);
+        // if there are no errors, go to result screen
+        setToggleResult(true);
+      } catch (e) {
+        console.log(e);
+        showDialog("Error", getErrorString(e));
+      }
     } else {
       setDisplayedShot(displayedShot + 1);
       setCurrentShot(currentShot + 1);
@@ -949,22 +964,20 @@ export default function Input({ setToggleResult, setOutputData }) {
                   </BottomSheetView>
                 </BottomSheetWrapper>
 
-                {/* Error Dialog: Empty Input*/}
+                {/* Snackbar Error Dialog */}
                 <DialogComponent
                   type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be filled."
-                  visible={emptyDialogVisible}
-                  onHide={hideEmptyDialog}
+                  visible={snackbarVisible}
+                  content={snackbarMessage}
+                  onHide={() => setSnackbarVisible(false)}
                 />
 
-                {/* Error Dialog: Invalid Input*/}
+                {/* Generic Error Dialog */}
                 <DialogComponent
-                  type={"snackbar"}
-                  title={"Error!"}
-                  content="All inputs must be numbers."
-                  visible={invalidDialogVisible}
-                  onHide={hideInvalidDialog}
+                  title={dialogTitle}
+                  content={dialogMessage}
+                  visible={dialogVisible}
+                  onHide={() => setDialogVisible(false)}
                 />
               </KeyboardAwareScrollView>
               {/* Navigation */}
@@ -1016,7 +1029,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   style={{
                     color: themeColors.accent,
                     paddingBottom: Platform.OS === "android" ? 10 : 30,
-                    fontSize: 12,
+                    fontSize: 16,
                   }}
                   onPress={() => {
                     navModalRef.current?.present();
@@ -1071,12 +1084,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFFFFF",
     padding: 10,
-  },
-  title: {
-    fontSize: 20,
-  },
-  subTitle: {
-    fontSize: 12,
   },
   shotNumber: {
     fontSize: 32,

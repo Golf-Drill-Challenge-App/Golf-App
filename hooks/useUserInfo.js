@@ -1,30 +1,49 @@
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import {
   collection,
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { currentAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
-export const useUserInfo = ({ userId = null } = {}) => {
-  console.log("fetching userInfo: ", { userId });
-
-  const { currentTeamId } = currentAuthContext();
+export const useUserInfo = ({
+  userId = null,
+  role = null,
+  enabled = true,
+} = {}) => {
+  const { currentTeamId, currentUserId } = currentAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["userInfo", { userId }],
+    queryKey: ["userInfo", { userId, role }],
     queryFn: async () => {
+      console.log("fetching userInfo: ", { userId });
       if (userId) {
         const querySnapshot = await getDoc(
           doc(db, "teams", currentTeamId, "users", userId),
         );
         const data = querySnapshot.data();
+        if (!data) {
+          if (currentUserId === userId) {
+            router.replace("segments/(team)/chooseTeam");
+          }
+          return {
+            name: "",
+            pfp: "",
+            role: "",
+            uid: "",
+            assigned_data: [],
+            uniqueDrills: [],
+          };
+        }
         const filteredAssignedData = data.assigned_data.filter((assignment) => {
           const timeDifference = currentDateTime - assignment.assignedTime;
           return timeDifference <= week_milliseconds;
@@ -42,6 +61,17 @@ export const useUserInfo = ({ userId = null } = {}) => {
           return updatedData;
         }
         return data;
+      } else if (role) {
+        let q = query(
+          collection(db, "teams", currentTeamId, "users"),
+          where("role", "==", role),
+        );
+        const querySnapshot = await getDocs(q);
+        const newUserInfo = {};
+        querySnapshot.forEach((doc) => {
+          newUserInfo[doc.id] = doc.data();
+        });
+        return newUserInfo;
       } else {
         const newUserInfo = {};
         const querySnapshot = await getDocs(
@@ -53,6 +83,7 @@ export const useUserInfo = ({ userId = null } = {}) => {
         return newUserInfo;
       }
     },
+    enabled,
   });
 
   return {
