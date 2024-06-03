@@ -38,7 +38,7 @@ Info below subject to change
 
 - `yarn`
 
-### Running App on a Physical Mobile Device
+### Dev Mode Instructions for Physical Mobile Device
 
 - Install Expo Go mobile app to run the app dev build
   - [iOS](https://apps.apple.com/us/app/expo-go/id982107779)
@@ -46,7 +46,7 @@ Info below subject to change
 - `yarn start`
   - Run app, scan QR code on physical phone
 
-### Running App on Android Emulator (Windows PC or MacOS)
+### Dev Mode Instructions for Android Emulator (Windows PC or MacOS)
 
 - Note that Expo Go will be automatically installed on the emulated mobile device for you
 - Create an Android Emulator AVD (simulated phone): https://developer.android.com/studio/run/managing-avds
@@ -55,25 +55,25 @@ Info below subject to change
 - Command to run Android Emulator:
   - `C:\Users\<username>\AppData\Local\Android\Sdk\emulator\emulator -avd <emulated phone name> -feature -Vulkan`
     - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulator\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
-- `yarn android` to run the app
+- `yarn a` to run the app
 
-### Running App in iOS Emulator (MacOS)
+### Dev Mode Instructions for iOS Emulator (MacOS)
 
 - Note that Expo Go will be automatically installed on the emulated mobile device for you
 - Documentation: https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device
 - Should be more straightforwards than Android, you shouldn't need to use command line to open iOS emulator
-- `yarn ios` to run the app
+- `yarn i` to run the app
 
-### WiFi / Tunneling
+### WiFi / Tunneling (Dev Mode)
 
 - In general, if running the app on a physical mobile device, the mobile device and the PC compiling the app should be on the same WiFi network
 - If on OSU WiFi, or any other WiFi that disables peer-to-peer, use the `--tunnel` argument, e.g:
   - `yarn start --tunnel`
-  - `yarn ios -tunnel`
-  - `yarn android --tunnel`
+  - `yarn i -tunnel`
+  - `yarn a --tunnel`
 - Using a mobile hotspot is another potential solution, if the other WiFi networks nearby disable peer-to-peer
 
-### Login Bypass
+### Login Bypass (Dev Mode)
 
 - `yarn test`
   - Bypass login for testing purposes, will log you in as a dummy user "John Doe"
@@ -85,10 +85,36 @@ Info below subject to change
       - For running app on iOS or Android emulator
     - Note that arguments can be combined, e.g. `yarn test --android --tunnel`
 
+### Building for Production Mode (Prebuild)
+
+**Android**
+
+- `yarn prebuild`
+- `yarn android`
+- Steps (to be fleshed out later):
+  - Open Android Studio and build APK
+  - Load it onto your phone
+
+**iOS**
+
+- `yarn prebuild`
+- `yarn android`
+- Steps (to be fleshed out later):
+  - Open `xcworkspace` in XCode
+  - Go to `Product` > `Archive`
+  - View archive in folder, open package content
+  - Find `.app` file, put in folder `Payload`
+  - Zip `Payload` folder and call it `<name>.ipa`
+  - Sideload `<name>.ipa` folder with AltStore
+
 ### Formatting Script
 
 - `yarn pretty`
-  - Run Prettier script to reformat code (standardize indents etc)
+  - Runs Prettier + ESLint script to catch any code formatting or linting errors
+  - NOTE: This will automatically update any files with the reformatted version; if you just want to check for possible formatting issues, run `yarn pretty:check` (see below)
+- `yarn pretty:check`
+  - Runs Prettier + ESLint, but only reports formatting / linting issues and does not edit any files yet
+  - Run by our GitHub Actions in `.github/workflows/main.yml`, so that each PR gets its formatting / linting automatically checked before merge
 
 ### App Compilation Troubleshooting
 

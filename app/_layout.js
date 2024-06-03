@@ -8,6 +8,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import DialogComponent from "~/components/dialog";
 import PaperWrapper from "~/components/paperWrapper";
 import { AlertContext } from "~/context/Alert";
+import DropDownPicker from "react-native-dropdown-picker";
 import { AuthProvider } from "~/context/Auth";
 
 // Create a client
@@ -22,6 +23,8 @@ const queryClient = new QueryClient({
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
 });
+
+DropDownPicker.setListMode("SCROLLVIEW");
 
 export default function RootLayoutNav() {
   const [dialogVisible, setDialogVisible] = useState(false);
