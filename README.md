@@ -110,7 +110,11 @@ Info below subject to change
 ### Formatting Script
 
 - `yarn pretty`
-  - Run Prettier script to reformat code (standardize indents etc)
+  - Runs Prettier + ESLint script to catch any code formatting or linting errors
+  - NOTE: This will automatically update any files with the reformatted version; if you just want to check for possible formatting issues, run `yarn pretty:check` (see below)
+- `yarn pretty:check`
+  - Runs Prettier + ESLint, but only reports formatting / linting issues and does not edit any files yet
+  - Run by our GitHub Actions in `.github/workflows/main.yml`, so that each PR gets its formatting / linting automatically checked before merge
 
 ### App Compilation Troubleshooting
 
