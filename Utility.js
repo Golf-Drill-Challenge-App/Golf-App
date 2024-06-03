@@ -94,15 +94,15 @@ export function lookUpExpectedPutts(proxHole) {
 }
 
 export function getIconByKey(key) {
-  const icons = [
-    { carry: "arrow-up" },
-    { sideLanding: "arrow-left-right" },
-    { strokes: "pound" },
-    { distance: "ruler" },
-  ];
+  const icons = {
+    carry: "arrow-up",
+    sideLanding: "arrow-left-right",
+    strokes: "pound",
+    distance: "ruler",
+    default: "help",
+  };
 
-  const iconObject = icons.find((icon) => icon[key]);
-  return iconObject ? iconObject[key] : null;
+  return icons[key] || icons.default;
 }
 
 export function getInitials(fullName) {

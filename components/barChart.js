@@ -82,6 +82,23 @@ export default function BarChartScreen({
 
   const [aggOutputDropdownOpen, setAggOutputDropdownOpen] = useState(false);
 
+  //some clever logic to close the dropdowns when the other one is open
+  useEffect(() => {
+    if (movingAvgRangeDropdownOpen) {
+      if (aggOutputDropdownOpen) {
+        setAggOutputDropdownOpen(false);
+      }
+    }
+  }, [movingAvgRangeDropdownOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (aggOutputDropdownOpen) {
+      if (movingAvgRangeDropdownOpen) {
+        setMovingAvgRangeDropdownOpen(false);
+      }
+    }
+  }, [aggOutputDropdownOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState(0);
 
@@ -273,6 +290,7 @@ export default function BarChartScreen({
             items={movingAvgRangeValues}
             open={movingAvgRangeDropdownOpen}
             setOpen={setMovingAvgRangeDropdownOpen}
+            maxHeight={40 * aggOutputValues.length}
             containerStyle={[styles.dropDownContainer, { width: 80 }]}
             style={styles.dropdown}
           />
@@ -286,6 +304,10 @@ export default function BarChartScreen({
             items={aggOutputValues}
             open={aggOutputDropdownOpen}
             setOpen={setAggOutputDropdownOpen}
+            maxHeight={45 * aggOutputValues.length}
+            scrollViewProps={{
+              showsVerticalScrollIndicator: false,
+            }}
             containerStyle={[
               styles.dropDownContainer,
               {

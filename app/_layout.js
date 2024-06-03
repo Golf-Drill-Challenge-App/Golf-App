@@ -3,6 +3,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack } from "expo-router";
+import DropDownPicker from "react-native-dropdown-picker";
 import { AuthProvider } from "~/context/Auth";
 
 // Create a client
@@ -17,6 +18,8 @@ const queryClient = new QueryClient({
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
 });
+
+DropDownPicker.setListMode("SCROLLVIEW");
 
 export default function RootLayoutNav() {
   return (
