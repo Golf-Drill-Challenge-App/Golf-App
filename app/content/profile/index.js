@@ -95,6 +95,8 @@ function Index() {
 
   const [imageUploading, setImageUploading] = useState(false);
 
+  const [updateLoading, setUpdateLoading] = useState(false);
+
   const profilePicSize = 120;
 
   useEffect(() => {
@@ -135,6 +137,7 @@ function Index() {
   };
 
   const handleUpdate = async () => {
+    setUpdateLoading(true);
     if (!newName) {
       showDialog("Input Needed", "Please enter a new name.");
       return;
@@ -192,6 +195,7 @@ function Index() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
+    setUpdateLoading(false);
   };
 
   const styles = StyleSheet.create({
@@ -433,13 +437,21 @@ function Index() {
                 </>
               )}
 
-              {/* Save Button */}
-              <TouchableOpacity
-                style={styles.saveChangesButton}
-                onPress={handleUpdate}
-              >
-                <Text style={styles.saveChangesButtonText}>Update</Text>
-              </TouchableOpacity>
+                  {/* Save Button */}
+                  <TouchableOpacity
+                    style={styles.saveChangesButton}
+                    onPress={handleUpdate}
+                  >
+                    {updateLoading ? (
+                      <ActivityIndicator
+                        animating={true}
+                        size={16}
+                        color={"#FFF"}
+                      />
+                    ) : (
+                      <Text style={styles.saveChangesButtonText}>Update</Text>
+                    )}
+                  </TouchableOpacity>
 
               {/* Sign Out Button */}
               <Pressable onPress={handleSignOut}>

@@ -19,7 +19,7 @@ export default function Index() {
 
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: toggleResult });
-  }, [toggleResult]);
+  }, [navigation, toggleResult]);
 
   useEffect(() => {
     return navigation.addListener("beforeRemove", (e) => {
@@ -34,7 +34,7 @@ export default function Index() {
       // Prompt the user before leaving the screen
       setLeaveDialogVisible(true);
     });
-  }, [toggleResult]);
+  }, [navigation, toggleResult]);
 
   const display = () => {
     if (toggleResult) {

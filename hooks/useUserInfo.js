@@ -25,7 +25,7 @@ export const useUserInfo = ({
   const { data, error, isLoading } = useQuery({
     queryKey: ["userInfo", { userId, role }],
     queryFn: async () => {
-      console.log("fetching userInfo: ", { userId });
+      console.log("fetching userInfo: ", { userId, role });
       if (userId) {
         const querySnapshot = await getDoc(
           doc(db, "teams", currentTeamId, "users", userId),
@@ -62,7 +62,7 @@ export const useUserInfo = ({
         }
         return data;
       } else if (role) {
-        let q = query(
+        const q = query(
           collection(db, "teams", currentTeamId, "users"),
           where("role", "==", role),
         );

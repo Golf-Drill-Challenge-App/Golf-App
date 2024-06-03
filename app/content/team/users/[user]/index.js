@@ -194,6 +194,7 @@ function Index() {
       role={currentUserInfo["role"]}
       userInfo={userInfo}
       drillInfo={drillInfo}
+      disableCriteria={(completed) => !completed}
     ></AssignmentsList>
   );
 
@@ -281,16 +282,28 @@ function Index() {
           )
         }
       />
-      <FlatList
-        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
-        stickyHeaderIndices={[1]}
-        data={[
-          profileHeader(),
-          segmentButtons(),
-          <View>{tabComponent[value]}</View>,
-        ]}
-        renderItem={({ item }) => item}
-      />
+      {userInfo.role === "player" ? (
+        <FlatList
+          refreshControl={
+            <RefreshInvalidate invalidateKeys={invalidateKeys} />
+          }
+          stickyHeaderIndices={[1]}
+          data={[
+            profileHeader(),
+            segmentButtons(),
+            <View>{tabComponent[value]}</View>,
+          ]}
+          renderItem={({ item }) => item}
+        />
+      ) : (
+        <FlatList
+          data={[profileHeader()]}
+          renderItem={({ item }) => item}
+          refreshControl={
+            <RefreshInvalidate invalidateKeys={invalidateKeys} />
+          }
+        />
+      )}
       {/* Remove user dialog */}
       <DialogComponent
         title={"Alert"}
@@ -304,7 +317,7 @@ function Index() {
             try {
               await removeUser(userId);
               await queryClient.removeQueries(["userInfo", userId]);
-              invalidateMultipleKeys(queryClient, [
+              await invalidateMultipleKeys(queryClient, [
                 ["userInfo"],
                 ["best_attempts"],
               ]);

@@ -26,9 +26,9 @@ function useProtectedRoute(currentUserId) {
     if (!currentUserId && !inAuthGroup) {
       router.replace("/signin");
     } else if (currentUserId && inAuthGroup) {
-      router.replace("/");
+      router.replace("/content/assignments");
     }
-  }, [currentUserId, segments]);
+  }, [currentUserId, router, segments]);
 }
 
 export const AuthProvider = ({ children }) => {

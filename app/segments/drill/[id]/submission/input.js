@@ -358,7 +358,7 @@ function getShotInfo(drillInfo) {
 
 //Helper function to generate shots for the sequence drill type
 function fillSequentialTargets(drillInfo) {
-  let shots = [];
+  const shots = [];
   for (let i = 0; i < drillInfo.reps; i++) {
     shots.push({
       shotNum: i + 1,
@@ -374,7 +374,7 @@ function fillSequentialTargets(drillInfo) {
 function fillRandomShotTargets(drillInfo) {
   const minCeiled = Math.ceil(drillInfo.requirements[0].min);
   const maxFloored = Math.floor(drillInfo.requirements[0].max);
-  let shots = [];
+  const shots = [];
 
   for (let i = 0; i < drillInfo.reps; i++) {
     const target = Math.floor(
@@ -399,7 +399,7 @@ function fillRandomShotTargets(drillInfo) {
 
 //Helper function to generate shots for the putt drill type
 function fillPuttTargets(drillInfo) {
-  let shots = [];
+  const shots = [];
   for (let i = 0; i < drillInfo.reps; i++) {
     const baseline = lookUpExpectedPutts(drillInfo.requirements[0].items[i]);
     let target = {};
@@ -424,7 +424,7 @@ function fillPuttTargets(drillInfo) {
 
 //Helper funciton for createOutputData to calculate the Carry Difference
 function calculateProxHole(target, carry, sideLanding) {
-  let carryDiff = calculateCarryDiff(target, carry);
+  const carryDiff = calculateCarryDiff(target, carry);
   return Math.sqrt(Math.pow(carryDiff * 3, 2) + Math.pow(sideLanding, 2));
 }
 
@@ -445,12 +445,12 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   let missedRightShotCount = 0;
   let carryDiffTotal = 0;
 
-  let outputShotData = [];
+  const outputShotData = [];
 
   //Generate the shots array for output data
   for (let j = 0; j < inputValues.length; j++) {
     //Generate the shots array for output data
-    let shot = {};
+    const shot = {};
     if (drillInfo.requirements[0].type === "inputtedPutt") {
       attemptShots[j].baseline = lookUpExpectedPutts(inputValues[j].distance);
       attemptShots[j].items.target = inputValues[j].distance;
@@ -789,7 +789,7 @@ export default function Input({ setToggleResult, setOutputData }) {
     }
     //check for submit button
     else if (submitVisible) {
-      let outputData = createOutputData(
+      const outputData = createOutputData(
         drillInfo,
         inputValues,
         attemptShots,
@@ -931,60 +931,60 @@ export default function Input({ setToggleResult, setOutputData }) {
               </BottomSheetScrollView>
             </BottomSheetWrapper>
 
-            {/* Description Bottom Sheet */}
-            <BottomSheetWrapper ref={descriptionModalRef}>
-              <BottomSheetView style={{ paddingBottom: 50 }}>
-                <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                  Description
-                </Text>
-                <DrillDescription drillData={drillInfo} />
-              </BottomSheetView>
-            </BottomSheetWrapper>
-          </KeyboardAwareScrollView>
-          {/* Navigation */}
-          <View style={styles.navigationContainer}>
-            <Text
-              onPress={() => {
-                const newInputValues = Array.from(
-                  { length: attemptShots.length },
-                  () => ({}),
-                );
-                for (let i = 0; i < attemptShots.length; i++) {
-                  drillInfo.inputs.forEach((item) => {
-                    switch (item.id) {
-                      case "carry":
-                        newInputValues[i][item.id] = Math.floor(
-                          Math.random() *
-                            attemptShots[displayedShot].items["target"] +
-                            attemptShots[displayedShot].items["target"] / 2,
-                        ).toString();
-                        break;
-                      case "sideLanding":
-                        newInputValues[i][item.id] = Math.floor(
-                          Math.random() * 21 - 10,
-                        ).toString();
-                        break;
-                      case "strokes":
-                        newInputValues[i][item.id] = Math.floor(
-                          Math.random() * 2 + 1,
-                        ).toString();
-                        break;
-                      case "distance":
-                        newInputValues[i][item.id] = Math.floor(
-                          Math.random() * 35 + 5,
-                        ).toString();
-                        break;
+                {/* Description Bottom Sheet */}
+                <BottomSheetWrapper ref={descriptionModalRef}>
+                  <BottomSheetView style={{ paddingBottom: 50 }}>
+                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
+                      Description
+                    </Text>
+                    <DrillDescription drillInfo={drillInfo} />
+                  </BottomSheetView>
+                </BottomSheetWrapper>
+              </KeyboardAwareScrollView>
+              {/* Navigation */}
+              <View style={styles.navigationContainer}>
+                <Text
+                  onPress={() => {
+                    const newInputValues = Array.from(
+                      { length: attemptShots.length },
+                      () => ({}),
+                    );
+                    for (let i = 0; i < attemptShots.length; i++) {
+                      drillInfo.inputs.forEach((item) => {
+                        switch (item.id) {
+                          case "carry":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() *
+                                attemptShots[displayedShot].items["target"] +
+                                attemptShots[displayedShot].items["target"] / 2,
+                            ).toString();
+                            break;
+                          case "sideLanding":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 21 - 10,
+                            ).toString();
+                            break;
+                          case "strokes":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 2 + 1,
+                            ).toString();
+                            break;
+                          case "distance":
+                            newInputValues[i][item.id] = Math.floor(
+                              Math.random() * 35 + 5,
+                            ).toString();
+                            break;
+                        }
+                      });
                     }
-                  });
-                }
-                setInputValues(newInputValues);
-                setDisplayedShot(attemptShots.length - 1);
-                setCurrentShot(attemptShots.length - 1);
-              }}
-            >
-              Fill in all inputs
-            </Text>
-            {buttonDisplayHandler()}
+                    setInputValues(newInputValues);
+                    setDisplayedShot(attemptShots.length - 1);
+                    setCurrentShot(attemptShots.length - 1);
+                  }}
+                >
+                  Fill in all inputs
+                </Text>
+                {buttonDisplayHandler()}
 
             <Text
               style={{

@@ -18,13 +18,6 @@ export default function Index() {
   } = useDrillInfo();
   const [lastRedirect, setLastRedirect] = useState("0");
 
-  if (drillInfoIsLoading) {
-    return <Loading />;
-  }
-
-  if (drillInfoError) {
-    return <ErrorComponent errorList={[drillInfoError]} />;
-  }
   useEffect(() => {
     if (lastRedirect !== currentTime && assignedTime) {
       setLastRedirect(currentTime);
@@ -35,7 +28,15 @@ export default function Index() {
         },
       });
     }
-  }, [currentTime]);
+  }, [assignedTime, currentTime, drillId, lastRedirect]);
+
+  if (drillInfoIsLoading) {
+    return <Loading />;
+  }
+
+  if (drillInfoError) {
+    return <ErrorComponent errorList={[drillInfoError]} />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>

@@ -5,7 +5,9 @@ import { doc, runTransaction } from "firebase/firestore";
 import { useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Appbar, Button, List, Text } from "react-native-paper";
+import {
+
+  TouchableRipple,ActivityIndicator,Appbar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
@@ -29,9 +31,11 @@ export default function Index() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
 
+  const [loading, setLoading] = useState(false);
+
   const queryClient = useQueryClient();
 
-  const { showDialog } = useAlertContext();
+  const { showDialog, showSnackBar } = useAlertContext();
 
   const [checkedItems, setCheckedItems] = useState({});
   const filteredUserInfo = useMemo(
@@ -65,13 +69,13 @@ export default function Index() {
   };
 
   const handleAssign = async () => {
+    setLoading(true);
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
     const time = new Date().getTime();
 
     try {
-      navigation.pop(3);
       await runTransaction(db, async (transaction) => {
         const updatedAssignedData = {};
 
@@ -97,10 +101,14 @@ export default function Index() {
         });
       });
       await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+      showSnackBar("Assignment Successful");
+      navigation.pop(3);
     } catch (e) {
       //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
       showDialog("Error", getErrorString(e));
     }
+
+    setLoading(false);
   };
 
   return (
@@ -163,41 +171,48 @@ export default function Index() {
                       userInfo={userData}
                     />
 
-                    <Text style={styles.title}>{userData.name}</Text>
-                  </View>
-                  <View style={styles.specContainer}>
-                    {checkedItems[uid] ? (
-                      <Icon name="checkbox-outline" size={20} />
-                    ) : (
-                      <Icon name="checkbox-blank-outline" size={20} />
-                    )}
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </List.Section>
-        </ScrollView>
-      </View>
-      <Button
-        style={{
-          margin: 10,
-          bottom: 30,
-          left: 0,
-          right: 0,
-        }}
-        labelStyle={{
-          fontSize: 20,
-          fontWeight: "bold",
-          padding: 5,
-        }}
-        mode="contained"
-        buttonColor={themeColors.accent}
-        textColor="white"
-        onPress={handleAssign}
-      >
-        Assign
-      </Button>
-    </SafeAreaView>
+                        <Text style={styles.title}>{userData.name}</Text>
+                      </View>
+                      <View style={styles.specContainer}>
+                        {checkedItems[uid] ? (
+                          <Icon name="checkbox-outline" size={20} />
+                        ) : (
+                          <Icon name="checkbox-blank-outline" size={20} />
+                        )}
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </List.Section>
+            </ScrollView>
+          </View>
+          <TouchableRipple
+            rippleColor="rgba(256, 256, 256, 0.2)"
+            borderless={true}
+            style={{
+              margin: 10,
+              bottom: 30,
+              left: 0,
+              right: 0,
+              backgroundColor: themeColors.accent,
+              padding: 10,
+              justifyContent: "center",
+              borderRadius: 20,
+              flexDirection: "row",
+            }}
+            onPress={handleAssign}
+          >
+            {loading ? (
+              <ActivityIndicator animating={true} color={"#FFF"} />
+            ) : (
+              <Text
+                style={{ color: "white", fontSize: 20, fontWeight: "bold" }}
+              >
+                Assign
+              </Text>
+            )}
+          </TouchableRipple>
+        </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
