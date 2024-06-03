@@ -945,9 +945,6 @@ export default function Input({ setToggleResult, setOutputData }) {
                 {/* Description Bottom Sheet */}
                 <BottomSheetWrapper ref={descriptionModalRef}>
                   <BottomSheetView style={{ paddingBottom: 50 }}>
-                    <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                      Description
-                    </Text>
                     <DrillDescription drillInfo={drillInfo} />
                   </BottomSheetView>
                 </BottomSheetWrapper>
