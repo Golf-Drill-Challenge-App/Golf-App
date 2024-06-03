@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Icon, Text, TextInput } from "react-native-paper";
 import { themeColors } from "~/Constants";
 
@@ -24,7 +24,9 @@ export default function DrillInput({
           mode="outlined"
           placeholder=""
           value={inputValue}
-          keyboardType="numeric"
+          keyboardType={
+            Platform.OS === "ios" ? "numbers-and-punctuation" : "numeric"
+          }
           returnKeyType="done"
           editable={currentShot === displayedShot}
           onChangeText={onInputChange}
