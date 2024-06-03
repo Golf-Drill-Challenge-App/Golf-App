@@ -40,13 +40,17 @@ Info below subject to change
 
 ### Dev Mode Instructions for Physical Mobile Device
 
+Compatible with both MacOS and Windows PC for app compilation. After compilation, app can be run on either iOS or Android phone.
+
 - Install Expo Go mobile app to run the app dev build
   - [iOS](https://apps.apple.com/us/app/expo-go/id982107779)
   - [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US)
 - `yarn start`
   - Run app, scan QR code on physical phone
 
-### Dev Mode Instructions for Android Emulator (Windows PC or MacOS)
+### Dev Mode Instructions for Android Emulator
+
+Compatible with both MacOS and Windows PC for app compilation.
 
 - Note that Expo Go will be automatically installed on the emulated mobile device for you
 - Create an Android Emulator AVD (simulated phone): https://developer.android.com/studio/run/managing-avds
@@ -54,10 +58,12 @@ Info below subject to change
   - More info: https://developer.android.com/studio/run/emulator-troubleshooting#error:-%60vulkan-1.dll
 - Command to run Android Emulator:
   - `C:\Users\<username>\AppData\Local\Android\Sdk\emulator\emulator -avd <emulated phone name> -feature -Vulkan`
-    - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulator\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
+    - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulat-or\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
 - `yarn a` to run the app
 
-### Dev Mode Instructions for iOS Emulator (MacOS)
+### Dev Mode Instructions for iOS Emulator
+
+Probably needs MacOS for app compilation (to run XCode) / iOS Emulator.
 
 - Note that Expo Go will be automatically installed on the emulated mobile device for you
 - Documentation: https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device
@@ -85,9 +91,9 @@ Info below subject to change
       - For running app on iOS or Android emulator
     - Note that arguments can be combined, e.g. `yarn test --android --tunnel`
 
-### Building for Production Mode (Prebuild)
+### Prebuild Instructions for Android (Production Mode)
 
-**Android**
+Presumably compatible with both MacOS and Windows PC for building the project in Android Studio.
 
 - `yarn prebuild`
 - `yarn android`
@@ -95,10 +101,12 @@ Info below subject to change
   - Open Android Studio and build APK
   - Load it onto your phone
 
-**iOS**
+### Prebuild Instructions for iOS (Production Mode, needs MacOS)
+
+Probably needs a MacOS at least for building the project in XCode.
 
 - `yarn prebuild`
-- `yarn android`
+- `yarn ios`
 - Steps (to be fleshed out later):
   - Open `xcworkspace` in XCode
   - Go to `Product` > `Archive`
@@ -114,7 +122,7 @@ Info below subject to change
   - NOTE: This will automatically update any files with the reformatted version; if you just want to check for possible formatting issues, run `yarn pretty:check` (see below)
 - `yarn pretty:check`
   - Runs Prettier + ESLint, but only reports formatting / linting issues and does not edit any files yet
-  - Run by our GitHub Actions in `.github/workflows/main.yml`, so that each PR gets its formatting / linting automatically checked before merge
+  - Run via GitHub Actions in `.github/workflows/main.yml`, so that each PR gets its formatting / linting automatically checked before merge
 
 ### App Compilation Troubleshooting
 
