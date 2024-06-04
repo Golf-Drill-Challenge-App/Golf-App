@@ -33,7 +33,7 @@ export default function DrillList({
 
   const drills = [];
   Object.values(drillData).forEach((drill) => {
-    if (!drill.assignmentOnly) {
+    if (!drill.assignmentOnly || userData.role !== "player") {
       if (drills.length !== 0) {
         const idx = drills.findIndex((item) => item.title === drill.drillType);
         if (idx !== -1) {
@@ -50,12 +50,17 @@ export default function DrillList({
           data: [drill],
         });
       }
-    } else if (userData.role !== "player") {
-      drills.push({
-        title: drill.drillType,
-        data: [drill],
-      });
-    }
+    } /* else if (userData.role !== "player") {
+        const idx = drills.findIndex((item) => item.title === drill.drillType);
+        if (idx !== -1) {
+          drills[idx].data.push(drill);
+        } else {
+          drills.push({
+            title: drill.drillType,
+            data: [drill],
+          });
+        }
+    }*/
   });
 
   drills.sort((a, b) => {

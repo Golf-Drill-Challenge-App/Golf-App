@@ -115,7 +115,7 @@ async function uploadAttempt(
 
     const uniqueDrills = userInfo.data().uniqueDrills;
 
-    if (!uniqueDrills.includes(drillId)) {
+    if (!uniqueDrills.includes(drillId) && drillInfo.hasStats) {
       // Add the new item to the array
       transaction.update(userRef, {
         ["uniqueDrills"]: [...uniqueDrills, drillId],
@@ -133,45 +133,6 @@ async function uploadAttempt(
       currentTeamId,
     );
   }
-
-  // Check if drill was assigned
-  if (assignedTime) {
-    await completeAssigned(
-      userId,
-      assignedTime,
-      drillId,
-      newAttemptRef.id,
-      currentTeamId,
-    );
-  }
-}
-
-async function uploadTextDrill(userId, assignedTime, drillId, currentTeamId) {
-  //create new document
-  const newAttemptRef = doc(collection(db, "teams", currentTeamId, "attempts")); //ERROR FROM HERE "indexOf is not a function"
-
-  //Newly created doc Id. Useful for finding upload data in testing.
-  console.log("New Attempt Ref ID: ", newAttemptRef.id);
-
-  //add id of new document into the data
-  const uploadData = { id: newAttemptRef.id };
-  // Upload the data
-  await setDoc(newAttemptRef, uploadData);
-  console.log("Attempt Document successfully uploaded!");
-
-  await runTransaction(db, async (transaction) => {
-    const userRef = doc(db, "teams", currentTeamId, "users", userId);
-    const userInfo = await transaction.get(userRef);
-
-    const uniqueDrills = userInfo.data().uniqueDrills;
-
-    if (!uniqueDrills.includes(drillId)) {
-      // Add the new item to the array
-      transaction.update(userRef, {
-        ["uniqueDrills"]: [...uniqueDrills, drillId],
-      });
-    }
-  });
 
   // Check if drill was assigned
   if (assignedTime) {
