@@ -3,7 +3,11 @@ import { Divider } from "react-native-paper";
 
 import { themeColors } from "~/Constants";
 import DrillCard from "~/components/drillCard";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useAuthContext } from "~/context/Auth";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function DrillList({
   drillData,
@@ -11,19 +15,42 @@ export default function DrillList({
   invalidateKeys,
   children,
 }) {
+  const { currentUserId } = useAuthContext();
+
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId: currentUserId });
+
+  if (userIsLoading) {
+    return <Loading />;
+  }
+
+  if (userError) {
+    return <ErrorComponent errorList={[userError]} />;
+  }
+
   const drills = [];
   Object.values(drillData).forEach((drill) => {
-    if (drills.length !== 0) {
-      const idx = drills.findIndex((item) => item.title === drill.drillType);
-      if (idx !== -1) {
-        drills[idx].data.push(drill);
+    if (!drill.assignmentOnly) {
+      if (drills.length !== 0) {
+        const idx = drills.findIndex((item) => item.title === drill.drillType);
+        if (idx !== -1) {
+          drills[idx].data.push(drill);
+        } else {
+          drills.push({
+            title: drill.drillType,
+            data: [drill],
+          });
+        }
       } else {
         drills.push({
           title: drill.drillType,
           data: [drill],
         });
       }
-    } else {
+    } else if (userData.role !== "player") {
       drills.push({
         title: drill.drillType,
         data: [drill],

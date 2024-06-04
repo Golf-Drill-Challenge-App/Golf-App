@@ -189,7 +189,7 @@ export default function BarChartScreen({
         invalidateKeys={invalidateKeys}
         text={"There are no stats for this drill."}
       />
-    )
+    );
   }
 
   const styles = StyleSheet.create({

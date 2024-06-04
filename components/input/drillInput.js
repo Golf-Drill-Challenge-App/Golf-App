@@ -15,39 +15,39 @@ export default function DrillInput({
 
   return (
     <View style={styles.item}>
-          <View
-            style={{ 
-              flexDirection: "row",
-              left: -10,
-            }}
-          >
-          <Icon source={getIconByKey(input.id)} size={20} style={{ position: "relative" }} />
-          <Text style={styles.description}>
-            {input.prompt}
-          </Text>
-          </View>
+      <View
+        style={{
+          flexDirection: "row",
+          left: -10,
+        }}
+      >
+        <Icon
+          source={getIconByKey(input.id)}
+          size={20}
+          style={{ position: "relative" }}
+        />
+        <Text style={styles.description}>{input.prompt}</Text>
+      </View>
 
-          <View style={styles.horizontalContainer}>
-          {input.id !== "completed" ? (
-            <TextInput
-              mode="outlined"
-              placeholder=""
-              value={inputValue}
-              keyboardType={
-                Platform.OS === "ios" ? "numbers-and-punctuation" : "numeric"
-              }
-              returnKeyType="done"
-              editable={currentShot === displayedShot}
-              onChangeText={onInputChange}
-              selectionColor={themeColors.accent}
-              cursorColor={themeColors.accent}
-              activeOutlineColor={themeColors.border}
-            />
-            ) : (
-
-              <TouchableOpacity
-            style={{
-            }}
+      <View style={styles.horizontalContainer}>
+        {input.id !== "completed" ? (
+          <TextInput
+            mode="outlined"
+            placeholder=""
+            value={inputValue}
+            keyboardType={
+              Platform.OS === "ios" ? "numbers-and-punctuation" : "numeric"
+            }
+            returnKeyType="done"
+            editable={currentShot === displayedShot}
+            onChangeText={onInputChange}
+            selectionColor={themeColors.accent}
+            cursorColor={themeColors.accent}
+            activeOutlineColor={themeColors.border}
+          />
+        ) : (
+          <TouchableOpacity
+            style={{}}
             activeOpacity={0.5}
             onPress={() => {
               setChecked(!checked);
@@ -55,26 +55,26 @@ export default function DrillInput({
               onInputChange(inputValue);
             }}
           >
-              <View 
-                style={{ 
-                  borderWidth: 1,
-                  borderRadius: 8,
-                  borderColor: "#aaa",
-                  width: 60,
-                  height: 60,
-                  backgroundColor: "#fff",
-                }}
-              >
-                {checked ? (
-                  <Icon source="check" size={60} color="green" />
-                ) : (
-                  <Icon source="check" size={60} color="#ddd" />
-                )}
-              </View>
+            <View
+              style={{
+                borderWidth: 1,
+                borderRadius: 8,
+                borderColor: "#aaa",
+                width: 60,
+                height: 60,
+                backgroundColor: "#fff",
+              }}
+            >
+              {checked ? (
+                <Icon source="check" size={60} color="green" />
+              ) : (
+                <Icon source="check" size={60} color="#ddd" />
+              )}
+            </View>
           </TouchableOpacity>
-            )}
-            <Text style={styles.distance}>{input.distanceMeasure}</Text>
-          </View>
+        )}
+        <Text style={styles.distance}>{input.distanceMeasure}</Text>
+      </View>
 
       <Text style={styles.helper}>{input.helperText}</Text>
     </View>
