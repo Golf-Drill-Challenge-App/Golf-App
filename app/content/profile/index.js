@@ -459,7 +459,7 @@ function Index() {
               </Pressable>
             </BottomSheetScrollView>
           </BottomSheetWrapper>
-          {uniqueDrills.length > 0 ? (
+          {uniqueDrills.length > 0 || userData.role === "player" ? (
             <View
               style={{
                 paddingBottom: Platform.OS === "ios" ? 86 + 50 : 86,
@@ -478,7 +478,7 @@ function Index() {
             <>
               <EmptyScreen
                 invalidateKeys={invalidateKeys}
-                text={"No drills attempted yet"}
+                text={"No drills attempted"}
                 preChild={() => profileHeader}
               />
             </>
