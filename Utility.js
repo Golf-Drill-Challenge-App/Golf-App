@@ -99,6 +99,7 @@ export function getIconByKey(key) {
     sideLanding: "arrow-left-right",
     strokes: "pound",
     distance: "ruler",
+    completed: "check",
     default: "help",
   };
 

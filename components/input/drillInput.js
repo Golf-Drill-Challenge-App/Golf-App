@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon, Text, TextInput } from "react-native-paper";
 import { themeColors } from "~/Constants";
+import { getIconByKey } from "~/Utility";
 
 export default function DrillInput({
-  icon,
   input,
   inputValue,
   onInputChange,
@@ -15,14 +15,20 @@ export default function DrillInput({
 
   return (
     <View style={styles.item}>
-      {input.id !== "completed" ? (
-        <>
+          <View
+            style={{ 
+              flexDirection: "row",
+              left: -10,
+            }}
+          >
+          <Icon source={getIconByKey(input.id)} size={20} style={{ position: "relative" }} />
           <Text style={styles.description}>
-            <Icon source={icon} size={20} />
             {input.prompt}
           </Text>
+          </View>
 
           <View style={styles.horizontalContainer}>
+          {input.id !== "completed" ? (
             <TextInput
               mode="outlined"
               placeholder=""
@@ -37,21 +43,10 @@ export default function DrillInput({
               cursorColor={themeColors.accent}
               activeOutlineColor={themeColors.border}
             />
+            ) : (
 
-            <Text style={styles.distance}>{input.distanceMeasure}</Text>
-          </View>
-        </>
-      ) : (
-        <View style={styles.horizontalContainer}>
-          <TouchableOpacity
+              <TouchableOpacity
             style={{
-              borderWidth: 1,
-              borderColor: themeColors.border,
-              borderRadius: 8,
-              marginVertical: 5,
-              paddingHorizontal: 20,
-              padding: 10,
-              backgroundColor: "#fff",
             }}
             activeOpacity={0.5}
             onPress={() => {
@@ -60,35 +55,27 @@ export default function DrillInput({
               onInputChange(inputValue);
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 20,
+              <View 
+                style={{ 
+                  borderWidth: 1,
+                  borderRadius: 8,
+                  borderColor: "#aaa",
+                  width: 60,
+                  height: 60,
+                  backgroundColor: "#fff",
                 }}
               >
-                <Text style={{ fontSize: 24, color: "#333" }}>
-                  {input.prompt}{" "}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
                 {checked ? (
-                  <Icon source="checkbox-outline" size={24} />
+                  <Icon source="check" size={60} color="green" />
                 ) : (
-                  <Icon source="checkbox-blank-outline" size={24} />
+                  <Icon source="check" size={60} color="#ddd" />
                 )}
               </View>
-            </View>
           </TouchableOpacity>
-        </View>
-      )}
+            )}
+            <Text style={styles.distance}>{input.distanceMeasure}</Text>
+          </View>
+
       <Text style={styles.helper}>{input.helperText}</Text>
     </View>
   );

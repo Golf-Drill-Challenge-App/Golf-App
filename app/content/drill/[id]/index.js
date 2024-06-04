@@ -63,7 +63,7 @@ export default function Index() {
           }
         />
         {/* Tab system */}
-        {drillInfo.requirements[0].type !== "text" && (
+        {drillInfo.hasStats && (
           <SegmentedButtons
             value={value}
             onValueChange={setValue}

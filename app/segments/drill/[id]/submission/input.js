@@ -23,7 +23,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import {
   getErrorString,
-  getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
@@ -985,7 +984,6 @@ export default function Input({ setToggleResult, setOutputData }) {
                   {drillInfo.inputs.map((item, id) => (
                     <DrillInput
                       key={id}
-                      icon={getIconByKey(item.id)}
                       input={item}
                       inputValue={inputValues[displayedShot]?.[item.id] || ""}
                       onInputChange={(newText) => {
@@ -1089,7 +1087,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                   Fill in all inputs
                 </Text>
                 {buttonDisplayHandler()}
-
+                {drillInfo.reps > 1 && (
                 <Text
                   style={{
                     color: themeColors.accent,
@@ -1102,6 +1100,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                 >
                   View all shots
                 </Text>
+                )}
               </View>
             </BottomSheetModalProvider>
           </View>
