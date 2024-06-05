@@ -100,6 +100,17 @@ function Index() {
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
   }
 
+  const unMarkAll = () => {
+    setAssignmentList((prevAssignmentList) => {
+      return prevAssignmentList.map((prevAssignment) => {
+        return {
+          ...prevAssignment,
+          markedForDelete: false,
+        };
+      });
+    });
+  };
+
   const handleAssignmentPress = async (assignment) => {
     if (!assignment.attemptId) {
       //terminator code
@@ -169,10 +180,15 @@ function Index() {
               justifyContent: "center",
               marginRight: 10,
             }}
-            onPress={() => setEditing(!editing)}
+            onPress={() => {
+              setEditing(!editing);
+              if (editing) {
+                unMarkAll();
+              }
+            }}
           >
             <Text style={{ color: themeColors.accent, fontSize: 17 }}>
-              {editing ? "Done" : "Edit"}
+              {editing ? "Cancel" : "Edit"}
             </Text>
           </Button>
         }
