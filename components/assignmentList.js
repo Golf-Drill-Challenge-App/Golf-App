@@ -70,8 +70,11 @@ const AssignmentsList = ({
   // Group the assigned drills by date
   const groupedData = useMemo(() => {
     return assigned_data.reduce((acc, curr) => {
+      const assignedDate = new Date(curr.assignedTime);
+      const timezoneOffset = assignedDate.getTimezoneOffset() * 60000;
+      const localTime = curr.assignedTime - timezoneOffset;
       //round the assigned time to the nearest day
-      const roundedTime = Math.floor(curr.assignedTime / 86400000) * 86400000;
+      const roundedTime = Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
 
       if (!acc[roundedTime]) {
         acc[roundedTime] = [];
