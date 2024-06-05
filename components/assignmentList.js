@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
 import { Avatar, Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
-import { formatDate } from "~/Utility";
+import { formatDate, getTimezoneOffsetTime } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import AssignmentCard from "~/components/assignmentCard";
 import EmptyScreen from "~/components/emptyScreen";
@@ -70,19 +70,15 @@ const AssignmentsList = ({
   // Group the assigned drills by date
   const groupedData = useMemo(() => {
     return assigned_data.reduce((acc, curr) => {
-      const assignedDate = new Date(curr.assignedTime);
-      const timezoneOffset = assignedDate.getTimezoneOffset() * 60000;
-      const localTime = curr.assignedTime - timezoneOffset;
-      //round the assigned time to the nearest day
-      const roundedTime = Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
+      const time = getTimezoneOffsetTime(curr.assignedTime);
 
-      if (!acc[roundedTime]) {
-        acc[roundedTime] = [];
+      if (!acc[time]) {
+        acc[time] = [];
       }
       if (curr.completed) {
-        acc[roundedTime].push(curr);
+        acc[time].push(curr);
       } else {
-        acc[roundedTime].unshift(curr);
+        acc[time].unshift(curr);
       }
 
       return acc;

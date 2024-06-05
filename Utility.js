@@ -122,3 +122,10 @@ export function getErrorString(error) {
     return String(error);
   }
 }
+
+export function getTimezoneOffsetTime(time) {
+  const date = new Date(time);
+  const timezoneOffset = date.getTimezoneOffset() * 60000;
+  const localTime = time - timezoneOffset;
+  return Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
+}

@@ -16,12 +16,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
-import { getErrorString } from "~/Utility";
+import { getErrorString, getTimezoneOffsetTime } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -32,6 +33,8 @@ export default function Index() {
     error: userInfoError,
     isLoading: userIsLoading,
   } = useUserInfo();
+
+  const { currentTeamId } = useAuthContext();
 
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
@@ -45,8 +48,6 @@ export default function Index() {
   const isAssignedToday = (assignedTime) => {
     const today = new Date();
     const assignedDate = new Date(assignedTime);
-    console.log("today", today)
-    console.log("assignedDate", assignedDate)
     return (
       today.getDate() === assignedDate.getDate() &&
       today.getMonth() === assignedDate.getMonth() &&
@@ -60,9 +61,11 @@ export default function Index() {
       Object.fromEntries(
         Object.entries(userInfo ?? {})
           .filter(([, value]) => {
-            const hasDrillAssignedToday = value.assigned_data?.some((assignment) => assignment.drillId === id && isAssignedToday(assignment.assignedTime));
-            console.log("userInfo", value.name)
-            console.log("hasDrillAssignedToday", hasDrillAssignedToday);
+            const hasDrillAssignedToday = value.assigned_data?.some(
+              (assignment) =>
+                assignment.drillId === id &&
+                isAssignedToday(assignment.assignedTime),
+            );
             return value.role === "player" && !hasDrillAssignedToday;
           })
           .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
@@ -95,14 +98,14 @@ export default function Index() {
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
-    const time = new Date().getTime();
+    const time = getTimezoneOffsetTime(new Date().getTime());
 
     try {
       await runTransaction(db, async (transaction) => {
         const updatedAssignedData = {};
 
         for (const userId of selectedUsers) {
-          const userRef = doc(db, "teams", "1", "users", userId);
+          const userRef = doc(db, "teams", currentTeamId, "users", userId);
           const docSnap = await transaction.get(userRef);
           if (docSnap.exists()) {
             const assignedData = docSnap.data()["assigned_data"];
@@ -115,7 +118,7 @@ export default function Index() {
           }
         }
         selectedUsers.forEach((userId) => {
-          const userRef = doc(db, "teams", "1", "users", userId);
+          const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
           transaction.update(userRef, {
             assigned_data: updatedAssignedData[userId],
