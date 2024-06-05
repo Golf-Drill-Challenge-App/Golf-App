@@ -168,7 +168,7 @@ function Index() {
                   <List.Item
                     key={`${assignment.uid}`}
                     onPress={() => handleAssignmentPress(assignment)}
-                    disabled={!assignment.completed}
+                    disabled={!assignment.completed || !drillInfo.hasStats}
                     style={{
                       paddingLeft: 20,
                     }}
@@ -198,7 +198,9 @@ function Index() {
                             >
                               Completed
                             </Text>
-                            <Icon size={20} source="chevron-right" />
+                            {drillInfo.hasStats && (
+                              <Icon size={20} source="chevron-right" />
+                            )}
                           </>
                         )}
                       </View>
