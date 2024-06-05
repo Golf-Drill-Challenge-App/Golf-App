@@ -63,6 +63,7 @@ export default function Index() {
         }
       />
       {/* Tab system */}
+      {drillInfo.hasStats && (
       <SegmentedButtons
         value={value}
         onValueChange={setValue}
@@ -105,6 +106,7 @@ export default function Index() {
               ]
         }
       />
+      )}
       {tabComponent[value]}
     </SafeAreaView>
   );

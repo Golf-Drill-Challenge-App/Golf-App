@@ -202,7 +202,9 @@ const AssignmentsList = ({
       keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
       ListHeaderComponent={children}
       renderItem={({ item: assignment }) => {
-        const disabled = disableCriteria(!!assignment.completed);
+        const disabled = disableCriteria(
+          !!assignment.completed || !!assignment.hasStats,
+        );
         return (
           <TouchableOpacity
             key={`${assignment.assignedTime}-${assignment.drillId}`}

@@ -183,6 +183,13 @@ export default function BarChartScreen({
         text={"No attempts have been made yet."}
       />
     );
+  } else if (!drillInfo.hasStats) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"There are no stats for this drill."}
+      />
+    );
   }
 
   const styles = StyleSheet.create({

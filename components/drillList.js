@@ -1,10 +1,13 @@
 ﻿import { SectionList, Text, View } from "react-native";
-import { Divider, Icon } from "react-native-paper";
+import { Divider } from "react-native-paper";
 
 import { themeColors } from "~/Constants";
-import { getIconByKey } from "~/Utility";
 import DrillCard from "~/components/drillCard";
+import ErrorComponent from "~/components/errorComponent";
+import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useAuthContext } from "~/context/Auth";
+import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function DrillList({
   drillData,
@@ -12,24 +15,52 @@ export default function DrillList({
   invalidateKeys,
   children,
 }) {
+  const { currentUserId } = useAuthContext();
+
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userIsLoading,
+  } = useUserInfo({ userId: currentUserId });
+
+  if (userIsLoading) {
+    return <Loading />;
+  }
+
+  if (userError) {
+    return <ErrorComponent errorList={[userError]} />;
+  }
+
   const drills = [];
   Object.values(drillData).forEach((drill) => {
-    if (drills.length !== 0) {
-      const idx = drills.findIndex((item) => item.title === drill.drillType);
-      if (idx !== -1) {
-        drills[idx].data.push(drill);
+    if (!drill.assignmentOnly || userData.role !== "player") {
+      if (drills.length !== 0) {
+        const idx = drills.findIndex((item) => item.title === drill.drillType);
+        if (idx !== -1) {
+          drills[idx].data.push(drill);
+        } else {
+          drills.push({
+            title: drill.drillType,
+            data: [drill],
+          });
+        }
       } else {
         drills.push({
           title: drill.drillType,
           data: [drill],
         });
       }
-    } else {
-      drills.push({
-        title: drill.drillType,
-        data: [drill],
-      });
-    }
+    } /* else if (userData.role !== "player") {
+        const idx = drills.findIndex((item) => item.title === drill.drillType);
+        if (idx !== -1) {
+          drills[idx].data.push(drill);
+        } else {
+          drills.push({
+            title: drill.drillType,
+            data: [drill],
+          });
+        }
+    }*/
   });
 
   drills.sort((a, b) => {
@@ -44,9 +75,19 @@ export default function DrillList({
     return 0;
   });
 
-  function getDrillIndexByTitle(title) {
-    return drillData.findIndex((item) => item.drillType === title);
-  }
+  drills.forEach((section) => {
+    section.data.sort((a, b) => {
+      const subTypeA = a.subType;
+      const subTypeB = b.subType;
+      if (subTypeA < subTypeB) {
+        return -1;
+      }
+      if (subTypeA > subTypeB) {
+        return 1;
+      }
+      return 0;
+    });
+  });
 
   return (
     <SectionList
@@ -66,15 +107,7 @@ export default function DrillList({
             backgroundColor: themeColors.background,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title} </Text>
-          {drillData[getDrillIndexByTitle(title)].inputs.map((input) => (
-            <Icon
-              key={input.id}
-              source={getIconByKey(input.id)}
-              size={12}
-              color="#666"
-            />
-          ))}
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>{title}</Text>
           <Divider bold={true} />
         </View>
       )}

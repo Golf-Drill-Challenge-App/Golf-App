@@ -22,7 +22,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import {
   getErrorString,
-  getIconByKey,
   lookUpBaselineStrokesGained,
   lookUpExpectedPutts,
 } from "~/Utility";
@@ -47,8 +46,14 @@ import { useUserInfo } from "~/hooks/useUserInfo";
  ***************************************/
 
 //A function to check if a drill was assigned upon completion
-async function completeAssigned(userId, assignedTime, drillId, attemptId) {
-  const userRef = doc(db, "teams", "1", "users", userId);
+async function completeAssigned(
+  userId,
+  assignedTime,
+  drillId,
+  attemptId,
+  currentTeamId,
+) {
+  const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
   const docSnap = await getDoc(userRef);
 
@@ -92,7 +97,7 @@ async function uploadAttempt(
   currentTeamId,
 ) {
   //create new document
-  const newAttemptRef = doc(collection(db, "teams", "1", "attempts"));
+  const newAttemptRef = doc(collection(db, "teams", currentTeamId, "attempts"));
 
   //Newly created doc Id. Useful for finding upload data in testing.
   console.log("New Attempt Ref ID: ", newAttemptRef.id);
@@ -103,32 +108,42 @@ async function uploadAttempt(
   await setDoc(newAttemptRef, uploadData);
   console.log("Attempt Document successfully uploaded!");
 
-  await runTransaction(db, async (transaction) => {
-    const userRef = doc(db, "teams", "1", "users", userId);
-    const userInfo = await transaction.get(userRef);
+  if (drillInfo.hasStats) {
+    await runTransaction(db, async (transaction) => {
+      const userRef = doc(db, "teams", currentTeamId, "users", userId);
+      const userInfo = await transaction.get(userRef);
 
-    const uniqueDrills = userInfo.data().uniqueDrills;
+      const uniqueDrills = userInfo.data().uniqueDrills;
 
-    if (!uniqueDrills.includes(drillId)) {
-      // Add the new item to the array
-      transaction.update(userRef, {
-        ["uniqueDrills"]: [...uniqueDrills, drillId],
-      });
-    }
-  });
+      if (!uniqueDrills.includes(drillId)) {
+        // Add the new item to the array
+        transaction.update(userRef, {
+          ["uniqueDrills"]: [...uniqueDrills, drillId],
+        });
+      }
+    });
+  }
 
   //Call function to check for leaderboard update
-  await handleLeaderboardUpdate(
-    uploadData,
-    drillInfo,
-    currentLeaderboard,
-    userInfo,
-    currentTeamId,
-  );
+  if (drillInfo.requirements[0].type !== "text") {
+    await handleLeaderboardUpdate(
+      uploadData,
+      drillInfo,
+      currentLeaderboard,
+      userInfo,
+      currentTeamId,
+    );
+  }
 
   // Check if drill was assigned
   if (assignedTime) {
-    await completeAssigned(userId, assignedTime, drillId, newAttemptRef.id);
+    await completeAssigned(
+      userId,
+      assignedTime,
+      drillId,
+      newAttemptRef.id,
+      currentTeamId,
+    );
   }
 }
 
@@ -262,7 +277,7 @@ async function handleRecordUpdate(
     await setDoc(recordRef, newEmptyRecordObject);
 
     //Add all time Record
-    await uploadNewRecord(uploadData, drillInfo, null, userInfo);
+    await uploadNewRecord(uploadData, drillInfo, null, userInfo, currentTeamId);
   } else {
     //Determine if lower is better
     const lowerIsBetter = drillInfo.aggOutputs[mainOutputAttempt].lowerIsBetter;
@@ -275,7 +290,13 @@ async function handleRecordUpdate(
 
     if (isNewAttemptBest) {
       //Update record
-      await uploadNewRecord(uploadData, drillInfo, currentRecordInfo, userInfo);
+      await uploadNewRecord(
+        uploadData,
+        drillInfo,
+        currentRecordInfo,
+        userInfo,
+        currentTeamId,
+      );
     }
   }
 }
@@ -286,8 +307,15 @@ async function uploadNewRecord(
   drillInfo,
   currentRecordInfo,
   userInfo,
+  currentTeamId,
 ) {
-  const recordRef = doc(db, "teams", "1", "all_time_records", uploadData.did);
+  const recordRef = doc(
+    db,
+    "teams",
+    currentTeamId,
+    "all_time_records",
+    uploadData.did,
+  );
 
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -342,6 +370,7 @@ function getShotInfo(drillInfo) {
       shots = fillRandomShotTargets(drillInfo);
       break;
     case "inputtedPutt":
+    case "text":
     case "sequence":
       shots = fillSequentialTargets(drillInfo);
       break;
@@ -826,10 +855,10 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   //Loading until an attempt is generated or hooks are working
   if (
-    attemptShots.length === 0 ||
     leaderboardIsLoading ||
     userIsLoading ||
-    drillInfoIsLoading
+    drillInfoIsLoading ||
+    attemptShots.length === 0
   ) {
     console.log("Loading");
     return <Loading />;
@@ -891,22 +920,19 @@ export default function Input({ setToggleResult, setOutputData }) {
 
               {/* Inputs */}
 
-              {drillInfo.inputs.map((item, id) => (
-                <DrillInput
-                  key={id}
-                  icon={getIconByKey(item.id)}
-                  prompt={item.prompt}
-                  helperText={item.helperText}
-                  distanceMeasure={item.distanceMeasure}
-                  inputValue={inputValues[displayedShot]?.[item.id] || ""}
-                  onInputChange={(newText) => {
-                    handleInputChange(item.id, newText);
-                  }}
-                  currentShot={currentShot}
-                  displayedShot={displayedShot}
-                />
-              ))}
-            </View>
+                  {drillInfo.inputs.map((item, id) => (
+                    <DrillInput
+                      key={id}
+                      input={item}
+                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                      onInputChange={(newText) => {
+                        handleInputChange(item.id, newText);
+                      }}
+                      currentShot={currentShot}
+                      displayedShot={displayedShot}
+                    />
+                  ))}
+                </View>
 
             {/*Navigation Bottom Sheet */}
             <BottomSheetWrapper ref={navModalRef}>
@@ -986,6 +1012,7 @@ export default function Input({ setToggleResult, setOutputData }) {
             </Text>
             {buttonDisplayHandler()}
 
+            {drillInfo.reps > 1 && (
             <Text
               style={{
                 color: themeColors.accent,
@@ -998,6 +1025,7 @@ export default function Input({ setToggleResult, setOutputData }) {
             >
               View all shots
             </Text>
+            )}
           </View>
         </BottomSheetModalProvider>
       </View>
