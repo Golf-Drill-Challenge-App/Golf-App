@@ -109,19 +109,21 @@ async function uploadAttempt(
   await setDoc(newAttemptRef, uploadData);
   console.log("Attempt Document successfully uploaded!");
 
-  await runTransaction(db, async (transaction) => {
-    const userRef = doc(db, "teams", currentTeamId, "users", userId);
-    const userInfo = await transaction.get(userRef);
+  if (drillInfo.hasStats) {
+    await runTransaction(db, async (transaction) => {
+      const userRef = doc(db, "teams", currentTeamId, "users", userId);
+      const userInfo = await transaction.get(userRef);
 
-    const uniqueDrills = userInfo.data().uniqueDrills;
+      const uniqueDrills = userInfo.data().uniqueDrills;
 
-    if (!uniqueDrills.includes(drillId) && drillInfo.hasStats) {
-      // Add the new item to the array
-      transaction.update(userRef, {
-        ["uniqueDrills"]: [...uniqueDrills, drillId],
-      });
-    }
-  });
+      if (!uniqueDrills.includes(drillId)) {
+        // Add the new item to the array
+        transaction.update(userRef, {
+          ["uniqueDrills"]: [...uniqueDrills, drillId],
+        });
+      }
+    });
+  }
 
   //Call function to check for leaderboard update
   if (drillInfo.requirements[0].type !== "text") {

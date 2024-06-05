@@ -198,7 +198,9 @@ function Index() {
                             >
                               Completed
                             </Text>
-                            <Icon size={20} source="chevron-right" />
+                            {drillInfo.hasStats && (
+                              <Icon size={20} source="chevron-right" />
+                            )}
                           </>
                         )}
                       </View>
