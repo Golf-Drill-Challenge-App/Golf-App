@@ -42,12 +42,29 @@ export default function Index() {
 
   const { showDialog, showSnackBar } = useAlertContext();
 
+  const isAssignedToday = (assignedTime) => {
+    const today = new Date();
+    const assignedDate = new Date(assignedTime);
+    console.log("today", today)
+    console.log("assignedDate", assignedDate)
+    return (
+      today.getDate() === assignedDate.getDate() &&
+      today.getMonth() === assignedDate.getMonth() &&
+      today.getFullYear() === assignedDate.getFullYear()
+    );
+  };
+
   const [checkedItems, setCheckedItems] = useState({});
   const filteredUserInfo = useMemo(
     () =>
       Object.fromEntries(
         Object.entries(userInfo ?? {})
-          .filter(([, value]) => value.role === "player")
+          .filter(([, value]) => {
+            const hasDrillAssignedToday = value.assigned_data?.some((assignment) => assignment.drillId === id && isAssignedToday(assignment.assignedTime));
+            console.log("userInfo", value.name)
+            console.log("hasDrillAssignedToday", hasDrillAssignedToday);
+            return value.role === "player" && !hasDrillAssignedToday;
+          })
           .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
       ),
     [userInfo],
