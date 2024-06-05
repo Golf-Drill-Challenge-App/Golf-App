@@ -447,7 +447,7 @@ function Index() {
             </Pressable>
           </BottomSheetScrollView>
         </BottomSheetWrapper>
-        {uniqueDrills.length > 0 || userData.role === "player" ? (
+        {uniqueDrills.length > 0 && userData.role === "player" ? (
           <View style={{ flex: 1 }}>
             <DrillList
               drillData={uniqueDrills}
