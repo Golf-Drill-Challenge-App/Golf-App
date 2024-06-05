@@ -920,19 +920,19 @@ export default function Input({ setToggleResult, setOutputData }) {
 
               {/* Inputs */}
 
-                  {drillInfo.inputs.map((item, id) => (
-                    <DrillInput
-                      key={id}
-                      input={item}
-                      inputValue={inputValues[displayedShot]?.[item.id] || ""}
-                      onInputChange={(newText) => {
-                        handleInputChange(item.id, newText);
-                      }}
-                      currentShot={currentShot}
-                      displayedShot={displayedShot}
-                    />
-                  ))}
-                </View>
+              {drillInfo.inputs.map((item, id) => (
+                <DrillInput
+                  key={id}
+                  input={item}
+                  inputValue={inputValues[displayedShot]?.[item.id] || ""}
+                  onInputChange={(newText) => {
+                    handleInputChange(item.id, newText);
+                  }}
+                  currentShot={currentShot}
+                  displayedShot={displayedShot}
+                />
+              ))}
+            </View>
 
             {/*Navigation Bottom Sheet */}
             <BottomSheetWrapper ref={navModalRef}>
@@ -1013,18 +1013,18 @@ export default function Input({ setToggleResult, setOutputData }) {
             {buttonDisplayHandler()}
 
             {drillInfo.reps > 1 && (
-            <Text
-              style={{
-                color: themeColors.accent,
-                paddingBottom: Platform.OS === "android" ? 10 : 30,
-                fontSize: 16,
-              }}
-              onPress={() => {
-                navModalRef.current?.present();
-              }}
-            >
-              View all shots
-            </Text>
+              <Text
+                style={{
+                  color: themeColors.accent,
+                  paddingBottom: Platform.OS === "android" ? 10 : 30,
+                  fontSize: 16,
+                }}
+                onPress={() => {
+                  navModalRef.current?.present();
+                }}
+              >
+                View all shots
+              </Text>
             )}
           </View>
         </BottomSheetModalProvider>

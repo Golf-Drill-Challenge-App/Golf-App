@@ -64,48 +64,48 @@ export default function Index() {
       />
       {/* Tab system */}
       {drillInfo.hasStats && (
-      <SegmentedButtons
-        value={value}
-        onValueChange={setValue}
-        style={{
-          marginLeft: 10,
-          marginRight: 10,
-          backgroundColor: themeColors.highlight,
-          borderRadius: 20,
-        }}
-        theme={{
-          colors: {
-            secondaryContainer: themeColors.overlay,
-          },
-        }}
-        buttons={
-          userInfo.role === "player"
-            ? [
-                {
-                  value: "description",
-                  label: "Description",
-                },
-                {
-                  value: "leaderboard",
-                  label: "Leaderboard",
-                },
-                {
-                  value: "stats",
-                  label: "Stats",
-                },
-              ]
-            : [
-                {
-                  value: "description",
-                  label: "Description",
-                },
-                {
-                  value: "leaderboard",
-                  label: "Leaderboard",
-                },
-              ]
-        }
-      />
+        <SegmentedButtons
+          value={value}
+          onValueChange={setValue}
+          style={{
+            marginLeft: 10,
+            marginRight: 10,
+            backgroundColor: themeColors.highlight,
+            borderRadius: 20,
+          }}
+          theme={{
+            colors: {
+              secondaryContainer: themeColors.overlay,
+            },
+          }}
+          buttons={
+            userInfo.role === "player"
+              ? [
+                  {
+                    value: "description",
+                    label: "Description",
+                  },
+                  {
+                    value: "leaderboard",
+                    label: "Leaderboard",
+                  },
+                  {
+                    value: "stats",
+                    label: "Stats",
+                  },
+                ]
+              : [
+                  {
+                    value: "description",
+                    label: "Description",
+                  },
+                  {
+                    value: "leaderboard",
+                    label: "Leaderboard",
+                  },
+                ]
+          }
+        />
       )}
       {tabComponent[value]}
     </SafeAreaView>
