@@ -86,8 +86,9 @@ function Index() {
     userInfoIsLoading,
   ]);
 
-  console.log("userInfoIsLoading: ", userInfoIsLoading);
-  console.log("assignmentList length ", assignmentList.length);
+  const allMarked = useMemo(() => {
+    return assignmentList.every((assignment) => assignment.markedForDelete);
+  }, [assignmentList]);
 
   const numCompleted = useMemo(() => {
     return assignmentList.filter((assignment) => assignment.completed).length;
@@ -176,9 +177,34 @@ function Index() {
           </Button>
         }
       />
-      <Text style={{ textAlign: "center", marginBottom: 10 }}>
-        {numCompleted} / {assignmentList.length} completed
-      </Text>
+
+      {editing ? (
+        //select all
+        <Button
+          mode={"text"}
+          style={{
+            margin: 0,
+            padding: 0,
+          }}
+          textColor={themeColors.accent}
+          onPress={() => {
+            setAssignmentList((prevAssignmentList) => {
+              return prevAssignmentList.map((prevAssignment) => {
+                return {
+                  ...prevAssignment,
+                  markedForDelete: !allMarked,
+                };
+              });
+            });
+          }}
+        >
+          {allMarked ? "Unselect All" : "Select All"}
+        </Button>
+      ) : (
+        <Text style={{ textAlign: "center", marginVertical: 10 }}>
+          {numCompleted} / {assignmentList.length} completed
+        </Text>
+      )}
       <ScrollView
         refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
       >
@@ -212,7 +238,9 @@ function Index() {
                       await handleAssignmentPress(assignment);
                     }
                   }}
-                  disabled={!editing && (!assignment.completed || !drillInfo.hasStats)}
+                  disabled={
+                    !editing && (!assignment.completed || !drillInfo.hasStats)
+                  }
                   style={{
                     paddingLeft: 20,
                   }}
