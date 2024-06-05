@@ -125,7 +125,7 @@ async function uploadAttempt(
   }
 
   //Call function to check for leaderboard update
-  if (drillInfo.requirements[0].type !== "text") {
+  if (drillInfo.hasStats) {
     await handleLeaderboardUpdate(
       uploadData,
       drillInfo,

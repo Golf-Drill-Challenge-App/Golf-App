@@ -194,7 +194,7 @@ function Index() {
       role={currentUserInfo["role"]}
       userInfo={userInfo}
       drillInfo={drillInfo}
-      disableCriteria={(completed, hasStats) => !completed || !hasStats}
+      disableCriteria={({ completed, hasStats }) => !completed || !hasStats}
     ></AssignmentsList>
   );
 
