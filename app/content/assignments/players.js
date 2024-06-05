@@ -1,19 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ScrollView, View } from "react-native";
 import { Appbar, Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
-import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useAlertContext } from "~/context/Alert";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -39,15 +38,7 @@ function Index() {
 
   const queryClient = useQueryClient();
 
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
+  const { showDialog } = useAlertContext();
 
   const playerList = useMemo(() => {
     if (!userInfo) return [];
@@ -123,97 +114,89 @@ function Index() {
   };
 
   return (
-    <PaperWrapper>
-      <DialogComponent
-        title={dialogTitle}
-        content={dialogMessage}
-        visible={dialogVisible}
-        onHide={() => setDialogVisible(false)}
-      />
-      <SafeAreaView
-        // flex: without this the scrollview automatically scrolls back up when finger no longer held down
-        style={{ flex: 1 }}
-        forceInset={{ top: "always" }}
-        // edges: to remove bottom padding above tabbar. Maybe move this (and PaperProvider) into app/_layout.js?
-        edges={["right", "top", "left"]}
-      >
-        <Header
-          title={drillInfo["subType"]}
-          subTitle={drillInfo["drillType"]}
-          preChildren={
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={themeColors.accent}
-            />
-          }
-        />
-        <Text style={{ textAlign: "center", marginBottom: 10 }}>
-          {numCompleted} / {playerList.length} completed
-        </Text>
-        <ScrollView
-          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
-        >
-          <View
-            style={{
-              backgroundColor: themeColors.background,
-              paddingBottom: 10,
-              paddingTop: 10,
+    <SafeAreaView
+      // flex: without this the scrollview automatically scrolls back up when finger no longer held down
+      style={{ flex: 1 }}
+      forceInset={{ top: "always" }}
+      // edges: to remove bottom padding above tabbar. Maybe move this (and PaperProvider) into app/_layout.js?
+      edges={["right", "top", "left"]}
+    >
+      <Header
+        title={drillInfo["subType"]}
+        subTitle={drillInfo["drillType"]}
+        preChildren={
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
             }}
-          >
-            <List.Section style={{ backgroundColor: themeColors.background }}>
-              {playerList.map((assignment) => {
-                return (
-                  <List.Item
-                    key={`${assignment.uid}`}
-                    onPress={() => handleAssignmentPress(assignment)}
-                    disabled={!assignment.completed || !drillInfo.hasStats}
-                    style={{
-                      paddingLeft: 20,
-                    }}
-                    left={() => (
-                      <ProfilePicture
-                        userInfo={assignment}
-                        style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: 12,
-                        }}
-                      />
-                    )}
-                    right={() => (
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        {assignment.completed && (
-                          <>
-                            <Text
-                              style={{
-                                color: "green",
-                              }}
-                            >
-                              Completed
-                            </Text>
-                            {drillInfo.hasStats && (
-                              <Icon size={20} source="chevron-right" />
-                            )}
-                          </>
-                        )}
-                      </View>
-                    )}
-                    title={assignment.name}
-                  />
-                );
-              })}
-            </List.Section>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </PaperWrapper>
+            color={themeColors.accent}
+          />
+        }
+      />
+      <Text style={{ textAlign: "center", marginBottom: 10 }}>
+        {numCompleted} / {playerList.length} completed
+      </Text>
+      <ScrollView
+        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+      >
+        <View
+          style={{
+            backgroundColor: themeColors.background,
+            paddingBottom: 10,
+            paddingTop: 10,
+          }}
+        >
+          <List.Section style={{ backgroundColor: themeColors.background }}>
+            {playerList.map((assignment) => {
+              return (
+                <List.Item
+                  key={`${assignment.uid}`}
+                  onPress={() => handleAssignmentPress(assignment)}
+                  disabled={!assignment.completed || !drillInfo.hasStats}
+                  style={{
+                    paddingLeft: 20,
+                  }}
+                  left={() => (
+                    <ProfilePicture
+                      userInfo={assignment}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 12,
+                      }}
+                    />
+                  )}
+                  right={() => (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      {assignment.completed && (
+                        <>
+                          <Text
+                            style={{
+                              color: "green",
+                            }}
+                          >
+                            Completed
+                          </Text>
+                          {drillInfo.hasStats && (
+                            <Icon size={20} source="chevron-right" />
+                          )}
+                        </>
+                      )}
+                    </View>
+                  )}
+                  title={assignment.name}
+                />
+              );
+            })}
+          </List.Section>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

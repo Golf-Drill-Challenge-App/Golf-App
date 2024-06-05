@@ -22,7 +22,6 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
 import {
   SafeAreaView,
@@ -32,14 +31,13 @@ import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
-import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
 import ProfileCard from "~/components/profileCard";
+import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { handleImageUpload } from "~/hooks/imageUpload";
@@ -52,6 +50,8 @@ function Index() {
   const { signOut, currentUserId, currentTeamId } = useAuthContext();
   const userId = currentUserId ?? null;
   const auth = getAuth();
+
+  const { showDialog, showSnackBar } = useAlertContext();
 
   const insets = useSafeAreaInsets();
 
@@ -93,12 +93,6 @@ function Index() {
   const [newPasswordCheck, setNewPasswordCheck] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
 
-  const [snackbarVisible, setSnackbarVisible] = useState(false); // State to toggle snackbar visibility
-  const [snackbarMessage, setSnackbarMessage] = useState(""); // State to set snackbar message
-
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState("");
-  const [dialogMessage, setDialogMessage] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
 
   const [updateLoading, setUpdateLoading] = useState(false);
@@ -140,17 +134,6 @@ function Index() {
     setCurrentPassword("");
     setNewPassword("");
     setNewPasswordCheck("");
-  };
-
-  const showDialog = (title, message) => {
-    setDialogTitle(title);
-    setDialogMessage(message);
-    setDialogVisible(true);
-  };
-
-  const showSnackBar = (message) => {
-    setSnackbarMessage(message);
-    setSnackbarVisible(true);
   };
 
   const handleUpdate = async () => {
@@ -304,228 +287,205 @@ function Index() {
   );
 
   return (
-    <PaperWrapper>
-      <View style={{ height: height, width: width }}>
-        <GestureHandlerRootView>
-          <BottomSheetModalProvider>
-            {/* Snackbar Error Dialog */}
-            <DialogComponent
-              type={"snackbar"}
-              visible={snackbarVisible}
-              content={snackbarMessage}
-              onHide={() => setSnackbarVisible(false)}
-            />
-
-            {/* Generic Error dialog */}
-            <DialogComponent
-              title={dialogTitle}
-              content={dialogMessage}
-              visible={dialogVisible}
-              onHide={() => setDialogVisible(false)}
-            />
-            <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-              <Header
-                title={"Personal Profile"}
-                postChildren={
-                  <Appbar.Action
-                    icon="cog"
-                    color={themeColors.accent}
-                    onPress={() => bottomSheetModalRef.current?.present()}
-                    style={{ marginRight: 7 }}
-                  />
-                }
+    <View style={{ height: height, width: width }}>
+      <BottomSheetModalProvider>
+        <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+          <Header
+            title={"Personal Profile"}
+            postChildren={
+              <Appbar.Action
+                icon="cog"
+                color={themeColors.accent}
+                onPress={() => bottomSheetModalRef.current?.present()}
+                style={{ marginRight: 7 }}
               />
-              <BottomSheetWrapper
-                ref={bottomSheetModalRef}
-                closeFn={() => {
-                  resetForm();
-                  setNewName(userData.name);
-                  setPasswordInputVisible(false);
+            }
+          />
+          <BottomSheetWrapper
+            ref={bottomSheetModalRef}
+            closeFn={() => {
+              resetForm();
+              setNewName(userData.name);
+              setPasswordInputVisible(false);
+            }}
+          >
+            <BottomSheetScrollView
+              contentContainerStyle={styles.modalContent}
+              keyboardDismissMode="interactive"
+              keyboardShouldPersistTaps="handled"
+            >
+              {/* Profile Picture */}
+              <TouchableOpacity
+                onPress={async () => {
+                  try {
+                    await handleImageUpload(
+                      setImageUploading,
+                      showSnackBar,
+                      userId,
+                      userRef,
+                    );
+                    await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                  } catch (e) {
+                    console.log(e);
+                    showDialog("Error", getErrorString(e));
+                  }
                 }}
               >
-                <BottomSheetScrollView
-                  contentContainerStyle={styles.modalContent}
-                  keyboardDismissMode="interactive"
-                  keyboardShouldPersistTaps="handled"
-                >
-                  {/* Profile Picture */}
-                  <TouchableOpacity
-                    onPress={async () => {
-                      try {
-                        await handleImageUpload(
-                          setImageUploading,
-                          setSnackbarMessage,
-                          userId,
-                          userRef,
-                        );
-                        await invalidateMultipleKeys(queryClient, [
-                          ["userInfo"],
-                        ]);
-                      } catch (e) {
-                        console.log(e);
-                        showDialog("Error", getErrorString(e));
-                      }
-                    }}
-                  >
-                    <View style={styles.profilePictureContainer}>
-                      {imageUploading ? (
-                        <ActivityIndicator
-                          animating={imageUploading}
-                          size="large"
-                          color={themeColors.accent}
-                          style={styles.activityIndicator}
-                        />
-                      ) : (
-                        <ProfilePicture
-                          userInfo={userData}
-                          style={styles.profilePicture}
-                        />
-                      )}
-                      <View style={styles.penIconContainer}>
-                        <MaterialIcons name="edit" size={24} color="black" />
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                  {/* Display Name */}
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      marginBottom: 10,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {userData.name}
-                  </Text>
-
-                  {/* Display Email */}
-                  <View style={styles.emailContainer}>
-                    <Text style={styles.emailText}>{email}</Text>
+                <View style={styles.profilePictureContainer}>
+                  {imageUploading ? (
+                    <ActivityIndicator
+                      animating={imageUploading}
+                      size="large"
+                      color={themeColors.accent}
+                      style={styles.activityIndicator}
+                    />
+                  ) : (
+                    <ProfilePicture
+                      userInfo={userData}
+                      style={styles.profilePicture}
+                    />
+                  )}
+                  <View style={styles.penIconContainer}>
+                    <MaterialIcons name="edit" size={24} color="black" />
                   </View>
+                </View>
+              </TouchableOpacity>
+              {/* Display Name */}
+              <Text
+                style={{
+                  fontSize: 20,
+                  marginBottom: 10,
+                  fontWeight: "bold",
+                }}
+              >
+                {userData.name}
+              </Text>
 
-                  {/* Name Update input field */}
-                  <View style={{ width: "80%", marginBottom: 10 }}>
-                    <Text style={styles.changePasswordButton}>
-                      Update your name
-                    </Text>
-                  </View>
+              {/* Display Email */}
+              <View style={styles.emailContainer}>
+                <Text style={styles.emailText}>{email}</Text>
+              </View>
+
+              {/* Name Update input field */}
+              <View style={{ width: "80%", marginBottom: 10 }}>
+                <Text style={styles.changePasswordButton}>
+                  Update your name
+                </Text>
+              </View>
+              <BottomSheetTextInput
+                style={styles.input}
+                value={newName}
+                onChangeText={(text) => setNewName(text)}
+                placeholder="Update your name"
+              />
+
+              {/* Change Password Button */}
+              <View
+                style={{
+                  marginBottom: 20, // Increase margin bottom for more spacing
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "80%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.changePasswordButton}>Change Password</Text>
+                <Switch
+                  value={passwordInputVisible}
+                  onValueChange={(newValue) => {
+                    resetForm();
+                    setPasswordInputVisible(newValue);
+                  }}
+                  theme={{
+                    colors: {
+                      primary: themeColors.accent,
+                    },
+                  }}
+                />
+              </View>
+
+              {/* Password Input Field */}
+              {passwordInputVisible && (
+                <>
                   <BottomSheetTextInput
                     style={styles.input}
-                    value={newName}
-                    onChangeText={(text) => setNewName(text)}
-                    placeholder="Update your name"
+                    value={currentPassword}
+                    onChangeText={setCurrentPassword}
+                    placeholder="Enter your current password"
+                    secureTextEntry={true}
+                    // to get rid of ios password suggestions
+                    // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                    // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                    textContentType="oneTimeCode"
                   />
-
-                  {/* Change Password Button */}
-                  <View
-                    style={{
-                      marginBottom: 20, // Increase margin bottom for more spacing
-                      flexDirection: "row",
-                      alignItems: "center",
-                      width: "80%",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text style={styles.changePasswordButton}>
-                      Change Password
-                    </Text>
-                    <Switch
-                      value={passwordInputVisible}
-                      onValueChange={(newValue) => {
-                        resetForm();
-                        setPasswordInputVisible(newValue);
-                      }}
-                      theme={{
-                        colors: {
-                          primary: themeColors.accent,
-                        },
-                      }}
-                    />
-                  </View>
-
-                  {/* Password Input Field */}
-                  {passwordInputVisible && (
-                    <>
-                      <BottomSheetTextInput
-                        style={styles.input}
-                        value={currentPassword}
-                        onChangeText={setCurrentPassword}
-                        placeholder="Enter your current password"
-                        secureTextEntry={true}
-                        // to get rid of ios password suggestions
-                        // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
-                        // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
-                        textContentType="oneTimeCode"
-                      />
-                      <BottomSheetTextInput
-                        style={styles.input}
-                        value={newPassword}
-                        onChangeText={setNewPassword}
-                        placeholder="Enter your new password"
-                        secureTextEntry={true}
-                        textContentType="newPassword"
-                      />
-                      <BottomSheetTextInput
-                        style={styles.input}
-                        value={newPasswordCheck}
-                        onChangeText={setNewPasswordCheck}
-                        placeholder="Confirm your new password"
-                        secureTextEntry={true}
-                        textContentType="newPassword"
-                      />
-                    </>
-                  )}
-
-                  {/* Save Button */}
-                  <TouchableOpacity
-                    style={styles.saveChangesButton}
-                    onPress={handleUpdate}
-                  >
-                    {updateLoading ? (
-                      <ActivityIndicator
-                        animating={true}
-                        size={16}
-                        color={"#FFF"}
-                      />
-                    ) : (
-                      <Text style={styles.saveChangesButtonText}>Update</Text>
-                    )}
-                  </TouchableOpacity>
-
-                  {/* Sign Out Button */}
-                  <Pressable onPress={handleSignOut}>
-                    <Text style={styles.signOutButton}>Sign Out</Text>
-                  </Pressable>
-                </BottomSheetScrollView>
-              </BottomSheetWrapper>
-              {uniqueDrills.length > 0 ? (
-                <View
-                  style={{
-                    paddingBottom: Platform.OS === "ios" ? 86 + 50 : 86,
-                  }}
-                >
-                  <DrillList
-                    drillData={uniqueDrills}
-                    href={"content/profile/drills/"}
-                    userId={userId}
-                    invalidateKeys={invalidateKeys}
-                  >
-                    {profileHeader}
-                  </DrillList>
-                </View>
-              ) : (
-                <>
-                  <EmptyScreen
-                    invalidateKeys={invalidateKeys}
-                    text={"No drills attempted yet"}
-                    preChild={() => profileHeader}
+                  <BottomSheetTextInput
+                    style={styles.input}
+                    value={newPassword}
+                    onChangeText={setNewPassword}
+                    placeholder="Enter your new password"
+                    secureTextEntry={true}
+                    textContentType="newPassword"
+                  />
+                  <BottomSheetTextInput
+                    style={styles.input}
+                    value={newPasswordCheck}
+                    onChangeText={setNewPasswordCheck}
+                    placeholder="Confirm your new password"
+                    secureTextEntry={true}
+                    textContentType="newPassword"
                   />
                 </>
               )}
-            </SafeAreaView>
-          </BottomSheetModalProvider>
-        </GestureHandlerRootView>
-      </View>
-    </PaperWrapper>
+
+              {/* Save Button */}
+              <TouchableOpacity
+                style={styles.saveChangesButton}
+                onPress={handleUpdate}
+              >
+                {updateLoading ? (
+                  <ActivityIndicator
+                    animating={true}
+                    size={16}
+                    color={"#FFF"}
+                  />
+                ) : (
+                  <Text style={styles.saveChangesButtonText}>Update</Text>
+                )}
+              </TouchableOpacity>
+
+              {/* Sign Out Button */}
+              <Pressable onPress={handleSignOut}>
+                <Text style={styles.signOutButton}>Sign Out</Text>
+              </Pressable>
+            </BottomSheetScrollView>
+          </BottomSheetWrapper>
+          {uniqueDrills.length > 0 || userData.role === "player" ? (
+            <View
+              style={{
+                paddingBottom: Platform.OS === "ios" ? 86 + 50 : 86,
+              }}
+            >
+              <DrillList
+                drillData={uniqueDrills}
+                href={"content/profile/drills/"}
+                userId={userId}
+                invalidateKeys={invalidateKeys}
+              >
+                {profileHeader}
+              </DrillList>
+            </View>
+          ) : (
+            <>
+              <EmptyScreen
+                invalidateKeys={invalidateKeys}
+                text={"No drills attempted"}
+                preChild={() => profileHeader}
+              />
+            </>
+          )}
+        </SafeAreaView>
+      </BottomSheetModalProvider>
+    </View>
   );
 }
 

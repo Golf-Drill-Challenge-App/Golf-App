@@ -4,18 +4,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "~/firebaseConfig";
 
 const AuthContext = createContext({
-  signOut() {
-    return;
-  },
-  setCurrentUserId() {
-    return;
-  },
-  setCurrentTeamId() {
-    return;
-  },
-  setCurrentUserInfo() {
-    return;
-  },
+  signOut() {},
+  setCurrentUserId() {},
+  setCurrentTeamId() {},
+  setCurrentUserInfo() {},
   currentUserId: null,
   currentTeamId: null,
   currentUserInfo: null,
