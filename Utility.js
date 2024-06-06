@@ -123,9 +123,32 @@ export function getErrorString(error) {
   }
 }
 
+export function getOffset(timeZone) {
+  const timeZoneName = Intl.DateTimeFormat("ia", {
+    timeZoneName: "shortOffset",
+    timeZone,
+  })
+    .formatToParts()
+    .find((i) => i.type === "timeZoneName").value;
+  const offset = timeZoneName.slice(3);
+  if (!offset) return 0;
+
+  const matchData = offset.match(/([+-])(\d+)(?::(\d+))?/);
+  if (!matchData) throw `cannot parse timezone name: ${timeZoneName}`;
+
+  const [, sign, hour, minute] = matchData;
+  let result = parseInt(hour) * 60;
+  if (sign === "+") result *= -1;
+  if (minute) result += parseInt(minute);
+
+  return result;
+}
+
 export function getTimezoneOffsetTime(time) {
-  const date = new Date(time);
-  const timezoneOffset = date.getTimezoneOffset() * 60000;
+  const timezoneOffset = getOffset("US/Pacific") * 60000;
+  // Divisor 3600000 = 1000 milliseconds * 60 seconds * 60 minutes)
+  // If you want to see timezone offset in minutes instead, set Divisor = 60000
+  console.log("UTC TIMEZONE OFFSET IN HOURS: " + timezoneOffset / 3600000);
   const localTime = time - timezoneOffset;
   return Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
 }
