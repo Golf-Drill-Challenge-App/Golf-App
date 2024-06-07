@@ -1,4 +1,4 @@
-import { firebaseErrors } from "~/Constants";
+import moment from "moment-timezone";
 
 export const clampNumber = (num, a, b) =>
   Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
@@ -111,37 +111,9 @@ export function getInitials(fullName) {
   return nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
 }
 
-export function getErrorString(error) {
-  if (error.code) {
-    if (firebaseErrors[error.code]) {
-      return firebaseErrors[error.code];
-    } else {
-      return error.code;
-    }
-  } else {
-    return String(error);
-  }
-}
-
 export function getOffset(timeZone) {
-  const timeZoneName = Intl.DateTimeFormat("ia", {
-    timeZoneName: "shortOffset",
-    timeZone,
-  })
-    .formatToParts()
-    .find((i) => i.type === "timeZoneName").value;
-  const offset = timeZoneName.slice(3);
-  if (!offset) return 0;
-
-  const matchData = offset.match(/([+-])(\d+)(?::(\d+))?/);
-  if (!matchData) throw `cannot parse timezone name: ${timeZoneName}`;
-
-  const [, sign, hour, minute] = matchData;
-  let result = parseInt(hour) * 60;
-  if (sign === "+") result *= -1;
-  if (minute) result += parseInt(minute);
-
-  return result;
+  const offsetMinutes = moment.tz(timeZone).utcOffset();
+  return offsetMinutes;
 }
 
 export function getTimezoneOffsetTime(time) {
