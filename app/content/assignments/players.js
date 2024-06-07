@@ -1,9 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { useMemo } from "react";
+import { doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Appbar, Icon, List, Text } from "react-native-paper";
+import { Appbar, Button, Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -13,6 +13,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
+import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -36,40 +37,62 @@ function Index() {
     ["drillInfo", { drillId }],
   ];
 
+  const { currentTeamId } = useAuthContext();
+
   const queryClient = useQueryClient();
 
-  const { showDialog } = useAlertContext();
+  const { showDialog, showSnackBar } = useAlertContext();
 
-  const playerList = useMemo(() => {
-    if (!userInfo) return [];
-    return Object.values(userInfo)
-      .filter((user) =>
-        user.assigned_data.some(
-          (assignment) =>
-            assignment.assignedTime == assignedTime &&
-            assignment.drillId === drillId,
-        ),
-      )
-      .map((user) => {
-        const assignment = user.assigned_data.find(
-          (assignment) =>
-            assignment.assignedTime == assignedTime &&
-            assignment.drillId === drillId,
-        );
-        return {
-          name: user.name,
-          pfp: user.pfp,
-          role: user.role,
-          uid: user.uid,
-          completed: assignment.completed,
-          attemptId: assignment.attemptId,
-        };
-      });
-  }, [userInfo, assignedTime, drillId]);
+  const [editing, setEditing] = useState(false);
+
+  const [assignmentList, setAssignmentList] = useState([]);
+
+  useEffect(() => {
+    if (!userInfo || userInfoIsLoading) setAssignmentList([]);
+    else {
+      setAssignmentList(
+        Object.values(userInfo)
+          .filter((user) =>
+            user.assigned_data.some(
+              (assignment) =>
+                assignment.assignedTime == assignedTime &&
+                assignment.drillId === drillId,
+            ),
+          )
+          .map((user) => {
+            const assignment = user.assigned_data.find(
+              (assignment) =>
+                assignment.assignedTime == assignedTime &&
+                assignment.drillId === drillId,
+            );
+            return {
+              name: user.name,
+              pfp: user.pfp,
+              role: user.role,
+              uid: user.uid,
+              completed: assignment.completed,
+              attemptId: assignment.attemptId,
+              markedForDelete: false,
+            };
+          }),
+      );
+    }
+  }, [
+    userInfo,
+    assignedTime,
+    drillId,
+    assignmentList.length,
+    navigation,
+    userInfoIsLoading,
+  ]);
+
+  const allMarked = useMemo(() => {
+    return assignmentList.every((assignment) => assignment.markedForDelete);
+  }, [assignmentList]);
 
   const numCompleted = useMemo(() => {
-    return playerList.filter((assignment) => assignment.completed).length;
-  }, [playerList]);
+    return assignmentList.filter((assignment) => assignment.completed).length;
+  }, [assignmentList]);
 
   if (drillInfoIsLoading || userInfoIsLoading) return <Loading />;
 
@@ -77,11 +100,28 @@ function Index() {
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
   }
 
+  const unMarkAll = () => {
+    setAssignmentList((prevAssignmentList) => {
+      return prevAssignmentList.map((prevAssignment) => {
+        return {
+          ...prevAssignment,
+          markedForDelete: false,
+        };
+      });
+    });
+  };
+
   const handleAssignmentPress = async (assignment) => {
     if (!assignment.attemptId) {
       //terminator code
       try {
-        const userRef = doc(db, "teams", "1", "users", assignment.uid);
+        const userRef = doc(
+          db,
+          "teams",
+          currentTeamId,
+          "users",
+          assignment.uid,
+        );
         const docSnap = await getDoc(userRef);
 
         if (docSnap.exists()) {
@@ -132,10 +172,55 @@ function Index() {
             color={themeColors.accent}
           />
         }
+        postChildren={
+          <Button
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 10,
+            }}
+            onPress={() => {
+              setEditing(!editing);
+              if (editing) {
+                unMarkAll();
+              }
+            }}
+          >
+            <Text style={{ color: themeColors.accent, fontSize: 17 }}>
+              {editing ? "Cancel" : "Edit"}
+            </Text>
+          </Button>
+        }
       />
-      <Text style={{ textAlign: "center", marginBottom: 10 }}>
-        {numCompleted} / {playerList.length} completed
-      </Text>
+
+      {editing ? (
+        //select all
+        <Button
+          mode={"text"}
+          style={{
+            margin: 0,
+            padding: 0,
+          }}
+          textColor={themeColors.accent}
+          onPress={() => {
+            setAssignmentList((prevAssignmentList) => {
+              return prevAssignmentList.map((prevAssignment) => {
+                return {
+                  ...prevAssignment,
+                  markedForDelete: !allMarked,
+                };
+              });
+            });
+          }}
+        >
+          {allMarked ? "Unselect All" : "Select All"}
+        </Button>
+      ) : (
+        <Text style={{ textAlign: "center", marginVertical: 10 }}>
+          {numCompleted} / {assignmentList.length} completed
+        </Text>
+      )}
       <ScrollView
         refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
       >
@@ -147,12 +232,31 @@ function Index() {
           }}
         >
           <List.Section style={{ backgroundColor: themeColors.background }}>
-            {playerList.map((assignment) => {
+            {assignmentList.map((assignment, index) => {
               return (
                 <List.Item
                   key={`${assignment.uid}`}
-                  onPress={() => handleAssignmentPress(assignment)}
-                  disabled={!assignment.completed || !drillInfo.hasStats}
+                  onPress={async () => {
+                    if (editing) {
+                      //toggle markedForDelete
+                      setAssignmentList((prevAssignmentList) => {
+                        return prevAssignmentList.map((prevAssignment) => {
+                          if (prevAssignment.uid === assignment.uid) {
+                            return {
+                              ...prevAssignment,
+                              markedForDelete: !prevAssignment.markedForDelete,
+                            };
+                          }
+                          return prevAssignment;
+                        });
+                      });
+                    } else {
+                      await handleAssignmentPress(assignment);
+                    }
+                  }}
+                  disabled={
+                    !editing && (!assignment.completed || !drillInfo.hasStats)
+                  }
                   style={{
                     paddingLeft: 20,
                   }}
@@ -173,19 +277,35 @@ function Index() {
                         alignItems: "center",
                       }}
                     >
-                      {assignment.completed && (
-                        <>
-                          <Text
-                            style={{
-                              color: "green",
-                            }}
-                          >
-                            Completed
-                          </Text>
-                          {drillInfo.hasStats && (
-                            <Icon size={20} source="chevron-right" />
-                          )}
-                        </>
+                      {editing ? (
+                        assignment.markedForDelete ? (
+                          <Icon
+                            source="checkbox-outline"
+                            size={20}
+                            color={"black"}
+                          />
+                        ) : (
+                          <Icon
+                            source="checkbox-blank-outline"
+                            size={20}
+                            color={"black"}
+                          />
+                        )
+                      ) : (
+                        assignment.completed && (
+                          <>
+                            <Text
+                              style={{
+                                color: "green",
+                              }}
+                            >
+                              Completed
+                            </Text>
+                            {drillInfo.hasStats && (
+                              <Icon size={20} source="chevron-right" />
+                            )}
+                          </>
+                        )
                       )}
                     </View>
                   )}
@@ -196,6 +316,89 @@ function Index() {
           </List.Section>
         </View>
       </ScrollView>
+      {editing && (
+        <View>
+          <Button
+            style={{
+              margin: 10,
+            }}
+            labelStyle={{
+              fontSize: 20,
+              fontWeight: "bold",
+              padding: 5,
+            }}
+            mode="contained"
+            buttonColor={themeColors.accent}
+            textColor="white"
+            disabled={
+              !assignmentList.some((assignment) => assignment.markedForDelete)
+            }
+            theme={{
+              colors: {
+                surfaceDisabled: "#A0A0A0",
+                onSurfaceDisabled: "#FFF",
+              },
+            }}
+            onPress={async () => {
+              try {
+                await runTransaction(db, async (transaction) => {
+                  const playerList = [];
+                  for (const assignment of assignmentList) {
+                    if (!assignment.markedForDelete) {
+                      continue;
+                    }
+                    const userRef = doc(
+                      db,
+                      "teams",
+                      currentTeamId,
+                      "users",
+                      assignment.uid,
+                    );
+                    console.log("Players marked for delete: ", assignment.uid);
+                    const docSnap = await transaction.get(userRef);
+
+                    if (docSnap.exists()) {
+                      const assignedData = docSnap.data().assigned_data;
+                      const updatedAssignmentList = assignedData.filter(
+                        (assignment) => assignment.assignedTime != assignedTime,
+                      );
+                      console.log(
+                        "Updated Assignment List: ",
+                        updatedAssignmentList,
+                      );
+                      console.log("current assignedTime: ", assignedTime);
+                      playerList.push({
+                        uid: assignment.uid,
+                        assigned_data: updatedAssignmentList,
+                      });
+                    }
+                  }
+
+                  for (const player of playerList) {
+                    const userRef = doc(
+                      db,
+                      "teams",
+                      currentTeamId,
+                      "users",
+                      player.uid,
+                    );
+                    await transaction.update(userRef, {
+                      ["assigned_data"]: player.assigned_data,
+                    });
+                  }
+                });
+                await invalidateMultipleKeys(queryClient, invalidateKeys);
+                showSnackBar("Assignments Deleted");
+              } catch (e) {
+                console.log("Error deleting assignments: ", e);
+                showDialog("Error", getErrorString(e));
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
