@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-paper";
 import ScatterChart from "react-native-scatter-chart";
+import { BarChart, Grid } from "react-native-svg-charts";
 import { prettyTitle, themeColors } from "~/Constants";
 import { numTrunc } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
@@ -52,11 +53,11 @@ export default function ResultScreen({
     return <ErrorComponent errorList={[drillInfoError, attemptError]} />;
   }
 
+  const attempt = attemptId ? fetchedAttempt : attemptData;
+
   const displayShotTendency = drillInfo.outputs.some(
     (output) => output === "carry" || output === "sideLanding",
   );
-
-  const attempt = attemptId ? fetchedAttempt : attemptData;
 
   const dots = attempt["shots"].map((value) => [
     (value["sideLanding"] ? Number(value["sideLanding"]) : 0) + 0.0612,
@@ -74,6 +75,49 @@ export default function ResultScreen({
   xMax += 0.1 * xMax;
   let xMin = Math.min(...xValues, -20);
   xMin += 0.1 * xMin;
+
+  const displayStrokeCount = drillInfo.outputs.some(
+    (output) => output === "strokes",
+  );
+
+  const temp = {};
+  attempt["shots"].forEach((value) => {
+    if (temp[value["strokes"]]) {
+      temp[value["strokes"]]["value"] += 1;
+    } else {
+      temp[value["strokes"]] = {
+        value: 1,
+        label: value["strokes"],
+      };
+    }
+  });
+
+  const barData = Object.values(temp);
+
+  const barWidth = 25;
+  const chartHeight = barData.length * barWidth;
+
+  const Labels = ({ x, y, bandwidth, data }) => {
+    const textArray = data.map((item, index) => {
+      const value = item.value;
+      return (
+        <Text
+          key={index}
+          style={{
+            position: "absolute",
+            top: y(index) + bandwidth / 2 - 9,
+            left: x(value) + 5,
+          }}
+          fontSize={14}
+          fill={"black"}
+          zIndex={0}
+        >
+          {value}
+        </Text>
+      );
+    });
+    return <View>{textArray}</View>;
+  };
 
   const sortedAggOutputs = Object.keys(drillInfo.aggOutputs).sort((a, b) => {
     return prettyTitle[a].localeCompare(prettyTitle[b]);
@@ -149,6 +193,59 @@ export default function ResultScreen({
                     chartWidth={width * 0.9}
                   />
                 </View>
+              </View>
+            </>
+          )}
+          {displayStrokeCount && (
+            <>
+              <Text style={styles.sectionTitle}>Stroke Count</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  height: chartHeight,
+                }}
+              >
+                {/*YAxis*/}
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    height: chartHeight,
+                  }}
+                >
+                  {barData.map((item, index) => (
+                    <Text
+                      key={index}
+                      style={{
+                        position: "absolute",
+                        top: index * barWidth + barWidth / 2 - 8,
+                        left: 0,
+                        fontSize: 14,
+                        fill: "black",
+                        zIndex: 0,
+                      }}
+                    >
+                      {item.label}
+                    </Text>
+                  ))}
+                </View>
+                <BarChart
+                  style={{
+                    height: chartHeight,
+                    width: "100%",
+                  }}
+                  data={barData}
+                  horizontal={true}
+                  yAccessor={({ item }) => item.value}
+                  svg={{ fill: "green", zIndex: 1 }}
+                  contentInset={{ right: 25, left: 25 }}
+                  spacing={0.2}
+                  gridMin={0}
+                >
+                  <Grid direction={Grid.Direction.VERTICAL} />
+                  <Labels />
+                </BarChart>
               </View>
             </>
           )}
