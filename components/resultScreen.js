@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -23,9 +22,6 @@ export default function ResultScreen({
   attemptId = null,
   attemptData = null,
 }) {
-  useEffect(() => {
-    console.log("rendering ResultScreen for: ", attemptId);
-  });
   const { width } = useWindowDimensions();
 
   const {
@@ -80,17 +76,11 @@ export default function ResultScreen({
     (output) => output === "strokes",
   );
 
-  const temp = {};
-  attempt["shots"].forEach((value) => {
-    if (temp[value["strokes"]]) {
-      temp[value["strokes"]]["value"] += 1;
-    } else {
-      temp[value["strokes"]] = {
-        value: 1,
-        label: value["strokes"],
-      };
-    }
-  });
+  const temp = attempt.shots.reduce((acc, { strokes }) => {
+    acc[strokes] = acc[strokes] || { value: 0, label: strokes };
+    acc[strokes].value += 1;
+    return acc;
+  }, {});
 
   const barData = Object.values(temp);
 
@@ -197,12 +187,14 @@ export default function ResultScreen({
             </>
           )}
           {displayStrokeCount && (
-            <>
+            <View style={{}}>
               <Text style={styles.sectionTitle}>Stroke Count</Text>
               <View
                 style={{
                   flexDirection: "row",
                   height: chartHeight,
+                  width: width * 0.9,
+                  margin: "auto", //center the chart
                 }}
               >
                 {/*YAxis*/}
@@ -247,7 +239,7 @@ export default function ResultScreen({
                   <Labels />
                 </BarChart>
               </View>
-            </>
+            </View>
           )}
 
           <Text style={styles.sectionTitle}>Shot History</Text>
