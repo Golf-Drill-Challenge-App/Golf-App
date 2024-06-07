@@ -1,4 +1,5 @@
 import moment from "moment-timezone";
+import { firebaseErrors } from "~/Constants";
 
 export const clampNumber = (num, a, b) =>
   Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b));
@@ -111,16 +112,26 @@ export function getInitials(fullName) {
   return nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
 }
 
+export function getErrorString(error) {
+  if (error.code) {
+    if (firebaseErrors[error.code]) {
+      return firebaseErrors[error.code];
+    } else {
+      return error.code;
+    }
+  } else {
+    return String(error);
+  }
+}
+
 export function getOffset(timeZone) {
-  const offsetMinutes = moment.tz(timeZone).utcOffset();
-  return offsetMinutes;
+  return moment.tz(timeZone).utcOffset();
 }
 
 export function getTimezoneOffsetTime(time) {
   const timezoneOffset = getOffset("US/Pacific") * 60000;
   // Divisor 3600000 = 1000 milliseconds * 60 seconds * 60 minutes)
   // If you want to see timezone offset in minutes instead, set Divisor = 60000
-  console.log("UTC TIMEZONE OFFSET IN HOURS: " + timezoneOffset / 3600000);
   const localTime = time - timezoneOffset;
   return Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
 }

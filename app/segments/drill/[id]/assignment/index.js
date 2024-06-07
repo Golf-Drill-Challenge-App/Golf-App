@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
 import { getErrorString, getTimezoneOffsetTime } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
@@ -70,13 +71,20 @@ export default function Index() {
           })
           .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
       ),
-    [userInfo],
+    [id, userInfo],
   );
+
   const allTrue = useMemo(() => {
     if (Object.keys(checkedItems).length === 0) {
       return false;
     }
     return Object.values(checkedItems).every((value) => value === true);
+  }, [checkedItems]);
+  const someTrue = useMemo(() => {
+    if (Object.keys(checkedItems).length === 0) {
+      return false;
+    }
+    return Object.values(checkedItems).some((value) => value === true);
   }, [checkedItems]);
   if (userIsLoading) {
     return <Loading />;
@@ -165,51 +173,59 @@ export default function Index() {
         }
       />
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1, marginBottom: 30 }}>
-          <List.Section style={{ paddingHorizontal: 20, height: "100%" }}>
-            {Object.entries(filteredUserInfo).map(([uid, userData]) => (
-              <TouchableOpacity
-                key={uid}
-                style={styles.cardContainer}
-                activeOpacity={0.5}
-                onPress={() =>
-                  setCheckedItems({
-                    ...checkedItems,
-                    [uid]: !checkedItems[uid],
-                  })
-                }
-              >
-                <View style={styles.cardContent}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 20,
-                    }}
-                  >
-                    <ProfilePicture
+        {Object.keys(filteredUserInfo).length > 0 ? (
+          <ScrollView style={{ flex: 1, marginBottom: 30 }}>
+            <List.Section style={{ paddingHorizontal: 20, height: "100%" }}>
+              {Object.entries(filteredUserInfo).map(([uid, userData]) => (
+                <TouchableOpacity
+                  key={uid}
+                  style={styles.cardContainer}
+                  activeOpacity={0.5}
+                  onPress={() =>
+                    setCheckedItems({
+                      ...checkedItems,
+                      [uid]: !checkedItems[uid],
+                    })
+                  }
+                >
+                  <View style={styles.cardContent}>
+                    <View
                       style={{
-                        height: 24,
-                        width: 24,
-                        borderRadius: 12,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 20,
                       }}
-                      userInfo={userData}
-                    />
+                    >
+                      <ProfilePicture
+                        style={{
+                          height: 24,
+                          width: 24,
+                          borderRadius: 12,
+                        }}
+                        userInfo={userData}
+                      />
 
-                    <Text style={styles.title}>{userData.name}</Text>
+                      <Text style={styles.title}>{userData.name}</Text>
+                    </View>
+                    <View style={styles.specContainer}>
+                      {checkedItems[uid] ? (
+                        <Icon name="checkbox-outline" size={20} />
+                      ) : (
+                        <Icon name="checkbox-blank-outline" size={20} />
+                      )}
+                    </View>
                   </View>
-                  <View style={styles.specContainer}>
-                    {checkedItems[uid] ? (
-                      <Icon name="checkbox-outline" size={20} />
-                    ) : (
-                      <Icon name="checkbox-blank-outline" size={20} />
-                    )}
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </List.Section>
-        </ScrollView>
+                </TouchableOpacity>
+              ))}
+            </List.Section>
+          </ScrollView>
+        ) : (
+          <EmptyScreen
+            text={
+              "No players left to assign.\nYou can only assign this drill to players who have not been assigned today."
+            }
+          />
+        )}
       </View>
       <TouchableRipple
         rippleColor="rgba(256, 256, 256, 0.2)"
@@ -219,12 +235,13 @@ export default function Index() {
           bottom: 30,
           left: 0,
           right: 0,
-          backgroundColor: themeColors.accent,
+          backgroundColor: someTrue ? themeColors.accent : "#A0A0A0",
           padding: 10,
           justifyContent: "center",
           borderRadius: 20,
           flexDirection: "row",
         }}
+        disabled={!someTrue}
         onPress={handleAssign}
       >
         {loading ? (
