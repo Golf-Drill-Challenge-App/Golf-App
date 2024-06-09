@@ -31,6 +31,7 @@ See [package.json](package.json) for more details on libraries used
 - Golf Coach's Spreadsheets (sample golf drills / calculations)
   - [Approach Shots / Line Tests](https://docs.google.com/spreadsheets/d/1ZufXjRCTzbIqJln_fJ5NDvNo0ahHIM-bkv9ZB8a6Drw/edit#gid=259638677)
   - [Putting](https://docs.google.com/spreadsheets/d/12gnHaMyzP0eGAi3MGVBYaG5obCJ0xri9d0RiqiWKfuA/edit#gid=865463318)
+  - [Full List of Golf Drills](https://docs.google.com/spreadsheets/d/1wzSL7WhsdgXudPROZLy6gyYUY910k_wEY-bWuKE_brk/edit#gid=0)
 - [Data Golf](https://datagolf.com/player-profiles?dg_id=18841)
   - Example of graph logic / styling, for golf stats
 
