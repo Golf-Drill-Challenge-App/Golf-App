@@ -37,12 +37,9 @@ See [package.json](package.json) for more details on libraries used
 
 ## Database Specifications
 
-Info below subject to change
-
 - Database Schema: [db_spec.jsonc](db_spec.jsonc)
-  - The current database on Firestore, as well as the local test data in [drill_data.json](drill_data.json), follows the schema starting on line 29 (`teams` object) of `db_spec.jsonc`
-    - May be moving drill attempts out of `teams` and into a separate data object soon
-- Currently, some pages in profile, team, drill submission still use the local data from `drill_data.json`, but the rest are connected to Firestore
+  - Overview / template of database design and structure
+- NOTE: The latest database / database specifications are now on Google Firestore (not public)
 
 ## Commands
 
