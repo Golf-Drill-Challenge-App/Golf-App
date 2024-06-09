@@ -13,7 +13,7 @@ Cross Platform Mobile app for the OSU Men's Golf Team.
 - [React Native Paper](https://reactnativepaper.com/)
 - [Gorhom/bottom-sheet](https://ui.gorhom.dev/components/bottom-sheet/)
 - [React Native SVG Charts](https://www.npmjs.com/package/react-native-svg-charts)
-- [Expo Go](https://expo.dev/)
+- [Expo](https://expo.dev/)
 - [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
 - [Firestore](https://firebase.google.com/docs/firestore)
 
