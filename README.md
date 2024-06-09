@@ -2,15 +2,25 @@
 
 Cross Platform Mobile app for the OSU Men's Golf Team.
 
+## Landing Page
+
+- https://golf-drill-challenge-app.github.io/
+  - Will add more user-facing documentation pages (FAQ) here in the future if needed
+
 ## Tech Stack
 
 - [React Native](https://reactnative.dev/)
 - [React Native Paper](https://reactnativepaper.com/)
 - [React Native SVG Charts](https://www.npmjs.com/package/react-native-svg-charts)
 - [Expo Go](https://expo.dev/)
+- [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
 - [Firestore](https://firebase.google.com/docs/firestore)
 
 See [package.json](package.json) for more details on libraries used
+
+### Architecture Diagram
+
+![architectural_diagram](https://i.imgur.com/Wy0O2iL.png)
 
 ## Design References
 
@@ -59,11 +69,12 @@ Compatible with both MacOS and Windows PC for app compilation.
 - Command to run Android Emulator:
   - `C:\Users\<username>\AppData\Local\Android\Sdk\emulator\emulator -avd <emulated phone name> -feature -Vulkan`
     - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulat-or\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
+    - Add `-no-snapshot-load` flag to start emulator from "cold boot" (if emulator keeps crashing upon turning on)
 - `yarn a` to run the app
 
 ### Dev Mode Instructions for iOS Emulator
 
-Probably needs MacOS for app compilation (to run XCode) / iOS Emulator.
+Needs MacOS for app compilation (to run XCode) / iOS Emulator.
 
 - Note that Expo Go will be automatically installed on the emulated mobile device for you
 - Documentation: https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device
@@ -93,7 +104,7 @@ Probably needs MacOS for app compilation (to run XCode) / iOS Emulator.
 
 ### Prebuild Instructions for Android (Production Mode)
 
-Presumably compatible with both MacOS and Windows PC for building the project in Android Studio.
+Compatible with both MacOS and Windows PC for building the project in Android Studio.
 
 - `yarn prebuild`
 - `yarn android`
@@ -103,7 +114,7 @@ Presumably compatible with both MacOS and Windows PC for building the project in
 
 ### Prebuild Instructions for iOS (Production Mode, needs MacOS)
 
-Probably needs a MacOS at least for building the project in XCode.
+Needs a MacOS for building the project in XCode.
 
 - `yarn prebuild`
 - `yarn ios`
