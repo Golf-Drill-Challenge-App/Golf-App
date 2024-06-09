@@ -16,7 +16,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { themeColors } from "~/Constants";
-import { getErrorString, getTimezoneOffsetTime } from "~/Utility";
+import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -24,6 +24,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useTimeContext } from "~/context/Time";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -46,33 +47,31 @@ export default function Index() {
 
   const { showDialog, showSnackBar } = useAlertContext();
 
-  const isAssignedToday = (assignedTime) => {
-    const today = new Date();
-    const assignedDate = new Date(assignedTime);
-    return (
-      today.getDate() === assignedDate.getDate() &&
-      today.getMonth() === assignedDate.getMonth() &&
-      today.getFullYear() === assignedDate.getFullYear()
-    );
-  };
+  const { getCurrentLocalizedDate, getLocalizedDate } = useTimeContext();
 
   const [checkedItems, setCheckedItems] = useState({});
-  const filteredUserInfo = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(userInfo ?? {})
-          .filter(([, value]) => {
-            const hasDrillAssignedToday = value.assigned_data?.some(
-              (assignment) =>
-                assignment.drillId === id &&
-                isAssignedToday(assignment.assignedTime),
-            );
-            return value.role === "player" && !hasDrillAssignedToday;
-          })
-          .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
-      ),
-    [id, userInfo],
-  );
+  const filteredUserInfo = useMemo(() => {
+    const isAssignedToday = (assignedTime) => {
+      const today = getCurrentLocalizedDate({ rounded: true }).getTime();
+      const assignedDate = getLocalizedDate({
+        time: assignedTime,
+        rounded: true,
+      }).getTime();
+      return today === assignedDate;
+    };
+    return Object.fromEntries(
+      Object.entries(userInfo ?? {})
+        .filter(([, value]) => {
+          const hasDrillAssignedToday = value.assigned_data?.some(
+            (assignment) =>
+              assignment.drillId === id &&
+              isAssignedToday(assignment.assignedTime),
+          );
+          return value.role === "player" && !hasDrillAssignedToday;
+        })
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name)),
+    );
+  }, [getCurrentLocalizedDate, getLocalizedDate, id, userInfo]);
 
   const allTrue = useMemo(() => {
     if (Object.keys(checkedItems).length === 0) {
@@ -106,7 +105,7 @@ export default function Index() {
     const selectedUsers = Object.entries(checkedItems)
       .filter(([, value]) => value)
       .map((value) => value[0]);
-    const time = getTimezoneOffsetTime(new Date().getTime());
+    const time = Date.now();
 
     try {
       await runTransaction(db, async (transaction) => {

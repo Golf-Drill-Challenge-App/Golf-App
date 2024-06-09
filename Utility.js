@@ -19,9 +19,14 @@ export function formatDate(unixTimestamp) {
     "Nov",
     "Dec",
   ];
-  if (typeof unixTimestamp === "string")
-    unixTimestamp = parseInt(unixTimestamp, 10);
-  const date = new Date(unixTimestamp);
+  let time = unixTimestamp;
+  if (typeof unixTimestamp === "string") {
+    const temp = parseInt(unixTimestamp, 10);
+    if (!isNaN(temp)) {
+      time = temp;
+    }
+  }
+  const date = new Date(time);
 
   const year = date.getFullYear();
   const month = months[date.getMonth()];

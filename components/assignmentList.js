@@ -3,11 +3,12 @@ import { useMemo } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
 import { Avatar, Text } from "react-native-paper";
 import { themeColors } from "~/Constants";
-import { formatDate, getTimezoneOffsetTime } from "~/Utility";
+import { formatDate } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import AssignmentCard from "~/components/assignmentCard";
 import EmptyScreen from "~/components/emptyScreen";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useTimeContext } from "~/context/Time";
 
 const AssignmentsList = ({
   role,
@@ -18,9 +19,9 @@ const AssignmentsList = ({
   children,
   disableCriteria = () => false,
 }) => {
-  const today = formatDate(Date.now());
-
   const currentPath = usePathname();
+
+  const { getLocalizedDate, getCurrentLocalizedDate } = useTimeContext();
 
   const assigned_data = useMemo(() => {
     if (userInfo) {
@@ -33,20 +34,24 @@ const AssignmentsList = ({
         player["assigned_data"].forEach((assignment) => {
           const { assignedTime, drillId, completed, attemptId } = assignment;
           const { uid, pfp, name } = player;
+          const mergeTime = getLocalizedDate({
+            time: assignedTime,
+            rounded: true,
+          }).getTime();
 
-          if (!alreadyAddedData[assignedTime]) {
-            alreadyAddedData[assignedTime] = {};
+          if (!alreadyAddedData[mergeTime]) {
+            alreadyAddedData[mergeTime] = {};
           }
 
-          if (!alreadyAddedData[assignedTime][drillId]) {
-            alreadyAddedData[assignedTime][drillId] = {
-              assignedTime,
+          if (!alreadyAddedData[mergeTime][drillId]) {
+            alreadyAddedData[mergeTime][drillId] = {
+              assignedTime: mergeTime,
               drillId,
               players: [],
             };
           }
 
-          alreadyAddedData[assignedTime][drillId].players.push({
+          alreadyAddedData[mergeTime][drillId].players.push({
             pfp,
             name,
             uid,
@@ -65,12 +70,12 @@ const AssignmentsList = ({
       });
       return newAssignedData;
     }
-  }, [playerInfo, userInfo]);
+  }, [getLocalizedDate, playerInfo, userInfo]);
 
   // Group the assigned drills by date
   const groupedData = useMemo(() => {
     return assigned_data.reduce((acc, curr) => {
-      const time = getTimezoneOffsetTime(curr.assignedTime);
+      const time = curr.assignedTime;
 
       if (!acc[time]) {
         acc[time] = [];
@@ -87,9 +92,7 @@ const AssignmentsList = ({
 
   // Sort the dates in descending order
   const sortedDates = useMemo(() => {
-    return Object.keys(groupedData).sort(
-      (a, b) => new Date(Number(b)) - new Date(Number(a)),
-    );
+    return Object.keys(groupedData).sort((a, b) => b - a);
   }, [groupedData]);
 
   if (sortedDates.length === 0) {
@@ -222,7 +225,6 @@ const AssignmentsList = ({
         );
       }}
       renderSectionHeader={({ section: { title } }) => {
-        const date = formatDate(title);
         return (
           <Text
             style={{
@@ -234,7 +236,9 @@ const AssignmentsList = ({
               backgroundColor: themeColors.background,
             }}
           >
-            {date === today ? "Today" : date}
+            {title === getCurrentLocalizedDate({ rounded: true })
+              ? "Today"
+              : formatDate(title)}
           </Text>
         );
       }}

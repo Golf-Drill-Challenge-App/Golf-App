@@ -13,6 +13,7 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
+import { useTimeContext } from "~/context/Time";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -40,22 +41,19 @@ function Index() {
 
   const { showDialog } = useAlertContext();
 
+  const { getLocalizedDate } = useTimeContext();
+
   const playerList = useMemo(() => {
     if (!userInfo) return [];
+    const critera = (assignment) =>
+      getLocalizedDate({
+        time: assignment.assignedTime,
+        rounded: true,
+      }).getTime() == assignedTime && assignment.drillId === drillId;
     return Object.values(userInfo)
-      .filter((user) =>
-        user.assigned_data.some(
-          (assignment) =>
-            assignment.assignedTime == assignedTime &&
-            assignment.drillId === drillId,
-        ),
-      )
+      .filter((user) => user.assigned_data.some(critera))
       .map((user) => {
-        const assignment = user.assigned_data.find(
-          (assignment) =>
-            assignment.assignedTime == assignedTime &&
-            assignment.drillId === drillId,
-        );
+        const assignment = user.assigned_data.find(critera);
         return {
           name: user.name,
           pfp: user.pfp,
@@ -65,7 +63,7 @@ function Index() {
           attemptId: assignment.attemptId,
         };
       });
-  }, [userInfo, assignedTime, drillId]);
+  }, [userInfo, getLocalizedDate, assignedTime, drillId]);
 
   const numCompleted = useMemo(() => {
     return playerList.filter((assignment) => assignment.completed).length;
