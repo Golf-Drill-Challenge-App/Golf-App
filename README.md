@@ -20,7 +20,7 @@ See [package.json](package.json) for more details on libraries used
 
 ### Architecture Diagram
 
-![architectural_diagram](https://i.imgur.com/Wy0O2iL.png)
+![architectural_diagram](https://i.imgur.com/t1Y4ARm.png)
 
 ## Design References
 
