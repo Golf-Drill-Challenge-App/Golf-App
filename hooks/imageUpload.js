@@ -6,7 +6,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 const firebaseProfileImageUpload = async (
   uri,
   setImageUploading,
-  setSnackbarMessage,
+  showSnackBar,
   id,
   reference,
 ) => {
@@ -33,13 +33,13 @@ const firebaseProfileImageUpload = async (
       pfp: downloadURL,
     });
 
-    setSnackbarMessage("Successfully uploaded the profile picture!");
+    showSnackBar("Successfully uploaded the profile picture!");
     setImageUploading(false);
 
     return downloadURL;
   } catch (e) {
     console.log("Error uploading image to Firebase:", e);
-    setSnackbarMessage("Error uploading profile picture. Please try again.");
+    showSnackBar("Error uploading profile picture. Please try again.");
     setImageUploading(false);
 
     throw e; // Rethrow the error to handle it at the caller's level if needed
@@ -59,7 +59,7 @@ const resizeImage = async (uri) => {
 // Function to handle image upload
 export const handleImageUpload = async (
   setImageUploading,
-  setSnackbarMessage,
+  showSnackBar,
   id,
   reference,
 ) => {
@@ -77,7 +77,7 @@ export const handleImageUpload = async (
     await firebaseProfileImageUpload(
       resizedUri,
       setImageUploading,
-      setSnackbarMessage,
+      showSnackBar,
       id,
       reference,
     );

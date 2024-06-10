@@ -17,6 +17,7 @@ const prettyTitle = {
   break: "Break",
   club: "Club",
   carry: "Carry",
+  completed: "Completed",
   carryDiff: "Carry Difference",
   distance: "Distance",
   carryDiffAverage: "Carry Difference Average",

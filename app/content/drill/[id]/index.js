@@ -11,7 +11,6 @@ import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import PaperWrapper from "~/components/paperWrapper";
 import { useAuthContext } from "~/context/Auth";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
 import { useUserInfo } from "~/hooks/useUserInfo";
@@ -35,7 +34,9 @@ export default function Index() {
     error: drillInfoError,
     isLoading: drillInfoIsLoading,
   } = useDrillInfo({ drillId });
+
   const { currentUserId } = useAuthContext();
+
   const {
     data: userInfo,
     error: userInfoError,
@@ -48,21 +49,21 @@ export default function Index() {
     return <ErrorComponent errorList={[drillInfoError, userInfoError]} />;
 
   return (
-    <PaperWrapper>
-      <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
-        <Header
-          title={drillInfo.subType}
-          subTitle={drillInfo.drillType}
-          preChildren={
-            <Appbar.BackAction
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={themeColors.accent}
-            />
-          }
-        />
-        {/* Tab system */}
+    <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
+      <Header
+        title={drillInfo.subType}
+        subTitle={drillInfo.drillType}
+        preChildren={
+          <Appbar.BackAction
+            onPress={() => {
+              navigation.goBack();
+            }}
+            color={themeColors.accent}
+          />
+        }
+      />
+      {/* Tab system */}
+      {drillInfo.hasStats && (
         <SegmentedButtons
           value={value}
           onValueChange={setValue}
@@ -105,8 +106,8 @@ export default function Index() {
                 ]
           }
         />
-        {tabComponent[value]}
-      </SafeAreaView>
-    </PaperWrapper>
+      )}
+      {tabComponent[value]}
+    </SafeAreaView>
   );
 }
