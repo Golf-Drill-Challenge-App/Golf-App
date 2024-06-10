@@ -21,7 +21,7 @@ See [package.json](package.json) for more details on libraries used
 
 ### Architecture Diagram
 
-![architectural_diagram](https://i.imgur.com/t1Y4ARm.png)
+![architectural_diagram](https://i.ibb.co/YQwJyPf/golf-drill-architecture-drawio-4.png)
 
 ## Design References
 
