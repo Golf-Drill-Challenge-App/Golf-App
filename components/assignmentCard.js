@@ -56,10 +56,12 @@ export default function AssignmentCard({
           ) : (
             completed !== undefined && <View style={{ width: 28 }} />
           )}
-          {!disabled && (
+          {!disabled ? (
             <View style={{ paddingLeft: 10 }}>
               <Icon source="chevron-right" size={20} />
             </View>
+          ) : (
+            <View style={{ width: 30 }} />
           )}
         </View>
       </View>
