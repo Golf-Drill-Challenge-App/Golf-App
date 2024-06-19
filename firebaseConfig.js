@@ -3,13 +3,14 @@ import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { apiKey } from "~/firebaseApiKey";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAJAQMt-eOyg5PWPzk7kX7RaF9x6gnUEfo",
+  apiKey: apiKey,
   authDomain: "osu-golf-drill-challenge-app.firebaseapp.com",
   databaseURL:
     "https://osu-golf-drill-challenge-app-default-rtdb.firebaseio.com",
