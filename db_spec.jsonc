@@ -1,0 +1,198 @@
+{
+  "users": {
+    "1": {
+      "uid": "1", // all ids must be a string
+      "email": "john.doe@gmail.com",
+      "teams": [
+        // just in case there's a billion teams and lookup is slow
+        {
+          "tid": "1",
+          "name": "Team 1",
+        },
+        {
+          "tid": "2",
+          "name": "Team 2",
+        },
+      ],
+    },
+    "2": {
+      "uid": "2",
+      "email": "doe.john@gmail.com",
+      "teams": [
+        {
+          "tid": "1",
+          "name": "Team 1",
+        },
+      ],
+    },
+  },
+  "teams": {
+    "1": {
+      "tid": "1",
+      "name": "Team 1",
+      "users": {
+        "1": {
+          // uid, corresponds with users list above
+          "uid": "1", // just in case this whole object needs to be passed as a prop. Can remove if memory constrained
+          "name": "John Doe", // putting name here allows different names for different teams
+          "role": "owner", // creator and only person who can delete a team. Value can be "owner", "coach", or "student"
+          "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        },
+        "2": {
+          "uid": "2", // correspond with users list above
+          "name": "Doe John", // putting name here allows different names for different teams
+          "role": "student", // Value can be "owner", "coach", or "student"
+          "pfp": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        },
+      },
+      "attempts": {
+        "1237486": {
+          //random id for each attempt. attempts will be found by querying
+          // one submission
+          "time": 1609023321, // unix time stamp, differentiator for multiple submissions
+          "did": "732489", // drillInfo id
+          "uid": "1", // user id
+          "strokesGained": -0.018999999999999018, // and other stats
+          "strokesGainedAverage": 0.060272727272727374,
+          "carryDiffAverage": -0.6708848559484548,
+          "sideLandingAverage": -0.8664528551014709,
+          "proxHoleAverage": 17.34356240061842,
+          "shots": [
+            {
+              "sid": 1, // count up
+              "target": 122,
+              "carry": 127.62146793901402,
+              "sideLanding": 33.20102955116408,
+              "carryDiff": 5.621467939014018,
+              "proxHole": 37.238642286763536,
+              "baseline": 2.85,
+              "expectedPutts": 2.032,
+              "strokesGained": -0.18199999999999994,
+            },
+            {
+              "sid": 2,
+              "did": "732489", // drillInfo id
+              "uid": "1", // user id
+              "target": 114,
+              "carry": 111.15626354611541,
+              "sideLanding": 15.93869780601396,
+              "carryDiff": -2.8437364538845866,
+              "proxHole": 18.07826376961579,
+              "baseline": 2.825,
+              "expectedPutts": 1.848,
+              "strokesGained": -0.02299999999999991,
+            },
+          ],
+        },
+        "567432": {
+          // 2nd submission
+          "time": 1705166999, // unix time stamp
+          "strokesGained": 3, // and other stats
+          "shots": [
+            {
+              "sid": 1, // count up
+              "target": 122,
+              "carry": 127.62146793901402,
+              "sideLanding": 33.20102955116408,
+              "carryDiff": 5.621467939014018,
+              "proxHole": 37.238642286763536,
+              "baseline": 2.85,
+              "expectedPutts": 2.032,
+              "strokesGained": -0.18199999999999994,
+            },
+            {
+              "sid": 2,
+              "target": 114,
+              "carry": 111.15626354611541,
+              "sideLanding": 15.93869780601396,
+              "carryDiff": -2.8437364538845866,
+              "proxHole": 18.07826376961579,
+              "baseline": 2.825,
+              "expectedPutts": 1.848,
+              "strokesGained": -0.02299999999999991,
+            },
+          ],
+        },
+      },
+      "best_attempts": {
+        //collection of did
+        "732489": {
+          //document of did, uid is the key
+          "2": {
+            //uid, document, contains a map item
+            "strokesGained": {
+              "value": "1237486", //the best value
+              "id": "567432", //attempt id that contains the "best" score for this field
+            },
+            "proxHole": {
+              "value": "1237486",
+              "id": "567432",
+            },
+          },
+        },
+      },
+      "drills": [
+        {
+          "did": "732489", // drillInfo id
+          "drillType": "20ShotChallenge", // e.g. "20 shot challenge", "putting challenge", "line test"
+          "spec": "50ft - 150ft", // this is just a string shown to the user. TODO: Add numeric fields for random distance ranges
+          "shotType": "arg", // e.g. "arg", "putt", "ott", "app"
+          "requirements": [
+            {
+              "name": "distance", // display name
+              "type": "random", // random or sequence. random to pick a value between min and max, sequence to pick a value from a list in order
+              "min": 100,
+              "max": 150,
+              "items": [
+                // array for sequence
+                "8",
+                "9",
+                "PW",
+                "9",
+                "8",
+                "7",
+                "8",
+                "9",
+                "PW",
+                "9",
+                "8",
+                "7",
+                "8",
+                "9",
+                "PW",
+                "9",
+                "8",
+                "7",
+                "8",
+                "9",
+              ],
+            },
+          ],
+          "prettyDrillType": "20 Shot Challenge",
+          "subType": "Red Zone",
+          "description": "Adipisicing ad sint occaecat magna sint ad ea laboris voluptate fugiat labore. Aute labore anim occaecat laborum in magna dolore dolor cupidatat. Ea excepteur nulla magna eiusmod ad. Aute tempor ut cillum laborum ea commodo est ad non et duis tempor exercitation ad. Aute deserunt aliquip exercitation.",
+          "inputs": ["distance", "sideLanding"],
+          "outputs": [
+            "target",
+            "carry",
+            "sideLanding",
+            "proxHole",
+            "baseline",
+            "expectedPutts",
+            "strokesGained",
+          ], //all data that will be stored in a shot
+          "aggOutputs": {
+            "strokesGained": { "lowerIsBetter": true },
+            "strokesGainedAverage": { "lowerIsBetter": true },
+            "carryDiffAverage": { "lowerIsBetter": false },
+            "sideLandingAverage": { "lowerIsBetter": false },
+            "proxHoleAverage": { "lowerIsBetter": false },
+          }, //all data that will be stored in an attempt
+          "mainOutputAttempt": "sideLandingAverage", // stat to be used for the barChart in statistics. This is the main data for attempt level data
+          "mainOutputShot": "sideLanding", // stat to be used for the big number in shotAccordion. This is the main data for shot level data
+          "reps": 20,
+        },
+      ],
+    },
+  },
+}
