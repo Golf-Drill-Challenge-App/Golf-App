@@ -13,7 +13,6 @@ import { useTimeContext } from "~/context/Time";
 const AssignmentsList = ({
   role,
   playerInfo,
-  userInfo,
   invalidateKeys,
   drillInfo,
   children,
@@ -21,56 +20,52 @@ const AssignmentsList = ({
 }) => {
   const currentPath = usePathname();
 
+  const singleUser = playerInfo.length === 1;
+
   const { getLocalizedDate, getCurrentLocalizedDate } = useTimeContext();
 
   const assigned_data = useMemo(() => {
-    if (userInfo) {
-      return userInfo.assigned_data;
-    } else {
-      const alreadyAddedData = {};
-      const newAssignedData = [];
+    const alreadyAddedData = {};
+    const newAssignedData = [];
 
-      Object.values(playerInfo).forEach((player) => {
-        player["assigned_data"].forEach((assignment) => {
-          const { assignedTime, drillId, completed, attemptId } = assignment;
-          const { uid, pfp, name } = player;
-          const mergeTime = getLocalizedDate({
-            time: assignedTime,
-            rounded: true,
-          }).getTime();
+    Object.values(playerInfo).forEach((player) => {
+      player["assigned_data"].forEach((assignment) => {
+        const { assignedTime, drillId, completed, attemptId } = assignment;
+        const { uid, pfp, name } = player;
+        const mergeTime = getLocalizedDate({
+          time: assignedTime,
+          rounded: true,
+        }).getTime();
 
-          if (!alreadyAddedData[mergeTime]) {
-            alreadyAddedData[mergeTime] = {};
-          }
+        if (!alreadyAddedData[mergeTime]) {
+          alreadyAddedData[mergeTime] = {};
+        }
 
-          if (!alreadyAddedData[mergeTime][drillId]) {
-            alreadyAddedData[mergeTime][drillId] = {
-              assignedTime: mergeTime,
-              drillId,
-              players: [],
-            };
-          }
+        if (!alreadyAddedData[mergeTime][drillId]) {
+          alreadyAddedData[mergeTime][drillId] = {
+            assignedTime: mergeTime,
+            drillId,
+            players: [],
+          };
+        }
 
-          alreadyAddedData[mergeTime][drillId].players.push({
-            pfp,
-            name,
-            uid,
-            completed,
-            attemptId,
-          });
+        alreadyAddedData[mergeTime][drillId].players.push({
+          pfp,
+          name,
+          uid,
+          completed,
+          attemptId,
         });
       });
+    });
 
-      Object.values(alreadyAddedData).forEach((assignedSortedByTime) => {
-        Object.values(assignedSortedByTime).forEach(
-          (assignedSortedByDrillId) => {
-            newAssignedData.push(assignedSortedByDrillId);
-          },
-        );
+    Object.values(alreadyAddedData).forEach((assignedSortedByTime) => {
+      Object.values(assignedSortedByTime).forEach((assignedSortedByDrillId) => {
+        newAssignedData.push(assignedSortedByDrillId);
       });
-      return newAssignedData;
-    }
-  }, [getLocalizedDate, playerInfo, userInfo]);
+    });
+    return newAssignedData;
+  }, [getLocalizedDate, playerInfo]);
 
   // Group the assigned drills by date
   const groupedData = useMemo(() => {
@@ -166,7 +161,7 @@ const AssignmentsList = ({
   };
 
   const cardPressHandler = (assignment) => {
-    if (userInfo) {
+    if (singleUser) {
       if (assignment.completed) {
         router.push({
           pathname: `${currentPath}/attempts/${assignment.attemptId}`,
@@ -218,7 +213,7 @@ const AssignmentsList = ({
               mainText={drillInfo[assignment.drillId]["subType"]}
               subText={drillInfo[assignment.drillId]["drillType"]}
               completed={assignment.completed}
-              pfp={userInfo ? null : stackedPfp(assignment["players"])}
+              pfp={singleUser ? null : stackedPfp(assignment["players"])}
               disabled={disabled}
             />
           </TouchableOpacity>

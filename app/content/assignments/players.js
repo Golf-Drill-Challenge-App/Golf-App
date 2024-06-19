@@ -231,7 +231,7 @@ function Index() {
           }}
         >
           <List.Section style={{ backgroundColor: themeColors.background }}>
-            {assignmentList.map((assignment, index) => {
+            {assignmentList.map((assignment) => {
               return (
                 <List.Item
                   key={`${assignment.uid}`}
@@ -359,7 +359,11 @@ function Index() {
                     if (docSnap.exists()) {
                       const assignedData = docSnap.data().assigned_data;
                       const updatedAssignmentList = assignedData.filter(
-                        (assignment) => assignment.assignedTime != assignedTime,
+                        (assignment) =>
+                          getLocalizedDate({
+                            time: assignment.assignedTime,
+                            rounded: true,
+                          }).getTime() != assignedTime,
                       );
                       console.log(
                         "Updated Assignment List: ",

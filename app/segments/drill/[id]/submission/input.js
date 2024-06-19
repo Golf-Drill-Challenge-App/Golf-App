@@ -78,6 +78,7 @@ async function completeAssigned(
     }
   } else {
     console.log("No such assignment document!");
+    throw "No such assignment document!";
   }
 }
 
