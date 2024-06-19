@@ -13,8 +13,8 @@ import Header from "~/components/header";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
-import { useTimeContext } from "~/context/Time";
 import { useAuthContext } from "~/context/Auth";
+import { useTimeContext } from "~/context/Time";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -60,9 +60,7 @@ function Index() {
         }).getTime() == assignedTime && assignment.drillId === drillId;
       setAssignmentList(
         Object.values(userInfo)
-          .filter((user) =>
-            user.assigned_data.some(critera),
-          )
+          .filter((user) => user.assigned_data.some(critera))
           .map((user) => {
             const assignment = user.assigned_data.find(critera);
             return {
