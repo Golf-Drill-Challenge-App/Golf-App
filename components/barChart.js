@@ -297,7 +297,7 @@ export default function BarChartScreen({
             items={movingAvgRangeValues}
             open={movingAvgRangeDropdownOpen}
             setOpen={setMovingAvgRangeDropdownOpen}
-            maxHeight={40 * aggOutputValues.length}
+            maxHeight={40 * movingAvgRangeValues.length}
             containerStyle={[styles.dropDownContainer, { width: 80 }]}
             style={styles.dropdown}
           />

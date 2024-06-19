@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
-export const useTeamInfo = ({ teamId = null } = {}) => {
+export const useTeamInfo = ({ teamId = null, enabled = true } = {}) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["teamInfo", { teamId }],
     queryFn: async () => {
@@ -19,6 +19,7 @@ export const useTeamInfo = ({ teamId = null } = {}) => {
         return newTeamInfo;
       }
     },
+    enabled,
   });
 
   return {

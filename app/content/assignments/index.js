@@ -72,8 +72,7 @@ export default function Index() {
       <Header title="Assigned Drills" />
       <AssignmentsList
         role={userInfo["role"]}
-        playerInfo={playerInfo}
-        userInfo={userInfo["role"] === "player" ? userInfo : null}
+        playerInfo={userInfo["role"] === "player" ? [userInfo] : playerInfo}
         invalidateKeys={invalidateKeys}
         drillInfo={drillInfo}
       />

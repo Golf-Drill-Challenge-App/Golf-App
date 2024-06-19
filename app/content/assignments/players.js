@@ -14,6 +14,7 @@ import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useTimeContext } from "~/context/Time";
 import { db } from "~/firebaseConfig";
 import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 import { useDrillInfo } from "~/hooks/useDrillInfo";
@@ -47,24 +48,21 @@ function Index() {
 
   const [assignmentList, setAssignmentList] = useState([]);
 
+  const { getLocalizedDate } = useTimeContext();
+
   useEffect(() => {
     if (!userInfo || userInfoIsLoading) setAssignmentList([]);
     else {
+      const critera = (assignment) =>
+        getLocalizedDate({
+          time: assignment.assignedTime,
+          rounded: true,
+        }).getTime() == assignedTime && assignment.drillId === drillId;
       setAssignmentList(
         Object.values(userInfo)
-          .filter((user) =>
-            user.assigned_data.some(
-              (assignment) =>
-                assignment.assignedTime == assignedTime &&
-                assignment.drillId === drillId,
-            ),
-          )
+          .filter((user) => user.assigned_data.some(critera))
           .map((user) => {
-            const assignment = user.assigned_data.find(
-              (assignment) =>
-                assignment.assignedTime == assignedTime &&
-                assignment.drillId === drillId,
-            );
+            const assignment = user.assigned_data.find(critera);
             return {
               name: user.name,
               pfp: user.pfp,
@@ -79,6 +77,7 @@ function Index() {
     }
   }, [
     userInfo,
+    getLocalizedDate,
     assignedTime,
     drillId,
     assignmentList.length,
@@ -232,7 +231,7 @@ function Index() {
           }}
         >
           <List.Section style={{ backgroundColor: themeColors.background }}>
-            {assignmentList.map((assignment, index) => {
+            {assignmentList.map((assignment) => {
               return (
                 <List.Item
                   key={`${assignment.uid}`}
@@ -360,7 +359,11 @@ function Index() {
                     if (docSnap.exists()) {
                       const assignedData = docSnap.data().assigned_data;
                       const updatedAssignmentList = assignedData.filter(
-                        (assignment) => assignment.assignedTime != assignedTime,
+                        (assignment) =>
+                          getLocalizedDate({
+                            time: assignment.assignedTime,
+                            rounded: true,
+                          }).getTime() != assignedTime,
                       );
                       console.log(
                         "Updated Assignment List: ",

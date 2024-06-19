@@ -59,7 +59,11 @@ export default function NavigationRectangle({
                 justifyContent: "space-between",
               }}
             >
-              <View>
+              <View
+                style={{
+                  paddingRight: 10,
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 20,
