@@ -159,7 +159,7 @@ async function handleLeaderboardUpdate(
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
   //check if the user exists on the leaderboard
-  if (currentLeaderboard[uploadData.uid] == undefined) {
+  if (currentLeaderboard[uploadData.uid] === undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
     await uploadNewLeaderboard(
@@ -648,13 +648,17 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
         break;
 
       case "leftSideLandingAverage":
-        outputData.leftSideLandingAverage =
-          leftSideLandingTotal / missedLeftShotCount;
+        if (!missedLeftShotCount) outputData.leftSideLandingAverage = 0;
+        else
+          outputData.leftSideLandingAverage =
+            leftSideLandingTotal / missedLeftShotCount;
         break;
 
       case "rightSideLandingAverage":
-        outputData.rightSideLandingAverage =
-          rightSideLandingTotal / missedRightShotCount;
+        if (!missedRightShotCount) outputData.rightSideLandingAverage = 0;
+        else
+          outputData.rightSideLandingAverage =
+            rightSideLandingTotal / missedRightShotCount;
         break;
 
       case "sideLandingTotal":
