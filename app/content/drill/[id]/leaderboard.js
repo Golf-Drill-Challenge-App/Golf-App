@@ -9,10 +9,10 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { useAllTimeRecords } from "~/hooks/useAllTimeRecords";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
+import { useAllTimeRecords } from "~/dbOperations/hooks/useAllTimeRecords";
+import { useBestAttempts } from "~/dbOperations/hooks/useBestAttempts";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 
 function getLeaderboardRanks(
   orderedLeaderboard,

@@ -6,7 +6,7 @@ import DrillList from "~/components/drillList";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
 
 export default function Index() {
   const { assignedTime, id: drillId, currentTime } = useLocalSearchParams();
