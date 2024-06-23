@@ -47,10 +47,10 @@ const firebaseProfileImageUpload = async (
 };
 
 // Function to resize the uploaded image
-const resizeImage = async (uri) => {
+const resizeImage = async (uri, width) => {
   const manipResult = await manipulateAsync(
     uri,
-    [{ resize: { width: 300 } }], // Adjust the width as needed; height is adjusted automatically to maintain aspect ratio.
+    [{ resize: { width: width } }], // Adjust the width as needed; height is adjusted automatically to maintain aspect ratio.
     { /*compress: 0.7,*/ format: SaveFormat.JPEG }, // Uncomment the 'compress' property in case we decide to further reduce the quality.
   );
   return manipResult.uri;
@@ -62,18 +62,20 @@ export const handleImageUpload = async (
   showSnackBar,
   id,
   reference,
+  width,
+  height,
 ) => {
   const imageResult = await launchImageLibraryAsync({
     mediaTypes: MediaTypeOptions.Images,
     allowsEditing: true,
-    aspect: [1, 1],
+    aspect: [width, height],
     quality: 1,
   });
 
   // console.log(imageResult);
 
   if (!imageResult.canceled) {
-    const resizedUri = await resizeImage(imageResult.assets[0].uri);
+    const resizedUri = await resizeImage(imageResult.assets[0].uri, width);
     await firebaseProfileImageUpload(
       resizedUri,
       setImageUploading,

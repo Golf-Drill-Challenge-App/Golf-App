@@ -25,9 +25,9 @@ import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { useTimeContext } from "~/context/Time";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 export default function Index() {
   const {

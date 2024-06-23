@@ -12,8 +12,8 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import { useAuthContext } from "~/context/Auth";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 
 export default function Index() {
   const [value, setValue] = React.useState("description");

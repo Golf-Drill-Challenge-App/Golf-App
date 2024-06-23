@@ -3,11 +3,11 @@ import { collection, getDocs, query, runTransaction } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
 //A function to clear the "best_attemepts" collection
-async function resetLeaderboards() {
+async function resetLeaderboards(teamId) {
   try {
     await runTransaction(db, async (transaction) => {
       const bestAttemptQuery = query(
-        collection(db, "teams", "1", "best_attempts"),
+        collection(db, "teams", teamId, "best_attempts"),
       );
       const bestAttemptSnapshot = await getDocs(bestAttemptQuery);
 

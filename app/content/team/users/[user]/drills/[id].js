@@ -6,8 +6,8 @@ import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
-import { useAttempts } from "~/hooks/useAttempts";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useAttempts } from "~/dbOperations/hooks/useAttempts";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
 
 export default function Stat() {
   const navigation = useNavigation();

@@ -140,3 +140,7 @@ export function getTimezoneOffsetTime(time) {
   const localTime = time - timezoneOffset;
   return Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
 }
+
+export function getPfpName(teamId, userId) {
+  return `${teamId}_${userId}`;
+}

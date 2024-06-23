@@ -6,7 +6,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Header from "~/components/header";
 import Loading from "~/components/loading";
 import ResultScreen from "~/components/resultScreen";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
 
 function Result({ submission, setToggleResult }) {
   const navigation = useNavigation();

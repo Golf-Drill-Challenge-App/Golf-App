@@ -12,8 +12,8 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { auth, db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
 
 function ChooseTeam() {
   const { signOut, currentUserId, currentUserInfo, setCurrentUserId } =
@@ -99,6 +99,7 @@ function ChooseTeam() {
           >
             <Button
               onPress={async () => {
+                //temporary, should be replaced with multiple team functionality
                 await setDoc(doc(db, "teams", "1", "users", currentUserId), {
                   name: currentUserInfo["displayName"],
                   // hardcoded pfp string for now, add pfp upload to profile settings in future PR

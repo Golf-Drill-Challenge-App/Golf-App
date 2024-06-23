@@ -18,24 +18,24 @@ import ProfileCard from "~/components/profileCard";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useEmailInfo } from "~/dbOperations/hooks/useEmailInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
+import { removeUser } from "~/dbOperations/removeUser";
 import { db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { removeUser } from "~/hooks/removeUser";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useEmailInfo } from "~/hooks/useEmailInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 //A function to add a user to the blacklist table with a timestamp
-async function blacklistUser(userId, userInfo) {
+async function blacklistUser(teamId, userId, userInfo) {
   //Create new document with userId as the id and a time field
 
   try {
-    await setDoc(doc(db, "teams", "1", "blacklist", userId), {
+    await setDoc(doc(db, "teams", teamId, "blacklist", userId), {
       time: Date.now(),
       name: userInfo["name"],
     });
     //remove users data
-    await removeUser(userId);
+    await removeUser(teamId, userId);
     console.log("User Removed successfully!");
   } catch (e) {
     console.log("Error removing user:", e);
@@ -43,8 +43,8 @@ async function blacklistUser(userId, userInfo) {
   }
 }
 
-async function changeRole(userId, newRole) {
-  const userRef = doc(db, "teams", "1", "users", userId);
+async function changeRole(teamId, userId, newRole) {
+  const userRef = doc(db, "teams", teamId, "users", userId);
   try {
     await updateDoc(userRef, { role: newRole });
     console.log("User Role Changed successfully!");
@@ -70,7 +70,7 @@ function Index() {
 
   const { showDialog, showSnackBar } = useAlertContext();
 
-  const { currentUserId } = useAuthContext();
+  const { currentUserId, currentTeamId } = useAuthContext();
 
   const {
     data: userInfo,
@@ -243,11 +243,11 @@ function Index() {
                 }
                 onPress={async () => {
                   try {
-                    if (userInfo.role === "player") {
-                      await changeRole(userId, "coach");
-                    } else {
-                      await changeRole(userId, "player");
-                    }
+                    await changeRole(
+                      currentTeamId,
+                      userId,
+                      userInfo.role === "player" ? "coach" : "player",
+                    );
                     await invalidateMultipleKeys(queryClient, [["userInfo"]]); //invalidate cache
                     showSnackBar("User role changed successfully!");
                     setMenuVisible(false);
@@ -311,7 +311,7 @@ function Index() {
           hideRemoveDialog,
           async () => {
             try {
-              await removeUser(userId);
+              await removeUser(currentTeamId, userId);
               await queryClient.removeQueries(["userInfo", userId]);
               await invalidateMultipleKeys(queryClient, [
                 ["userInfo"],
@@ -336,7 +336,7 @@ function Index() {
           hideBanDialog,
           async () => {
             try {
-              await blacklistUser(userId, userInfo);
+              await blacklistUser(currentTeamId, userId, userInfo);
               await queryClient.removeQueries(["userInfo", userId]);
               await invalidateMultipleKeys(queryClient, [
                 ["userInfo"],

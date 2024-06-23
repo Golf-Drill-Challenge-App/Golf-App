@@ -7,14 +7,16 @@ import {
   runTransaction,
   where,
 } from "firebase/firestore";
+import removePfp from "~/dbOperations/removePfp";
 import { db } from "~/firebaseConfig";
+import { getPfpName } from "~/Utility";
 
-async function removeUser(userId) {
+async function removeUser(teamId, userId) {
   try {
     await runTransaction(db, async (transaction) => {
       //Remove all attempts from attempts table with UID == userID
       const attemptQuery = query(
-        collection(db, "teams", "1", "attempts"),
+        collection(db, "teams", teamId, "attempts"),
         where("uid", "==", userId),
       );
 
@@ -26,7 +28,7 @@ async function removeUser(userId) {
 
       //Remove all entries from best_attempts table with UID == userID
       const bestAttemptQuery = query(
-        collection(db, "teams", "1", "best_attempts"),
+        collection(db, "teams", teamId, "best_attempts"),
       );
 
       const bestAttemptSnapshot = await getDocs(bestAttemptQuery);
@@ -43,9 +45,11 @@ async function removeUser(userId) {
       }
 
       //Remove user from user table where UID == userID
-      const userRef = doc(db, "teams", "1", "users", userId);
+      const userRef = doc(db, "teams", teamId, "users", userId);
 
       await transaction.delete(userRef);
+
+      await removePfp(getPfpName(teamId, userId));
 
       console.log(" Remove User Transaction has completed");
     });

@@ -14,8 +14,8 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import ShotAccordion from "~/components/shotAccordion";
-import { useAttempts } from "~/hooks/useAttempts";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useAttempts } from "~/dbOperations/hooks/useAttempts";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
 
 export default function ResultScreen({
   drillId = null,

@@ -35,11 +35,11 @@ import NavigationRectangle from "~/components/input/navigationRectangle";
 import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useBestAttempts } from "~/dbOperations/hooks/useBestAttempts";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 /***************************************
  * Attempt Submission functions
