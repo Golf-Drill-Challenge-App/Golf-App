@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 import { firebaseErrors } from "~/Constants";
 
 export const clampNumber = (num, a, b) =>
@@ -18,9 +19,14 @@ export function formatDate(unixTimestamp) {
     "Nov",
     "Dec",
   ];
-  if (typeof unixTimestamp === "string")
-    unixTimestamp = parseInt(unixTimestamp, 10);
-  const date = new Date(unixTimestamp);
+  let time = unixTimestamp;
+  if (typeof unixTimestamp === "string") {
+    const temp = parseInt(unixTimestamp, 10);
+    if (!isNaN(temp)) {
+      time = temp;
+    }
+  }
+  const date = new Date(time);
 
   const year = date.getFullYear();
   const month = months[date.getMonth()];
@@ -121,4 +127,16 @@ export function getErrorString(error) {
   } else {
     return String(error);
   }
+}
+
+export function getOffset(timeZone) {
+  return moment.tz(timeZone).utcOffset();
+}
+
+export function getTimezoneOffsetTime(time) {
+  const timezoneOffset = getOffset("US/Pacific") * 60000;
+  // Divisor 3600000 = 1000 milliseconds * 60 seconds * 60 minutes)
+  // If you want to see timezone offset in minutes instead, set Divisor = 60000
+  const localTime = time - timezoneOffset;
+  return Math.floor(localTime / 86400000) * 86400000 + timezoneOffset;
 }

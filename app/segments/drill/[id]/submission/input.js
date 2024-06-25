@@ -78,6 +78,7 @@ async function completeAssigned(
     }
   } else {
     console.log("No such assignment document!");
+    throw "No such assignment document!";
   }
 }
 
@@ -125,7 +126,7 @@ async function uploadAttempt(
   }
 
   //Call function to check for leaderboard update
-  if (drillInfo.requirements[0].type !== "text") {
+  if (drillInfo.hasStats) {
     await handleLeaderboardUpdate(
       uploadData,
       drillInfo,
@@ -982,9 +983,6 @@ export default function Input({ setToggleResult, setOutputData }) {
             {/* Description Bottom Sheet */}
             <BottomSheetWrapper ref={descriptionModalRef}>
               <BottomSheetView style={{ paddingBottom: 50 }}>
-                <Text style={{ marginLeft: 10 }} variant="headlineLarge">
-                  Description
-                </Text>
                 <DrillDescription drillInfo={drillInfo} />
               </BottomSheetView>
             </BottomSheetWrapper>

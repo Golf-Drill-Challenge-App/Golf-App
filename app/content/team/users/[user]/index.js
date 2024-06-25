@@ -192,10 +192,10 @@ function Index() {
   const AssignmentScreen = () => (
     <AssignmentsList
       role={currentUserInfo["role"]}
-      userInfo={userInfo}
+      playerInfo={[userInfo]}
       drillInfo={drillInfo}
-      disableCriteria={(completed, hasStats) => !completed || !hasStats}
-    ></AssignmentsList>
+      disableCriteria={({ completed, hasStats }) => !completed || !hasStats}
+    />
   );
 
   const tabComponent = {
@@ -216,7 +216,7 @@ function Index() {
           />
         }
         postChildren={
-          currentUserInfo.role === "owner" && userInfo.role != "owner" ? (
+          currentUserInfo.role === "owner" && userInfo.role !== "owner" ? (
             <Menu
               visible={menuVisible}
               onDismiss={() => {

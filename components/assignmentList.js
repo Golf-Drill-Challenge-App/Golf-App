@@ -8,78 +8,77 @@ import ProfilePicture from "~/components/ProfilePicture";
 import AssignmentCard from "~/components/assignmentCard";
 import EmptyScreen from "~/components/emptyScreen";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useTimeContext } from "~/context/Time";
 
 const AssignmentsList = ({
   role,
   playerInfo,
-  userInfo,
   invalidateKeys,
   drillInfo,
   children,
   disableCriteria = () => false,
 }) => {
-  const today = formatDate(Date.now());
-
   const currentPath = usePathname();
 
+  const singleUser = playerInfo.length === 1;
+
+  const { getLocalizedDate, getCurrentLocalizedDate } = useTimeContext();
+
   const assigned_data = useMemo(() => {
-    if (userInfo) {
-      return userInfo.assigned_data;
-    } else {
-      const alreadyAddedData = {};
-      const newAssignedData = [];
+    const alreadyAddedData = {};
+    const newAssignedData = [];
 
-      Object.values(playerInfo).forEach((player) => {
-        player["assigned_data"].forEach((assignment) => {
-          const { assignedTime, drillId, completed, attemptId } = assignment;
-          const { uid, pfp, name } = player;
+    Object.values(playerInfo).forEach((player) => {
+      player["assigned_data"].forEach((assignment) => {
+        const { assignedTime, drillId, completed, attemptId } = assignment;
+        const { uid, pfp, name } = player;
+        const mergeTime = getLocalizedDate({
+          time: assignedTime,
+          rounded: true,
+        }).getTime();
 
-          if (!alreadyAddedData[assignedTime]) {
-            alreadyAddedData[assignedTime] = {};
-          }
+        if (!alreadyAddedData[mergeTime]) {
+          alreadyAddedData[mergeTime] = {};
+        }
 
-          if (!alreadyAddedData[assignedTime][drillId]) {
-            alreadyAddedData[assignedTime][drillId] = {
-              assignedTime,
-              drillId,
-              players: [],
-            };
-          }
+        if (!alreadyAddedData[mergeTime][drillId]) {
+          alreadyAddedData[mergeTime][drillId] = {
+            assignedTime: mergeTime,
+            drillId,
+            players: [],
+          };
+        }
 
-          alreadyAddedData[assignedTime][drillId].players.push({
-            pfp,
-            name,
-            uid,
-            completed,
-            attemptId,
-          });
+        alreadyAddedData[mergeTime][drillId].players.push({
+          pfp,
+          name,
+          uid,
+          completed,
+          attemptId,
         });
       });
+    });
 
-      Object.values(alreadyAddedData).forEach((assignedSortedByTime) => {
-        Object.values(assignedSortedByTime).forEach(
-          (assignedSortedByDrillId) => {
-            newAssignedData.push(assignedSortedByDrillId);
-          },
-        );
+    Object.values(alreadyAddedData).forEach((assignedSortedByTime) => {
+      Object.values(assignedSortedByTime).forEach((assignedSortedByDrillId) => {
+        newAssignedData.push(assignedSortedByDrillId);
       });
-      return newAssignedData;
-    }
-  }, [playerInfo, userInfo]);
+    });
+    return newAssignedData;
+  }, [getLocalizedDate, playerInfo]);
 
   // Group the assigned drills by date
   const groupedData = useMemo(() => {
     return assigned_data.reduce((acc, curr) => {
-      //round the assigned time to the nearest day
-      const roundedTime = Math.floor(curr.assignedTime / 86400000) * 86400000;
+      const time = curr.assignedTime;
 
-      if (!acc[roundedTime]) {
-        acc[roundedTime] = [];
+      if (!acc[time]) {
+        acc[time] = [];
       }
       if (curr.completed) {
-        acc[roundedTime].push(curr);
+        acc[time].push(curr);
       } else {
-        acc[roundedTime].unshift(curr);
+        acc[time].unshift(curr);
       }
 
       return acc;
@@ -88,9 +87,7 @@ const AssignmentsList = ({
 
   // Sort the dates in descending order
   const sortedDates = useMemo(() => {
-    return Object.keys(groupedData).sort(
-      (a, b) => new Date(Number(b)) - new Date(Number(a)),
-    );
+    return Object.keys(groupedData).sort((a, b) => b - a);
   }, [groupedData]);
 
   if (sortedDates.length === 0) {
@@ -164,7 +161,7 @@ const AssignmentsList = ({
   };
 
   const cardPressHandler = (assignment) => {
-    if (userInfo) {
+    if (singleUser) {
       if (assignment.completed) {
         router.push({
           pathname: `${currentPath}/attempts/${assignment.attemptId}`,
@@ -202,9 +199,10 @@ const AssignmentsList = ({
       keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
       ListHeaderComponent={children}
       renderItem={({ item: assignment }) => {
-        const disabled = disableCriteria(
-          !!assignment.completed || !!assignment.hasStats,
-        );
+        const disabled = disableCriteria({
+          completed: !!assignment.completed,
+          hasStats: drillInfo[assignment.drillId].hasStats,
+        });
         return (
           <TouchableOpacity
             key={`${assignment.assignedTime}-${assignment.drillId}`}
@@ -215,14 +213,13 @@ const AssignmentsList = ({
               mainText={drillInfo[assignment.drillId]["subType"]}
               subText={drillInfo[assignment.drillId]["drillType"]}
               completed={assignment.completed}
-              pfp={userInfo ? null : stackedPfp(assignment["players"])}
+              pfp={singleUser ? null : stackedPfp(assignment["players"])}
               disabled={disabled}
             />
           </TouchableOpacity>
         );
       }}
       renderSectionHeader={({ section: { title } }) => {
-        const date = formatDate(title);
         return (
           <Text
             style={{
@@ -234,7 +231,9 @@ const AssignmentsList = ({
               backgroundColor: themeColors.background,
             }}
           >
-            {date === today ? "Today" : date}
+            {title === getCurrentLocalizedDate({ rounded: true })
+              ? "Today"
+              : formatDate(title)}
           </Text>
         );
       }}
