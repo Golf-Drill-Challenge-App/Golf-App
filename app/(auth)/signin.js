@@ -46,7 +46,7 @@ export default function SignIn() {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
         console.log(e);
-        showDialog("Error", getErrorString(e));
+        showDialog("Error", "Authentication Error"); //maybe could be more specific about only invalid email and invalid password errors
       }
     }
   }
@@ -164,7 +164,10 @@ export default function SignIn() {
               style={styles.button}
               backgroundColor={themeColors.accent}
             >
-              <Link asChild href={"/signup"}>
+              <Link
+                asChild
+                href={{ pathname: "/signup", params: { passedEmail: email } }}
+              >
                 <Text style={styles.buttonText}>Sign Up</Text>
               </Link>
             </Pressable>
