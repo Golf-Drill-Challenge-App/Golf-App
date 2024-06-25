@@ -238,7 +238,13 @@ export default function Leaderboard() {
                   </View>
                 )}
                 right={() => (
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingLeft: 10,
+                    }}
+                  >
                     <Text>
                       {numTrunc(attempt["value"], true)}{" "}
                       {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
