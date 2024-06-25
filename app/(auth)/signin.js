@@ -46,7 +46,7 @@ export default function SignIn() {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (e) {
         console.log(e);
-        showDialog("Error", "Authentication Error");
+        showDialog("Error", "Authentication Error"); //maybe could be more specific about only invalid email and invalid password errors
       }
     }
   }
