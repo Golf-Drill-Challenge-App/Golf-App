@@ -683,13 +683,16 @@ function validateInputs(inputs) {
 //A function to validate stroke inputs are all positive whole numbers
 function validateStrokeInput(inputs) {
   //Validate inputs contain strokes property
-  if (inputs.hasOwnProperty("strokes")){
+  if (inputs.hasOwnProperty("strokes")) {
     //validate strokes is a positive integer
-    return (!(Number.isInteger(parseFloat(inputs["strokes"]))) || parseFloat(inputs["strokes"]) <= 0);
+    return (
+      !Number.isInteger(parseFloat(inputs["strokes"])) ||
+      parseFloat(inputs["strokes"]) <= 0
+    );
   }
 
   //inputs don't include strokes
-  return false
+  return false;
 }
 
 export default function Input({ setToggleResult, setOutputData }) {
@@ -830,7 +833,7 @@ export default function Input({ setToggleResult, setOutputData }) {
       showSnackBar("All inputs must be numbers.");
     }
     //check inputs have correct stroke values
-    else if(validateStrokeInput(inputValues[displayedShot])){
+    else if (validateStrokeInput(inputValues[displayedShot])) {
       showSnackBar("Strokes must be a positive integer.");
     }
     //check for submit button
