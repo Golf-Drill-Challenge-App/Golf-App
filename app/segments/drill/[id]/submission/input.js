@@ -680,6 +680,18 @@ function validateInputs(inputs) {
   return Object.values(inputs).some((input) => isNaN(input));
 }
 
+//A function to validate stroke inputs are all positive whole numbers
+function validateStrokeInput(inputs) {
+  //Validate inputs contain strokes property
+  if (inputs.hasOwnProperty("strokes")){
+    //validate strokes is a positive integer
+    return (!(Number.isInteger(parseFloat(inputs["strokes"]))) || parseFloat(inputs["strokes"]) <= 0);
+  }
+
+  //inputs don't include strokes
+  return false
+}
+
 export default function Input({ setToggleResult, setOutputData }) {
   const { id: drillId, assignedTime } = useLocalSearchParams();
   const { currentUserId, currentTeamId } = useAuthContext();
@@ -816,6 +828,10 @@ export default function Input({ setToggleResult, setOutputData }) {
     //check inputs are all numbers
     else if (validateInputs(inputValues[displayedShot])) {
       showSnackBar("All inputs must be numbers.");
+    }
+    //check inputs have correct stroke values
+    else if(validateStrokeInput(inputValues[displayedShot])){
+      showSnackBar("Strokes must be a positive integer.");
     }
     //check for submit button
     else if (submitVisible) {
