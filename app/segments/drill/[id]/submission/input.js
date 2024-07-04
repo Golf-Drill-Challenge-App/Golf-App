@@ -1,7 +1,7 @@
 import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
-  BottomSheetView
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -12,7 +12,7 @@ import {
   getDocs,
   runTransaction,
   setDoc,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
@@ -23,7 +23,7 @@ import { themeColors } from "~/Constants";
 import {
   getErrorString,
   lookUpBaselineStrokesGained,
-  lookUpExpectedPutts
+  lookUpExpectedPutts,
 } from "~/Utility";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DrillDescription from "~/components/drillDescription";
@@ -51,7 +51,7 @@ async function completeAssigned(
   assignedTime,
   drillId,
   attemptId,
-  currentTeamId
+  currentTeamId,
 ) {
   const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
@@ -95,7 +95,7 @@ async function uploadAttempt(
   drillInfo,
   currentLeaderboard,
   userInfo,
-  currentTeamId
+  currentTeamId,
 ) {
   //create new document
   const newAttemptRef = doc(collection(db, "teams", currentTeamId, "attempts"));
@@ -119,7 +119,7 @@ async function uploadAttempt(
       if (!uniqueDrills.includes(drillId)) {
         // Add the new item to the array
         transaction.update(userRef, {
-          ["uniqueDrills"]: [...uniqueDrills, drillId]
+          ["uniqueDrills"]: [...uniqueDrills, drillId],
         });
       }
     });
@@ -132,7 +132,7 @@ async function uploadAttempt(
       drillInfo,
       currentLeaderboard,
       userInfo,
-      currentTeamId
+      currentTeamId,
     );
   }
 
@@ -143,7 +143,7 @@ async function uploadAttempt(
       assignedTime,
       drillId,
       newAttemptRef.id,
-      currentTeamId
+      currentTeamId,
     );
   }
 }
@@ -154,7 +154,7 @@ async function handleLeaderboardUpdate(
   drillInfo,
   currentLeaderboard,
   userInfo,
-  currentTeamId
+  currentTeamId,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -167,7 +167,7 @@ async function handleLeaderboardUpdate(
       uploadData,
       userInfo,
       drillInfo,
-      currentTeamId
+      currentTeamId,
     );
   } else {
     //used if an attempt already exists
@@ -189,7 +189,7 @@ async function handleLeaderboardUpdate(
         uploadData,
         userInfo,
         drillInfo,
-        currentTeamId
+        currentTeamId,
       );
     }
   }
@@ -201,7 +201,7 @@ async function uploadNewLeaderboard(
   uploadData,
   userInfo,
   drillInfo,
-  currentTeamId
+  currentTeamId,
 ) {
   const attemptId = uploadData.id;
   const attemptValue = uploadData[mainOutputAttempt];
@@ -209,8 +209,8 @@ async function uploadNewLeaderboard(
   const newAttempt = {
     [mainOutputAttempt]: {
       id: attemptId,
-      value: attemptValue
-    }
+      value: attemptValue,
+    },
   };
 
   //Reference to best_attempts drill document
@@ -219,7 +219,7 @@ async function uploadNewLeaderboard(
     "teams",
     currentTeamId,
     "best_attempts",
-    uploadData.did
+    uploadData.did,
   );
 
   await runTransaction(db, async (transaction) => {
@@ -227,7 +227,7 @@ async function uploadNewLeaderboard(
     const latestLeaderboard = await transaction.get(bestAttemptsDrillRef);
     if (!latestLeaderboard.exists()) {
       const allUserInfo = await getDocs(
-        collection(db, "teams", currentTeamId, "users")
+        collection(db, "teams", currentTeamId, "users"),
       );
       const emptyBestAttempt = {};
       for (const doc of allUserInfo.docs) {
@@ -237,7 +237,7 @@ async function uploadNewLeaderboard(
       await transaction.set(bestAttemptsDrillRef, emptyBestAttempt);
     }
     transaction.update(bestAttemptsDrillRef, {
-      [uploadData.uid]: newAttempt
+      [uploadData.uid]: newAttempt,
     });
   });
   console.log("Transaction (leaderboard update) successfully committed!");
@@ -249,7 +249,7 @@ async function handleRecordUpdate(
   uploadData,
   drillInfo,
   userInfo,
-  currentTeamId
+  currentTeamId,
 ) {
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
@@ -259,7 +259,7 @@ async function handleRecordUpdate(
     "teams",
     currentTeamId,
     "all_time_records",
-    uploadData.did
+    uploadData.did,
   );
 
   const docSnap = await getDoc(recordRef);
@@ -271,7 +271,7 @@ async function handleRecordUpdate(
     //Empty all time record object
     const newEmptyRecordObject = {
       currentRecord: {},
-      previousRecords: []
+      previousRecords: [],
     };
 
     //Create all time record Document
@@ -287,7 +287,7 @@ async function handleRecordUpdate(
     const isNewAttemptBest = lowerIsBetter
       ? uploadData[mainOutputAttempt] < currentRecordInfo.currentRecord["value"]
       : uploadData[mainOutputAttempt] >
-      currentRecordInfo.currentRecord["value"];
+        currentRecordInfo.currentRecord["value"];
 
     if (isNewAttemptBest) {
       //Update record
@@ -296,7 +296,7 @@ async function handleRecordUpdate(
         drillInfo,
         currentRecordInfo,
         userInfo,
-        currentTeamId
+        currentTeamId,
       );
     }
   }
@@ -308,14 +308,14 @@ async function uploadNewRecord(
   drillInfo,
   currentRecordInfo,
   userInfo,
-  currentTeamId
+  currentTeamId,
 ) {
   const recordRef = doc(
     db,
     "teams",
     currentTeamId,
     "all_time_records",
-    uploadData.did
+    uploadData.did,
   );
 
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
@@ -328,7 +328,7 @@ async function uploadNewRecord(
     name: userInfo.name,
     value: uploadData[drillInfo.mainOutputAttempt],
     time: uploadData["time"],
-    distanceMeasure: distanceMeasure
+    distanceMeasure: distanceMeasure,
   };
 
   let newDocData;
@@ -337,7 +337,7 @@ async function uploadNewRecord(
   if (currentRecordInfo == null) {
     newDocData = {
       currentRecord: newRecord,
-      previousRecords: []
+      previousRecords: [],
     };
   } else {
     const oldPreviousRecords = currentRecordInfo.previousRecords;
@@ -345,12 +345,12 @@ async function uploadNewRecord(
     //add old record to previous records
     const updatedPreviousRecords = [
       ...oldPreviousRecords,
-      currentRecordInfo.currentRecord
+      currentRecordInfo.currentRecord,
     ];
 
     newDocData = {
       currentRecord: newRecord,
-      previousRecords: updatedPreviousRecords
+      previousRecords: updatedPreviousRecords,
     };
   }
 
@@ -393,8 +393,8 @@ function fillSequentialTargets(drillInfo) {
     shots.push({
       shotNum: i + 1,
       items: {
-        [drillInfo.requirements[0].name]: drillInfo.requirements[0].items[i]
-      }
+        [drillInfo.requirements[0].name]: drillInfo.requirements[0].items[i],
+      },
     });
   }
   return shots;
@@ -408,7 +408,7 @@ function fillRandomShotTargets(drillInfo) {
 
   for (let i = 0; i < drillInfo.reps; i++) {
     const target = Math.floor(
-      Math.random() * (maxFloored - minCeiled + 1) + minCeiled
+      Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
     );
     let baseline;
     if (drillInfo.shotType === "putt") {
@@ -419,9 +419,9 @@ function fillRandomShotTargets(drillInfo) {
     shots.push({
       shotNum: i + 1,
       items: {
-        [drillInfo.requirements[0].name]: target
+        [drillInfo.requirements[0].name]: target,
       },
-      baseline: baseline
+      baseline: baseline,
     });
   }
   return shots;
@@ -435,13 +435,13 @@ function fillPuttTargets(drillInfo) {
     let target = {};
     for (let j = 0; j < drillInfo.requirements.length; j++) {
       target = Object.assign(target, {
-        [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i]
+        [drillInfo.requirements[j].name]: drillInfo.requirements[j].items[i],
       });
     }
     shots.push({
       shotNum: i + 1,
       baseline: baseline,
-      items: target
+      items: target,
     });
   }
 
@@ -522,13 +522,13 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
           if (inputValues[j].sideLanding > 0) {
             rightSideLandingTotal += Math.abs(
-              Number(inputValues[j].sideLanding)
+              Number(inputValues[j].sideLanding),
             );
             missedRightShotCount += 1;
           }
           if (inputValues[j].sideLanding < 0) {
             leftSideLandingTotal += Math.abs(
-              Number(inputValues[j].sideLanding)
+              Number(inputValues[j].sideLanding),
             );
             missedLeftShotCount += 1;
           }
@@ -539,12 +539,12 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
           shot.proxHole = calculateProxHole(
             attemptShots[j].items.target,
             inputValues[j].carry,
-            inputValues[j].sideLanding
+            inputValues[j].sideLanding,
           );
           proxHoleTotal += calculateProxHole(
             attemptShots[j].items.target,
             inputValues[j].carry,
-            inputValues[j].sideLanding
+            inputValues[j].sideLanding,
           );
           break;
 
@@ -557,8 +557,8 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
             calculateProxHole(
               attemptShots[j].items.target,
               inputValues[j].carry,
-              inputValues[j].sideLanding
-            )
+              inputValues[j].sideLanding,
+            ),
           );
           break;
 
@@ -571,8 +571,8 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
                   calculateProxHole(
                     attemptShots[j].items.target,
                     inputValues[j].carry,
-                    inputValues[j].sideLanding
-                  )
+                    inputValues[j].sideLanding,
+                  ),
                 ) -
                 1;
               break;
@@ -591,7 +591,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
         case "carryDiff":
           shot.carryDiff = calculateCarryDiff(
             attemptShots[j].items.target,
-            inputValues[j].carry
+            inputValues[j].carry,
           );
           carryDiffTotal += shot.carryDiff;
           break;
@@ -617,7 +617,7 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
     time: timeStamp,
     did: did,
     uid: uid,
-    shots: outputShotData
+    shots: outputShotData,
   };
 
   //Generate the aggOutputs for output data
@@ -672,9 +672,11 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
 
 //A function to validate inputs
 function validateInputs(inputs, numInputs) {
-
   //validate no empty inputs
-  if (Object.keys(inputs).length !== numInputs || Object.values(inputs).some((value) => value === "")) {
+  if (
+    Object.keys(inputs).length !== numInputs ||
+    Object.values(inputs).some((value) => value === "")
+  ) {
     return "All inputs must be filled.";
   }
 
@@ -685,8 +687,10 @@ function validateInputs(inputs, numInputs) {
 
   //validate stroke inputs are all positive whole numbers
   if (inputs.hasOwnProperty("strokes")) {
-    if (!Number.isInteger(parseFloat(inputs["strokes"])) ||
-      parseFloat(inputs["strokes"]) <= 0) {
+    if (
+      !Number.isInteger(parseFloat(inputs["strokes"])) ||
+      parseFloat(inputs["strokes"]) <= 0
+    ) {
       return "Strokes must be a positive integer.";
     }
   }
@@ -701,19 +705,19 @@ export default function Input({ setToggleResult, setOutputData }) {
   const {
     data: currentLeaderboard,
     isLoading: leaderboardIsLoading,
-    error: leaderboardError
+    error: leaderboardError,
   } = useBestAttempts({ drillId });
 
   const {
     data: drillInfo,
     error: drillInfoError,
-    isLoading: drillInfoIsLoading
+    isLoading: drillInfoIsLoading,
   } = useDrillInfo({ drillId });
 
   const {
     data: userInfo,
     isLoading: userIsLoading,
-    error: userError
+    error: userError,
   } = useUserInfo({ userId: currentUserId });
 
   const queryClient = useQueryClient();
@@ -723,7 +727,7 @@ export default function Input({ setToggleResult, setOutputData }) {
   const invalidateKeys = [
     ["userInfo"], //assignments
     ["best_attempts", { drillId }],
-    ["all_time_records", { drillId }]
+    ["all_time_records", { drillId }],
   ];
 
   const { height } = useWindowDimensions();
@@ -810,7 +814,7 @@ export default function Input({ setToggleResult, setOutputData }) {
       const updatedValues = [...prevValues];
       updatedValues[displayedShot] = {
         ...updatedValues[displayedShot],
-        [id]: newText
+        [id]: newText,
       };
       return updatedValues;
     });
@@ -833,7 +837,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         inputValues,
         attemptShots,
         currentUserId,
-        drillId
+        drillId,
       );
 
       setOutputData(outputData);
@@ -846,7 +850,7 @@ export default function Input({ setToggleResult, setOutputData }) {
           drillInfo,
           currentLeaderboard,
           userInfo,
-          currentTeamId
+          currentTeamId,
         );
 
         // invalidate cache on button press
@@ -980,7 +984,7 @@ export default function Input({ setToggleResult, setOutputData }) {
               onPress={() => {
                 const newInputValues = Array.from(
                   { length: attemptShots.length },
-                  () => ({})
+                  () => ({}),
                 );
                 for (let i = 0; i < attemptShots.length; i++) {
                   drillInfo.inputs.forEach((item) => {
@@ -988,23 +992,23 @@ export default function Input({ setToggleResult, setOutputData }) {
                       case "carry":
                         newInputValues[i][item.id] = Math.floor(
                           Math.random() *
-                          attemptShots[displayedShot].items["target"] +
-                          attemptShots[displayedShot].items["target"] / 2
+                            attemptShots[displayedShot].items["target"] +
+                            attemptShots[displayedShot].items["target"] / 2,
                         ).toString();
                         break;
                       case "sideLanding":
                         newInputValues[i][item.id] = Math.floor(
-                          Math.random() * 21 - 10
+                          Math.random() * 21 - 10,
                         ).toString();
                         break;
                       case "strokes":
                         newInputValues[i][item.id] = Math.floor(
-                          Math.random() * 2 + 1
+                          Math.random() * 2 + 1,
                         ).toString();
                         break;
                       case "distance":
                         newInputValues[i][item.id] = Math.floor(
-                          Math.random() * 35 + 5
+                          Math.random() * 35 + 5,
                         ).toString();
                         break;
                     }
@@ -1024,7 +1028,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                 style={{
                   color: themeColors.accent,
                   paddingBottom: Platform.OS === "android" ? 10 : 30,
-                  fontSize: 16
+                  fontSize: 16,
                 }}
                 onPress={() => {
                   navModalRef.current?.present();
@@ -1043,58 +1047,58 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   shotNumContainer: {
     flex: 1,
     alignItems: "flex-start",
     marginBottom: 15,
-    marginLeft: 10
+    marginLeft: 10,
   },
   navigationContainer: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   button: {
     width: "95%",
     backgroundColor: themeColors.accent,
     marginBottom: 20,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   buttonText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
-    padding: 5
+    padding: 5,
   },
   disabledButton: {
     width: "95%",
     backgroundColor: "#A0A0A0",
     marginBottom: 20,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   disabledButtonText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
-    padding: 10
+    padding: 10,
   },
   shotNumber: {
     fontSize: 32,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   shotTotal: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#A0A0A0"
+    color: "#A0A0A0",
   },
   item: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   horizontalContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 10
+    marginVertical: 10,
   },
   bottomSheetContentContainer: {
     flex: 1,
@@ -1102,12 +1106,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     gap: 10,
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   modalContainerStyle: {
     backgroundColor: themeColors.background,
     padding: 20,
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
