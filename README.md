@@ -67,7 +67,7 @@ Compatible with both MacOS and Windows PC for app compilation.
   - More info: https://developer.android.com/studio/run/emulator-troubleshooting#error:-%60vulkan-1.dll
 - Command to run Android Emulator:
   - `C:\Users\<username>\AppData\Local\Android\Sdk\emulator\emulator -avd <emulated phone name> -feature -Vulkan`
-    - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulat-or\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
+    - Example: `C:\Users\solde\AppData\Local\Android\Sdk\emulator\emulator -avd Pixel_3a_API_34_extension_level_7_x86_64 -feature -Vulkan`
     - Add `-no-snapshot-load` flag to start emulator from "cold boot" (if emulator keeps crashing upon turning on)
 - `yarn a` to run the app
 
