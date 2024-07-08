@@ -192,7 +192,11 @@ function Index() {
       }
     } catch (e) {
       console.log(e);
-      showDialog("Error", getErrorString(e));
+      if (e.code === "auth/wrong-password") {
+        showDialog("Error", "Invalid password");
+      } else {
+        showDialog("Error", getErrorString(e));
+      }
     }
     setUpdateLoading(false);
   };
