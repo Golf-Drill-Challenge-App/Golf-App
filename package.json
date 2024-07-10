@@ -60,7 +60,8 @@
     "react-native-svg": "15.2.0",
     "react-native-svg-charts": "^5.4.0",
     "react-native-web": "~0.19.6",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "underscore": "^1.13.6"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",

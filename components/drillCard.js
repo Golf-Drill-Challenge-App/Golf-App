@@ -1,19 +1,16 @@
-import { Link } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { themeColors } from "~/Constants";
 
 function DrillCard(props) {
   return (
-    <Link href={props.hrefString} asChild>
-      <TouchableOpacity style={styles.cardContainer}>
-        <View style={styles.cardContent}>
-          <Text style={styles.title}>{props.drill.subType}</Text>
-          <View style={styles.specContainer}>
-            <Text style={styles.inputText}>{"x" + props.drill["reps"]}</Text>
-          </View>
+    <TouchableOpacity style={styles.cardContainer} onPress={props.onPress}>
+      <View style={styles.cardContent}>
+        <Text style={styles.title}>{props.drill.subType}</Text>
+        <View style={styles.specContainer}>
+          <Text style={styles.inputText}>{"x" + props.drill["reps"]}</Text>
         </View>
-      </TouchableOpacity>
-    </Link>
+      </View>
+    </TouchableOpacity>
   );
 }
 
