@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { doc, runTransaction } from "firebase/firestore";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
@@ -15,6 +15,7 @@ import {
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -100,48 +101,55 @@ export default function Index() {
     setCheckedItems(updatedCheckedItems);
   };
 
-  const handleAssign = async () => {
-    setLoading(true);
-    const selectedUsers = Object.entries(checkedItems)
-      .filter(([, value]) => value)
-      .map((value) => value[0]);
-    const time = Date.now();
+  const handleAssign = useCallback(
+    debounce(
+      async () => {
+        setLoading(true);
+        const selectedUsers = Object.entries(checkedItems)
+          .filter(([, value]) => value)
+          .map((value) => value[0]);
+        const time = Date.now();
 
-    try {
-      await runTransaction(db, async (transaction) => {
-        const updatedAssignedData = {};
+        try {
+          await runTransaction(db, async (transaction) => {
+            const updatedAssignedData = {};
 
-        for (const userId of selectedUsers) {
-          const userRef = doc(db, "teams", currentTeamId, "users", userId);
-          const docSnap = await transaction.get(userRef);
-          if (docSnap.exists()) {
-            const assignedData = docSnap.data()["assigned_data"];
-            updatedAssignedData[userId] = [
-              { assignedTime: time, completed: false, drillId: id },
-              ...assignedData,
-            ];
-          } else {
-            console.log("No such Assigned Data document!");
-          }
-        }
-        selectedUsers.forEach((userId) => {
-          const userRef = doc(db, "teams", currentTeamId, "users", userId);
+            for (const userId of selectedUsers) {
+              const userRef = doc(db, "teams", currentTeamId, "users", userId);
+              const docSnap = await transaction.get(userRef);
+              if (docSnap.exists()) {
+                const assignedData = docSnap.data()["assigned_data"];
+                updatedAssignedData[userId] = [
+                  { assignedTime: time, completed: false, drillId: id },
+                  ...assignedData,
+                ];
+              } else {
+                console.log("No such Assigned Data document!");
+              }
+            }
+            selectedUsers.forEach((userId) => {
+              const userRef = doc(db, "teams", currentTeamId, "users", userId);
 
-          transaction.update(userRef, {
-            assigned_data: updatedAssignedData[userId],
+              transaction.update(userRef, {
+                assigned_data: updatedAssignedData[userId],
+              });
+            });
           });
-        });
-      });
-      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-      showSnackBar("Assignment Successful");
-      navigation.pop(3);
-    } catch (e) {
-      //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
-      showDialog("Error", getErrorString(e));
-    }
+          await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+          showSnackBar("Assignment Successful");
+          navigation.pop(3);
+        } catch (e) {
+          //this will never ever show because of navigation.pop(3) below.I don't know if we should stick with the slow transaction above to show errors or navigate back and make it feel snappy, probably the former.
+          showDialog("Error", getErrorString(e));
+        }
 
-    setLoading(false);
-  };
+        setLoading(false);
+      },
+      1000,
+      true,
+    ),
+    [checkedItems],
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>

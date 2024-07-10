@@ -1,7 +1,8 @@
-import { Link, useLocalSearchParams, usePathname } from "expo-router";
-import { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
+import { useCallback, useState } from "react";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
+import { debounce } from "underscore";
 import { prettyTitle, themeColors } from "~/Constants";
 import { formatDate, numTrunc } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -73,6 +74,17 @@ export default function Leaderboard() {
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
   } = useBestAttempts({ drillId });
+
+  const debouncedPress = useCallback(
+    debounce(
+      (href) => {
+        router.push(href);
+      },
+      1000,
+      true,
+    ),
+    [],
+  );
 
   const invalidateKeys = [
     ["userInfo"],
@@ -206,12 +218,11 @@ export default function Leaderboard() {
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboard[userId][mainOutputAttempt];
           return (
-            <Link
+            <TouchableOpacity
               key={userId}
-              href={{
-                pathname: `${currentPath}/attempts/${attempt["id"]}`,
-              }}
-              asChild
+              onPress={() =>
+                debouncedPress(`${currentPath}/attempts/${attempt["id"]}`)
+              }
               style={{ paddingLeft: 20 }}
             >
               <List.Item
@@ -247,7 +258,7 @@ export default function Leaderboard() {
                   </View>
                 )}
               />
-            </Link>
+            </TouchableOpacity>
           );
         })}
       </List.Section>

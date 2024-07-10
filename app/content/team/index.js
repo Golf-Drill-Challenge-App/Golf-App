@@ -7,7 +7,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
@@ -26,6 +26,7 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -92,6 +93,15 @@ function Index() {
   useEffect(() => {
     setNewName(currentTeamData ? currentTeamData.name : "");
   }, [currentTeamData]);
+
+  const handleUserPress = useCallback(
+    debounce(
+      (userId) => router.push(`content/team/users/${userId}`),
+      1000,
+      true,
+    ),
+    [],
+  );
 
   const resetForm = () => {
     setNewName(currentTeamData.name);
@@ -477,9 +487,7 @@ function Index() {
                           <Icon source="chevron-right" />
                         </View>
                       )}
-                      onPress={() =>
-                        router.push(`content/team/users/${userId}`)
-                      }
+                      onPress={() => handleUserPress(userId)}
                     />
                   );
                 })}
