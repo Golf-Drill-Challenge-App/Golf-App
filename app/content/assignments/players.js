@@ -16,10 +16,10 @@ import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { useTimeContext } from "~/context/Time";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const navigation = useNavigation();

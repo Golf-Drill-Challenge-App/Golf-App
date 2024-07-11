@@ -19,16 +19,12 @@ import {
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from "react-native";
 import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
-import { getErrorString } from "~/Utility";
+import { getErrorString, getPfpName } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DrillList from "~/components/drillList";
@@ -39,12 +35,12 @@ import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useEmailInfo } from "~/dbOperations/hooks/useEmailInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { handleImageUpload } from "~/dbOperations/imageUpload";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { db } from "~/firebaseConfig";
-import { handleImageUpload } from "~/hooks/imageUpload";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useEmailInfo } from "~/hooks/useEmailInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { signOut, currentUserId, currentTeamId } = useAuthContext();
@@ -52,10 +48,6 @@ function Index() {
   const auth = getAuth();
 
   const { showDialog, showSnackBar } = useAlertContext();
-
-  const insets = useSafeAreaInsets();
-
-  const { height, width } = useWindowDimensions();
 
   const {
     data: userData,
@@ -334,8 +326,10 @@ function Index() {
                   await handleImageUpload(
                     setImageUploading,
                     showSnackBar,
-                    userId,
+                    getPfpName(currentTeamId, userId),
                     userRef,
+                    profilePicSize,
+                    profilePicSize,
                   );
                   await invalidateMultipleKeys(queryClient, [["userInfo"]]);
                 } catch (e) {
