@@ -209,7 +209,7 @@ function Index() {
         title={userInfo["name"] + "'s Profile"}
         preChildren={
           <Appbar.BackAction
-            onPress={() => {
+            onPressIn={() => {
               navigation.goBack();
             }}
             color={themeColors.accent}

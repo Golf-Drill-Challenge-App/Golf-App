@@ -16,7 +16,7 @@ export default function Result() {
         title={"Drill Results"}
         preChildren={
           <Appbar.BackAction
-            onPress={navigation.goBack}
+            onPressIn={navigation.goBack}
             color={themeColors.accent}
           />
         }

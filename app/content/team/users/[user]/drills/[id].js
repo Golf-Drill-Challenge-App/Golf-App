@@ -43,7 +43,7 @@ export default function Stat() {
         title={"Statistics"}
         preChildren={
           <Appbar.BackAction
-            onPress={() => {
+            onPressIn={() => {
               navigation.goBack();
             }}
             color={themeColors.accent}

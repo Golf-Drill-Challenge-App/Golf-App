@@ -235,7 +235,7 @@ function Index() {
         subTitle={drillInfo["drillType"]}
         preChildren={
           <Appbar.BackAction
-            onPress={() => {
+            onPressIn={() => {
               navigation.goBack();
             }}
             color={themeColors.accent}

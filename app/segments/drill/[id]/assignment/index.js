@@ -160,7 +160,7 @@ export default function Index() {
         title="Assign Drill"
         preChildren={
           <Appbar.BackAction
-            onPress={() => {
+            onPressIn={() => {
               navigation.goBack();
             }}
             color={themeColors.accent}
