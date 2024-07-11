@@ -1,7 +1,8 @@
 import { router, usePathname } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { SectionList, TouchableOpacity, View } from "react-native";
 import { Avatar, Text } from "react-native-paper";
+import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import { formatDate } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -90,6 +91,43 @@ const AssignmentsList = ({
     return Object.keys(groupedData).sort((a, b) => b - a);
   }, [groupedData]);
 
+  const cardPressHandler = useCallback(
+    debounce(
+      (assignment) => {
+        if (singleUser) {
+          if (assignment.completed) {
+            router.push({
+              pathname: `${currentPath}/attempts/${assignment.attemptId}`,
+              params: {
+                id: assignment.drillId,
+              },
+            });
+          } else if (role === "player") {
+            router.push({
+              pathname: `content/drill`,
+              params: {
+                id: `${assignment.drillId}`,
+                assignedTime: assignment.assignedTime,
+                currentTime: new Date(),
+              },
+            });
+          }
+        } else {
+          router.push({
+            pathname: "content/assignments/players",
+            params: {
+              drillId: assignment.drillId,
+              assignedTime: assignment.assignedTime,
+            },
+          });
+        }
+      },
+      1000,
+      true,
+    ),
+    [singleUser],
+  );
+
   if (sortedDates.length === 0) {
     return (
       <EmptyScreen
@@ -158,36 +196,6 @@ const AssignmentsList = ({
         </View>
       </View>
     );
-  };
-
-  const cardPressHandler = (assignment) => {
-    if (singleUser) {
-      if (assignment.completed) {
-        router.push({
-          pathname: `${currentPath}/attempts/${assignment.attemptId}`,
-          params: {
-            id: assignment.drillId,
-          },
-        });
-      } else if (role === "player") {
-        router.push({
-          pathname: `content/drill`,
-          params: {
-            id: `${assignment.drillId}`,
-            assignedTime: assignment.assignedTime,
-            currentTime: new Date(),
-          },
-        });
-      }
-    } else {
-      router.push({
-        pathname: "content/assignments/players",
-        params: {
-          drillId: assignment.drillId,
-          assignedTime: assignment.assignedTime,
-        },
-      });
-    }
   };
 
   return (
