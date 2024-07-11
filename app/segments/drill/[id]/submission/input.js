@@ -159,7 +159,7 @@ async function handleLeaderboardUpdate(
   const mainOutputAttempt = drillInfo.mainOutputAttempt;
 
   //check if the user exists on the leaderboard
-  if (currentLeaderboard[uploadData.uid] == undefined) {
+  if (currentLeaderboard[uploadData.uid] === undefined) {
     console.log("User not on leaderboard, uploading this attempt");
 
     await uploadNewLeaderboard(
@@ -648,13 +648,17 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
         break;
 
       case "leftSideLandingAverage":
-        outputData.leftSideLandingAverage =
-          leftSideLandingTotal / missedLeftShotCount;
+        if (!missedLeftShotCount) outputData.leftSideLandingAverage = 0;
+        else
+          outputData.leftSideLandingAverage =
+            leftSideLandingTotal / missedLeftShotCount;
         break;
 
       case "rightSideLandingAverage":
-        outputData.rightSideLandingAverage =
-          rightSideLandingTotal / missedRightShotCount;
+        if (!missedRightShotCount) outputData.rightSideLandingAverage = 0;
+        else
+          outputData.rightSideLandingAverage =
+            rightSideLandingTotal / missedRightShotCount;
         break;
 
       case "sideLandingTotal":
@@ -670,14 +674,33 @@ function createOutputData(drillInfo, inputValues, attemptShots, uid, did) {
   return outputData;
 }
 
-//A function to validate inputs are not empty
-function checkEmptyInputs(inputs) {
-  return Object.values(inputs).some((value) => value === "");
-}
+//A function to validate inputs
+function validateInputs(inputs, numInputs) {
+  //validate no empty inputs
+  if (
+    Object.keys(inputs).length !== numInputs ||
+    Object.values(inputs).some((value) => value === "")
+  ) {
+    return "All inputs must be filled.";
+  }
 
-//A function to validate inputs are all numbers
-function validateInputs(inputs) {
-  return Object.values(inputs).some((input) => isNaN(input));
+  //validate all inputs are numbers
+  if (Object.values(inputs).some((input) => isNaN(input))) {
+    return "All inputs must be numbers.";
+  }
+
+  //validate stroke inputs are all positive whole numbers
+  if (inputs.hasOwnProperty("strokes")) {
+    if (
+      !Number.isInteger(parseFloat(inputs["strokes"])) ||
+      parseFloat(inputs["strokes"]) <= 0
+    ) {
+      return "Strokes must be a positive integer.";
+    }
+  }
+
+  //return valid inputs
+  return "valid inputs";
 }
 
 export default function Input({ setToggleResult, setOutputData }) {
@@ -806,16 +829,10 @@ export default function Input({ setToggleResult, setOutputData }) {
     // need to declare userId and drillId like this due to obj destructuring / how query keys are defined in
     // useAttempts / useDrillInfo hooks
 
-    //Check if all inputs have been filled in
-    if (
-      Object.keys(inputValues[displayedShot]).length !== numInputs ||
-      checkEmptyInputs(inputValues[displayedShot])
-    ) {
-      showSnackBar("All inputs must be filled.");
-    }
-    //check inputs are all numbers
-    else if (validateInputs(inputValues[displayedShot])) {
-      showSnackBar("All inputs must be numbers.");
+    const inputStatus = validateInputs(inputValues[displayedShot], numInputs);
+
+    if (inputStatus !== "valid inputs") {
+      showSnackBar(inputStatus);
     }
     //check for submit button
     else if (submitVisible) {
