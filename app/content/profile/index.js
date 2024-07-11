@@ -139,6 +139,7 @@ function Index() {
     setUpdateLoading(true);
     if (!newName) {
       showDialog("Input Needed", "Please enter a new name.");
+      setUpdateLoading(false);
       return;
     }
     if (!passwordInputVisible && newName === userData.name) {
@@ -146,10 +147,12 @@ function Index() {
         "No Change Detected",
         "The new name must be different from the current name.",
       );
+      setUpdateLoading(false);
       return;
     }
     if (passwordInputVisible && !(currentPassword && newPassword)) {
       showDialog("Incomplete Form", "Please fill out all the password fields.");
+      setUpdateLoading(false);
       return;
     }
     if (newPassword !== newPasswordCheck) {
@@ -157,6 +160,7 @@ function Index() {
         "Passwords Do Not Match",
         "The new passwords you entered do not match. Please try again.",
       );
+      setUpdateLoading(false);
       return;
     }
     try {

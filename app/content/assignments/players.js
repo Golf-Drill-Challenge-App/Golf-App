@@ -3,7 +3,14 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Appbar, Button, Icon, List, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Appbar,
+  Button,
+  Icon,
+  List,
+  Text,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -92,6 +99,8 @@ function Index() {
   const numCompleted = useMemo(() => {
     return assignmentList.filter((assignment) => assignment.completed).length;
   }, [assignmentList]);
+
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   if (drillInfoIsLoading || userInfoIsLoading) return <Loading />;
 
@@ -339,6 +348,7 @@ function Index() {
               },
             }}
             onPress={async () => {
+              setLoadingDelete(true);
               try {
                 await runTransaction(db, async (transaction) => {
                   const playerList = [];
@@ -391,14 +401,16 @@ function Index() {
                   }
                 });
                 await invalidateMultipleKeys(queryClient, invalidateKeys);
+                setLoadingDelete(false);
                 showSnackBar("Assignments Deleted");
               } catch (e) {
                 console.log("Error deleting assignments: ", e);
                 showDialog("Error", getErrorString(e));
+                setLoadingDelete(false);
               }
             }}
           >
-            Delete
+            {loadingDelete ? <ActivityIndicator /> : "Delete"}
           </Button>
         </View>
       )}
