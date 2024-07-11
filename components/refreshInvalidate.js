@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { RefreshControl } from "react-native";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 
 // extra props reason: https://stackoverflow.com/questions/69659094/react-native-custom-refreshcontrol-component-doesnt-work-in-flatlist-on-android
 function RefreshInvalidate({ invalidateKeys = [], ...props }) {
