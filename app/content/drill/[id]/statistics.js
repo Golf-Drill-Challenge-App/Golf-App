@@ -3,8 +3,8 @@ import BarChartScreen from "~/components/barChart";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useAuthContext } from "~/context/Auth";
-import { useAttempts } from "~/hooks/useAttempts";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
+import { useAttempts } from "~/dbOperations/hooks/useAttempts";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
 
 export default function Stat() {
   const drillId = useLocalSearchParams()["id"];
