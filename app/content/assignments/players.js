@@ -410,7 +410,11 @@ function Index() {
               }
             }}
           >
-            {loadingDelete ? <ActivityIndicator /> : "Delete"}
+            {loadingDelete ? (
+              <ActivityIndicator size={20} color={"#FFF"} />
+            ) : (
+              "Delete"
+            )}
           </Button>
         </View>
       )}
