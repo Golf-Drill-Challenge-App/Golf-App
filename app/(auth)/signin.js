@@ -23,8 +23,9 @@ import ProfilePicture from "~/components/ProfilePicture";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
-import { debounce } from "underscore";
+import { debounce, once } from "underscore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DialogComponent from "~/components/dialog";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
@@ -40,21 +41,20 @@ export default function SignIn() {
 
   const [timeIntervalPassword, setTimeIntervalPassword] = useState(0)
 
-  let intervalId
+  useEffect(()=>{//prevents people from exiting the app to reset the timer
+    AsyncStorage.getItem('timeNextPasswordReset').then(
+      (value)=> {
+        setTimeIntervalPassword(Math.floor((parseInt(value, 10) - Date.now()) / 1000));
+      })
+  }, [])
 
-  useEffect(() => {
-    if(timeIntervalPassword <= 0)
-    clearInterval(intervalId)
-  }, [intervalId, timeIntervalPassword]);
-
-  const startTimeInterval = (interval)=>{
-    console.log(interval)
-    setTimeIntervalPassword(interval)
-    intervalId = setInterval(()=> {
-      setTimeIntervalPassword(timeIntervalPassword - 1)
-      console.log(timeIntervalPassword)
-    }, 1000)
-  }
+  useEffect(()=> {//main countdown loop
+    const intervalId = setInterval(() => {
+      if (timeIntervalPassword > 0)
+        setTimeIntervalPassword((prevState)=>prevState - 1);
+    }, 1000);
+    return ()=>clearInterval(intervalId)
+  }, [timeIntervalPassword])
 
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
@@ -72,19 +72,6 @@ export default function SignIn() {
   }
 
   const handleForgotPassword = async ()=> {
-    const currentDate = Date.now()
-    const timeNextPasswordReset = await AsyncStorage.getItem('timeNextPasswordReset')
-    console.log("timeNextPasswordReset", timeNextPasswordReset, "date now", currentDate)
-    console.log("comparison", currentDate < parseInt(timeNextPasswordReset, 10))
-    if(timeNextPasswordReset !== null && currentDate < parseInt(timeNextPasswordReset, 10)){
-      // if(timeIntervalPassword <= 0)
-      //   startTimeInterval((parseInt(timeNextPasswordReset, 10) - currentDate) / 1000)
-      showDialog(
-        "Error",
-        "Please wait for another" + timeIntervalPassword + "seconds"
-      );
-      return;
-    }
     if (!email) {
       showDialog(
         "Error",
@@ -96,7 +83,7 @@ export default function SignIn() {
       await sendPasswordResetEmail(getAuth(), email);
       const date = Date.now() + 60000;
       await AsyncStorage.setItem('timeNextPasswordReset', date.toString())
-      startTimeInterval(60)
+      setTimeIntervalPassword(60)
       showDialog("Success", "Password reset email sent");
     } catch (e) {
       console.log(e);
@@ -185,9 +172,11 @@ export default function SignIn() {
               onChangeText={setPassword}
               style={styles.input}
             />
-            <Pressable style={styles.button} onPress={handleForgotPassword}>
+            {timeIntervalPassword <= 0 ? <Pressable style={styles.button} onPress={handleForgotPassword}>
               <Text style={styles.forgotPassword}>Forgot your password?</Text>
-            </Pressable>
+            </Pressable> : <Text style={
+              [styles.button, {textAlign: "center"}]
+            }>Retry in {timeIntervalPassword}s</Text>}
 
             <Pressable
               style={styles.button}
