@@ -4,7 +4,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -23,6 +23,9 @@ import ProfilePicture from "~/components/ProfilePicture";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
+import { debounce, once } from "underscore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DialogComponent from "~/components/dialog";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
@@ -35,6 +38,23 @@ export default function SignIn() {
   const { height } = useWindowDimensions();
 
   const { showDialog } = useAlertContext();
+
+  const [timeIntervalPassword, setTimeIntervalPassword] = useState(0)
+
+  useEffect(()=>{//prevents people from exiting the app to reset the timer
+    AsyncStorage.getItem('timeNextPasswordReset').then(
+      (value)=> {
+        setTimeIntervalPassword(Math.floor((parseInt(value, 10) - Date.now()) / 1000));
+      })
+  }, [])
+
+  useEffect(()=> {//main countdown loop
+    const intervalId = setInterval(() => {
+      if (timeIntervalPassword > 0)
+        setTimeIntervalPassword((prevState)=>prevState - 1);
+    }, 1000);
+    return ()=>clearInterval(intervalId)
+  }, [timeIntervalPassword])
 
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
@@ -51,7 +71,7 @@ export default function SignIn() {
     }
   }
 
-  async function handleForgotPassword() {
+  const handleForgotPassword = async ()=> {
     if (!email) {
       showDialog(
         "Error",
@@ -61,7 +81,10 @@ export default function SignIn() {
     }
     try {
       await sendPasswordResetEmail(getAuth(), email);
-      showDialog("", "Password reset email sent");
+      const date = Date.now() + 60000;
+      await AsyncStorage.setItem('timeNextPasswordReset', date.toString())
+      setTimeIntervalPassword(60)
+      showDialog("Success", "Password reset email sent");
     } catch (e) {
       console.log(e);
       showDialog("Error", getErrorString(e));
@@ -149,9 +172,11 @@ export default function SignIn() {
               onChangeText={setPassword}
               style={styles.input}
             />
-            <Pressable style={styles.button} onPress={handleForgotPassword}>
+            {timeIntervalPassword <= 0 ? <Pressable style={styles.button} onPress={handleForgotPassword}>
               <Text style={styles.forgotPassword}>Forgot your password?</Text>
-            </Pressable>
+            </Pressable> : <Text style={
+              [styles.button, {textAlign: "center"}]
+            }>Retry in {timeIntervalPassword}s</Text>}
 
             <Pressable
               style={styles.button}
