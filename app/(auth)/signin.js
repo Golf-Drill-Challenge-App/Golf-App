@@ -4,7 +4,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -23,6 +23,8 @@ import ProfilePicture from "~/components/ProfilePicture";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
+import { debounce } from "underscore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
@@ -35,6 +37,24 @@ export default function SignIn() {
   const { height } = useWindowDimensions();
 
   const { showDialog } = useAlertContext();
+
+  const [timeIntervalPassword, setTimeIntervalPassword] = useState(0)
+
+  let intervalId
+
+  useEffect(() => {
+    if(timeIntervalPassword <= 0)
+    clearInterval(intervalId)
+  }, [intervalId, timeIntervalPassword]);
+
+  const startTimeInterval = (interval)=>{
+    console.log(interval)
+    setTimeIntervalPassword(interval)
+    intervalId = setInterval(()=> {
+      setTimeIntervalPassword(timeIntervalPassword - 1)
+      console.log(timeIntervalPassword)
+    }, 1000)
+  }
 
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
@@ -51,7 +71,20 @@ export default function SignIn() {
     }
   }
 
-  async function handleForgotPassword() {
+  const handleForgotPassword = async ()=> {
+    const currentDate = Date.now()
+    const timeNextPasswordReset = await AsyncStorage.getItem('timeNextPasswordReset')
+    console.log("timeNextPasswordReset", timeNextPasswordReset, "date now", currentDate)
+    console.log("comparison", currentDate < parseInt(timeNextPasswordReset, 10))
+    if(timeNextPasswordReset !== null && currentDate < parseInt(timeNextPasswordReset, 10)){
+      // if(timeIntervalPassword <= 0)
+      //   startTimeInterval((parseInt(timeNextPasswordReset, 10) - currentDate) / 1000)
+      showDialog(
+        "Error",
+        "Please wait for another" + timeIntervalPassword + "seconds"
+      );
+      return;
+    }
     if (!email) {
       showDialog(
         "Error",
@@ -61,7 +94,10 @@ export default function SignIn() {
     }
     try {
       await sendPasswordResetEmail(getAuth(), email);
-      showDialog("", "Password reset email sent");
+      const date = Date.now() + 60000;
+      await AsyncStorage.setItem('timeNextPasswordReset', date.toString())
+      startTimeInterval(60)
+      showDialog("Success", "Password reset email sent");
     } catch (e) {
       console.log(e);
       showDialog("Error", getErrorString(e));
