@@ -23,6 +23,7 @@ import ProfilePicture from "~/components/ProfilePicture";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { auth } from "~/firebaseConfig";
+import { ActivityIndicator } from "react-native-paper";
 
 const BUTTON_WIDTH = 150;
 const INPUT_WIDTH = 200;
@@ -30,6 +31,7 @@ const INPUT_WIDTH = 200;
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false)
   const { setCurrentUserId } = useAuthContext();
 
   const { height } = useWindowDimensions();
@@ -52,11 +54,13 @@ export default function SignIn() {
   }
 
   async function handleForgotPassword() {
+    setForgotLoading(true)
     if (!email) {
       showDialog(
         "Error",
         "Please enter an email address to reset your password",
       );
+      setForgotLoading(false)
       return;
     }
     try {
@@ -66,6 +70,7 @@ export default function SignIn() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
+    setForgotLoading(false)
   }
 
   const styles = StyleSheet.create({
@@ -149,9 +154,9 @@ export default function SignIn() {
               onChangeText={setPassword}
               style={styles.input}
             />
-            <Pressable style={styles.button} onPress={handleForgotPassword}>
+            {forgotLoading ? <ActivityIndicator style={{marginTop: 10}} size={27} color={"#000"}/> : <Pressable style={styles.button} onPress={handleForgotPassword}>
               <Text style={styles.forgotPassword}>Forgot your password?</Text>
-            </Pressable>
+            </Pressable>}
 
             <Pressable
               style={styles.button}
