@@ -5,7 +5,6 @@ import { useState } from "react";
 import {
   Keyboard,
   Platform,
-  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -14,6 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Button } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -93,8 +93,8 @@ export default function SignUp() {
     buttonText: {
       fontSize: 18,
       color: "white",
-      paddingVertical: 8,
       textAlign: "center",
+      fontWeight: "normal",
     },
     input: {
       marginVertical: 5,
@@ -173,21 +173,23 @@ export default function SignUp() {
               // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
               textContentType="oneTimeCode"
             />
-            <Pressable
+            <Button
               style={[styles.button]}
               onPress={handleSubmit}
-              backgroundColor={themeColors.accent}
+              buttonColor={themeColors.accent}
+              labelStyle={styles.buttonText}
             >
-              <Text style={styles.buttonText}>Submit</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button]}
-              backgroundColor={themeColors.accent}
-            >
-              <Link asChild href={"/signin"}>
-                <Text style={styles.buttonText}>Back to Login</Text>
-              </Link>
-            </Pressable>
+              Submit
+            </Button>
+            <Link asChild href={"/signin"}>
+              <Button
+                buttonColor={themeColors.accent}
+                style={styles.button}
+                labelStyle={styles.buttonText}
+              >
+                Back to Login
+              </Button>
+            </Link>
           </View>
         </View>
       </KeyboardAwareScrollView>
