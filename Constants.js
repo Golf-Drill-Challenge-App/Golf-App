@@ -48,10 +48,10 @@ const prettyRole = {
 
 const firebaseErrors = {
   "auth/email-already-in-use": "Email is already in use",
-  "auth/invalid-email": "Incorrect username / password",
+  "auth/invalid-email": "Incorrect email / password",
   "auth/weak-password": "Password is too weak",
   "auth/user-not-found": "User not found",
-  "auth/wrong-password": "Incorrect username / password",
+  "auth/wrong-password": "Incorrect email / password",
   "auth/missing-email": "Missing email",
   "auth/missing-password": "Missing password",
 };
