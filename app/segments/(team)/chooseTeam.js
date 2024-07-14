@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { signOut as signoutFireBase } from "firebase/auth";
+import { sendEmailVerification } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
@@ -16,6 +16,7 @@ import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { auth, db } from "~/firebaseConfig";
 
 function ChooseTeam() {
+  // const auth = getAuth();
   const { signOut, currentUserId, currentUserInfo, setCurrentUserId } =
     useAuthContext();
   const queryClient = useQueryClient();
@@ -99,6 +100,7 @@ function ChooseTeam() {
           >
             <Button
               onPress={async () => {
+                // Email verification sent!
                 //temporary, should be replaced with multiple team functionality
                 await setDoc(doc(db, "teams", "1", "users", currentUserId), {
                   name: currentUserInfo["displayName"],
@@ -114,7 +116,32 @@ function ChooseTeam() {
                 await invalidateMultipleKeys(queryClient, [
                   ["userInfo", { userId: currentUserId }],
                 ]);
-                router.replace("/");
+                sendEmailVerification(auth.currentUser)
+                  .then(() => {
+                    // Email verification sent!
+                    console.error("VERIFICATION SENT");
+                    console.error(
+                      "PLEASE VERIFY EMAIL WITHIN THE NEXT 30 SECONDS.",
+                    );
+                    setTimeout(() => {
+                      // TODO: Do more research on currentUser.reload()
+                      // References on currentUser.reload():
+                      // https://stackoverflow.com/questions/53508364/update-the-email-verification-status-without-reloading-page
+                      // https://stackoverflow.com/questions/50271839/firebase-observe-email-verification-status-in-real-time/50272808#50272808
+                      auth.currentUser.reload();
+                      console.log(auth.currentUser.emailVerified);
+                    }, "30000");
+                    if (auth.currentUser.emailVerified) {
+                      console.error(
+                        "EMAIL VERIFIED, REDIRECTING TO HOMESCREEN",
+                      );
+                      router.replace("/");
+                    }
+                  })
+                  .catch((err) => {
+                    console.error("VERIFICATION FAILED");
+                    console.error(err);
+                  });
               }}
               style={{
                 backgroundColor: themeColors.accent,
