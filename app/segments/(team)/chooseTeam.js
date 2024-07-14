@@ -1,8 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { signOut as signoutFireBase } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
 import { Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,6 +11,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useBlackList } from "~/dbOperations/hooks/useBlackList";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { auth, db } from "~/firebaseConfig";
 
@@ -22,10 +22,19 @@ function ChooseTeam() {
 
   const { showDialog } = useAlertContext();
 
-  const [blacklist, setBlacklist] = useState(false);
+  const {
+    data: blacklist,
+    error: blacklistError,
+    isLoading: blacklistIsLoading,
+  } = useBlackList();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  if (blacklistIsLoading) {
+    return <Loading />;
+  }
+
+  if (blacklistError) {
+    return <ErrorComponent errorList={[blacklistError]} />;
+  }
 
   async function handleSignOut() {
     try {
@@ -35,35 +44,6 @@ function ChooseTeam() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
-  }
-
-  // TODO: make an actual hook for this? Shouldn't be related tho, as is coach pov?
-  useEffect(() => {
-    const fetchBlacklistDoc = async () => {
-      try {
-        const docRef = doc(db, "teams", "1", "blacklist", currentUserId);
-        const docSnap = await getDoc(docRef);
-
-        //See if the user is on blacklist
-        setBlacklist(docSnap.exists());
-      } catch (e) {
-        setError(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (currentUserId) {
-      fetchBlacklistDoc();
-    }
-  }, [currentUserId]);
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ErrorComponent errorList={[error]} />;
   }
 
   return (
