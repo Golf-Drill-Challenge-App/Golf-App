@@ -45,6 +45,7 @@
     "expo-system-ui": "~3.0.4",
     "firebase": "^10.8.0",
     "react": "18.2.0",
+    "moment-timezone": "^0.5.45",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
     "react-native-dropdown-picker": "^5.4.6",
@@ -75,7 +76,6 @@
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-scope": "^8.0.1",
-    "moment-timezone": "^0.5.45",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4"
   },
