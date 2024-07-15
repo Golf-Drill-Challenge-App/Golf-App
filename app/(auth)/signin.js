@@ -85,7 +85,10 @@ export default function SignIn() {
       const date = Date.now() + 60000;
       await AsyncStorage.setItem("timeNextPasswordReset", date.toString());
       setTimeIntervalPassword(60);
-      showDialog("Success", "Password reset email sent");
+      showDialog(
+        "Email Sent",
+        "An email to reset your password has been sent.",
+        );
     } catch (e) {
       console.log(e);
       showDialog("Error", getErrorString(e));
