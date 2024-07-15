@@ -43,7 +43,9 @@ export default function SignIn() {
     //prevents people from exiting the app to reset the timer
     AsyncStorage.getItem("timeNextPasswordReset").then((value) => {
       setTimeIntervalPassword(
-        Math.floor((parseInt(value, 10) - Date.now()) / 1000),
+        Math.floor(
+          (parseInt(value === null ? 0 : value, 10) - Date.now()) / 1000,
+        ),
       );
     });
   }, []);
@@ -88,7 +90,7 @@ export default function SignIn() {
       showDialog(
         "Email Sent",
         "An email to reset your password has been sent.",
-        );
+      );
     } catch (e) {
       console.log(e);
       showDialog("Error", getErrorString(e));
@@ -176,7 +178,7 @@ export default function SignIn() {
               onChangeText={setPassword}
               style={styles.input}
             />
-            {timeIntervalPassword <= 0 ? (
+            {timeIntervalPassword <= 0 || isNaN(timeIntervalPassword) ? (
               <Pressable style={styles.button} onPress={handleForgotPassword}>
                 <Text style={styles.forgotPassword}>Forgot your password?</Text>
               </Pressable>
