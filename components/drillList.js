@@ -7,7 +7,7 @@ import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAuthContext } from "~/context/Auth";
-import { useUserInfo } from "~/hooks/useUserInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 
 export default function DrillList({
   drillData,
