@@ -6,7 +6,7 @@ import { themeColors } from "~/Constants";
 import Blacklist from "~/app/segments/(team)/blacklist";
 import Header from "~/components/header";
 
-function ManageForeignRequests(props) {
+function ManageForeignRequests() {
   const [tabValue, setTabValue] = useState("invites");
   const navigation = useNavigation();
 

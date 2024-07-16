@@ -37,7 +37,7 @@ function Blacklist() {
           borderRadius: 5,
         }}
       >
-        {Object.keys(blacklist).map((userId, idx) => {
+        {Object.keys(blacklist).map((userId) => {
           return (
             <List.Item
               title={blacklist[userId].email}
