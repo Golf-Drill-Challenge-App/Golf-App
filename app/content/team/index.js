@@ -242,48 +242,62 @@ function Index() {
             <Header
               title={"Team"}
               postChildren={
-                currentUserInfo.role === "owner" ? (
-                  <Menu
-                    visible={menuVisible}
-                    onDismiss={() => {
-                      setMenuVisible(false);
-                    }}
-                    anchor={
-                      <Appbar.Action
-                        icon="dots-horizontal-circle-outline"
+                <>
+                  {currentUserInfo.role === "coach" ||
+                  currentUserInfo.role === "owner" ? (
+                    <Appbar.Action
+                      icon="account-cog-outline"
+                      onPress={() => {
+                        router.push("/segments/(team)/manageForeignRequests");
+                      }}
+                      color={themeColors.accent}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {currentUserInfo.role === "owner" ? (
+                    <Menu
+                      visible={menuVisible}
+                      onDismiss={() => {
+                        setMenuVisible(false);
+                      }}
+                      anchor={
+                        <Appbar.Action
+                          icon="dots-horizontal-circle-outline"
+                          onPress={() => {
+                            setMenuVisible(true);
+                          }}
+                          color={themeColors.accent}
+                        />
+                      }
+                      statusBarHeight={45}
+                      anchorPosition="bottom"
+                      contentStyle={{
+                        backgroundColor: themeColors.background,
+                      }}
+                    >
+                      <Menu.Item
+                        leadingIcon="pencil-outline"
                         onPress={() => {
-                          setMenuVisible(true);
+                          bottomSheetModalRef.current?.present();
+                          setMenuVisible(false);
                         }}
-                        color={themeColors.accent}
+                        title="Edit Team"
                       />
-                    }
-                    statusBarHeight={45}
-                    anchorPosition="bottom"
-                    contentStyle={{
-                      backgroundColor: themeColors.background,
-                    }}
-                  >
-                    <Menu.Item
-                      leadingIcon="pencil-outline"
-                      onPress={() => {
-                        bottomSheetModalRef.current?.present();
-                        setMenuVisible(false);
-                      }}
-                      title="Edit Team"
-                    />
-                    <Menu.Item
-                      leadingIcon="restart"
-                      onPress={() => {
-                        console.log("Reset Season Pressed!");
-                        setMenuVisible(false);
-                        setResetDialogVisible(true);
-                      }}
-                      title="Reset Season"
-                    />
-                  </Menu>
-                ) : (
-                  <></>
-                )
+                      <Menu.Item
+                        leadingIcon="restart"
+                        onPress={() => {
+                          console.log("Reset Season Pressed!");
+                          setMenuVisible(false);
+                          setResetDialogVisible(true);
+                        }}
+                        title="Reset Season"
+                      />
+                    </Menu>
+                  ) : (
+                    <></>
+                  )}
+                </>
               }
             />
             <BottomSheetWrapper
