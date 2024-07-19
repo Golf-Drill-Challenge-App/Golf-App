@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
@@ -45,25 +45,25 @@ export default function SignUp() {
         email,
         password,
       );
-      await updateProfile(userCredential.user, {
-        displayName: name,
-      });
+      // await updateProfile(userCredential.user, {
+      //   displayName: name,
+      // });
       await setDoc(doc(db, "users", userCredential.user.uid), {
         email: email,
       });
-      await setDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
-        name: name,
-        // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-        pfp: "",
-        // hardcoded "player" role for now, add role selection to profile settings in future PR
-        role: "player",
-        uid: userCredential.user.uid,
-        assigned_data: [],
-        uniqueDrills: [],
-      });
+      // await setDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
+      //   name: name,
+      //   // hardcoded pfp string for now, add pfp upload to profile settings in future PR
+      //   pfp: "",
+      //   // hardcoded "player" role for now, add role selection to profile settings in future PR
+      //   role: "player",
+      //   uid: userCredential.user.uid,
+      //   assigned_data: [],
+      //   uniqueDrills: [],
+      // });
 
       setCurrentUserId(userCredential.user.uid);
-      setCurrentUserInfo(userCredential.user);
+      setCurrentUserInfo({ ...userCredential.user, displayName: name });
 
       // console.log(userCredential.user);
     } catch (e) {

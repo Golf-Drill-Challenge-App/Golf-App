@@ -107,9 +107,12 @@ function Index() {
       />
     );
   const foundUsers = Object.values(userInfo)
-    .filter((user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
+    .filter((user) => {
+      if (!user.name) {
+        return true;
+      }
+      return user.name.toLowerCase().includes(searchQuery.toLowerCase());
+    })
     .sort((user1, user2) => {
       // Assign priorities based on conditions
       const getPriority = (user) => {
