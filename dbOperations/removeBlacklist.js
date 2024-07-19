@@ -1,14 +1,9 @@
-import { doc, runTransaction } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "~/firebaseConfig";
 
 async function removeBlacklist(teamId, userId) {
   try {
-    await runTransaction(db, async (transaction) => {
-      //Remove user from user table where UID == userID
-      const userRef = doc(db, "teams", teamId, "blacklist", userId);
-
-      await transaction.delete(userRef);
-    });
+    await deleteDoc(doc(db, "teams", teamId, "blacklist", userId));
   } catch (e) {
     console.log("Remove Blacklist Transaction failed: ", e);
     throw e; // Rethrow the error to handle it at the caller's level if needed
