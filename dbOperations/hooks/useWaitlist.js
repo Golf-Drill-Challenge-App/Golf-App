@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { collection, getDocs } from "firebase/firestore";
 import { useAuthContext } from "~/context/Auth";
-import { useQuery } from "@tanstack/react-query";
 import { db } from "~/firebaseConfig";
 
 export const useWaitlist = ({ enabled = true } = {}) => {
@@ -27,4 +27,4 @@ export const useWaitlist = ({ enabled = true } = {}) => {
     error,
     isLoading,
   };
-}
+};
