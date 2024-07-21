@@ -1,10 +1,11 @@
 import {
   collection,
+  deleteDoc,
   deleteField,
   doc,
   getDocs,
   query,
-  runTransaction,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import removePfp from "~/dbOperations/removePfp";
@@ -13,48 +14,46 @@ import { getPfpName } from "~/Utility";
 
 async function removeUser(teamId, userId) {
   try {
-    await runTransaction(db, async (transaction) => {
-      //Remove all attempts from attempts table with UID == userID
-      const attemptQuery = query(
-        collection(db, "teams", teamId, "attempts"),
-        where("uid", "==", userId),
-      );
+    //Remove all attempts from attempts table with UID == userID
+    const attemptQuery = query(
+      collection(db, "teams", teamId, "attempts"),
+      where("uid", "==", userId),
+    );
 
-      const attemptSnapshot = await getDocs(attemptQuery);
+    const attemptSnapshot = await getDocs(attemptQuery);
 
-      for (const doc of attemptSnapshot.docs) {
-        await transaction.delete(doc.ref);
+    for (const doc of attemptSnapshot.docs) {
+      await deleteDoc(doc.ref);
+    }
+
+    //Remove all entries from best_attempts table with UID == userID
+    const bestAttemptQuery = query(
+      collection(db, "teams", teamId, "best_attempts"),
+    );
+
+    const bestAttemptSnapshot = await getDocs(bestAttemptQuery);
+
+    for (const doc of bestAttemptSnapshot.docs) {
+      const docData = doc.data();
+
+      if (docData[userId]) {
+        //Delete the field
+        await updateDoc(doc.ref, {
+          [userId]: deleteField(),
+        });
       }
+    }
 
-      //Remove all entries from best_attempts table with UID == userID
-      const bestAttemptQuery = query(
-        collection(db, "teams", teamId, "best_attempts"),
-      );
+    //Remove user from user table where UID == userID
+    const userRef = doc(db, "teams", teamId, "users", userId);
 
-      const bestAttemptSnapshot = await getDocs(bestAttemptQuery);
+    await deleteDoc(userRef);
 
-      for (const doc of bestAttemptSnapshot.docs) {
-        const docData = doc.data();
+    await removePfp(getPfpName(teamId, userId));
 
-        if (docData[userId]) {
-          //Delete the field
-          await transaction.update(doc.ref, {
-            [userId]: deleteField(),
-          });
-        }
-      }
-
-      //Remove user from user table where UID == userID
-      const userRef = doc(db, "teams", teamId, "users", userId);
-
-      await transaction.delete(userRef);
-
-      await removePfp(getPfpName(teamId, userId));
-
-      console.log(" Remove User Transaction has completed");
-    });
+    console.log(" Remove User has completed");
   } catch (e) {
-    console.log("Remove User Transaction failed: ", e);
+    console.log("Remove User failed: ", e);
     throw e; // Rethrow the error to handle it at the caller's level if needed
   }
 }
