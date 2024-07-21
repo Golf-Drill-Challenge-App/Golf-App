@@ -53,7 +53,11 @@ function ChooseTeam() {
     return "neutral";
   }, [blacklist, currentUserId, waitlist]); //blacklist, waitlist, invited, neutral
 
-  const invalidateKeys = [["blacklist"], ["waitlist"]];
+  const invalidateKeys = [
+    ["blacklist"],
+    ["waitlist"],
+    ["userInfo", { userId: currentUserId }],
+  ];
 
   if (blacklistIsLoading || waitlistIsLoading) {
     return <Loading />;
@@ -120,9 +124,7 @@ function ChooseTeam() {
                 //temporary, should be replaced with multiple team functionality
                 await addToTeam(currentTeamId, currentUserId, currentUserInfo);
                 setCurrentUserId(currentUserId);
-                await invalidateMultipleKeys(queryClient, [
-                  ["userInfo", { userId: currentUserId }],
-                ]);
+                await invalidateMultipleKeys(queryClient, invalidateKeys);
                 router.replace("/");
               }}
               style={{
@@ -156,7 +158,7 @@ function ChooseTeam() {
                   currentUserId,
                   currentUserInfo,
                 );
-                await invalidateMultipleKeys(queryClient, [["waitlist"]]);
+                await invalidateMultipleKeys(queryClient, invalidateKeys);
               }}
               style={{
                 backgroundColor: themeColors.accent,
