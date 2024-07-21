@@ -29,7 +29,7 @@ function Waitlist() {
     return <Loading />;
   }
 
-  const invalidateKeys = [["waitlist", "userInfo"]];
+  const invalidateKeys = [["waitlist"], ["userInfo"]];
 
   return (
     <ScrollView

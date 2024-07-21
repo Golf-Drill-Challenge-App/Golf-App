@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
@@ -45,9 +45,9 @@ export default function SignUp() {
         email,
         password,
       );
-      // await updateProfile(userCredential.user, {
-      //   displayName: name,
-      // });
+      await updateProfile(userCredential.user, {
+        displayName: name,
+      });
       await setDoc(doc(db, "users", userCredential.user.uid), {
         email: email,
       });

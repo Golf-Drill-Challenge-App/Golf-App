@@ -53,7 +53,7 @@ function ChooseTeam() {
     return "neutral";
   }, [blacklist, currentUserId, waitlist]); //blacklist, waitlist, invited, neutral
 
-  const invalidateKeys = [["blacklist", "waitlist"]];
+  const invalidateKeys = [["blacklist"], ["waitlist"]];
 
   if (blacklistIsLoading || waitlistIsLoading) {
     return <Loading />;

@@ -137,6 +137,11 @@ function Index() {
         return priority1 - priority2;
       }
 
+      //doesn't softlock in case displayName is null for some reason
+      if (!user1.name) {
+        return -1;
+      }
+
       // If priorities are the same, then sort alphabetically by name
       return user1.name.localeCompare(user2.name);
     });
