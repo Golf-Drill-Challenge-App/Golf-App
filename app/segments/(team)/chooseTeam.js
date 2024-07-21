@@ -2,13 +2,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { signOut as signoutFireBase } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { useBlackList } from "~/dbOperations/hooks/useBlackList";
@@ -27,6 +28,8 @@ function ChooseTeam() {
     error: blacklistError,
     isLoading: blacklistIsLoading,
   } = useBlackList();
+
+  const invalidateKeys = [["blacklist"]];
 
   if (blacklistIsLoading) {
     return <Loading />;
@@ -49,15 +52,17 @@ function ChooseTeam() {
   return (
     <SafeAreaView
       style={{
-        flex: 1,
         justifyContent: "center",
+        flex: 1,
       }}
     >
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           justifyContent: "center",
           alignItems: "center",
+          flexGrow: 1,
         }}
+        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
       >
         {blacklist[currentUserId] ? (
           <Text
@@ -72,7 +77,6 @@ function ChooseTeam() {
         ) : (
           <View
             style={{
-              flexGrow: 1,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -116,7 +120,6 @@ function ChooseTeam() {
         )}
         <View
           style={{
-            flexGrow: 1,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -140,7 +143,7 @@ function ChooseTeam() {
             </Text>
           </Button>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
