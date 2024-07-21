@@ -59,7 +59,7 @@ function ChooseTeam() {
           alignItems: "center",
         }}
       >
-        {blacklist ? (
+        {blacklist[currentUserId] ? (
           <Text
             style={{
               fontSize: 16,

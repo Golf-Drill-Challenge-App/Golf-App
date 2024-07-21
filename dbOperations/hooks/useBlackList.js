@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
 
@@ -7,18 +7,18 @@ export const useBlackList = ({ enabled = true } = {}) => {
   const { currentTeamId } = useAuthContext();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["blackList"],
+    queryKey: ["blacklist"],
     queryFn: async () => {
       console.log("fetching blacklist");
+      const newBlacklist = {};
       // Fetch all time records
-      const querySnapshot = await getDoc(
-        doc(db, "teams", currentTeamId, "blacklist"),
+      const querySnapshot = await getDocs(
+        collection(db, "teams", currentTeamId, "blacklist"),
       );
-      const data = querySnapshot.data();
-      if (data === undefined) {
-        return false;
-      }
-      return querySnapshot.data();
+      querySnapshot.forEach((doc) => {
+        newBlacklist[doc.id] = doc.data();
+      });
+      return newBlacklist;
     },
     enabled,
   });
