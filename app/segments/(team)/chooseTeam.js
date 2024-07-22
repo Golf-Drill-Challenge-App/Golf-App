@@ -1,6 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { router } from "expo-router";
-import { sendEmailVerification } from "firebase/auth";
+import {
+  sendEmailVerification,
+  signOut as signoutFireBase,
+} from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
@@ -100,48 +102,33 @@ function ChooseTeam() {
           >
             <Button
               onPress={async () => {
-                // Email verification sent!
                 //temporary, should be replaced with multiple team functionality
-                await setDoc(doc(db, "teams", "1", "users", currentUserId), {
-                  name: currentUserInfo["displayName"],
-                  // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-                  pfp: "",
-                  // hardcoded "player" role for now, add role selection to profile settings in future PR
-                  role: "player",
-                  uid: currentUserId,
-                  assigned_data: [],
-                  uniqueDrills: [],
-                });
-                setCurrentUserId(currentUserId);
-                await invalidateMultipleKeys(queryClient, [
-                  ["userInfo", { userId: currentUserId }],
-                ]);
-                sendEmailVerification(auth.currentUser)
-                  .then(() => {
-                    // Email verification sent!
-                    console.error("VERIFICATION SENT");
-                    console.error(
-                      "PLEASE VERIFY EMAIL WITHIN THE NEXT 30 SECONDS.",
+                // TODO: Maybe instead of setTimeout, use onIdTokenChanged (https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#onidtokenchanged)
+                auth.currentUser.reload();
+                setTimeout(async () => {
+                  console.error("Delayed for 5 second.");
+                  if (auth.currentUser.emailVerified) {
+                    await setDoc(
+                      doc(db, "teams", "1", "users", currentUserId),
+                      {
+                        name: currentUserInfo["displayName"],
+                        // hardcoded pfp string for now, add pfp upload to profile settings in future PR
+                        pfp: "",
+                        // hardcoded "player" role for now, add role selection to profile settings in future PR
+                        role: "player",
+                        uid: currentUserId,
+                        assigned_data: [],
+                        uniqueDrills: [],
+                      },
                     );
-                    setTimeout(() => {
-                      // TODO: Do more research on currentUser.reload()
-                      // References on currentUser.reload():
-                      // https://stackoverflow.com/questions/53508364/update-the-email-verification-status-without-reloading-page
-                      // https://stackoverflow.com/questions/50271839/firebase-observe-email-verification-status-in-real-time/50272808#50272808
-                      auth.currentUser.reload();
-                      console.log(auth.currentUser.emailVerified);
-                    }, "30000");
-                    if (auth.currentUser.emailVerified) {
-                      console.error(
-                        "EMAIL VERIFIED, REDIRECTING TO HOMESCREEN",
-                      );
-                      router.replace("/");
-                    }
-                  })
-                  .catch((err) => {
-                    console.error("VERIFICATION FAILED");
-                    console.error(err);
-                  });
+                    setCurrentUserId(currentUserId);
+                    await invalidateMultipleKeys(queryClient, [
+                      ["userInfo", { userId: currentUserId }],
+                    ]);
+                  } else {
+                    console.error("EMAIL NOT VERIFIED YET, TRY AGAIN");
+                  }
+                }, "5000");
               }}
               style={{
                 backgroundColor: themeColors.accent,
@@ -168,6 +155,35 @@ function ChooseTeam() {
             justifyContent: "center",
           }}
         >
+          <Button
+            style={{
+              backgroundColor: themeColors.accent,
+              borderRadius: 12,
+              marginTop: 20,
+            }}
+            onPress={async () => {
+              // TODO: Add this (sendEmailVerification) to signup as well
+              sendEmailVerification(auth.currentUser)
+                .then(() => {
+                  // Email verification sent!
+                  console.error("VERIFICATION SENT");
+                })
+                .catch((err) => {
+                  console.error("VERIFICATION FAILED");
+                  console.error(err);
+                });
+            }}
+          >
+            <Text
+              style={{
+                color: themeColors.highlight,
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Resend Verification Email
+            </Text>
+          </Button>
           <Button
             onPress={handleSignOut}
             style={{
