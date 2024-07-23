@@ -177,7 +177,10 @@ export default function SignIn() {
             >
               Login
             </Button>
-            <Link asChild href={{ pathname: "/signup", params: { passedEmail: email } }}>
+            <Link
+              asChild
+              href={{ pathname: "/signup", params: { passedEmail: email } }}
+            >
               <Button
                 buttonColor={themeColors.accent}
                 style={styles.button}
