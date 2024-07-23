@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
@@ -26,8 +26,9 @@ const INPUT_WIDTH = 200;
 
 export default function SignUp() {
   const { setCurrentUserId, setCurrentUserInfo } = useAuthContext();
+  const { passedEmail } = useLocalSearchParams();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(passedEmail);
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
@@ -39,6 +40,9 @@ export default function SignUp() {
     try {
       if (password !== passwordCheck) {
         throw "Passwords don't match";
+      }
+      if (!email.endsWith("@oregonstate.edu")) {
+        throw "Only @oregonstate.edu emails are allowed at this time.";
       }
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -135,6 +139,7 @@ export default function SignUp() {
               autoComplete="email"
               autoCorrect={false}
               onChangeText={setEmail}
+              value={email}
               style={[styles.input]}
             />
             <Text style={[styles.placeholderText]}>Password</Text>
