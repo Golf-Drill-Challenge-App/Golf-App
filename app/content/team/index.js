@@ -7,7 +7,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
@@ -26,6 +26,7 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -37,12 +38,12 @@ import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useTeamInfo } from "~/dbOperations/hooks/useTeamInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { handleImageUpload } from "~/dbOperations/imageUpload";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
+import { resetLeaderboards } from "~/dbOperations/resetLeaderboards";
 import { db } from "~/firebaseConfig";
-import { handleImageUpload } from "~/hooks/imageUpload";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { resetLeaderboards } from "~/hooks/resetLeaderboards";
-import { useTeamInfo } from "~/hooks/useTeamInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { currentUserId, currentTeamId } = useAuthContext();
@@ -92,6 +93,15 @@ function Index() {
   useEffect(() => {
     setNewName(currentTeamData ? currentTeamData.name : "");
   }, [currentTeamData]);
+
+  const handleUserPress = useCallback(
+    debounce(
+      (userId) => router.push(`content/team/users/${userId}`),
+      1000,
+      true,
+    ),
+    [],
+  );
 
   const resetForm = () => {
     setNewName(currentTeamData.name);
@@ -216,7 +226,7 @@ function Index() {
           hideResetDialog,
           async () => {
             try {
-              await resetLeaderboards();
+              await resetLeaderboards(currentTeamId);
               await invalidateMultipleKeys(queryClient, [["best_attempts"]]);
               hideResetDialog();
             } catch (e) {
@@ -306,6 +316,8 @@ function Index() {
                         showSnackBar,
                         currentTeamId,
                         teamRef,
+                        175,
+                        100,
                       );
                       await invalidateMultipleKeys(queryClient, [["teamInfo"]]);
                     } catch (e) {
@@ -477,9 +489,7 @@ function Index() {
                           <Icon source="chevron-right" />
                         </View>
                       )}
-                      onPress={() =>
-                        router.push(`content/team/users/${userId}`)
-                      }
+                      onPress={() => handleUserPress(userId)}
                     />
                   );
                 })}

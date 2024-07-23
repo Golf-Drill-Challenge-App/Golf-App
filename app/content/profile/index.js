@@ -12,22 +12,19 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from "react-native";
 import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
-import { getErrorString } from "~/Utility";
+import { getErrorString, getPfpName } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
 import DrillList from "~/components/drillList";
@@ -38,12 +35,12 @@ import Loading from "~/components/loading";
 import ProfileCard from "~/components/profileCard";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useEmailInfo } from "~/dbOperations/hooks/useEmailInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { handleImageUpload } from "~/dbOperations/imageUpload";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { db } from "~/firebaseConfig";
-import { handleImageUpload } from "~/hooks/imageUpload";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useEmailInfo } from "~/hooks/useEmailInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const { signOut, currentUserId, currentTeamId } = useAuthContext();
@@ -51,10 +48,6 @@ function Index() {
   const auth = getAuth();
 
   const { showDialog, showSnackBar } = useAlertContext();
-
-  const insets = useSafeAreaInsets();
-
-  const { height, width } = useWindowDimensions();
 
   const {
     data: userData,
@@ -103,6 +96,86 @@ function Index() {
     setEmail(userEmail);
   }, [userData, userEmail]);
 
+  const handleUpdate = useCallback(
+    debounce(
+      async () => {
+        setUpdateLoading(true);
+        if (!newName) {
+          showDialog("Input Needed", "Please enter a new name.");
+          return;
+        }
+        if (!passwordInputVisible && newName === userData.name) {
+          showDialog(
+            "No Change Detected",
+            "The new name must be different from the current name.",
+          );
+          return;
+        }
+        if (passwordInputVisible && !(currentPassword && newPassword)) {
+          showDialog(
+            "Incomplete Form",
+            "Please fill out all the password fields.",
+          );
+          return;
+        }
+        if (newPassword !== newPasswordCheck) {
+          showDialog(
+            "Passwords Do Not Match",
+            "The new passwords you entered do not match. Please try again.",
+          );
+          return;
+        }
+        try {
+          if (passwordInputVisible) {
+            // attempt updating the password
+            // re-authenticate the user and check if the provided current password is valid
+            const userCredential = await signInWithEmailAndPassword(
+              auth,
+              userEmail,
+              currentPassword,
+            );
+
+            // once re-authenticated, update the password
+            await updatePassword(userCredential.user, newPassword);
+
+            // Update successful
+            resetForm();
+            bottomSheetModalRef.current.close();
+            setPasswordInputVisible(false);
+            showSnackBar("Password updated successfully");
+          }
+          //doing password first because it checks if the user's entered password is correct, so the form is submitted at once
+          if (newName !== userData.name) {
+            // check if they request to update their name to a new one
+            await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
+              name: newName,
+            });
+
+            // invalidate cache on successful name update
+            await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+            bottomSheetModalRef.current.close();
+            showSnackBar("Name field updated successfully");
+          }
+        } catch (e) {
+          console.log(e);
+          showDialog("Error", getErrorString(e));
+        }
+        setUpdateLoading(false);
+      },
+      1000,
+      true,
+    ),
+    [
+      currentPassword,
+      newName,
+      newPassword,
+      newPasswordCheck,
+      passwordInputVisible,
+      userData.name,
+      userEmail,
+    ],
+  );
+
   if (userIsLoading || userEmailIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
@@ -125,7 +198,11 @@ function Index() {
       signOut();
     } catch (e) {
       console.log(e);
-      showDialog("Error", getErrorString(e));
+      if (e.code === "auth/wrong-password") {
+        showDialog("Error", "Invalid password");
+      } else {
+        showDialog("Error", getErrorString(e));
+      }
     }
   }
 
@@ -133,68 +210,6 @@ function Index() {
     setCurrentPassword("");
     setNewPassword("");
     setNewPasswordCheck("");
-  };
-
-  const handleUpdate = async () => {
-    setUpdateLoading(true);
-    if (!newName) {
-      showDialog("Input Needed", "Please enter a new name.");
-      return;
-    }
-    if (!passwordInputVisible && newName === userData.name) {
-      showDialog(
-        "No Change Detected",
-        "The new name must be different from the current name.",
-      );
-      return;
-    }
-    if (passwordInputVisible && !(currentPassword && newPassword)) {
-      showDialog("Incomplete Form", "Please fill out all the password fields.");
-      return;
-    }
-    if (newPassword !== newPasswordCheck) {
-      showDialog(
-        "Passwords Do Not Match",
-        "The new passwords you entered do not match. Please try again.",
-      );
-      return;
-    }
-    try {
-      if (passwordInputVisible) {
-        // attempt updating the password
-        // re-authenticate the user and check if the provided current password is valid
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          userEmail,
-          currentPassword,
-        );
-
-        // once re-authenticated, update the password
-        await updatePassword(userCredential.user, newPassword);
-
-        // Update successful
-        resetForm();
-        bottomSheetModalRef.current.close();
-        setPasswordInputVisible(false);
-        showSnackBar("Password updated successfully");
-      }
-      //doing password first because it checks if the user's entered password is correct, so the form is submitted at once
-      if (newName !== userData.name) {
-        // check if they request to update their name to a new one
-        await updateDoc(doc(db, "teams", currentTeamId, "users", userId), {
-          name: newName,
-        });
-
-        // invalidate cache on successful name update
-        await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-        bottomSheetModalRef.current.close();
-        showSnackBar("Name field updated successfully");
-      }
-    } catch (e) {
-      console.log(e);
-      showDialog("Error", getErrorString(e));
-    }
-    setUpdateLoading(false);
   };
 
   const styles = StyleSheet.create({
@@ -315,8 +330,10 @@ function Index() {
                   await handleImageUpload(
                     setImageUploading,
                     showSnackBar,
-                    userId,
+                    getPfpName(currentTeamId, userId),
                     userRef,
+                    profilePicSize,
+                    profilePicSize,
                   );
                   await invalidateMultipleKeys(queryClient, [["userInfo"]]);
                 } catch (e) {

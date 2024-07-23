@@ -1,10 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Appbar, Button, Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { once } from "underscore";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -15,10 +16,10 @@ import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { useTimeContext } from "~/context/Time";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { db } from "~/firebaseConfig";
-import { invalidateMultipleKeys } from "~/hooks/invalidateMultipleKeys";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
 
 function Index() {
   const navigation = useNavigation();
@@ -92,6 +93,75 @@ function Index() {
   const numCompleted = useMemo(() => {
     return assignmentList.filter((assignment) => assignment.completed).length;
   }, [assignmentList]);
+
+  const handleDelete = useCallback(
+    once(async () => {
+      try {
+        await runTransaction(db, async (transaction) => {
+          const playerList = [];
+          for (const assignment of assignmentList) {
+            if (!assignment.markedForDelete) {
+              continue;
+            }
+            const userRef = doc(
+              db,
+              "teams",
+              currentTeamId,
+              "users",
+              assignment.uid,
+            );
+            console.log("Players marked for delete: ", assignment.uid);
+            const docSnap = await transaction.get(userRef);
+
+            if (docSnap.exists()) {
+              const assignedData = docSnap.data().assigned_data;
+              const updatedAssignmentList = assignedData.filter(
+                (assignment) =>
+                  getLocalizedDate({
+                    time: assignment.assignedTime,
+                    rounded: true,
+                  }).getTime() != assignedTime,
+              );
+              console.log("Updated Assignment List: ", updatedAssignmentList);
+              console.log("current assignedTime: ", assignedTime);
+              playerList.push({
+                uid: assignment.uid,
+                assigned_data: updatedAssignmentList,
+              });
+            }
+          }
+
+          for (const player of playerList) {
+            const userRef = doc(
+              db,
+              "teams",
+              currentTeamId,
+              "users",
+              player.uid,
+            );
+            await transaction.update(userRef, {
+              ["assigned_data"]: player.assigned_data,
+            });
+          }
+        });
+        await invalidateMultipleKeys(queryClient, invalidateKeys);
+        showSnackBar("Assignments Deleted");
+      } catch (e) {
+        console.log("Error deleting assignments: ", e);
+        showDialog("Error", getErrorString(e));
+      }
+    }),
+    [
+      assignedTime,
+      assignmentList,
+      currentTeamId,
+      getLocalizedDate,
+      invalidateKeys,
+      queryClient,
+      showDialog,
+      showSnackBar,
+    ],
+  );
 
   if (drillInfoIsLoading || userInfoIsLoading) return <Loading />;
 
@@ -338,65 +408,7 @@ function Index() {
                 onSurfaceDisabled: "#FFF",
               },
             }}
-            onPress={async () => {
-              try {
-                await runTransaction(db, async (transaction) => {
-                  const playerList = [];
-                  for (const assignment of assignmentList) {
-                    if (!assignment.markedForDelete) {
-                      continue;
-                    }
-                    const userRef = doc(
-                      db,
-                      "teams",
-                      currentTeamId,
-                      "users",
-                      assignment.uid,
-                    );
-                    console.log("Players marked for delete: ", assignment.uid);
-                    const docSnap = await transaction.get(userRef);
-
-                    if (docSnap.exists()) {
-                      const assignedData = docSnap.data().assigned_data;
-                      const updatedAssignmentList = assignedData.filter(
-                        (assignment) =>
-                          getLocalizedDate({
-                            time: assignment.assignedTime,
-                            rounded: true,
-                          }).getTime() != assignedTime,
-                      );
-                      console.log(
-                        "Updated Assignment List: ",
-                        updatedAssignmentList,
-                      );
-                      console.log("current assignedTime: ", assignedTime);
-                      playerList.push({
-                        uid: assignment.uid,
-                        assigned_data: updatedAssignmentList,
-                      });
-                    }
-                  }
-
-                  for (const player of playerList) {
-                    const userRef = doc(
-                      db,
-                      "teams",
-                      currentTeamId,
-                      "users",
-                      player.uid,
-                    );
-                    await transaction.update(userRef, {
-                      ["assigned_data"]: player.assigned_data,
-                    });
-                  }
-                });
-                await invalidateMultipleKeys(queryClient, invalidateKeys);
-                showSnackBar("Assignments Deleted");
-              } catch (e) {
-                console.log("Error deleting assignments: ", e);
-                showDialog("Error", getErrorString(e));
-              }
-            }}
+            onPress={handleDelete}
           >
             Delete
           </Button>

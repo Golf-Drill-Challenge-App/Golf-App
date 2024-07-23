@@ -1,13 +1,16 @@
 ﻿import { SectionList, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 
+import { router } from "expo-router";
+import { useCallback } from "react";
+import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import DrillCard from "~/components/drillCard";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAuthContext } from "~/context/Auth";
-import { useUserInfo } from "~/hooks/useUserInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 
 export default function DrillList({
   drillData,
@@ -22,6 +25,18 @@ export default function DrillList({
     error: userError,
     isLoading: userIsLoading,
   } = useUserInfo({ userId: currentUserId });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedPress = useCallback(
+    debounce(
+      (href) => {
+        router.push(href);
+      },
+      1000,
+      true,
+    ),
+    [],
+  ); //useCallback so the debounce timer don't get reset every render
 
   if (userIsLoading) {
     return <Loading />;
@@ -95,7 +110,12 @@ export default function DrillList({
       sections={drills}
       ListHeaderComponent={children}
       renderItem={({ item }) => (
-        <DrillCard key={item.did} drill={item} hrefString={href + item.did} />
+        <DrillCard
+          key={item.did}
+          drill={item}
+          onPress={() => debouncedPress(href + item.did)}
+          hrefString={href + item.did}
+        />
       )}
       renderSectionHeader={({ section: { title } }) => (
         <View

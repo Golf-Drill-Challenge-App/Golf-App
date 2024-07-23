@@ -61,7 +61,10 @@ export default function SignIn() {
     }
     try {
       await sendPasswordResetEmail(getAuth(), email);
-      showDialog("", "Password reset email sent");
+      showDialog(
+        "Email Sent",
+        "An email to reset your password has been sent.",
+      );
     } catch (e) {
       console.log(e);
       showDialog("Error", getErrorString(e));
@@ -164,7 +167,10 @@ export default function SignIn() {
               style={styles.button}
               backgroundColor={themeColors.accent}
             >
-              <Link asChild href={"/signup"}>
+              <Link
+                asChild
+                href={{ pathname: "/signup", params: { passedEmail: email } }}
+              >
                 <Text style={styles.buttonText}>Sign Up</Text>
               </Link>
             </Pressable>

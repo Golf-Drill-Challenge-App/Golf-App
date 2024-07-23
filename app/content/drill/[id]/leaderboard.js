@@ -1,7 +1,8 @@
-import { Link, useLocalSearchParams, usePathname } from "expo-router";
-import { useState } from "react";
-import { ScrollView, View } from "react-native";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
+import { useCallback, useState } from "react";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
+import { debounce } from "underscore";
 import { prettyTitle, themeColors } from "~/Constants";
 import { formatDate, numTrunc } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -9,10 +10,10 @@ import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
-import { useAllTimeRecords } from "~/hooks/useAllTimeRecords";
-import { useBestAttempts } from "~/hooks/useBestAttempts";
-import { useDrillInfo } from "~/hooks/useDrillInfo";
-import { useUserInfo } from "~/hooks/useUserInfo";
+import { useAllTimeRecords } from "~/dbOperations/hooks/useAllTimeRecords";
+import { useBestAttempts } from "~/dbOperations/hooks/useBestAttempts";
+import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 
 function getLeaderboardRanks(
   orderedLeaderboard,
@@ -73,6 +74,17 @@ export default function Leaderboard() {
     isLoading: leaderboardIsLoading,
     error: leaderboardError,
   } = useBestAttempts({ drillId });
+
+  const debouncedPress = useCallback(
+    debounce(
+      (href) => {
+        router.push(href);
+      },
+      1000,
+      true,
+    ),
+    [],
+  );
 
   const invalidateKeys = [
     ["userInfo"],
@@ -206,12 +218,11 @@ export default function Leaderboard() {
         {orderedLeaderboard.map((userId, idx) => {
           const attempt = leaderboard[userId][mainOutputAttempt];
           return (
-            <Link
+            <TouchableOpacity
               key={userId}
-              href={{
-                pathname: `${currentPath}/attempts/${attempt["id"]}`,
-              }}
-              asChild
+              onPress={() =>
+                debouncedPress(`${currentPath}/attempts/${attempt["id"]}`)
+              }
               style={{ paddingLeft: 20 }}
             >
               <List.Item
@@ -238,7 +249,13 @@ export default function Leaderboard() {
                   </View>
                 )}
                 right={() => (
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingLeft: 10,
+                    }}
+                  >
                     <Text>
                       {numTrunc(attempt["value"], true)}{" "}
                       {drillInfo.aggOutputs[mainOutputAttempt].distanceMeasure}
@@ -247,7 +264,7 @@ export default function Leaderboard() {
                   </View>
                 )}
               />
-            </Link>
+            </TouchableOpacity>
           );
         })}
       </List.Section>
