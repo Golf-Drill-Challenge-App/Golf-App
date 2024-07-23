@@ -187,7 +187,6 @@ function ChooseTeam() {
               marginTop: 20,
             }}
             onPress={async () => {
-              // TODO: Add this (sendEmailVerification) to signup as well
               sendEmailVerification(auth.currentUser)
                 .then(() => {
                   // Email verification sent!
