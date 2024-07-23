@@ -1,5 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 import {
+  onIdTokenChanged,
   sendEmailVerification,
   signOut as signoutFireBase,
 } from "firebase/auth";
@@ -23,7 +25,7 @@ function ChooseTeam() {
     useAuthContext();
   const queryClient = useQueryClient();
 
-  const { showDialog } = useAlertContext();
+  const { showDialog, showSnackBar } = useAlertContext();
 
   const [blacklist, setBlacklist] = useState(false);
 
@@ -102,33 +104,56 @@ function ChooseTeam() {
           >
             <Button
               onPress={async () => {
-                //temporary, should be replaced with multiple team functionality
-                // TODO: Maybe instead of setTimeout, use onIdTokenChanged (https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#onidtokenchanged)
-                auth.currentUser.reload();
-                setTimeout(async () => {
-                  console.error("Delayed for 5 second.");
-                  if (auth.currentUser.emailVerified) {
-                    await setDoc(
-                      doc(db, "teams", "1", "users", currentUserId),
-                      {
-                        name: currentUserInfo["displayName"],
-                        // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-                        pfp: "",
-                        // hardcoded "player" role for now, add role selection to profile settings in future PR
-                        role: "player",
-                        uid: currentUserId,
-                        assigned_data: [],
-                        uniqueDrills: [],
-                      },
-                    );
-                    setCurrentUserId(currentUserId);
-                    await invalidateMultipleKeys(queryClient, [
-                      ["userInfo", { userId: currentUserId }],
-                    ]);
-                  } else {
-                    console.error("EMAIL NOT VERIFIED YET, TRY AGAIN");
-                  }
-                }, "5000");
+                let completed = false;
+
+                const unregisterAuthObserver = onIdTokenChanged(
+                  auth,
+                  async (user) => {
+                    if (user && !completed) {
+                      await user.reload();
+                      if (user.emailVerified) {
+                        completed = true;
+                        console.log(
+                          "Email successfully verified. Adding user to team, then redirecting to Home Screen",
+                        );
+                        showSnackBar(
+                          "Email successfully verified. Adding user to team, then redirecting to Home Screen",
+                        );
+
+                        // Update Firestore document
+                        await setDoc(
+                          doc(db, "teams", "1", "users", currentUserId),
+                          {
+                            name: currentUserInfo["displayName"],
+                            pfp: "",
+                            role: "player",
+                            uid: currentUserId,
+                            assigned_data: [],
+                            uniqueDrills: [],
+                          },
+                        );
+                        setCurrentUserId(currentUserId);
+                        await invalidateMultipleKeys(queryClient, [
+                          ["userInfo", { userId: currentUserId }],
+                        ]);
+                        unregisterAuthObserver();
+                        // Navigate to the next page
+                        router.replace("/");
+                      } else {
+                        console.log("Error: Email Not Verified Yet, Try Again");
+                        showDialog(
+                          "Error",
+                          "Email Not Verified Yet, Try Again",
+                        );
+                        // Allow re-attempt
+                        completed = false;
+                      }
+                    }
+                  },
+                );
+
+                // Trigger a user reload to update the token and invoke the listener
+                await auth.currentUser.reload();
               }}
               style={{
                 backgroundColor: themeColors.accent,
@@ -166,11 +191,12 @@ function ChooseTeam() {
               sendEmailVerification(auth.currentUser)
                 .then(() => {
                   // Email verification sent!
-                  console.error("VERIFICATION SENT");
+                  console.log("Verification Email Sent!");
+                  showSnackBar("Verification Email Sent!");
                 })
-                .catch((err) => {
-                  console.error("VERIFICATION FAILED");
-                  console.error(err);
+                .catch((e) => {
+                  console.log("Error sending verification email: ", e);
+                  showDialog("Error", getErrorString(e));
                 });
             }}
           >
