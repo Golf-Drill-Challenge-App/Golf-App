@@ -70,16 +70,14 @@ export default function SignUp() {
         uniqueDrills: [],
       });
 
-      sendEmailVerification(auth.currentUser)
-        .then(() => {
-          // Email verification sent!
-          console.log("Verification Email Sent!");
-          showSnackBar("Verification Email Sent!");
-        })
-        .catch((e) => {
-          console.log("Error sending verification email: ", e);
-          showDialog("Error", getErrorString(e));
-        });
+      try {
+        await sendEmailVerification(auth.currentUser);
+        console.log("Verification Email Sent!");
+        showSnackBar("Verification Email Sent!");
+      } catch {
+        console.log("Error sending verification email: ", e);
+        showDialog("Error", getErrorString(e));
+      }
 
       setCurrentUserId(userCredential.user.uid);
       setCurrentUserInfo(userCredential.user);
