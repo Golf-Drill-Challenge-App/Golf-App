@@ -9,3 +9,4 @@ ios
 android
 webstorm.config.js
 firebaseApiKey.js
+.env*.local
