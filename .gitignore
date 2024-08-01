@@ -4,7 +4,6 @@
 .DS_Store
 /.vs
 /venv
-eas.json
 ios
 android
 webstorm.config.js
