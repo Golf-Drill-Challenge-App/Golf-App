@@ -14,11 +14,12 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Divider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { once } from "underscore";
 import { themeColors } from "~/Constants";
 import {
   getErrorString,
@@ -836,6 +837,15 @@ export default function Input({ setToggleResult, setOutputData }) {
     }
     //check for submit button
     else if (submitVisible) {
+      await handleSubmit();
+    } else {
+      setDisplayedShot(displayedShot + 1);
+      setCurrentShot(currentShot + 1);
+    }
+  };
+
+  const handleSubmit = useCallback(
+    once(async () => {
       const outputData = createOutputData(
         drillInfo,
         inputValues,
@@ -865,11 +875,9 @@ export default function Input({ setToggleResult, setOutputData }) {
         console.log(e);
         showDialog("Error", getErrorString(e));
       }
-    } else {
-      setDisplayedShot(displayedShot + 1);
-      setCurrentShot(currentShot + 1);
-    }
-  };
+    }),
+    [attemptShots, currentLeaderboard, inputValues, userInfo],
+  );
 
   //Loading until an attempt is generated or hooks are working
   if (
