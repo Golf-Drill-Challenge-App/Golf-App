@@ -64,7 +64,7 @@ function ChooseTeam() {
   }
 
   if (blacklistError || waitlistError) {
-    return <ErrorComponent errorList={[blacklistError]} />;
+    return <ErrorComponent errorList={[blacklistError, waitlistError]} />;
   }
 
   async function handleSignOut() {
