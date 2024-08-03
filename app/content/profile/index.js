@@ -171,7 +171,7 @@ function Index() {
       newPassword,
       newPasswordCheck,
       passwordInputVisible,
-      userData.name,
+      userData,
       userEmail,
     ],
   );
