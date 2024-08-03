@@ -1,6 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ScrollView, TextInput, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  View,
+} from "react-native";
 import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -31,6 +37,11 @@ export function Invitelist() {
   const [currentEmailValid, setCurrentEmailValid] = useState(false);
 
   const onInvite = async () => {
+    const invitedEmail = Object.values(invitelist).map(
+      (invite) => invite["email"],
+    );
+    if (invitedEmail.includes(currentEmailInput)) {
+    }
     await addToInvitelist(currentTeamId, currentEmailInput);
     setCurrentEmailInput("");
     await invalidateMultipleKeys(queryClient, invalidateKeys);
@@ -47,10 +58,11 @@ export function Invitelist() {
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/;
 
   return (
-    <View
+    <KeyboardAvoidingView
       style={{
         flex: 1,
       }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView
         refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
@@ -65,6 +77,7 @@ export function Invitelist() {
             return (
               <List.Item
                 title={invitelist[inviteId].email}
+                key={inviteId}
                 right={() => (
                   <View
                     style={{
@@ -95,8 +108,6 @@ export function Invitelist() {
       <View
         style={{
           flexDirection: "row",
-          position: "absolute",
-          bottom: 0,
           padding: 5,
         }}
       >
@@ -124,7 +135,7 @@ export function Invitelist() {
           Invite
         </Button>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
