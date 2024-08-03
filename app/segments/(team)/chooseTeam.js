@@ -79,7 +79,11 @@ function ChooseTeam() {
   }
 
   if (blacklistError || waitlistError || invitelistError) {
-    return <ErrorComponent errorList={[blacklistError, waitlistError, invitelistError]} />;
+    return (
+      <ErrorComponent
+        errorList={[blacklistError, waitlistError, invitelistError]}
+      />
+    );
   }
 
   async function handleSignOut() {
