@@ -15,6 +15,7 @@ import { useAuthContext } from "~/context/Auth";
 import { addToTeam } from "~/dbOperations/addToTeam";
 import { addToWaitlist } from "~/dbOperations/addToWaitlist";
 import { useBlackList } from "~/dbOperations/hooks/useBlackList";
+import { useInvitelist } from "~/dbOperations/hooks/useInviteList";
 import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 import { useWaitlist } from "~/dbOperations/hooks/useWaitlist";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
@@ -44,6 +45,12 @@ function ChooseTeam() {
     isLoading: waitlistIsLoading,
   } = useWaitlist();
 
+  const {
+    data: invitelist,
+    error: invitelistError,
+    isLoading: invitelistIsLoading,
+  } = useInvitelist({ email: currentUserInfo.email });
+
   //basically to trigger the side effect that navigates off this page
   useUserInfo({ userId: currentUserId });
 
@@ -54,21 +61,25 @@ function ChooseTeam() {
     if (waitlist && waitlist[currentUserId]) {
       return "waitlist";
     }
+    if (invitelist && invitelist["id"] !== undefined) {
+      return "invitelist";
+    }
     return "neutral";
-  }, [blacklist, currentUserId, waitlist]); //blacklist, waitlist, invited, neutral
+  }, [blacklist, currentUserId, invitelist, waitlist]); //blacklist, waitlist, invitelist, neutral
 
   const invalidateKeys = [
+    ["invitelist"],
     ["blacklist"],
     ["waitlist"],
     ["userInfo", { userId: currentUserId }],
   ];
 
-  if (blacklistIsLoading || waitlistIsLoading) {
+  if (blacklistIsLoading || waitlistIsLoading || invitelistIsLoading) {
     return <Loading />;
   }
 
-  if (blacklistError || waitlistError) {
-    return <ErrorComponent errorList={[blacklistError]} />;
+  if (blacklistError || waitlistError || invitelistError) {
+    return <ErrorComponent errorList={[blacklistError, invitelistError]} />;
   }
 
   async function handleSignOut() {
@@ -116,13 +127,22 @@ function ChooseTeam() {
           >
             Your request to join the team has been received
           </Text>
-        ) : state === "invited" ? (
+        ) : state === "invitelist" ? (
           <View
             style={{
               alignItems: "center",
               justifyContent: "center",
             }}
           >
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: "center",
+                color: "gray",
+              }}
+            >
+              You have been invited to the team
+            </Text>
             <Button
               onPress={async () => {
                 //temporary, should be replaced with multiple team functionality

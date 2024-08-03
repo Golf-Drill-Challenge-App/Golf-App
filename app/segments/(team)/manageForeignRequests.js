@@ -4,6 +4,7 @@ import { Appbar, SegmentedButtons } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import Blacklist from "~/app/segments/(team)/blacklist";
+import Invitelist from "~/app/segments/(team)/invitelist";
 import Waitlist from "~/app/segments/(team)/waitlist";
 import Header from "~/components/header";
 
@@ -38,7 +39,7 @@ function ManageForeignRequests() {
 
   const tabComponent = useMemo(
     () => ({
-      invites: <Invitelist />,
+      invitelist: <Invitelist />,
       waitlist: <Waitlist />,
       blacklist: <Blacklist />,
     }),
