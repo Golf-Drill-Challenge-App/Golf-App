@@ -17,7 +17,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Appbar, Button, Text } from "react-native-paper";
+import { Appbar, Button, Divider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { once } from "underscore";
 import { themeColors } from "~/Constants";
@@ -959,6 +959,32 @@ export default function Input({ setToggleResult, setOutputData }) {
                 />
               ))}
             </View>
+
+            {/* Next Shot */}
+
+            {displayedShot === currentShot &&
+              displayedShot + 1 < attemptShots.length && (
+                <View>
+                  <Divider bold={true} style={{ width: "100%" }} />
+                  <View style={styles.shotNumContainer}>
+                    <Text style={[styles.shotTotal, { fontSize: 24 }]}>
+                      Next Shot
+                    </Text>
+                  </View>
+                  <View style={styles.horizontalContainer}>
+                    {drillInfo.requirements.map((item, id) => (
+                      <DrillTarget
+                        key={id}
+                        prompt={item.prompt}
+                        distanceMeasure={item.distanceMeasure}
+                        target={
+                          attemptShots[displayedShot + 1].items[item.name]
+                        }
+                      />
+                    ))}
+                  </View>
+                </View>
+              )}
 
             {/*Navigation Bottom Sheet */}
             <BottomSheetWrapper ref={navModalRef}>
