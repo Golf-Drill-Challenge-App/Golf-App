@@ -10,7 +10,7 @@ export const useWaitlist = ({ enabled = true } = {}) => {
     queryFn: async () => {
       console.log("fetching waitlist");
       const newWaitlist = {};
-      // Fetch all time records
+      // Fetch all Entries on the Waitlist
       const querySnapshot = await getDocs(
         collection(db, "teams", currentTeamId, "waitlist"),
       );
