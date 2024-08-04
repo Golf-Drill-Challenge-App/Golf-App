@@ -18,6 +18,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ActivityIndicator, Button } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -31,6 +32,7 @@ const INPUT_WIDTH = 200;
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
   const { setCurrentUserId } = useAuthContext();
 
   const { height } = useWindowDimensions();
@@ -74,12 +76,14 @@ export default function SignIn() {
     }
   }
 
-  const handleForgotPassword = async () => {
+  async function handleForgotPassword() {
+    setForgotLoading(true);
     if (!email) {
       showDialog(
         "Error",
         "Please enter an email address to reset your password",
       );
+      setForgotLoading(false);
       return;
     }
     try {
@@ -95,7 +99,8 @@ export default function SignIn() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
-  };
+    setForgotLoading(false);
+  }
 
   const styles = StyleSheet.create({
     container: {
@@ -118,8 +123,8 @@ export default function SignIn() {
     buttonText: {
       fontSize: 18,
       color: "white",
-      paddingVertical: 8,
       textAlign: "center",
+      fontWeight: "normal",
     },
     input: {
       marginVertical: 5,
@@ -178,7 +183,13 @@ export default function SignIn() {
               onChangeText={setPassword}
               style={styles.input}
             />
-            {timeIntervalPassword <= 0 || isNaN(timeIntervalPassword) ? (
+            {forgotLoading ? (
+              <ActivityIndicator
+                style={{ marginTop: 10 }}
+                size={27}
+                color={"#000"}
+              />
+            ) : timeIntervalPassword <= 0 || isNaN(timeIntervalPassword) ? (
               <Pressable style={styles.button} onPress={handleForgotPassword}>
                 <Text style={styles.forgotPassword}>Forgot your password?</Text>
               </Pressable>
@@ -188,24 +199,26 @@ export default function SignIn() {
               </Text>
             )}
 
-            <Pressable
+            <Button
               style={styles.button}
               onPress={handleSignIn}
-              backgroundColor={themeColors.accent}
+              buttonColor={themeColors.accent}
+              labelStyle={styles.buttonText}
             >
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
-            <Pressable
-              style={styles.button}
-              backgroundColor={themeColors.accent}
+              Login
+            </Button>
+            <Link
+              asChild
+              href={{ pathname: "/signup", params: { passedEmail: email } }}
             >
-              <Link
-                asChild
-                href={{ pathname: "/signup", params: { passedEmail: email } }}
+              <Button
+                buttonColor={themeColors.accent}
+                style={styles.button}
+                labelStyle={styles.buttonText}
               >
-                <Text style={styles.buttonText}>Sign Up</Text>
-              </Link>
-            </Pressable>
+                Sign Up
+              </Button>
+            </Link>
           </View>
         </View>
       </KeyboardAwareScrollView>
