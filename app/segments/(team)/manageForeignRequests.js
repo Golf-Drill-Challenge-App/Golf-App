@@ -44,7 +44,7 @@ function ManageForeignRequests() {
       blacklist: <Blacklist />,
     }),
     [],
-  ); // Recreate pages only if drillId changes
+  );
 
   return (
     <SafeAreaView

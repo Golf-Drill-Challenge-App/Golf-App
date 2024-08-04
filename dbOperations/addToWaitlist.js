@@ -15,7 +15,6 @@ export async function addToWaitlist(
       currentUserId,
     );
     const currentTime = Date.now();
-    console.log("data", currentUserInfo);
     await setDoc(newRequestRef, {
       displayName: currentUserInfo["displayName"],
       email: currentUserInfo["email"],
