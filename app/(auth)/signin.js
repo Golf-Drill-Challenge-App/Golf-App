@@ -1,10 +1,11 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
 import {
   getAuth,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Keyboard,
   Platform,
@@ -38,6 +39,28 @@ export default function SignIn() {
 
   const { showDialog } = useAlertContext();
 
+  const [timeIntervalPassword, setTimeIntervalPassword] = useState(0);
+
+  useEffect(() => {
+    //prevents people from exiting the app to reset the timer
+    AsyncStorage.getItem("timeNextPasswordReset").then((value) => {
+      setTimeIntervalPassword(
+        Math.floor(
+          (parseInt(value === null ? 0 : value, 10) - Date.now()) / 1000,
+        ),
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    //main countdown loop
+    const intervalId = setInterval(() => {
+      if (timeIntervalPassword > 0)
+        setTimeIntervalPassword((prevState) => prevState - 1);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [timeIntervalPassword]);
+
   async function handleSignIn() {
     if (process.env.EXPO_PUBLIC_TEST_UID) {
       // Only allow login as test user while using `yarn test` to reduce errors
@@ -65,6 +88,9 @@ export default function SignIn() {
     }
     try {
       await sendPasswordResetEmail(getAuth(), email);
+      const date = Date.now() + 60000;
+      await AsyncStorage.setItem("timeNextPasswordReset", date.toString());
+      setTimeIntervalPassword(30);
       showDialog(
         "Email Sent",
         "An email to reset your password has been sent.",
@@ -163,10 +189,14 @@ export default function SignIn() {
                 size={27}
                 color={"#000"}
               />
-            ) : (
+            ) : timeIntervalPassword <= 0 || isNaN(timeIntervalPassword) ? (
               <Pressable style={styles.button} onPress={handleForgotPassword}>
                 <Text style={styles.forgotPassword}>Forgot your password?</Text>
               </Pressable>
+            ) : (
+              <Text style={[styles.button, { textAlign: "center" }]}>
+                Retry in {timeIntervalPassword}s
+              </Text>
             )}
 
             <Button
