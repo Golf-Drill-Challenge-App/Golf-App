@@ -3,7 +3,14 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Appbar, Button, Icon, List, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Appbar,
+  Button,
+  Icon,
+  List,
+  Text,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { once } from "underscore";
 import { themeColors } from "~/Constants";
@@ -94,8 +101,10 @@ function Index() {
     return assignmentList.filter((assignment) => assignment.completed).length;
   }, [assignmentList]);
 
+  const [loadingDelete, setLoadingDelete] = useState(false);
   const handleDelete = useCallback(
     once(async () => {
+      setLoadingDelete(true);
       try {
         await runTransaction(db, async (transaction) => {
           const playerList = [];
@@ -146,9 +155,11 @@ function Index() {
         });
         await invalidateMultipleKeys(queryClient, invalidateKeys);
         showSnackBar("Assignments Deleted");
+        setLoadingDelete(false);
       } catch (e) {
         console.log("Error deleting assignments: ", e);
         showDialog("Error", getErrorString(e));
+        setLoadingDelete(false);
       }
     }),
     [
@@ -410,7 +421,11 @@ function Index() {
             }}
             onPress={handleDelete}
           >
-            Delete
+            {loadingDelete ? (
+              <ActivityIndicator size={20} color={"#FFF"} />
+            ) : (
+              "Delete"
+            )}
           </Button>
         </View>
       )}
