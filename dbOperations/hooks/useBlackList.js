@@ -11,7 +11,7 @@ export const useBlackList = ({ enabled = true } = {}) => {
     queryFn: async () => {
       console.log("fetching blacklist");
       const newBlacklist = {};
-      // Fetch all time records
+      // Fetch blacklist
       const querySnapshot = await getDocs(
         collection(db, "teams", currentTeamId, "blacklist"),
       );
