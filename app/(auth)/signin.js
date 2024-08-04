@@ -90,7 +90,7 @@ export default function SignIn() {
       await sendPasswordResetEmail(getAuth(), email);
       const date = Date.now() + 60000;
       await AsyncStorage.setItem("timeNextPasswordReset", date.toString());
-      setTimeIntervalPassword(60);
+      setTimeIntervalPassword(30);
       showDialog(
         "Email Sent",
         "An email to reset your password has been sent.",
