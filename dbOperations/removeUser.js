@@ -7,9 +7,9 @@ import {
   runTransaction,
   where,
 } from "firebase/firestore";
-import removePfp from "~/dbOperations/removePfp";
-import { db } from "~/firebaseConfig";
 import { getPfpName } from "~/Utility";
+import { db } from "~/firebaseConfig";
+import removePfp from "./removePfp";
 
 async function removeUser(teamId, userId) {
   try {
@@ -47,9 +47,14 @@ async function removeUser(teamId, userId) {
       //Remove user from user table where UID == userID
       const userRef = doc(db, "teams", teamId, "users", userId);
 
-      await transaction.delete(userRef);
+      const userSnapshot = await transaction.get(userRef);
 
-      await removePfp(getPfpName(teamId, userId));
+      //remove pfp if there is one
+      if (userSnapshot.data().pfp !== "") {
+        await removePfp(getPfpName(teamId, userId));
+      }
+
+      await transaction.delete(userRef);
 
       console.log(" Remove User Transaction has completed");
     });
