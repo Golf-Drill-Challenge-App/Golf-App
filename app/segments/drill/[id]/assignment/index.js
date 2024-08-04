@@ -255,7 +255,7 @@ export default function Index() {
         onPress={handleAssign}
       >
         {loading ? (
-          <ActivityIndicator animating={true} color={"#FFF"} />
+          <ActivityIndicator animating={true} size={20} color={"#FFF"} />
         ) : (
           <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
             Assign
