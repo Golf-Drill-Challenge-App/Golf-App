@@ -32,6 +32,8 @@ function ChooseTeam() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [verified, setVerified] = useState(false);
+
   async function handleSignOut() {
     try {
       await signoutFireBase(auth);
@@ -62,6 +64,22 @@ function ChooseTeam() {
       fetchBlacklistDoc();
     }
   }, [currentUserId]);
+
+  useEffect(() => {
+    const unregisterAuthObserver = onIdTokenChanged(auth, async (user) => {
+      if (user) {
+        if (user.emailVerified) {
+          setVerified(true);
+          showSnackBar("Email successfully verified.");
+          unregisterAuthObserver();
+        } else {
+          setVerified(false);
+          console.log("Error: Email Not Verified Yet, Try Again");
+        }
+      }
+    });
+    return unregisterAuthObserver;
+  }, [showSnackBar]);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -111,73 +129,64 @@ function ChooseTeam() {
             >
               You've been banned from this team.
             </Text>
+          ) : verified ? (
+            <Button
+              onPress={async () => {
+                // Update Firestore document
+                await setDoc(doc(db, "teams", "1", "users", currentUserId), {
+                  name: currentUserInfo["displayName"],
+                  pfp: "",
+                  role: "player",
+                  uid: currentUserId,
+                  assigned_data: [],
+                  uniqueDrills: [],
+                });
+                setCurrentUserId(currentUserId);
+                await invalidateMultipleKeys(queryClient, [
+                  ["userInfo", { userId: currentUserId }],
+                ]);
+                // Navigate to the next page
+                router.replace("/");
+              }}
+              style={{
+                backgroundColor: themeColors.accent,
+                borderRadius: 12,
+                marginTop: 20,
+              }}
+            >
+              <Text
+                style={{
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
+                }}
+              >
+                Join Team
+              </Text>
+            </Button>
           ) : (
             <View
               style={{
-                flexGrow: 1,
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
+              <Text>Waiting for email verification...</Text>
               <Button
-                onPress={async () => {
-                  let completed = false;
-
-                  const unregisterAuthObserver = onIdTokenChanged(
-                    auth,
-                    async (user) => {
-                      if (user && !completed) {
-                        await user.reload();
-                        if (user.emailVerified) {
-                          completed = true;
-                          console.log(
-                            "Email successfully verified. Adding user to team, then redirecting to Home Screen",
-                          );
-                          showSnackBar(
-                            "Email successfully verified. Adding user to team, then redirecting to Home Screen",
-                          );
-
-                          // Update Firestore document
-                          await setDoc(
-                            doc(db, "teams", "1", "users", currentUserId),
-                            {
-                              name: currentUserInfo["displayName"],
-                              pfp: "",
-                              role: "player",
-                              uid: currentUserId,
-                              assigned_data: [],
-                              uniqueDrills: [],
-                            },
-                          );
-                          setCurrentUserId(currentUserId);
-                          await invalidateMultipleKeys(queryClient, [
-                            ["userInfo", { userId: currentUserId }],
-                          ]);
-                          unregisterAuthObserver();
-                          // Navigate to the next page
-                          router.replace("/");
-                        } else {
-                          console.log(
-                            "Error: Email Not Verified Yet, Try Again",
-                          );
-                          showDialog(
-                            "Error",
-                            "Email Not Verified Yet, Try Again",
-                          );
-                          // Allow re-attempt
-                          completed = false;
-                        }
-                      }
-                    },
-                  );
-
-                  // Trigger a user reload to update the token and invoke the listener
-                  await auth.currentUser.reload();
-                }}
                 style={{
                   backgroundColor: themeColors.accent,
                   borderRadius: 12,
                   marginTop: 20,
+                }}
+                onPress={async () => {
+                  try {
+                    await sendEmailVerification(auth.currentUser);
+                    console.log("Verification Email Sent!");
+                    showSnackBar("Verification Email Sent!");
+                  } catch {
+                    console.log("Error sending verification email: ", e);
+                    showDialog("Error", getErrorString(e));
+                  }
                 }}
               >
                 <Text
@@ -187,64 +196,29 @@ function ChooseTeam() {
                     textAlign: "center",
                   }}
                 >
-                  Join Team
+                  Resend Verification Email
                 </Text>
               </Button>
             </View>
           )}
-          <View
+          <Button
+            onPress={handleSignOut}
             style={{
-              flexGrow: 1,
-              alignItems: "center",
-              justifyContent: "center",
+              backgroundColor: themeColors.accent,
+              borderRadius: 12,
+              marginTop: 20,
             }}
           >
-            <Button
+            <Text
               style={{
-                backgroundColor: themeColors.accent,
-                borderRadius: 12,
-                marginTop: 20,
-              }}
-              onPress={async () => {
-                try {
-                  await sendEmailVerification(auth.currentUser);
-                  console.log("Verification Email Sent!");
-                  showSnackBar("Verification Email Sent!");
-                } catch {
-                  console.log("Error sending verification email: ", e);
-                  showDialog("Error", getErrorString(e));
-                }
+                color: themeColors.highlight,
+                fontSize: 18,
+                textAlign: "center",
               }}
             >
-              <Text
-                style={{
-                  color: themeColors.highlight,
-                  fontSize: 18,
-                  textAlign: "center",
-                }}
-              >
-                Resend Verification Email
-              </Text>
-            </Button>
-            <Button
-              onPress={handleSignOut}
-              style={{
-                backgroundColor: themeColors.accent,
-                borderRadius: 12,
-                marginTop: 20,
-              }}
-            >
-              <Text
-                style={{
-                  color: themeColors.highlight,
-                  fontSize: 18,
-                  textAlign: "center",
-                }}
-              >
-                Sign Out
-              </Text>
-            </Button>
-          </View>
+              Sign Out
+            </Text>
+          </Button>
         </View>
       </ScrollView>
     </SafeAreaView>
