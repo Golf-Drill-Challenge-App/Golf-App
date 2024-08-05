@@ -26,13 +26,14 @@ import { removeUser } from "~/dbOperations/removeUser";
 import { db } from "~/firebaseConfig";
 
 //A function to add a user to the blacklist table with a timestamp
-async function blacklistUser(teamId, userId, userInfo) {
+async function blacklistUser(teamId, userId, userInfo, userEmail) {
   //Create new document with userId as the id and a time field
 
   try {
     await setDoc(doc(db, "teams", teamId, "blacklist", userId), {
       time: Date.now(),
       name: userInfo["name"],
+      email: userEmail,
     });
     //remove users data
     await removeUser(teamId, userId);
@@ -336,7 +337,7 @@ function Index() {
           hideBanDialog,
           async () => {
             try {
-              await blacklistUser(currentTeamId, userId, userInfo);
+              await blacklistUser(currentTeamId, userId, userInfo, userEmail);
               await queryClient.removeQueries(["userInfo", userId]);
               await invalidateMultipleKeys(queryClient, [
                 ["userInfo"],
