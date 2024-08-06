@@ -1,9 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
   TextInput,
   View,
 } from "react-native";
@@ -30,17 +31,22 @@ export function Invitelist() {
 
   const { currentTeamId } = useAuthContext();
 
+  const invitedEmail = useMemo(() => {
+    console.log("invitelist", invitelist);
+    return Object.values(invitelist).map((invite) => invite["email"]);
+  }, [invitelist]);
+
   const invalidateKeys = [["invitelist"]];
   // const queryClient = useQueryClient();
 
   const [currentEmailInput, setCurrentEmailInput] = useState("");
   const [currentEmailValid, setCurrentEmailValid] = useState(false);
+  const [statusText, setStatusText] = useState("");
 
   const onInvite = async () => {
-    const invitedEmail = Object.values(invitelist).map(
-      (invite) => invite["email"],
-    );
     if (invitedEmail.includes(currentEmailInput)) {
+      setStatusText("Email already invited");
+      return;
     }
     await addToInvitelist(currentTeamId, currentEmailInput);
     setCurrentEmailInput("");
@@ -105,6 +111,7 @@ export function Invitelist() {
           })}
         </List.Section>
       </ScrollView>
+      <Text>{statusText}</Text>
       <View
         style={{
           flexDirection: "row",
@@ -115,7 +122,11 @@ export function Invitelist() {
           value={currentEmailInput}
           onChangeText={(text) => {
             setCurrentEmailInput(text);
-            setCurrentEmailValid(emailRegex.test(text));
+            const included = invitedEmail.includes(text);
+            if (included) setStatusText("Email already invited");
+            else setStatusText("");
+
+            setCurrentEmailValid(!included && emailRegex.test(text));
           }}
           autoCapitalize={"none"}
           autoComplete={"email"}
