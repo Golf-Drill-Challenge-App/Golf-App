@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Button, List } from "react-native-paper";
+import { ActivityIndicator, Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -20,6 +21,8 @@ function Blacklist() {
   const { currentTeamId } = useAuthContext();
 
   const queryClient = useQueryClient(); // also called here for updating name
+
+  const [unbanLoading, setUnbanLoading] = useState({});
 
   const invalidateKeys = [["blacklist"]];
 
@@ -51,12 +54,19 @@ function Blacklist() {
                 >
                   <Button
                     onPress={async () => {
+                      setUnbanLoading({ ...unbanLoading, [userId]: true });
                       await removeBlacklist(currentTeamId, userId);
                       await invalidateMultipleKeys(queryClient, invalidateKeys);
+                      setUnbanLoading({ ...unbanLoading, [userId]: false });
                     }}
                     textColor={themeColors.accent}
+                    height={38} //so the button doesn't change size because of the spinner
                   >
-                    Unban
+                    {unbanLoading[userId] ? (
+                      <ActivityIndicator color={themeColors.accent} />
+                    ) : (
+                      "Unban"
+                    )}
                   </Button>
                 </View>
               )}
