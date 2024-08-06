@@ -207,8 +207,9 @@ export default function SignIn() {
               onPress={handleSignIn}
               buttonColor={themeColors.accent}
               labelStyle={styles.buttonText}
+              loading={loginLoading}
             >
-              {loginLoading ? <ActivityIndicator color={"white"} /> : "Login"}
+              Login
             </Button>
             <Link
               asChild

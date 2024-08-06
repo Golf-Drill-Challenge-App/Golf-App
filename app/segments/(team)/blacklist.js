@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { ActivityIndicator, Button, List } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -60,13 +60,9 @@ function Blacklist() {
                       setUnbanLoading({ ...unbanLoading, [userId]: false });
                     }}
                     textColor={themeColors.accent}
-                    height={38} //so the button doesn't change size because of the spinner
+                    loading={unbanLoading[userId]}
                   >
-                    {unbanLoading[userId] ? (
-                      <ActivityIndicator color={themeColors.accent} />
-                    ) : (
-                      "Unban"
-                    )}
+                    Unban
                   </Button>
                 </View>
               )}

@@ -9,6 +9,7 @@ import {
   Divider,
   Menu,
   SegmentedButtons,
+  Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -316,8 +317,20 @@ function Index() {
         onHide={hideRemoveDialog}
         buttons={[
           "Cancel",
-          removeUserLoading ? (
-            <ActivityIndicator color={"white"} />
+          !removeUserLoading ? (
+            <View style={{ height: 20, padding: 0, backgroundColor: "green" }}>
+              <Text style={{ color: themeColors.accent }}>Remove User</Text>
+              <ActivityIndicator
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: "50%",
+                  right: "50%",
+                }}
+                color={"white"}
+              />
+            </View>
           ) : (
             "Remove User"
           ),

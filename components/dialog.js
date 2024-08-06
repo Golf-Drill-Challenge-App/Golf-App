@@ -34,7 +34,7 @@ export default function DialogComponent({
       <Button
         key={index}
         onPress={buttonsFunctions[index]}
-        style={style}
+        style={[style, { padding: 0, margin: 0 }]}
         labelStyle={labelStyle}
       >
         {item}

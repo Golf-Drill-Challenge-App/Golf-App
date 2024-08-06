@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { ActivityIndicator, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -177,8 +177,9 @@ export default function SignUp() {
               onPress={handleSubmit}
               buttonColor={themeColors.accent}
               labelStyle={styles.buttonText}
+              loading={signUpLoading}
             >
-              {signUpLoading ? <ActivityIndicator color={"white"} /> : "Submit"}
+              Submit
             </Button>
             <Link asChild href={"/signin"}>
               <Button

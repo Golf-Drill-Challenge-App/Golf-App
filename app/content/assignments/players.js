@@ -3,14 +3,7 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import {
-  ActivityIndicator,
-  Appbar,
-  Button,
-  Icon,
-  List,
-  Text,
-} from "react-native-paper";
+import { Appbar, Button, Icon, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { once } from "underscore";
 import { themeColors } from "~/Constants";
@@ -420,12 +413,9 @@ function Index() {
               },
             }}
             onPress={handleDelete}
+            loading={loadingDelete}
           >
-            {loadingDelete ? (
-              <ActivityIndicator size={20} color={"#FFF"} />
-            ) : (
-              "Delete"
-            )}
+            Delete
           </Button>
         </View>
       )}

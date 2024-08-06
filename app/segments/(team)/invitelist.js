@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { ActivityIndicator, Button, List } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
@@ -115,12 +115,9 @@ export function Invitelist() {
                       }}
                       height={38} //so the button doesn't change size because of the spinner
                       textColor={themeColors.accent}
+                      loading={removeLoading[inviteId]}
                     >
-                      {removeLoading[inviteId] ? (
-                        <ActivityIndicator color={themeColors.accent} />
-                      ) : (
-                        "Remove"
-                      )}
+                      Remove
                     </Button>
                   </View>
                 )}
@@ -160,12 +157,9 @@ export function Invitelist() {
           disabled={!currentEmailValid}
           onPress={onInvite}
           textColor={themeColors.accent}
+          loading={inviteLoading}
         >
-          {inviteLoading ? (
-            <ActivityIndicator color={themeColors.accent} />
-          ) : (
-            "Invite"
-          )}
+          Invite
         </Button>
       </View>
     </KeyboardAvoidingView>

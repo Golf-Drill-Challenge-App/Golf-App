@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { signOut as signoutFireBase } from "firebase/auth";
 import { useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { ActivityIndicator, Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -169,20 +169,17 @@ function ChooseTeam() {
                 borderRadius: 12,
                 marginTop: 20,
               }}
+              loading={buttonLoading}
             >
-              {buttonLoading ? (
-                <ActivityIndicator color={themeColors.accent} />
-              ) : (
-                <Text
-                  style={{
-                    color: themeColors.highlight,
-                    fontSize: 18,
-                    textAlign: "center",
-                  }}
-                >
-                  Join Team
-                </Text>
-              )}
+              <Text
+                style={{
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
+                }}
+              >
+                Join Team
+              </Text>
             </Button>
           </View>
         ) : (
@@ -208,20 +205,17 @@ function ChooseTeam() {
                 borderRadius: 12,
                 marginTop: 20,
               }}
+              loading={buttonLoading}
             >
-              {buttonLoading ? (
-                <ActivityIndicator color={themeColors.accent} />
-              ) : (
-                <Text
-                  style={{
-                    color: themeColors.highlight,
-                    fontSize: 18,
-                    textAlign: "center",
-                  }}
-                >
-                  Request to Join Team
-                </Text>
-              )}
+              <Text
+                style={{
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
+                }}
+              >
+                Request to Join Team
+              </Text>
             </Button>
           </View>
         )}
@@ -238,20 +232,17 @@ function ChooseTeam() {
               borderRadius: 12,
               marginTop: 20,
             }}
+            loading={signoutLoading}
           >
-            {signoutLoading ? (
-              <ActivityIndicator color={themeColors.accent} />
-            ) : (
-              <Text
-                style={{
-                  color: themeColors.highlight,
-                  fontSize: 18,
-                  textAlign: "center",
-                }}
-              >
-                Sign Out
-              </Text>
-            )}
+            <Text
+              style={{
+                color: themeColors.highlight,
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Sign Out
+            </Text>
           </Button>
         </View>
       </ScrollView>
