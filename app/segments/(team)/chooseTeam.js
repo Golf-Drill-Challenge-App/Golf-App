@@ -19,6 +19,7 @@ import { useInvitelist } from "~/dbOperations/hooks/useInviteList";
 import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 import { useWaitlist } from "~/dbOperations/hooks/useWaitlist";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
+import { removeInvitelist } from "~/dbOperations/removeInvitelist";
 import { auth } from "~/firebaseConfig";
 
 function ChooseTeam() {
@@ -151,6 +152,7 @@ function ChooseTeam() {
               onPress={async () => {
                 //temporary, should be replaced with multiple team functionality
                 await addToTeam(currentTeamId, currentUserId, currentUserInfo);
+                await removeInvitelist(currentTeamId, invitelist["id"]);
                 setCurrentUserId(currentUserId);
                 await invalidateMultipleKeys(queryClient, invalidateKeys);
                 router.replace("/");
