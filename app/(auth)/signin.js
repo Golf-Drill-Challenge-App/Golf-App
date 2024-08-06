@@ -33,6 +33,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const { setCurrentUserId } = useAuthContext();
 
   const { height } = useWindowDimensions();
@@ -62,6 +63,7 @@ export default function SignIn() {
   }, [timeIntervalPassword]);
 
   async function handleSignIn() {
+    setLoginLoading(true);
     if (process.env.EXPO_PUBLIC_TEST_UID) {
       // Only allow login as test user while using `yarn test` to reduce errors
       setCurrentUserId(process.env.EXPO_PUBLIC_TEST_UID);
@@ -74,6 +76,7 @@ export default function SignIn() {
         showDialog("Error", getErrorString(e));
       }
     }
+    setLoginLoading(false);
   }
 
   async function handleForgotPassword() {
@@ -205,7 +208,7 @@ export default function SignIn() {
               buttonColor={themeColors.accent}
               labelStyle={styles.buttonText}
             >
-              Login
+              {loginLoading ? <ActivityIndicator color={"white"} /> : "Login"}
             </Button>
             <Link
               asChild
@@ -216,7 +219,7 @@ export default function SignIn() {
                 style={styles.button}
                 labelStyle={styles.buttonText}
               >
-                Sign Up
+                Sign up
               </Button>
             </Link>
           </View>

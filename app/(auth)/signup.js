@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button } from "react-native-paper";
+import { ActivityIndicator, Button } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -32,11 +32,14 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
+  const [signUpLoading, setSignUpLoading] = useState(false);
+
   const { showDialog } = useAlertContext();
 
   const { height } = useWindowDimensions();
 
   async function handleSubmit() {
+    setSignUpLoading(true);
     try {
       if (password !== passwordCheck) {
         throw "Passwords don't match";
@@ -64,6 +67,7 @@ export default function SignUp() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
+    setSignUpLoading(false);
   }
 
   const styles = StyleSheet.create({
@@ -174,7 +178,7 @@ export default function SignUp() {
               buttonColor={themeColors.accent}
               labelStyle={styles.buttonText}
             >
-              Submit
+              {signUpLoading ? <ActivityIndicator color={"white"} /> : "Submit"}
             </Button>
             <Link asChild href={"/signin"}>
               <Button

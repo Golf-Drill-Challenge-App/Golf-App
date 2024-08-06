@@ -3,7 +3,13 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
-import { Appbar, Divider, Menu, SegmentedButtons } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Appbar,
+  Divider,
+  Menu,
+  SegmentedButtons,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -65,6 +71,7 @@ function Index() {
 
   const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
   const hideRemoveDialog = () => setRemoveDialogVisible(false);
+  const [removeUserLoading, setRemoveUserLoading] = useState(false);
 
   const [banDialogVisible, setBanDialogVisible] = useState(false);
   const hideBanDialog = () => setBanDialogVisible(false);
@@ -307,10 +314,18 @@ function Index() {
         content="All data will be lost when this user is removed."
         visible={removeDialogVisible}
         onHide={hideRemoveDialog}
-        buttons={["Cancel", "Remove User"]}
+        buttons={[
+          "Cancel",
+          removeUserLoading ? (
+            <ActivityIndicator color={"white"} />
+          ) : (
+            "Remove User"
+          ),
+        ]}
         buttonsFunctions={[
           hideRemoveDialog,
           async () => {
+            setRemoveUserLoading(true);
             try {
               await removeUser(currentTeamId, userId);
               await queryClient.removeQueries(["userInfo", userId]);
@@ -332,6 +347,7 @@ function Index() {
                 showDialog("Error", getErrorString(e));
               }
             }
+            setRemoveUserLoading(false);
           },
         ]}
       />
