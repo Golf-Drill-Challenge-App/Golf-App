@@ -32,8 +32,8 @@ export function Invitelist() {
   const { currentTeamId } = useAuthContext();
 
   const invitedEmail = useMemo(() => {
-    console.log("invitelist", invitelist);
-    return Object.values(invitelist).map((invite) => invite["email"]);
+    if (invitelist)
+      return Object.values(invitelist).map((invite) => invite["email"]);
   }, [invitelist]);
 
   const invalidateKeys = [["invitelist"]];
