@@ -3,14 +3,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
-import {
-  ActivityIndicator,
-  Appbar,
-  Divider,
-  Menu,
-  SegmentedButtons,
-  Text,
-} from "react-native-paper";
+import { Appbar, Divider, Menu, SegmentedButtons } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -72,7 +65,6 @@ function Index() {
 
   const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
   const hideRemoveDialog = () => setRemoveDialogVisible(false);
-  const [removeUserLoading, setRemoveUserLoading] = useState(false);
 
   const [banDialogVisible, setBanDialogVisible] = useState(false);
   const hideBanDialog = () => setBanDialogVisible(false);
@@ -315,30 +307,10 @@ function Index() {
         content="All data will be lost when this user is removed."
         visible={removeDialogVisible}
         onHide={hideRemoveDialog}
-        buttons={[
-          "Cancel",
-          !removeUserLoading ? (
-            <View style={{ height: 20, padding: 0, backgroundColor: "green" }}>
-              <Text style={{ color: themeColors.accent }}>Remove User</Text>
-              <ActivityIndicator
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  left: "50%",
-                  right: "50%",
-                }}
-                color={"white"}
-              />
-            </View>
-          ) : (
-            "Remove User"
-          ),
-        ]}
+        buttons={["Cancel", "Remove User"]}
         buttonsFunctions={[
           hideRemoveDialog,
           async () => {
-            setRemoveUserLoading(true);
             try {
               await removeUser(currentTeamId, userId);
               await queryClient.removeQueries(["userInfo", userId]);
@@ -360,7 +332,6 @@ function Index() {
                 showDialog("Error", getErrorString(e));
               }
             }
-            setRemoveUserLoading(false);
           },
         ]}
       />
