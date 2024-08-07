@@ -1,17 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { signOut as signoutFireBase } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { doc, setDoc } from "firebase/firestore";
+import { ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
+import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
+import { useBlackList } from "~/dbOperations/hooks/useBlackList";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { auth, db } from "~/firebaseConfig";
 
@@ -22,10 +23,21 @@ function ChooseTeam() {
 
   const { showDialog } = useAlertContext();
 
-  const [blacklist, setBlacklist] = useState(false);
+  const {
+    data: blacklist,
+    error: blacklistError,
+    isLoading: blacklistIsLoading,
+  } = useBlackList();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const invalidateKeys = [["blacklist"]];
+
+  if (blacklistIsLoading) {
+    return <Loading />;
+  }
+
+  if (blacklistError) {
+    return <ErrorComponent errorList={[blacklistError]} />;
+  }
 
   async function handleSignOut() {
     try {
@@ -37,49 +49,22 @@ function ChooseTeam() {
     }
   }
 
-  // TODO: make an actual hook for this? Shouldn't be related tho, as is coach pov?
-  useEffect(() => {
-    const fetchBlacklistDoc = async () => {
-      try {
-        const docRef = doc(db, "teams", "1", "blacklist", currentUserId);
-        const docSnap = await getDoc(docRef);
-
-        //See if the user is on blacklist
-        setBlacklist(docSnap.exists());
-      } catch (e) {
-        setError(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (currentUserId) {
-      fetchBlacklistDoc();
-    }
-  }, [currentUserId]);
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ErrorComponent errorList={[error]} />;
-  }
-
   return (
     <SafeAreaView
       style={{
-        flex: 1,
         justifyContent: "center",
+        flex: 1,
       }}
     >
-      <View
-        style={{
+      <ScrollView
+        contentContainerStyle={{
           justifyContent: "center",
           alignItems: "center",
+          flexGrow: 1,
         }}
+        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
       >
-        {blacklist ? (
+        {blacklist[currentUserId] ? (
           <Text
             style={{
               fontSize: 16,
@@ -92,7 +77,6 @@ function ChooseTeam() {
         ) : (
           <View
             style={{
-              flexGrow: 1,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -136,7 +120,6 @@ function ChooseTeam() {
         )}
         <View
           style={{
-            flexGrow: 1,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -160,7 +143,7 @@ function ChooseTeam() {
             </Text>
           </Button>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
