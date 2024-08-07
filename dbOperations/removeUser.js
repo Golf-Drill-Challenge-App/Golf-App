@@ -22,6 +22,11 @@ async function removeUser(teamId, userId) {
 
       const attemptSnapshot = await getDocs(attemptQuery);
 
+      //Remove user from user table where UID == userID
+      const userRef = doc(db, "teams", teamId, "users", userId);
+
+      const userSnapshot = await transaction.get(userRef);
+
       for (const doc of attemptSnapshot.docs) {
         await transaction.delete(doc.ref);
       }
@@ -43,11 +48,6 @@ async function removeUser(teamId, userId) {
           });
         }
       }
-
-      //Remove user from user table where UID == userID
-      const userRef = doc(db, "teams", teamId, "users", userId);
-
-      const userSnapshot = await transaction.get(userRef);
 
       //remove pfp if there is one
       if (userSnapshot.data().pfp !== "") {
