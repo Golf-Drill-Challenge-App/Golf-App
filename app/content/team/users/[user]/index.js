@@ -329,6 +329,7 @@ function Index() {
                 navigation.goBack();
               } else {
                 console.log("Error removing user:", e);
+                hideRemoveDialog();
                 showDialog("Error", getErrorString(e));
               }
             }
@@ -355,6 +356,7 @@ function Index() {
               navigation.goBack();
             } catch (e) {
               console.log("Error banning user:", e);
+              hideBanDialog();
               showDialog("Error", getErrorString(e));
             }
           },
