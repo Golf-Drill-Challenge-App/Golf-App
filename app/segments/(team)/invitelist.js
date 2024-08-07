@@ -37,7 +37,6 @@ export function Invitelist() {
   }, [invitelist]);
 
   const invalidateKeys = [["invitelist"]];
-  // const queryClient = useQueryClient();
 
   const [currentEmailInput, setCurrentEmailInput] = useState("");
   const [currentEmailValid, setCurrentEmailValid] = useState(false);

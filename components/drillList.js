@@ -1,9 +1,6 @@
 ﻿import { SectionList, Text, View } from "react-native";
 import { Divider } from "react-native-paper";
 
-import { router } from "expo-router";
-import { useCallback } from "react";
-import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import DrillCard from "~/components/drillCard";
 import ErrorComponent from "~/components/errorComponent";
@@ -11,6 +8,7 @@ import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAuthContext } from "~/context/Auth";
 import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { useDebouncedNavigation } from "~/hooks/useDebouncedNavigation";
 
 export default function DrillList({
   drillData,
@@ -27,16 +25,7 @@ export default function DrillList({
   } = useUserInfo({ userId: currentUserId });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedPress = useCallback(
-    debounce(
-      (href) => {
-        router.push(href);
-      },
-      1000,
-      true,
-    ),
-    [],
-  ); //useCallback so the debounce timer don't get reset every render
+  const debouncedPress = useDebouncedNavigation();
 
   if (userIsLoading) {
     return <Loading />;

@@ -27,7 +27,7 @@ export const useInvitelist = ({ enabled = true, email = null } = {}) => {
         return invite;
       } else {
         const newWaitlist = {};
-        // Fetch all time records
+        // Fetch entries on the Waitlist
         const querySnapshot = await getDocs(
           collection(db, "teams", currentTeamId, "invitelist"),
         );
