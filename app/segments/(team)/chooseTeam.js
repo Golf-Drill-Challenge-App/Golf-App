@@ -15,6 +15,7 @@ import { useAuthContext } from "~/context/Auth";
 import { addToTeam } from "~/dbOperations/addToTeam";
 import { addToWaitlist } from "~/dbOperations/addToWaitlist";
 import { useBlackList } from "~/dbOperations/hooks/useBlackList";
+import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 import { useWaitlist } from "~/dbOperations/hooks/useWaitlist";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { auth } from "~/firebaseConfig";
@@ -42,6 +43,9 @@ function ChooseTeam() {
     error: waitlistError,
     isLoading: waitlistIsLoading,
   } = useWaitlist();
+
+  //basically to trigger the side effect that navigates off this page
+  useUserInfo({ userId: currentUserId });
 
   const state = useMemo(() => {
     if (blacklist && blacklist[currentUserId]) {
