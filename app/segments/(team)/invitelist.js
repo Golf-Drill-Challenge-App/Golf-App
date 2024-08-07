@@ -153,7 +153,7 @@ export function Invitelist() {
           }}
         />
         <Button
-          disabled={!currentEmailValid}
+          disabled={!currentEmailValid || inviteLoading}
           onPress={onInvite}
           textColor={themeColors.accent}
           loading={inviteLoading}
