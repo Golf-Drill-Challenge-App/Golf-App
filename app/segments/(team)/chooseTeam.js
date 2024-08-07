@@ -13,14 +13,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
-import Loading from "~/components/loading";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { auth, db } from "~/firebaseConfig";
 
 function ChooseTeam() {
-  // const auth = getAuth();
   const { signOut, currentUserId, currentUserInfo, setCurrentUserId } =
     useAuthContext();
   const queryClient = useQueryClient();
@@ -68,6 +66,10 @@ function ChooseTeam() {
   useEffect(() => {
     const unregisterAuthObserver = onIdTokenChanged(auth, async (user) => {
       if (user) {
+        await auth.currentUser.reload();
+        console.log("USER RELOADED AFTER VERIFICATION");
+        console.log(user.emailVerified);
+        console.log(auth.currentUser.emailVerified);
         if (user.emailVerified) {
           setVerified(true);
           showSnackBar("Email successfully verified.");
@@ -79,7 +81,7 @@ function ChooseTeam() {
       }
     });
     return unregisterAuthObserver;
-  }, [showSnackBar]);
+  }, [auth.currentUser]);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -91,10 +93,6 @@ function ChooseTeam() {
       setRefreshing(false);
     }, 2000);
   }, []);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   if (error) {
     return <ErrorComponent errorList={[error]} />;
@@ -179,15 +177,18 @@ function ChooseTeam() {
                   marginTop: 20,
                 }}
                 onPress={async () => {
+                  setLoading(true);
                   try {
                     await sendEmailVerification(auth.currentUser);
                     console.log("Verification Email Sent!");
                     showSnackBar("Verification Email Sent!");
-                  } catch {
+                  } catch (e) {
                     console.log("Error sending verification email: ", e);
                     showDialog("Error", getErrorString(e));
                   }
+                  setLoading(false);
                 }}
+                loading={loading}
               >
                 <Text
                   style={{
