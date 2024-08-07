@@ -5,9 +5,8 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { useQueryClient } from "@tanstack/react-query";
-import { router } from "expo-router";
 import { doc, updateDoc } from "firebase/firestore";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   StyleSheet,
@@ -26,7 +25,6 @@ import {
   Text,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -44,6 +42,7 @@ import { handleImageUpload } from "~/dbOperations/imageUpload";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
 import { resetLeaderboards } from "~/dbOperations/resetLeaderboards";
 import { db } from "~/firebaseConfig";
+import { useDebouncedNavigation } from "~/hooks/useDebouncedNavigation";
 
 function Index() {
   const { currentUserId, currentTeamId } = useAuthContext();
@@ -94,14 +93,7 @@ function Index() {
     setNewName(currentTeamData ? currentTeamData.name : "");
   }, [currentTeamData]);
 
-  const handleUserPress = useCallback(
-    debounce(
-      (userId) => router.push(`content/team/users/${userId}`),
-      1000,
-      true,
-    ),
-    [],
-  );
+  const handleUserPress = useDebouncedNavigation();
 
   const resetForm = () => {
     setNewName(currentTeamData.name);
@@ -503,7 +495,9 @@ function Index() {
                           <Icon source="chevron-right" />
                         </View>
                       )}
-                      onPress={() => handleUserPress(userId)}
+                      onPress={() =>
+                        handleUserPress(`content/team/users/${userId}`)
+                      }
                     />
                   );
                 })}
