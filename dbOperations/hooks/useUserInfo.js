@@ -32,8 +32,9 @@ export const useUserInfo = ({
           doc(db, "teams", currentTeamId, "users", userId),
         );
         const data = querySnapshot.data();
+        const inChooseTeam = segments.at(-1) === "chooseTeam";
         if (!data) {
-          if (currentUserId === userId) {
+          if (currentUserId === userId && !inChooseTeam) {
             router.replace("segments/(team)/chooseTeam");
           }
           return {
@@ -45,7 +46,6 @@ export const useUserInfo = ({
             uniqueDrills: [],
           };
         }
-        const inChooseTeam = segments.at(-1) === "chooseTeam";
         if (inChooseTeam) {
           router.replace("content/assignments");
         }
