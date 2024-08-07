@@ -1,8 +1,7 @@
-import { router, useLocalSearchParams, usePathname } from "expo-router";
-import { useCallback, useState } from "react";
+import { useLocalSearchParams, usePathname } from "expo-router";
+import { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Icon, List, Text } from "react-native-paper";
-import { debounce } from "underscore";
 import { prettyTitle, themeColors } from "~/Constants";
 import { formatDate, numTrunc } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
@@ -14,6 +13,7 @@ import { useAllTimeRecords } from "~/dbOperations/hooks/useAllTimeRecords";
 import { useBestAttempts } from "~/dbOperations/hooks/useBestAttempts";
 import { useDrillInfo } from "~/dbOperations/hooks/useDrillInfo";
 import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
+import { useDebouncedNavigation } from "~/hooks/useDebouncedNavigation";
 
 function getLeaderboardRanks(
   orderedLeaderboard,
@@ -75,16 +75,7 @@ export default function Leaderboard() {
     error: leaderboardError,
   } = useBestAttempts({ drillId });
 
-  const debouncedPress = useCallback(
-    debounce(
-      (href) => {
-        router.push(href);
-      },
-      1000,
-      true,
-    ),
-    [],
-  );
+  const debouncedPress = useDebouncedNavigation();
 
   const invalidateKeys = [
     ["userInfo"],
