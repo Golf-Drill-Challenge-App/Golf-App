@@ -41,6 +41,7 @@ function Blacklist() {
           return (
             <List.Item
               title={blacklist[userId].email}
+              key={userId}
               right={() => (
                 <View
                   style={{
