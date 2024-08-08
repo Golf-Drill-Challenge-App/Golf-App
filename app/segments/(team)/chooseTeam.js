@@ -66,10 +66,6 @@ function ChooseTeam() {
   useEffect(() => {
     const unregisterAuthObserver = onIdTokenChanged(auth, async (user) => {
       if (user) {
-        await auth.currentUser.reload();
-        console.log("USER RELOADED AFTER VERIFICATION");
-        console.log(user.emailVerified);
-        console.log(auth.currentUser.emailVerified);
         if (user.emailVerified) {
           setVerified(true);
           showSnackBar("Email successfully verified.");
@@ -81,7 +77,7 @@ function ChooseTeam() {
       }
     });
     return unregisterAuthObserver;
-  }, [auth.currentUser]);
+  }, []);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -189,6 +185,7 @@ function ChooseTeam() {
                   setLoading(false);
                 }}
                 loading={loading}
+                textColor="white"
               >
                 <Text
                   style={{
