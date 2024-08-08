@@ -21,6 +21,7 @@
   "dependencies": {
     "@expo/ngrok": "^4.1.0",
     "@expo/webpack-config": "^19.0.0",
+    "@good-react-native/keyboard-avoider": "^1.1.4",
     "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@tanstack/query-async-storage-persister": "^5.27.5",
@@ -44,8 +45,8 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",
     "firebase": "^10.8.0",
-    "react": "18.2.0",
     "moment-timezone": "^0.5.45",
+    "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
     "react-native-dropdown-picker": "^5.4.6",
