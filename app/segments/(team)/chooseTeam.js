@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { signOut as signoutFireBase } from "firebase/auth";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,6 +31,9 @@ function ChooseTeam() {
     currentTeamId,
   } = useAuthContext();
   const queryClient = useQueryClient();
+
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [signoutLoading, setSignoutLoading] = useState(false);
 
   const { showDialog } = useAlertContext();
 
@@ -88,6 +91,7 @@ function ChooseTeam() {
   }
 
   async function handleSignOut() {
+    setSignoutLoading(true);
     try {
       await signoutFireBase(auth);
       signOut();
@@ -95,6 +99,7 @@ function ChooseTeam() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
+    setSignoutLoading(false);
   }
 
   return (
@@ -150,11 +155,13 @@ function ChooseTeam() {
             </Text>
             <Button
               onPress={async () => {
+                setButtonLoading(true);
                 //temporary, should be replaced with multiple team functionality
                 await addToTeam(currentTeamId, currentUserId, currentUserInfo);
                 await removeInvitelist(currentTeamId, invitelist["id"]);
                 setCurrentUserId(currentUserId);
                 await invalidateMultipleKeys(queryClient, invalidateKeys);
+                setButtonLoading(false);
                 router.replace("/");
               }}
               style={{
@@ -162,6 +169,7 @@ function ChooseTeam() {
                 borderRadius: 12,
                 marginTop: 20,
               }}
+              loading={buttonLoading}
             >
               <Text
                 style={{
@@ -183,18 +191,21 @@ function ChooseTeam() {
           >
             <Button
               onPress={async () => {
+                setButtonLoading(true);
                 await addToWaitlist(
                   currentTeamId,
                   currentUserId,
                   currentUserInfo,
                 );
                 await invalidateMultipleKeys(queryClient, invalidateKeys);
+                setButtonLoading(false);
               }}
               style={{
                 backgroundColor: themeColors.accent,
                 borderRadius: 12,
                 marginTop: 20,
               }}
+              loading={buttonLoading}
             >
               <Text
                 style={{
@@ -221,6 +232,7 @@ function ChooseTeam() {
               borderRadius: 12,
               marginTop: 20,
             }}
+            loading={signoutLoading}
           >
             <Text
               style={{
