@@ -14,6 +14,7 @@ const BottomSheetWrapper = forwardRef(
         backgroundStyle={{ backgroundColor: themeColors.background }}
         topInset={insets.top}
         keyboardBlurBehavior={"restore"}
+        android_keyboardInputMode={"adjustResize"}
         backdropComponent={({ animatedIndex, style }) => {
           return (
             <BottomSheetBackdrop
