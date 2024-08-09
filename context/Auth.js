@@ -11,6 +11,7 @@ const AuthContext = createContext({
   currentUserId: null,
   currentTeamId: null,
   currentUserInfo: null,
+  currentUserVerified: false,
 });
 
 export function useAuthContext() {
@@ -35,6 +36,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentUserInfo, setCurrentUserInfo] = useState(null);
   const [currentTeamId, setCurrentTeamId] = useState("1");
+  const [currentUserVerified, setCurrentUserVerified] = useState(false);
 
   useProtectedRoute(currentUserId);
 
@@ -55,6 +57,9 @@ export const AuthProvider = ({ children }) => {
           setCurrentUserId(newlyLoggedInUser["uid"] ?? "Error (uid)");
           setCurrentUserInfo(newlyLoggedInUser ?? {});
           console.log("user changed. userId:", newlyLoggedInUser["uid"]);
+          if (auth.currentUser.emailVerified) {
+            setCurrentUserVerified(true);
+          }
         }
       }
     });
@@ -78,6 +83,7 @@ export const AuthProvider = ({ children }) => {
           setCurrentUserInfo(userInfo);
         },
         currentUserInfo,
+        currentUserVerified,
       }}
     >
       {children}

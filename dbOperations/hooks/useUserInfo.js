@@ -10,14 +10,15 @@ import {
   where,
 } from "firebase/firestore";
 import { useAuthContext } from "~/context/Auth";
-import { db } from "~/firebaseConfig";
+import { auth, db } from "~/firebaseConfig";
 
 export const useUserInfo = ({
   userId = null,
   role = null,
   enabled = true,
 } = {}) => {
-  const { currentTeamId, currentUserId } = useAuthContext();
+  const { currentTeamId, currentUserId, currentUserVerified } =
+    useAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
@@ -31,7 +32,14 @@ export const useUserInfo = ({
           doc(db, "teams", currentTeamId, "users", userId),
         );
         const data = querySnapshot.data();
-        if (!data) {
+
+        // DEBUG REMOVE BELOW LOG LINES LATER
+        console.log("DATA");
+        console.log(data);
+        console.log("VERIFIED STATUS");
+        console.log(auth.currentUser.emailVerified);
+
+        if (!data || !auth.currentUser.emailVerified) {
           if (currentUserId === userId) {
             router.replace("segments/(team)/chooseTeam");
           }
