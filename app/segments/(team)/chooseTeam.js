@@ -69,14 +69,26 @@ function ChooseTeam() {
         if (user.emailVerified) {
           setVerified(true);
           showSnackBar("Email successfully verified.");
-          unregisterAuthObserver();
+          clearInterval(intervalId); // Stop the interval when email is verified
+          unregisterAuthObserver(); // Unregister the auth observer
         } else {
           setVerified(false);
           console.log("Error: Email Not Verified Yet, Try Again");
         }
       }
     });
-    return unregisterAuthObserver;
+
+    // Set up an interval to check email verification every 10 seconds
+    const intervalId = setInterval(async () => {
+      if (auth.currentUser) {
+        await auth.currentUser.reload();
+      }
+    }, 10000); // 10,000 ms = 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Clean up the interval when component unmounts
+      unregisterAuthObserver(); // Unregister the auth observer
+    };
   }, []);
 
   const [refreshing, setRefreshing] = useState(false);
