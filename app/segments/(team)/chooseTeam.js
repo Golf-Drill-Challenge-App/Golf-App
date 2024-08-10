@@ -93,12 +93,10 @@ function ChooseTeam() {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(async () => {
-      await auth.currentUser.reload();
-      setRefreshing(false);
-    }, 2000);
+    await auth.currentUser.reload();
+    setRefreshing(false);
   }, []);
 
   if (error) {
