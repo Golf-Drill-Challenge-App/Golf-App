@@ -97,7 +97,6 @@ function ChooseTeam() {
     setRefreshing(true);
     setTimeout(async () => {
       await auth.currentUser.reload();
-      console.log("user reloaded");
       setRefreshing(false);
     }, 2000);
   }, []);

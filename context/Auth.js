@@ -1,5 +1,5 @@
 import { useRouter, useSegments } from "expo-router";
-import { onAuthStateChanged } from "firebase/auth";
+import { onIdTokenChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "~/firebaseConfig";
 
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
-    onAuthStateChanged(auth, (newlyLoggedInUser) => {
+    onIdTokenChanged(auth, (newlyLoggedInUser) => {
       // test user login (yarn test)
       // If you sign out, reload or click "sign in" to login as test user
       // Signout functionality for test user is buggy, chance of auto-logging back in
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
         }
       }
     });
-  }, []);
+  }, [currentUserVerified]);
   return (
     <AuthContext.Provider
       value={{

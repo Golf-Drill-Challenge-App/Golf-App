@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useAuthContext } from "~/context/Auth";
-import { auth, db } from "~/firebaseConfig";
+import { db } from "~/firebaseConfig";
 
 export const useUserInfo = ({
   userId = null,
@@ -33,13 +33,7 @@ export const useUserInfo = ({
         );
         const data = querySnapshot.data();
 
-        // DEBUG REMOVE BELOW LOG LINES LATER
-        console.log("DATA");
-        console.log(data);
-        console.log("VERIFIED STATUS");
-        console.log(auth.currentUser.emailVerified);
-
-        if (!data || !auth.currentUser.emailVerified) {
+        if (!data || !currentUserVerified) {
           if (currentUserId === userId) {
             router.replace("segments/(team)/chooseTeam");
           }
