@@ -327,19 +327,10 @@ function Index() {
                 ]);
                 navigation.goBack();
               } catch (e) {
-                if (e.code === "storage/object-not-found") {
-                  //success kinda weird rn
-                  await invalidateMultipleKeys(queryClient, [
-                    ["userInfo"],
-                    ["best_attempts"],
-                  ]);
-                  navigation.goBack();
-                } else {
-                  console.log("Error removing user:", e);
-                  hideRemoveDialog();
-                  showDialog("Error", getErrorString(e));
-                  setRemoveLoading(false);
-                }
+                console.log("Error removing user:", e);
+                hideRemoveDialog();
+                showDialog("Error", getErrorString(e));
+                setRemoveLoading(false);
               }
             },
             loading: removeLoading,
