@@ -3,11 +3,10 @@ import { router } from "expo-router";
 import {
   onIdTokenChanged,
   sendEmailVerification,
+  signOut as signoutFireBase,
 } from "firebase/auth";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { signOut as signoutFireBase } from "firebase/auth";
-import { useMemo } from "react";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -76,7 +75,8 @@ function ChooseTeam() {
   }, [blacklist, currentUserId, invitelist, waitlist]); //blacklist, waitlist, invitelist, neutral
 
   const [verified, setVerified] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); //for Refresh Control
+  const [loading, setLoading] = useState(false); //for resend email button
 
   const invalidateKeys = [
     ["invitelist"],

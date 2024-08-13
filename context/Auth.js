@@ -57,13 +57,11 @@ export const AuthProvider = ({ children }) => {
           setCurrentUserId(newlyLoggedInUser["uid"] ?? "Error (uid)");
           setCurrentUserInfo(newlyLoggedInUser ?? {});
           console.log("user changed. userId:", newlyLoggedInUser["uid"]);
-          if (auth.currentUser.emailVerified) {
-            setCurrentUserVerified(true);
-          }
+          setCurrentUserVerified(auth.currentUser.emailVerified);
         }
       }
     });
-  }, [currentUserVerified]);
+  }, []);
   return (
     <AuthContext.Provider
       value={{
