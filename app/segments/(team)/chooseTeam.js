@@ -72,7 +72,8 @@ function ChooseTeam() {
   }, [blacklist, currentUserId, invitelist, waitlist]); //blacklist, waitlist, invitelist, neutral
 
   const [verified, setVerified] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); //for Refresh Control
+  const [loading, setLoading] = useState(false); //for resend email button
 
   const invalidateKeys = [
     ["invitelist"],
