@@ -82,6 +82,7 @@ function Index() {
 
   const [resetDialogVisible, setResetDialogVisible] = useState(false);
   const hideResetDialog = () => setResetDialogVisible(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   const [newName, setNewName] = useState("");
 
@@ -222,18 +223,23 @@ function Index() {
         content="Resetting the season will wipe all leaderboards"
         visible={resetDialogVisible}
         onHide={hideResetDialog}
-        buttons={["Cancel", "Reset Season"]}
-        buttonsFunctions={[
-          hideResetDialog,
-          async () => {
-            try {
-              await resetLeaderboards(currentTeamId);
-              await invalidateMultipleKeys(queryClient, [["best_attempts"]]);
-              hideResetDialog();
-            } catch (e) {
-              console.log("Error resetting season:", e);
-              showDialog("Error", getErrorString(e));
-            }
+        buttons={[
+          { children: "Cancel", pressHandler: hideResetDialog },
+          {
+            children: "Reset Season",
+            pressHandler: async () => {
+              setResetLoading(true);
+              try {
+                await resetLeaderboards(currentTeamId);
+                await invalidateMultipleKeys(queryClient, [["best_attempts"]]);
+                hideResetDialog();
+              } catch (e) {
+                console.log("Error resetting season:", e);
+                showDialog("Error", getErrorString(e));
+              }
+              setResetLoading(false);
+            },
+            loading: resetLoading,
           },
         ]}
       />
