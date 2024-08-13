@@ -36,7 +36,8 @@ function ChooseTeam() {
   const invalidateKeys = [["blacklist"]];
 
   const [verified, setVerified] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); //for Refresh Control
+  const [loading, setLoading] = useState(false); //for resend email button
 
   async function handleSignOut() {
     try {
