@@ -1,5 +1,9 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import {
@@ -32,7 +36,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
-  const { showDialog } = useAlertContext();
+  const { showDialog, showSnackBar } = useAlertContext();
 
   const { height } = useWindowDimensions();
 
@@ -55,6 +59,15 @@ export default function SignUp() {
       await setDoc(doc(db, "users", userCredential.user.uid), {
         email: email,
       });
+
+      try {
+        await sendEmailVerification(auth.currentUser);
+        console.log("Verification Email Sent!");
+        showSnackBar("Verification Email Sent!");
+      } catch {
+        console.log("Error sending verification email: ", e);
+        showDialog("Error", getErrorString(e));
+      }
 
       setCurrentUserId(userCredential.user.uid);
       setCurrentUserInfo({ ...userCredential.user, displayName: name });
