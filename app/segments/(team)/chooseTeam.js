@@ -5,12 +5,8 @@ import {
   sendEmailVerification,
   signOut as signoutFireBase,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { signOut as signoutFireBase } from "firebase/auth";
-import { useMemo } from "react";
-import { ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -135,47 +131,51 @@ function ChooseTeam() {
           alignItems: "center",
           flexGrow: 1,
         }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        {!verified ? (<View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text>Waiting for email verification...</Text>
-          <Button
+        {!verified ? (
+          <View
             style={{
-              backgroundColor: themeColors.accent,
-              borderRadius: 12,
-              marginTop: 20,
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            onPress={async () => {
-              setLoading(true);
-              try {
-                await sendEmailVerification(auth.currentUser);
-                console.log("Verification Email Sent!");
-                showSnackBar("Verification Email Sent!");
-              } catch (e) {
-                console.log("Error sending verification email: ", e);
-                showDialog("Error", getErrorString(e));
-              }
-              setLoading(false);
-            }}
-            loading={loading}
-            textColor="white"
           >
-            <Text
+            <Text>Waiting for email verification...</Text>
+            <Button
               style={{
-                color: themeColors.highlight,
-                fontSize: 18,
-                textAlign: "center",
+                backgroundColor: themeColors.accent,
+                borderRadius: 12,
+                marginTop: 20,
               }}
+              onPress={async () => {
+                setLoading(true);
+                try {
+                  await sendEmailVerification(auth.currentUser);
+                  console.log("Verification Email Sent!");
+                  showSnackBar("Verification Email Sent!");
+                } catch (e) {
+                  console.log("Error sending verification email: ", e);
+                  showDialog("Error", getErrorString(e));
+                }
+                setLoading(false);
+              }}
+              loading={loading}
+              textColor="white"
             >
-              Resend Verification Email
-            </Text>
-          </Button>
-        </View>) : state === "blacklist" ? (
+              <Text
+                style={{
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
+                }}
+              >
+                Resend Verification Email
+              </Text>
+            </Button>
+          </View>
+        ) : state === "blacklist" ? (
           <Text
             style={{
               fontSize: 16,
