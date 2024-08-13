@@ -7,9 +7,6 @@ import {
 } from "firebase/auth";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { signOut as signoutFireBase } from "firebase/auth";
-import { useMemo, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
