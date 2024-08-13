@@ -1,5 +1,5 @@
 import { useRouter, useSegments } from "expo-router";
-import { onAuthStateChanged } from "firebase/auth";
+import { onIdTokenChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "~/firebaseConfig";
 
@@ -11,6 +11,7 @@ const AuthContext = createContext({
   currentUserId: null,
   currentTeamId: null,
   currentUserInfo: null,
+  currentUserVerified: false,
 });
 
 export function useAuthContext() {
@@ -35,12 +36,13 @@ export const AuthProvider = ({ children }) => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentUserInfo, setCurrentUserInfo] = useState(null);
   const [currentTeamId, setCurrentTeamId] = useState("1");
+  const [currentUserVerified, setCurrentUserVerified] = useState(false);
 
   useProtectedRoute(currentUserId);
 
   useEffect(() => {
     //if this code is not in here, it'll run for infinite times
-    onAuthStateChanged(auth, (newlyLoggedInUser) => {
+    onIdTokenChanged(auth, (newlyLoggedInUser) => {
       // test user login (yarn test)
       // If you sign out, reload or click "sign in" to login as test user
       // Signout functionality for test user is buggy, chance of auto-logging back in
@@ -55,10 +57,13 @@ export const AuthProvider = ({ children }) => {
           setCurrentUserId(newlyLoggedInUser["uid"] ?? "Error (uid)");
           setCurrentUserInfo(newlyLoggedInUser ?? {});
           console.log("user changed. userId:", newlyLoggedInUser["uid"]);
+          if (auth.currentUser.emailVerified) {
+            setCurrentUserVerified(true);
+          }
         }
       }
     });
-  }, []);
+  }, [currentUserVerified]);
   return (
     <AuthContext.Provider
       value={{
@@ -78,6 +83,7 @@ export const AuthProvider = ({ children }) => {
           setCurrentUserInfo(userInfo);
         },
         currentUserInfo,
+        currentUserVerified,
       }}
     >
       {children}
