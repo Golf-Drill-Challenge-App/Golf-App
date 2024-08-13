@@ -3,11 +3,10 @@ import { router } from "expo-router";
 import {
   onIdTokenChanged,
   sendEmailVerification,
+  signOut as signoutFireBase,
 } from "firebase/auth";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { signOut as signoutFireBase } from "firebase/auth";
-import { useMemo } from "react";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
@@ -107,7 +106,7 @@ function ChooseTeam() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await auth.currentUser.reload();
-    await invalidateMultipleKeys(queryClient, invalidateKeys)
+    await invalidateMultipleKeys(queryClient, invalidateKeys);
     setRefreshing(false);
   }, []);
 
@@ -132,132 +131,132 @@ function ChooseTeam() {
         }
         contentContainerStyle={{ flex: 1, justifyContent: "center" }}
       >
-          {!verified ? (
-            <View
+        {!verified ? (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text>Waiting for email verification...</Text>
+            <Button
               style={{
-                alignItems: "center",
-                justifyContent: "center",
+                backgroundColor: themeColors.accent,
+                borderRadius: 12,
+                marginTop: 20,
               }}
+              onPress={async () => {
+                setLoading(true);
+                try {
+                  await sendEmailVerification(auth.currentUser);
+                  console.log("Verification Email Sent!");
+                  showSnackBar("Verification Email Sent!");
+                } catch (e) {
+                  console.log("Error sending verification email: ", e);
+                  showDialog("Error", getErrorString(e));
+                }
+                setLoading(false);
+              }}
+              loading={loading}
+              textColor="white"
             >
-              <Text>Waiting for email verification...</Text>
-              <Button
+              <Text
                 style={{
-                  backgroundColor: themeColors.accent,
-                  borderRadius: 12,
-                  marginTop: 20,
-                }}
-                onPress={async () => {
-                  setLoading(true);
-                  try {
-                    await sendEmailVerification(auth.currentUser);
-                    console.log("Verification Email Sent!");
-                    showSnackBar("Verification Email Sent!");
-                  } catch (e) {
-                    console.log("Error sending verification email: ", e);
-                    showDialog("Error", getErrorString(e));
-                  }
-                  setLoading(false);
-                }}
-                loading={loading}
-                textColor="white"
-              >
-                <Text
-                  style={{
-                    color: themeColors.highlight,
-                    fontSize: 18,
-                    textAlign: "center",
-                  }}
-                >
-                  Resend Verification Email
-                </Text>
-              </Button>
-            </View>
-          ): state === "blacklist" ? (
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: "center",
-                color: "gray",
-              }}
-            >
-              You've been banned from this team.
-            </Text>
-          ) : state === "waitlist" ? (
-            <Text
-              style={{
-                fontSize: 16,
-                textAlign: "center",
-                color: "gray",
-              }}
-            >
-              Your request to join the team has been received
-            </Text>
-          ) : state === "invited" ? (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                onPress={async () => {
-                  //temporary, should be replaced with multiple team functionality
-                  await addToTeam(currentTeamId, currentUserId, currentUserInfo);
-                  setCurrentUserId(currentUserId);
-                  await invalidateMultipleKeys(queryClient, invalidateKeys);
-                  router.replace("/");
-                }}
-                style={{
-                  backgroundColor: themeColors.accent,
-                  borderRadius: 12,
-                  marginTop: 20,
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
                 }}
               >
-                <Text
-                  style={{
-                    color: themeColors.highlight,
-                    fontSize: 18,
-                    textAlign: "center",
-                  }}
-                >
-                  Join Team
-                </Text>
-              </Button>
-            </View>
-          ) : (
-            <View
+                Resend Verification Email
+              </Text>
+            </Button>
+          </View>
+        ) : state === "blacklist" ? (
+          <Text
+            style={{
+              fontSize: 16,
+              textAlign: "center",
+              color: "gray",
+            }}
+          >
+            You've been banned from this team.
+          </Text>
+        ) : state === "waitlist" ? (
+          <Text
+            style={{
+              fontSize: 16,
+              textAlign: "center",
+              color: "gray",
+            }}
+          >
+            Your request to join the team has been received
+          </Text>
+        ) : state === "invited" ? (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              onPress={async () => {
+                //temporary, should be replaced with multiple team functionality
+                await addToTeam(currentTeamId, currentUserId, currentUserInfo);
+                setCurrentUserId(currentUserId);
+                await invalidateMultipleKeys(queryClient, invalidateKeys);
+                router.replace("/");
+              }}
               style={{
-                alignItems: "center",
-                justifyContent: "center",
+                backgroundColor: themeColors.accent,
+                borderRadius: 12,
+                marginTop: 20,
               }}
             >
-              <Button
-                onPress={async () => {
-                  await addToWaitlist(
-                    currentTeamId,
-                    currentUserId,
-                    currentUserInfo,
-                  );
-                  await invalidateMultipleKeys(queryClient, invalidateKeys);
-                }}
+              <Text
                 style={{
-                  backgroundColor: themeColors.accent,
-                  borderRadius: 12,
-                  marginTop: 20,
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
                 }}
               >
-                <Text
-                  style={{
-                    color: themeColors.highlight,
-                    fontSize: 18,
-                    textAlign: "center",
-                  }}
-                >
-                  Request to Join Team
-                </Text>
-              </Button>
-            </View>
-          )}
+                Join Team
+              </Text>
+            </Button>
+          </View>
+        ) : (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              onPress={async () => {
+                await addToWaitlist(
+                  currentTeamId,
+                  currentUserId,
+                  currentUserInfo,
+                );
+                await invalidateMultipleKeys(queryClient, invalidateKeys);
+              }}
+              style={{
+                backgroundColor: themeColors.accent,
+                borderRadius: 12,
+                marginTop: 20,
+              }}
+            >
+              <Text
+                style={{
+                  color: themeColors.highlight,
+                  fontSize: 18,
+                  textAlign: "center",
+                }}
+              >
+                Request to Join Team
+              </Text>
+            </Button>
+          </View>
+        )}
         <View
           style={{
             alignItems: "center",
