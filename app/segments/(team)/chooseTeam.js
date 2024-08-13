@@ -1,11 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { doc, setDoc } from "firebase/firestore";
 import {
   onIdTokenChanged,
   sendEmailVerification,
   signOut as signoutFireBase,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
@@ -79,7 +79,7 @@ function ChooseTeam() {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await auth.currentUser.reload();
-    await invalidateMultipleKeys(queryClient, invalidateKeys)
+    await invalidateMultipleKeys(queryClient, invalidateKeys);
     setRefreshing(false);
   }, []);
 
