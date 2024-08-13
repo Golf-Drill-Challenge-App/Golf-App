@@ -17,7 +17,8 @@ export const useUserInfo = ({
   role = null,
   enabled = true,
 } = {}) => {
-  const { currentTeamId, currentUserId } = useAuthContext();
+  const { currentTeamId, currentUserId, currentUserVerified } =
+    useAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
@@ -31,7 +32,8 @@ export const useUserInfo = ({
           doc(db, "teams", currentTeamId, "users", userId),
         );
         const data = querySnapshot.data();
-        if (!data) {
+
+        if (!data || !currentUserVerified) {
           if (currentUserId === userId) {
             router.replace("segments/(team)/chooseTeam");
           }

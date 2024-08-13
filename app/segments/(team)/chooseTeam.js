@@ -1,15 +1,19 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { signOut as signoutFireBase } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { ScrollView, Text, View } from "react-native";
+import {
+  onIdTokenChanged,
+  sendEmailVerification,
+  signOut as signoutFireBase,
+} from "firebase/auth";
+import { useCallback, useEffect, useState } from "react";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
-import RefreshInvalidate from "~/components/refreshInvalidate";
 import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { useBlackList } from "~/dbOperations/hooks/useBlackList";
@@ -21,7 +25,7 @@ function ChooseTeam() {
     useAuthContext();
   const queryClient = useQueryClient();
 
-  const { showDialog } = useAlertContext();
+  const { showDialog, showSnackBar } = useAlertContext();
 
   const {
     data: blacklist,
@@ -31,13 +35,8 @@ function ChooseTeam() {
 
   const invalidateKeys = [["blacklist"]];
 
-  if (blacklistIsLoading) {
-    return <Loading />;
-  }
-
-  if (blacklistError) {
-    return <ErrorComponent errorList={[blacklistError]} />;
-  }
+  const [verified, setVerified] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   async function handleSignOut() {
     try {
@@ -49,6 +48,49 @@ function ChooseTeam() {
     }
   }
 
+  useEffect(() => {
+    const unregisterAuthObserver = onIdTokenChanged(auth, async (user) => {
+      if (user) {
+        if (user.emailVerified) {
+          setVerified(true);
+          showSnackBar("Email successfully verified.");
+          clearInterval(intervalId); // Stop the interval when email is verified
+          unregisterAuthObserver(); // Unregister the auth observer
+        } else {
+          setVerified(false);
+          console.log("Error: Email Not Verified Yet, Try Again");
+        }
+      }
+    });
+
+    // Set up an interval to check email verification every 10 seconds
+    const intervalId = setInterval(async () => {
+      if (auth.currentUser) {
+        await auth.currentUser.reload();
+      }
+    }, 10000); // 10,000 ms = 10 seconds
+
+    return () => {
+      clearInterval(intervalId); // Clean up the interval when component unmounts
+      unregisterAuthObserver(); // Unregister the auth observer
+    };
+  }, []);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await auth.currentUser.reload();
+    await invalidateMultipleKeys(queryClient, invalidateKeys)
+    setRefreshing(false);
+  }, []);
+
+  if (blacklistIsLoading) {
+    return <Loading />;
+  }
+
+  if (blacklistError) {
+    return <ErrorComponent errorList={[blacklistError]} />;
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -57,38 +99,34 @@ function ChooseTeam() {
       }}
     >
       <ScrollView
-        contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
-          flexGrow: 1,
-        }}
-        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{ flex: 1, justifyContent: "center" }}
       >
-        {blacklist[currentUserId] ? (
-          <Text
-            style={{
-              fontSize: 16,
-              textAlign: "center",
-              color: "gray",
-            }}
-          >
-            You've been banned from this team.
-          </Text>
-        ) : (
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {blacklist[currentUserId] ? (
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: "center",
+                color: "gray",
+              }}
+            >
+              You've been banned from this team.
+            </Text>
+          ) : verified ? (
             <Button
               onPress={async () => {
-                //temporary, should be replaced with multiple team functionality
+                // Update Firestore document
                 await setDoc(doc(db, "teams", "1", "users", currentUserId), {
                   name: currentUserInfo["displayName"],
-                  // hardcoded pfp string for now, add pfp upload to profile settings in future PR
                   pfp: "",
-                  // hardcoded "player" role for now, add role selection to profile settings in future PR
                   role: "player",
                   uid: currentUserId,
                   assigned_data: [],
@@ -98,6 +136,7 @@ function ChooseTeam() {
                 await invalidateMultipleKeys(queryClient, [
                   ["userInfo", { userId: currentUserId }],
                 ]);
+                // Navigate to the next page
                 router.replace("/");
               }}
               style={{
@@ -116,14 +155,47 @@ function ChooseTeam() {
                 Join Team
               </Text>
             </Button>
-          </View>
-        )}
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+          ) : (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text>Waiting for email verification...</Text>
+              <Button
+                style={{
+                  backgroundColor: themeColors.accent,
+                  borderRadius: 12,
+                  marginTop: 20,
+                }}
+                onPress={async () => {
+                  setLoading(true);
+                  try {
+                    await sendEmailVerification(auth.currentUser);
+                    console.log("Verification Email Sent!");
+                    showSnackBar("Verification Email Sent!");
+                  } catch (e) {
+                    console.log("Error sending verification email: ", e);
+                    showDialog("Error", getErrorString(e));
+                  }
+                  setLoading(false);
+                }}
+                loading={loading}
+                textColor="white"
+              >
+                <Text
+                  style={{
+                    color: themeColors.highlight,
+                    fontSize: 18,
+                    textAlign: "center",
+                  }}
+                >
+                  Resend Verification Email
+                </Text>
+              </Button>
+            </View>
+          )}
           <Button
             onPress={handleSignOut}
             style={{
