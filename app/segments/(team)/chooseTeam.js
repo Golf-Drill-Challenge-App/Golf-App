@@ -3,11 +3,10 @@ import { router } from "expo-router";
 import {
   onIdTokenChanged,
   sendEmailVerification,
+  signOut as signoutFireBase,
 } from "firebase/auth";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
-import { signOut as signoutFireBase } from "firebase/auth";
-import { useMemo } from "react";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
