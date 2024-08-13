@@ -18,7 +18,8 @@ export const useUserInfo = ({
   enabled = true,
 } = {}) => {
   const segments = useSegments();
-  const { currentTeamId, currentUserId , currentUserVerified} = useAuthContext();
+  const { currentTeamId, currentUserId, currentUserVerified } =
+    useAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
