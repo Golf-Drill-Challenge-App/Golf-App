@@ -18,7 +18,8 @@ export const useUserInfo = ({
   enabled = true,
 } = {}) => {
   const segments = useSegments();
-  const { currentTeamId, currentUserId } = useAuthContext();
+  const { currentTeamId, currentUserId, currentUserVerified } =
+    useAuthContext();
   const week_milliseconds = 604800000;
   const currentDate = new Date();
   const currentDateTime = currentDate.getTime();
@@ -33,7 +34,7 @@ export const useUserInfo = ({
         );
         const data = querySnapshot.data();
         const inChooseTeam = segments.at(-1) === "chooseTeam";
-        if (!data) {
+        if (!data || !currentUserVerified) {
           if (currentUserId === userId && !inChooseTeam) {
             router.replace("segments/(team)/chooseTeam");
           }
