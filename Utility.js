@@ -113,6 +113,9 @@ export function getIconByKey(key) {
 }
 
 export function getInitials(fullName) {
+  if (!fullName) {
+    return "?";
+  }
   const nameParts = fullName.trim().split(/\s+/);
   return nameParts.map((part) => part.charAt(0).toUpperCase()).join("");
 }
