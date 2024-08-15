@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { useAuthContext } from "~/context/Auth";
 import { db } from "~/firebaseConfig";
+import { getErrorString } from "~/Utility";
 
 export const useUserInfo = ({
   userId = null,
@@ -28,10 +29,20 @@ export const useUserInfo = ({
     queryFn: async () => {
       console.log("fetching userInfo: ", { userId, role });
       if (userId) {
-        const querySnapshot = await getDoc(
-          doc(db, "teams", currentTeamId, "users", userId),
-        );
-        const data = querySnapshot.data();
+        let data;
+        try {
+          const querySnapshot = await getDoc(
+            doc(db, "teams", currentTeamId, "users", userId),
+          );
+          data = querySnapshot.data();
+        } catch (e) {
+          if (getErrorString(e) === "permission-denied") {
+            data = undefined;
+          } else {
+            throw e;
+          }
+          console.log("e", getErrorString(e));
+        }
 
         if (!data || !currentUserVerified) {
           if (currentUserId === userId) {
