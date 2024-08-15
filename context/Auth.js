@@ -1,6 +1,7 @@
 import { useRouter, useSegments } from "expo-router";
 import { onIdTokenChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
+import { TESTING } from "~/Constants";
 import { auth } from "~/firebaseConfig";
 
 const AuthContext = createContext({
@@ -57,7 +58,12 @@ export const AuthProvider = ({ children }) => {
           setCurrentUserId(newlyLoggedInUser["uid"] ?? "Error (uid)");
           setCurrentUserInfo(newlyLoggedInUser ?? {});
           console.log("user changed. userId:", newlyLoggedInUser["uid"]);
-          setCurrentUserVerified(auth.currentUser.emailVerified);
+
+          if (TESTING) {
+            setCurrentUserVerified(true);
+          } else {
+            setCurrentUserVerified(auth.currentUser.emailVerified);
+          }
         }
       }
     });
