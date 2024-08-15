@@ -18,9 +18,11 @@ import { useAuthContext } from "~/context/Auth";
 import { addToTeam } from "~/dbOperations/addToTeam";
 import { addToWaitlist } from "~/dbOperations/addToWaitlist";
 import { useBlackList } from "~/dbOperations/hooks/useBlackList";
+import { useInvitelist } from "~/dbOperations/hooks/useInviteList";
 import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 import { useWaitlist } from "~/dbOperations/hooks/useWaitlist";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
+import { removeInvitelist } from "~/dbOperations/removeInvitelist";
 import { auth } from "~/firebaseConfig";
 
 function ChooseTeam() {
@@ -47,6 +49,12 @@ function ChooseTeam() {
     isLoading: waitlistIsLoading,
   } = useWaitlist();
 
+  const {
+    data: invitelist,
+    error: invitelistError,
+    isLoading: invitelistIsLoading,
+  } = useInvitelist({ email: currentUserInfo.email });
+
   //basically to trigger the side effect that navigates off this page
   useUserInfo({ userId: currentUserId });
 
@@ -57,14 +65,18 @@ function ChooseTeam() {
     if (waitlist && waitlist[currentUserId]) {
       return "waitlist";
     }
+    if (invitelist && invitelist["id"] !== undefined) {
+      return "invitelist";
+    }
     return "neutral";
-  }, [blacklist, currentUserId, waitlist]); //blacklist, waitlist, invited, neutral
+  }, [blacklist, currentUserId, invitelist, waitlist]); //blacklist, waitlist, invitelist, neutral
 
   const [verified, setVerified] = useState(false);
   const [refreshing, setRefreshing] = useState(false); //for Refresh Control
   const [loading, setLoading] = useState(false); //for resend email button
 
   const invalidateKeys = [
+    ["invitelist"],
     ["blacklist"],
     ["waitlist"],
     ["userInfo", { userId: currentUserId }],
@@ -119,12 +131,16 @@ function ChooseTeam() {
     setRefreshing(false);
   }, []);
 
-  if (blacklistIsLoading || waitlistIsLoading) {
+  if (blacklistIsLoading || waitlistIsLoading || invitelistIsLoading) {
     return <Loading />;
   }
 
-  if (blacklistError || waitlistError) {
-    return <ErrorComponent errorList={[blacklistError, waitlistError]} />;
+  if (blacklistError || waitlistError || invitelistError) {
+    return (
+      <ErrorComponent
+        errorList={[blacklistError, waitlistError, invitelistError]}
+      />
+    );
   }
 
   return (
@@ -135,10 +151,14 @@ function ChooseTeam() {
       }}
     >
       <ScrollView
+        contentContainerStyle={{
+          justifyContent: "center",
+          alignItems: "center",
+          flexGrow: 1,
+        }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        contentContainerStyle={{ flex: 1, justifyContent: "center" }}
       >
         {!verified ? (
           <View
@@ -200,17 +220,27 @@ function ChooseTeam() {
           >
             Your request to join the team has been received
           </Text>
-        ) : state === "invited" ? (
+        ) : state === "invitelist" ? (
           <View
             style={{
               alignItems: "center",
               justifyContent: "center",
             }}
           >
+            <Text
+              style={{
+                fontSize: 16,
+                textAlign: "center",
+                color: "gray",
+              }}
+            >
+              You have been invited to the team
+            </Text>
             <Button
               onPress={async () => {
                 //temporary, should be replaced with multiple team functionality
                 await addToTeam(currentTeamId, currentUserId, currentUserInfo);
+                await removeInvitelist(currentTeamId, invitelist["id"]);
                 setCurrentUserId(currentUserId);
                 await invalidateMultipleKeys(queryClient, invalidateKeys);
                 router.replace("/");
