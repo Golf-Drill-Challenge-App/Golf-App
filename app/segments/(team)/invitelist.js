@@ -42,7 +42,11 @@ export function Invitelist() {
   const [currentEmailValid, setCurrentEmailValid] = useState(false);
   const [statusText, setStatusText] = useState("");
 
+  const [removeLoading, setRemoveLoading] = useState({});
+  const [inviteLoading, setInviteLoading] = useState(false);
+
   const onInvite = async () => {
+    setInviteLoading(true);
     if (invitedEmail.includes(currentEmailInput)) {
       setStatusText("Email already invited");
       return;
@@ -50,6 +54,7 @@ export function Invitelist() {
     await addToInvitelist(currentTeamId, currentEmailInput);
     setCurrentEmailInput("");
     await invalidateMultipleKeys(queryClient, invalidateKeys);
+    setInviteLoading(false);
   };
 
   if (inviteError) {
@@ -93,13 +98,23 @@ export function Invitelist() {
                   >
                     <Button
                       onPress={async () => {
+                        setRemoveLoading({
+                          ...removeLoading,
+                          [inviteId]: true,
+                        });
                         await removeInvitelist(currentTeamId, inviteId);
                         await invalidateMultipleKeys(
                           queryClient,
                           invalidateKeys,
                         );
+                        setRemoveLoading({
+                          ...removeLoading,
+                          [inviteId]: false,
+                        });
                       }}
+                      height={38} //so the button doesn't change size because of the spinner
                       textColor={themeColors.accent}
+                      loading={removeLoading[inviteId]}
                     >
                       Remove
                     </Button>
@@ -143,6 +158,7 @@ export function Invitelist() {
           disabled={!currentEmailValid}
           onPress={onInvite}
           textColor={themeColors.accent}
+          loading={inviteLoading}
         >
           Invite
         </Button>

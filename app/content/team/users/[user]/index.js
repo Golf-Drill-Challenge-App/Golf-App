@@ -65,9 +65,11 @@ function Index() {
 
   const [removeDialogVisible, setRemoveDialogVisible] = useState(false);
   const hideRemoveDialog = () => setRemoveDialogVisible(false);
+  const [removeLoading, setRemoveLoading] = useState(false);
 
   const [banDialogVisible, setBanDialogVisible] = useState(false);
   const hideBanDialog = () => setBanDialogVisible(false);
+  const [banLoading, setBanLoading] = useState(false);
 
   const { showDialog, showSnackBar } = useAlertContext();
 
@@ -307,23 +309,31 @@ function Index() {
         content="All data will be lost when this user is removed."
         visible={removeDialogVisible}
         onHide={hideRemoveDialog}
-        buttons={["Cancel", "Remove User"]}
-        buttonsFunctions={[
-          hideRemoveDialog,
-          async () => {
-            try {
-              await removeUser(currentTeamId, userId);
-              await queryClient.removeQueries(["userInfo", userId]);
-              await invalidateMultipleKeys(queryClient, [
-                ["userInfo"],
-                ["best_attempts"],
-              ]);
-              navigation.goBack();
-            } catch (e) {
-              console.log("Error removing user:", e);
-              hideRemoveDialog();
-              showDialog("Error", getErrorString(e));
-            }
+        buttons={[
+          {
+            children: "Cancel",
+            pressHandler: hideRemoveDialog,
+          },
+          {
+            children: "Remove User",
+            pressHandler: async () => {
+              setRemoveLoading(true);
+              try {
+                await removeUser(currentTeamId, userId);
+                await queryClient.removeQueries(["userInfo", userId]);
+                await invalidateMultipleKeys(queryClient, [
+                  ["userInfo"],
+                  ["best_attempts"],
+                ]);
+                navigation.goBack();
+              } catch (e) {
+                console.log("Error removing user:", e);
+                hideRemoveDialog();
+                showDialog("Error", getErrorString(e));
+                setRemoveLoading(false);
+              }
+            },
+            loading: removeLoading,
           },
         ]}
       />
@@ -333,23 +343,28 @@ function Index() {
         content="Banning this user will delete all their data and prevent them from joining the team again."
         visible={banDialogVisible}
         onHide={hideBanDialog}
-        buttons={["Cancel", "Ban User"]}
-        buttonsFunctions={[
-          hideBanDialog,
-          async () => {
-            try {
-              await blacklistUser(currentTeamId, userId, userInfo, userEmail);
-              await queryClient.removeQueries(["userInfo", userId]);
-              await invalidateMultipleKeys(queryClient, [
-                ["userInfo"],
-                ["best_attempts"],
-              ]); //invalidate cache
-              navigation.goBack();
-            } catch (e) {
-              console.log("Error banning user:", e);
-              hideBanDialog();
-              showDialog("Error", getErrorString(e));
-            }
+        buttons={[
+          { children: "Cancel", pressHandler: hideBanDialog },
+          {
+            children: "Ban User",
+            pressHandler: async () => {
+              setBanLoading(true);
+              try {
+                await blacklistUser(currentTeamId, userId, userInfo, userEmail);
+                await queryClient.removeQueries(["userInfo", userId]);
+                await invalidateMultipleKeys(queryClient, [
+                  ["userInfo"],
+                  ["best_attempts"],
+                ]); //invalidate cache
+                navigation.goBack();
+              } catch (e) {
+                console.log("Error banning user:", e);
+                hideBanDialog();
+                showDialog("Error", getErrorString(e));
+                setBanLoading(false);
+              }
+            },
+            loading: banLoading,
           },
         ]}
       />

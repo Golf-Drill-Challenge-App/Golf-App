@@ -20,7 +20,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ActivityIndicator, Appbar, Switch } from "react-native-paper";
+import { ActivityIndicator, Appbar, Button, Switch } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
@@ -267,11 +267,8 @@ function Index() {
     },
     saveChangesButton: {
       backgroundColor: themeColors.accent,
-      paddingHorizontal: 20,
-      paddingVertical: 10,
-      borderRadius: 20,
+      width: 100,
       marginBottom: 20,
-      width: 100, // Increase the width of the button
       alignSelf: "center",
     },
     saveChangesButtonText: {
@@ -451,16 +448,17 @@ function Index() {
             )}
 
             {/* Save Button */}
-            <TouchableOpacity
+            <Button
               style={styles.saveChangesButton}
               onPress={handleUpdate}
+              textColor={themeColors.highlight}
+              labelStyle={{
+                fontWeight: "bold",
+              }}
+              loading={updateLoading}
             >
-              {updateLoading ? (
-                <ActivityIndicator animating={true} size={16} color={"#FFF"} />
-              ) : (
-                <Text style={styles.saveChangesButtonText}>Update</Text>
-              )}
-            </TouchableOpacity>
+              Update
+            </Button>
 
             {/* Sign Out Button */}
             <Pressable onPress={handleSignOut}>

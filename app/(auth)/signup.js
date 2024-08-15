@@ -36,11 +36,14 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
+  const [signUpLoading, setSignUpLoading] = useState(false);
+
   const { showDialog, showSnackBar } = useAlertContext();
 
   const { height } = useWindowDimensions();
 
   async function handleSubmit() {
+    setSignUpLoading(true);
     try {
       if (password !== passwordCheck) {
         throw "Passwords don't match";
@@ -77,6 +80,7 @@ export default function SignUp() {
       console.log(e);
       showDialog("Error", getErrorString(e));
     }
+    setSignUpLoading(false);
   }
 
   const styles = StyleSheet.create({
@@ -186,6 +190,7 @@ export default function SignUp() {
               onPress={handleSubmit}
               buttonColor={themeColors.accent}
               labelStyle={styles.buttonText}
+              loading={signUpLoading}
             >
               Submit
             </Button>
