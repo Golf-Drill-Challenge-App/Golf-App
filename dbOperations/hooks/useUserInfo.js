@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { router, useSegments } from "expo-router";
 import {
   collection,
   doc,
@@ -18,6 +18,7 @@ export const useUserInfo = ({
   role = null,
   enabled = true,
 } = {}) => {
+  const segments = useSegments();
   const { currentTeamId, currentUserId, currentUserVerified } =
     useAuthContext();
   const week_milliseconds = 604800000;
@@ -44,8 +45,10 @@ export const useUserInfo = ({
           console.log("e", getErrorString(e));
         }
 
+        const inChooseTeam = segments.at(-1) === "chooseTeam";
+
         if (!data || !currentUserVerified) {
-          if (currentUserId === userId) {
+          if (currentUserId === userId && !inChooseTeam) {
             router.replace("segments/(team)/chooseTeam");
           }
           return {
@@ -57,6 +60,10 @@ export const useUserInfo = ({
             uniqueDrills: [],
           };
         }
+        if (inChooseTeam) {
+          router.replace("content/assignments");
+        }
+
         const filteredAssignedData = data.assigned_data.filter((assignment) => {
           const timeDifference = currentDateTime - assignment.assignedTime;
           return timeDifference <= week_milliseconds;
