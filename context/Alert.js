@@ -17,10 +17,12 @@ export const AlertProvider = ({ children }) => {
 
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+
   return (
     <AlertContext.Provider
       value={{
         showDialog: (title, message) => {
+          if (title === "Error" && message === "permission-denied") return; //for initial sign in. do this or change the rules
           setDialogTitle(title);
           setDialogMessage(message);
           setDialogVisible(true);
