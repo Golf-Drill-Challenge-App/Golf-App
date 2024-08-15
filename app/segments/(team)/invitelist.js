@@ -11,6 +11,7 @@ import {
 import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -45,6 +46,10 @@ export function Invitelist() {
   const [removeLoading, setRemoveLoading] = useState({});
   const [inviteLoading, setInviteLoading] = useState(false);
 
+  const [removeCounter, setRemoveCounter] = useState(0);
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
   const onInvite = async () => {
     if (inviteLoading) return;
     setInviteLoading(true);
@@ -54,6 +59,7 @@ export function Invitelist() {
     }
     await addToInvitelist(currentTeamId, currentEmailInput);
     setCurrentEmailInput("");
+    setCurrentEmailValid(false);
     await invalidateMultipleKeys(queryClient, invalidateKeys);
     setInviteLoading(false);
   };
@@ -75,6 +81,15 @@ export function Invitelist() {
       }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <DialogComponent
+        type={"snackbar"}
+        visible={snackbarVisible}
+        content={`Unbanned ${removeCounter} user${removeCounter > 1 ? "s" : ""}`}
+        onHide={() => {
+          setSnackbarVisible(false);
+          setRemoveCounter(0);
+        }}
+      />
       <ScrollView
         refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
       >
@@ -108,6 +123,8 @@ export function Invitelist() {
                           queryClient,
                           invalidateKeys,
                         );
+                        setRemoveCounter((prev) => prev + 1);
+                        setSnackbarVisible(true);
                         setRemoveLoading({
                           ...removeLoading,
                           [inviteId]: false,

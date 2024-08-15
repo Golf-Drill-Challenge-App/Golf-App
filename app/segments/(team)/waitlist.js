@@ -4,6 +4,7 @@ import { ScrollView, View } from "react-native";
 import { ActivityIndicator, Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -26,6 +27,11 @@ function Waitlist() {
   //this is a pretty blunt implementation... I'm using the same variable here because each entry will disappear after either buttons are pressed
   const [loading, setLoading] = useState({});
 
+  const [snackbarCounter, setSnackbarCounter] = useState(0);
+  const [lastDecision, setLastDecision] = useState("");
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
   if (waitlistError) {
     return <ErrorComponent error={getErrorString(waitlistError)} />;
   }
@@ -40,6 +46,15 @@ function Waitlist() {
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
+      <DialogComponent
+        type={"snackbar"}
+        visible={snackbarVisible}
+        content={`${lastDecision} ${snackbarCounter} user${snackbarCounter > 1 ? "s" : ""}`}
+        onHide={() => {
+          setSnackbarVisible(false);
+          setSnackbarCounter(0);
+        }}
+      />
       <List.Section
         style={{
           margin: 5,
@@ -83,6 +98,13 @@ function Waitlist() {
                             queryClient,
                             invalidateKeys,
                           );
+                          if (lastDecision !== "Accepted") {
+                            setLastDecision("Accepted");
+                            setSnackbarCounter(1);
+                          } else {
+                            setSnackbarCounter((prev) => prev + 1);
+                          }
+                          setSnackbarVisible(true);
                           setLoading({ ...loading, [userId]: false });
                         }}
                         textColor={"green"}
@@ -97,6 +119,13 @@ function Waitlist() {
                             queryClient,
                             invalidateKeys,
                           );
+                          if (lastDecision !== "Rejected") {
+                            setLastDecision("Rejected");
+                            setSnackbarCounter(1);
+                          } else {
+                            setSnackbarCounter((prev) => prev + 1);
+                          }
+                          setSnackbarVisible(true);
                           setLoading({ ...loading, [userId]: false });
                         }}
                         textColor={"red"}
