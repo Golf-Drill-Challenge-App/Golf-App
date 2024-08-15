@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { themeColors } from "~/Constants";
+import { TESTING, themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
@@ -98,6 +98,10 @@ function ChooseTeam() {
   }
 
   useEffect(() => {
+    if (TESTING) {
+      setVerified(true);
+      return;
+    }
     const unregisterAuthObserver = onIdTokenChanged(auth, async (user) => {
       if (user) {
         if (user.emailVerified) {
