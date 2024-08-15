@@ -46,6 +46,7 @@ export function Invitelist() {
   const [inviteLoading, setInviteLoading] = useState(false);
 
   const onInvite = async () => {
+    if (inviteLoading) return;
     setInviteLoading(true);
     if (invitedEmail.includes(currentEmailInput)) {
       setStatusText("Email already invited");
@@ -155,7 +156,7 @@ export function Invitelist() {
           }}
         />
         <Button
-          disabled={!currentEmailValid || inviteLoading}
+          disabled={!currentEmailValid}
           onPress={onInvite}
           textColor={themeColors.accent}
           loading={inviteLoading}
