@@ -7,6 +7,8 @@ const themeColors = {
   highlight: "#fff",
 };
 
+const TESTING = true;
+
 const prettyTitle = {
   target: "Target",
   sideLanding: "Side Landing",
@@ -55,4 +57,11 @@ const firebaseErrors = {
   "auth/missing-email": "Missing email",
   "auth/missing-password": "Missing password",
 };
-export { firebaseErrors, prettyRole, prettyTitle, shortTitle, themeColors };
+export {
+  TESTING,
+  firebaseErrors,
+  prettyRole,
+  prettyTitle,
+  shortTitle,
+  themeColors,
+};
