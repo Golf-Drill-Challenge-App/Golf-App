@@ -115,6 +115,8 @@ export function Invitelist() {
         style={{
           flexDirection: "row",
           padding: 5,
+          paddingLeft: 20,
+          paddingRight: 35,
         }}
       >
         <TextInput
