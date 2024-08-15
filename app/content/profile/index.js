@@ -453,18 +453,18 @@ function Index() {
                   </>
                 )}
 
-            {/* Save Button */}
-            <Button
-              style={styles.saveChangesButton}
-              onPress={handleUpdate}
-              textColor={themeColors.highlight}
-              labelStyle={{
-                fontWeight: "bold",
-              }}
-              loading={updateLoading}
-            >
-              Update
-            </Button>
+                {/* Save Button */}
+                <Button
+                  style={styles.saveChangesButton}
+                  onPress={handleUpdate}
+                  textColor={themeColors.highlight}
+                  labelStyle={{
+                    fontWeight: "bold",
+                  }}
+                  loading={updateLoading}
+                >
+                  Update
+                </Button>
 
                 {/* Sign Out Button */}
                 <Pressable onPress={handleSignOut}>
