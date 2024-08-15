@@ -26,7 +26,7 @@ export default function DialogComponent({
       labelStyle = { color: themeColors.accent };
     } else {
       style = { backgroundColor: themeColors.accent };
-      labelStyle = { color: "white" };
+      labelStyle = { color: themeColors.highlight };
     }
 
     return (

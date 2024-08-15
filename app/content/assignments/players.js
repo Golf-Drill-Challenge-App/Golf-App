@@ -402,7 +402,7 @@ function Index() {
             }}
             mode="contained"
             buttonColor={themeColors.accent}
-            textColor="white"
+            textColor={themeColors.highlight}
             disabled={
               !assignmentList.some((assignment) => assignment.markedForDelete)
             }

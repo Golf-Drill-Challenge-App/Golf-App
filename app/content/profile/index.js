@@ -451,7 +451,7 @@ function Index() {
             <Button
               style={styles.saveChangesButton}
               onPress={handleUpdate}
-              textColor={"white"}
+              textColor={themeColors.highlight}
               labelStyle={{
                 fontWeight: "bold",
               }}

@@ -239,12 +239,15 @@ export default function Index() {
           right: 0,
           padding: 5,
         }}
-        labelStyle={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+        labelStyle={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: themeColors.highlight,
+        }}
         buttonColor={someTrue ? themeColors.accent : "#A0A0A0"}
         disabled={!someTrue}
         onPress={handleAssign}
         loading={loading}
-        textColor={"white"}
       >
         Assign
       </Button>
