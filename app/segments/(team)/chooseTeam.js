@@ -188,7 +188,7 @@ function ChooseTeam() {
                 setLoading(false);
               }}
               loading={loading}
-              textColor="white"
+              textColor={themeColors.highlight}
             >
               <Text
                 style={{
@@ -253,6 +253,7 @@ function ChooseTeam() {
                 borderRadius: 12,
                 marginTop: 20,
               }}
+              textColor={themeColors.highlight}
               loading={buttonLoading}
             >
               <Text
@@ -290,6 +291,7 @@ function ChooseTeam() {
                 marginTop: 20,
               }}
               loading={buttonLoading}
+              textColor={themeColors.highlight}
             >
               <Text
                 style={{
@@ -316,6 +318,7 @@ function ChooseTeam() {
               borderRadius: 12,
               marginTop: 20,
             }}
+            textColor={themeColors.highlight}
             loading={signoutLoading}
           >
             <Text
