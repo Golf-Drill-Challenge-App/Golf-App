@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Button } from "react-native-paper";
-import { themeColors } from "~/Constants";
+import { TESTING, themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import { useAlertContext } from "~/context/Alert";
@@ -45,7 +45,7 @@ export default function SignUp() {
       if (password !== passwordCheck) {
         throw "Passwords don't match";
       }
-      if (!email.endsWith("@oregonstate.edu")) {
+      if (!TESTING && !email.endsWith("@oregonstate.edu")) {
         throw "Only @oregonstate.edu emails are allowed at this time.";
       }
       const userCredential = await createUserWithEmailAndPassword(
