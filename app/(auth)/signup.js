@@ -59,16 +59,6 @@ export default function SignUp() {
       await setDoc(doc(db, "users", userCredential.user.uid), {
         email: email,
       });
-      await setDoc(doc(db, "teams", "1", "users", userCredential.user.uid), {
-        name: name,
-        // hardcoded pfp string for now, add pfp upload to profile settings in future PR
-        pfp: "",
-        // hardcoded "player" role for now, add role selection to profile settings in future PR
-        role: "player",
-        uid: userCredential.user.uid,
-        assigned_data: [],
-        uniqueDrills: [],
-      });
 
       try {
         await sendEmailVerification(auth.currentUser);
@@ -80,7 +70,7 @@ export default function SignUp() {
       }
 
       setCurrentUserId(userCredential.user.uid);
-      setCurrentUserInfo(userCredential.user);
+      setCurrentUserInfo({ ...userCredential.user, displayName: name });
 
       // console.log(userCredential.user);
     } catch (e) {
