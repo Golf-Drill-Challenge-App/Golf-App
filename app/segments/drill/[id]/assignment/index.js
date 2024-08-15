@@ -5,14 +5,7 @@ import { doc, runTransaction } from "firebase/firestore";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  ActivityIndicator,
-  Appbar,
-  Button,
-  List,
-  Text,
-  TouchableRipple,
-} from "react-native-paper";
+import { Appbar, Button, List, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { once } from "underscore";
@@ -237,31 +230,27 @@ export default function Index() {
           />
         )}
       </View>
-      <TouchableRipple
-        rippleColor="rgba(256, 256, 256, 0.2)"
-        borderless={true}
+      <Button
+        mode={"contained"}
         style={{
-          margin: 10,
+          marginHorizontal: 10,
           bottom: 30,
           left: 0,
           right: 0,
-          backgroundColor: someTrue ? themeColors.accent : "#A0A0A0",
-          padding: 10,
-          justifyContent: "center",
-          borderRadius: 20,
-          flexDirection: "row",
+          padding: 5,
         }}
+        labelStyle={{
+          fontSize: 20,
+          fontWeight: "bold",
+          color: themeColors.highlight,
+        }}
+        buttonColor={someTrue ? themeColors.accent : "#A0A0A0"}
         disabled={!someTrue}
         onPress={handleAssign}
+        loading={loading}
       >
-        {loading ? (
-          <ActivityIndicator animating={true} size={20} color={"#FFF"} />
-        ) : (
-          <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
-            Assign
-          </Text>
-        )}
-      </TouchableRipple>
+        Assign
+      </Button>
     </SafeAreaView>
   );
 }

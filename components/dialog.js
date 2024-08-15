@@ -16,10 +16,9 @@ export default function DialogComponent({
   content,
   visible,
   onHide,
-  buttons = ["Ok"],
-  buttonsFunctions = [() => onHide()],
+  buttons = [{ children: "Ok", pressHandler: () => onHide(), loading: false }], //should I also include style in here?
 }) {
-  const Buttons = buttons.map((item, index) => {
+  const Buttons = buttons.map((button, index) => {
     let style;
     let labelStyle;
     if (index === 0) {
@@ -27,17 +26,18 @@ export default function DialogComponent({
       labelStyle = { color: themeColors.accent };
     } else {
       style = { backgroundColor: themeColors.accent };
-      labelStyle = { color: "white" };
+      labelStyle = { color: themeColors.highlight };
     }
 
     return (
       <Button
         key={index}
-        onPress={buttonsFunctions[index]}
+        onPress={button["pressHandler"]}
         style={style}
         labelStyle={labelStyle}
+        loading={!!button["loading"]}
       >
-        {item}
+        {button["children"]}
       </Button>
     );
   });
