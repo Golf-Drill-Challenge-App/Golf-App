@@ -3,7 +3,14 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
-import { Appbar, Divider, Menu, SegmentedButtons } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Appbar,
+  Divider,
+  Menu,
+  SegmentedButtons,
+  Text,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
@@ -70,6 +77,8 @@ function Index() {
   const [banDialogVisible, setBanDialogVisible] = useState(false);
   const hideBanDialog = () => setBanDialogVisible(false);
   const [banLoading, setBanLoading] = useState(false);
+
+  const [promoteLoading, setPromoteLoading] = useState(false);
 
   const { showDialog, showSnackBar } = useAlertContext();
 
@@ -246,6 +255,7 @@ function Index() {
                 }
                 onPress={async () => {
                   try {
+                    setPromoteLoading(true);
                     await changeRole(
                       currentTeamId,
                       userId,
@@ -258,8 +268,19 @@ function Index() {
                     console.log(e);
                     showDialog("Error", getErrorString(e));
                   }
+                  setPromoteLoading(false);
                 }}
-                title={userInfo.role === "player" ? "Promote" : "Demote"}
+                title={
+                  <>
+                    {promoteLoading ? (
+                      <ActivityIndicator color={"#1C1B1F"} />
+                    ) : (
+                      <Text>
+                        {userInfo.role === "player" ? "Promote" : "Demote"}
+                      </Text>
+                    )}
+                  </>
+                }
               />
               <Divider />
               <Menu.Item
