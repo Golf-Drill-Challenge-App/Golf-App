@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
         }
       }
     });
-  }, [currentUserVerified]);
+  }, []);
   return (
     <AuthContext.Provider
       value={{
