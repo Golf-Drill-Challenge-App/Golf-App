@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [currentUserInfo, setCurrentUserInfo] = useState(null);
   const [currentTeamId, setCurrentTeamId] = useState("1");
-  const [currentUserVerified, setCurrentUserVerified] = useState(false);
+  const [currentUserVerified, setCurrentUserVerified] = useState(true);
 
   useProtectedRoute(currentUserId);
 
