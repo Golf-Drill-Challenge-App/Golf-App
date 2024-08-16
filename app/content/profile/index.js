@@ -1,4 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { KeyboardAvoiderScrollView } from "@good-react-native/keyboard-avoider";
 import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
@@ -320,150 +321,157 @@ function Index() {
           }}
         >
           <BottomSheetScrollView
-            contentContainerStyle={styles.modalContent}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
           >
-            {/* Profile Picture */}
-            <TouchableOpacity
-              onPress={async () => {
-                try {
-                  await handleImageUpload(
-                    setImageUploading,
-                    showSnackBar,
-                    getPfpName(currentTeamId, userId),
-                    userRef,
-                    profilePicSize,
-                    profilePicSize,
-                  );
-                  await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-                } catch (e) {
-                  console.log(e);
-                  showDialog("Error", getErrorString(e));
-                }
-              }}
-            >
-              <View style={styles.profilePictureContainer}>
-                {imageUploading ? (
-                  <ActivityIndicator
-                    animating={imageUploading}
-                    size="large"
-                    color={themeColors.accent}
-                    style={styles.activityIndicator}
-                  />
-                ) : (
-                  <ProfilePicture
-                    userInfo={userData}
-                    style={styles.profilePicture}
-                  />
-                )}
-                <View style={styles.penIconContainer}>
-                  <MaterialIcons name="edit" size={24} color="black" />
+            <KeyboardAvoiderScrollView>
+              <View style={styles.modalContent}>
+                {/* Profile Picture */}
+                <TouchableOpacity
+                  onPress={async () => {
+                    try {
+                      await handleImageUpload(
+                        setImageUploading,
+                        showSnackBar,
+                        getPfpName(currentTeamId, userId),
+                        userRef,
+                        profilePicSize,
+                        profilePicSize,
+                      );
+                      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                    } catch (e) {
+                      console.log(e);
+                      showDialog("Error", getErrorString(e));
+                    }
+                  }}
+                >
+                  <View style={styles.profilePictureContainer}>
+                    {imageUploading ? (
+                      <ActivityIndicator
+                        animating={imageUploading}
+                        size="large"
+                        color={themeColors.accent}
+                        style={styles.activityIndicator}
+                      />
+                    ) : (
+                      <ProfilePicture
+                        userInfo={userData}
+                        style={styles.profilePicture}
+                      />
+                    )}
+                    <View style={styles.penIconContainer}>
+                      <MaterialIcons name="edit" size={24} color="black" />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                {/* Display Name */}
+                <Text
+                  style={{
+                    fontSize: 20,
+                    marginBottom: 10,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {userData.name}
+                </Text>
+
+                {/* Display Email */}
+                <View style={styles.emailContainer}>
+                  <Text style={styles.emailText}>{email}</Text>
                 </View>
+
+                {/* Name Update input field */}
+                <View style={{ width: "80%", marginBottom: 10 }}>
+                  <Text style={styles.changePasswordButton}>
+                    Update your name
+                  </Text>
+                </View>
+                <BottomSheetTextInput
+                  style={styles.input}
+                  value={newName}
+                  onChangeText={(text) => setNewName(text)}
+                  placeholder="Update your name"
+                />
+
+                {/* Change Password Button */}
+                <View
+                  style={{
+                    marginBottom: 20, // Increase margin bottom for more spacing
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "80%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.changePasswordButton}>
+                    Change Password
+                  </Text>
+                  <Switch
+                    value={passwordInputVisible}
+                    onValueChange={(newValue) => {
+                      resetForm();
+                      setPasswordInputVisible(newValue);
+                    }}
+                    theme={{
+                      colors: {
+                        primary: themeColors.accent,
+                      },
+                    }}
+                  />
+                </View>
+
+                {/* Password Input Field */}
+                {passwordInputVisible && (
+                  <>
+                    <BottomSheetTextInput
+                      style={styles.input}
+                      value={currentPassword}
+                      onChangeText={setCurrentPassword}
+                      placeholder="Enter your current password"
+                      secureTextEntry={true}
+                      // to get rid of ios password suggestions
+                      // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                      // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                      textContentType="oneTimeCode"
+                    />
+                    <BottomSheetTextInput
+                      style={styles.input}
+                      value={newPassword}
+                      onChangeText={setNewPassword}
+                      placeholder="Enter your new password"
+                      secureTextEntry={true}
+                      textContentType="newPassword"
+                    />
+                    <BottomSheetTextInput
+                      style={styles.input}
+                      value={newPasswordCheck}
+                      onChangeText={setNewPasswordCheck}
+                      placeholder="Confirm your new password"
+                      secureTextEntry={true}
+                      textContentType="newPassword"
+                    />
+                  </>
+                )}
+
+                {/* Save Button */}
+                <Button
+                  style={styles.saveChangesButton}
+                  onPress={handleUpdate}
+                  textColor={themeColors.highlight}
+                  labelStyle={{
+                    fontWeight: "bold",
+                  }}
+                  loading={updateLoading}
+                >
+                  Update
+                </Button>
+
+                {/* Sign Out Button */}
+                <Pressable onPress={handleSignOut}>
+                  <Text style={styles.signOutButton}>Sign Out</Text>
+                </Pressable>
               </View>
-            </TouchableOpacity>
-            {/* Display Name */}
-            <Text
-              style={{
-                fontSize: 20,
-                marginBottom: 10,
-                fontWeight: "bold",
-              }}
-            >
-              {userData.name}
-            </Text>
-
-            {/* Display Email */}
-            <View style={styles.emailContainer}>
-              <Text style={styles.emailText}>{email}</Text>
-            </View>
-
-            {/* Name Update input field */}
-            <View style={{ width: "80%", marginBottom: 10 }}>
-              <Text style={styles.changePasswordButton}>Update your name</Text>
-            </View>
-            <BottomSheetTextInput
-              style={styles.input}
-              value={newName}
-              onChangeText={(text) => setNewName(text)}
-              placeholder="Update your name"
-            />
-
-            {/* Change Password Button */}
-            <View
-              style={{
-                marginBottom: 20, // Increase margin bottom for more spacing
-                flexDirection: "row",
-                alignItems: "center",
-                width: "80%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={styles.changePasswordButton}>Change Password</Text>
-              <Switch
-                value={passwordInputVisible}
-                onValueChange={(newValue) => {
-                  resetForm();
-                  setPasswordInputVisible(newValue);
-                }}
-                theme={{
-                  colors: {
-                    primary: themeColors.accent,
-                  },
-                }}
-              />
-            </View>
-
-            {/* Password Input Field */}
-            {passwordInputVisible && (
-              <>
-                <BottomSheetTextInput
-                  style={styles.input}
-                  value={currentPassword}
-                  onChangeText={setCurrentPassword}
-                  placeholder="Enter your current password"
-                  secureTextEntry={true}
-                  // to get rid of ios password suggestions
-                  // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
-                  // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
-                  textContentType="oneTimeCode"
-                />
-                <BottomSheetTextInput
-                  style={styles.input}
-                  value={newPassword}
-                  onChangeText={setNewPassword}
-                  placeholder="Enter your new password"
-                  secureTextEntry={true}
-                  textContentType="newPassword"
-                />
-                <BottomSheetTextInput
-                  style={styles.input}
-                  value={newPasswordCheck}
-                  onChangeText={setNewPasswordCheck}
-                  placeholder="Confirm your new password"
-                  secureTextEntry={true}
-                  textContentType="newPassword"
-                />
-              </>
-            )}
-
-            {/* Save Button */}
-            <Button
-              style={styles.saveChangesButton}
-              onPress={handleUpdate}
-              textColor={themeColors.highlight}
-              labelStyle={{
-                fontWeight: "bold",
-              }}
-              loading={updateLoading}
-            >
-              Update
-            </Button>
-
-            {/* Sign Out Button */}
-            <Pressable onPress={handleSignOut}>
-              <Text style={styles.signOutButton}>Sign Out</Text>
-            </Pressable>
+            </KeyboardAvoiderScrollView>
           </BottomSheetScrollView>
         </BottomSheetWrapper>
         {uniqueDrills.length > 0 && userData.role === "player" ? (
