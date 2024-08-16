@@ -21,6 +21,7 @@
   "dependencies": {
     "@expo/ngrok": "^4.1.0",
     "@expo/webpack-config": "^19.0.0",
+    "@good-react-native/keyboard-avoider": "^1.1.4",
     "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@tanstack/query-async-storage-persister": "^5.27.5",

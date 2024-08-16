@@ -4,9 +4,11 @@ import { ScrollView, View } from "react-native";
 import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
+import DialogComponent from "~/components/dialog";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
+import { useAlertContext } from "~/context/Alert";
 import { useAuthContext } from "~/context/Auth";
 import { useBlackList } from "~/dbOperations/hooks/useBlackList";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
@@ -24,6 +26,11 @@ function Blacklist() {
   const queryClient = useQueryClient(); // also called here for updating name
 
   const [unbanLoading, setUnbanLoading] = useState({});
+  const [unbanCounter, setUnbanCounter] = useState(0);
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+
+  const { showDialog } = useAlertContext();
 
   const invalidateKeys = [["blacklist"]];
 
@@ -35,6 +42,15 @@ function Blacklist() {
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
     >
+      <DialogComponent
+        type={"snackbar"}
+        visible={snackbarVisible}
+        content={`Unbanned ${unbanCounter} user${unbanCounter > 1 ? "s" : ""}`}
+        onHide={() => {
+          setSnackbarVisible(false);
+          setUnbanCounter(0);
+        }}
+      />
       <List.Section
         style={{
           margin: 5,
@@ -64,6 +80,8 @@ function Blacklist() {
                           queryClient,
                           invalidateKeys,
                         );
+                        setUnbanCounter((prev) => prev + 1);
+                        setSnackbarVisible(true);
                         setUnbanLoading({ ...unbanLoading, [userId]: false });
                       } catch (e) {
                         console.log(e);

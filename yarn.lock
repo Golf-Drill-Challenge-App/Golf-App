@@ -1749,6 +1749,13 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-1.0.1.tgz#0b62c9f47f557a5b4adc073bb0a47542ce6af4c4"
   integrity sha512-jmEnr/pk0yVkA7mIlHNnxCi+wWzOFUg0WyIotgkKAb2u1J7fAeDBcVNSTjTihbAYNusCLQdW5s9IJ5qwnEufcQ==
 
+"@good-react-native/keyboard-avoider@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@good-react-native/keyboard-avoider/-/keyboard-avoider-1.1.4.tgz#634a18d8634d100b2b4e1f419c4b56dc0ab831ab"
+  integrity sha512-Yfbr3b7pOdjdZW03cyHC5kVzFX7D1kPP2jr8yvT7hzI3zoCPuvwTjxzl80vjs3NWCGt1ZAPAbhEkG4oFzGaCSg==
+  dependencies:
+    react-native-uuid "^2.0.1"
+
 "@gorhom/bottom-sheet@^4":
   version "4.6.3"
   resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.6.3.tgz#0e16999de7468efc6b730f680692f6d53f0abd8e"
@@ -9359,6 +9366,11 @@ react-native-svg@15.2.0:
   dependencies:
     css-select "^5.1.0"
     css-tree "^1.1.3"
+
+react-native-uuid@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.2.tgz#3da192e342ef35ee95a7def676ab41c1256dfd66"
+  integrity sha512-5ypj/hV58P+6VREdjkW0EudSibsH3WdqDERoHKnD9syFWjF+NfRWWrJb2sa3LIwI5zpzMvUiabs+DX40WHpEMw==
 
 react-native-web@~0.19.6:
   version "0.19.12"
