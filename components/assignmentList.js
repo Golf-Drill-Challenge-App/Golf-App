@@ -13,6 +13,7 @@ import { useTimeContext } from "~/context/Time";
 
 const AssignmentsList = ({
   role,
+  singleUser,
   playerInfo,
   invalidateKeys,
   drillInfo,
@@ -20,8 +21,6 @@ const AssignmentsList = ({
   disableCriteria = () => false,
 }) => {
   const currentPath = usePathname();
-
-  const singleUser = playerInfo.length === 1;
 
   const { getLocalizedDate, getCurrentLocalizedDate } = useTimeContext();
 
@@ -95,9 +94,10 @@ const AssignmentsList = ({
     debounce(
       (assignment) => {
         if (singleUser) {
-          if (assignment.completed) {
+          //since singleUser
+          if (assignment["players"][0].completed) {
             router.push({
-              pathname: `${currentPath}/attempts/${assignment.attemptId}`,
+              pathname: `${currentPath}/attempts/${assignment["players"][0].attemptId}`,
               params: {
                 id: assignment.drillId,
               },
@@ -111,7 +111,7 @@ const AssignmentsList = ({
                 currentTime: new Date(),
               },
             });
-          }
+          } //else disabled
         } else {
           router.push({
             pathname: "content/assignments/players",
@@ -207,8 +207,11 @@ const AssignmentsList = ({
       keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
       ListHeaderComponent={children}
       renderItem={({ item: assignment }) => {
+        const assignmentCompleted = singleUser
+          ? assignment["players"][0].completed
+          : false;
         const disabled = disableCriteria({
-          completed: !!assignment.completed,
+          completed: assignmentCompleted,
           hasStats: drillInfo[assignment.drillId].hasStats,
         });
         return (
@@ -220,7 +223,7 @@ const AssignmentsList = ({
             <AssignmentCard
               mainText={drillInfo[assignment.drillId]["subType"]}
               subText={drillInfo[assignment.drillId]["drillType"]}
-              completed={assignment.completed}
+              completed={assignmentCompleted}
               pfp={singleUser ? null : stackedPfp(assignment["players"])}
               disabled={disabled}
             />
@@ -239,7 +242,7 @@ const AssignmentsList = ({
               backgroundColor: themeColors.background,
             }}
           >
-            {title === getCurrentLocalizedDate({ rounded: true })
+            {title == getCurrentLocalizedDate({ rounded: true }).getTime()
               ? "Today"
               : formatDate(title)}
           </Text>

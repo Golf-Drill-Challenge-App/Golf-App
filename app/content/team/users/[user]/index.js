@@ -204,6 +204,7 @@ function Index() {
   const AssignmentScreen = () => (
     <AssignmentsList
       role={currentUserInfo["role"]}
+      singleUser={true}
       playerInfo={[userInfo]}
       drillInfo={drillInfo}
       disableCriteria={({ completed, hasStats }) => !completed || !hasStats}
