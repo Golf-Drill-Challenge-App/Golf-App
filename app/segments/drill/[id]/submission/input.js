@@ -733,6 +733,7 @@ export default function Input({ setToggleResult, setOutputData }) {
     ["userInfo"], //assignments
     ["best_attempts", { drillId }],
     ["all_time_records", { drillId }],
+    ["attempts", { userId: currentUserId, drillId }],
   ];
 
   const { height } = useWindowDimensions();
@@ -745,6 +746,8 @@ export default function Input({ setToggleResult, setOutputData }) {
   const [displayedShot, setDisplayedShot] = useState(0); //a useState hook to track what shot is displayed
 
   const [currentShot, setCurrentShot] = useState(0); //a useState hook to track current shot to be attempted
+
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   /***** Navigation Bottom Sheet stuff *****/
   const navModalRef = useRef(null);
@@ -778,6 +781,7 @@ export default function Input({ setToggleResult, setOutputData }) {
           labelStyle={styles.buttonText}
           mode="contained-tonal"
           onPress={handleButtonClick}
+          loading={submitLoading}
         >
           Submit Drill
         </Button>
@@ -846,6 +850,7 @@ export default function Input({ setToggleResult, setOutputData }) {
 
   const handleSubmit = useCallback(
     once(async () => {
+      setSubmitLoading(true);
       const outputData = createOutputData(
         drillInfo,
         inputValues,
@@ -875,6 +880,7 @@ export default function Input({ setToggleResult, setOutputData }) {
         console.log(e);
         showDialog("Error", getErrorString(e));
       }
+      setSubmitLoading(false);
     }),
     [attemptShots, currentLeaderboard, inputValues, userInfo],
   );
