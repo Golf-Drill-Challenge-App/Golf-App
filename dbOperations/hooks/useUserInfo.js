@@ -74,11 +74,15 @@ export const useUserInfo = ({
             ...data,
             assigned_data: filteredAssignedData,
           };
-          await updateDoc(
-            doc(db, "teams", currentTeamId, "users", userId),
-            updatedData,
-          );
-          return updatedData;
+          try {
+            await updateDoc(
+              doc(db, "teams", currentTeamId, "users", userId),
+              updatedData,
+            );
+            return updatedData;
+          } catch (e) {
+            console.log("can't clear old assignments", getErrorString(e));
+          }
         }
         return data;
       } else if (role) {
