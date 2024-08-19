@@ -23,7 +23,7 @@ import { db } from "~/firebaseConfig";
 
 function Index() {
   const navigation = useNavigation();
-  const { drillId, assignedTime } = useLocalSearchParams();
+  const { drillId, mergeTime } = useLocalSearchParams();
   const {
     data: drillInfo,
     isLoading: drillInfoIsLoading,
@@ -58,7 +58,7 @@ function Index() {
         getLocalizedDate({
           time: assignment.assignedTime,
           rounded: true,
-        }).getTime() == assignedTime && assignment.drillId === drillId;
+        }).getTime() == mergeTime && assignment.drillId === drillId;
       setAssignmentList(
         Object.values(userInfo)
           .filter((user) => user.assigned_data.some(critera))
@@ -79,7 +79,7 @@ function Index() {
   }, [
     userInfo,
     getLocalizedDate,
-    assignedTime,
+    mergeTime,
     drillId,
     assignmentList.length,
     navigation,
@@ -122,10 +122,10 @@ function Index() {
                   getLocalizedDate({
                     time: assignment.assignedTime,
                     rounded: true,
-                  }).getTime() != assignedTime,
+                  }).getTime() != mergeTime,
               );
               console.log("Updated Assignment List: ", updatedAssignmentList);
-              console.log("current assignedTime: ", assignedTime);
+              console.log("current mergeTime: ", mergeTime);
               playerList.push({
                 uid: assignment.uid,
                 assigned_data: updatedAssignmentList,
@@ -156,7 +156,7 @@ function Index() {
       }
     }),
     [
-      assignedTime,
+      mergeTime,
       assignmentList,
       currentTeamId,
       getLocalizedDate,
@@ -200,7 +200,7 @@ function Index() {
         if (docSnap.exists()) {
           const assignedData = docSnap.data().assigned_data;
           const updatedAssignedData = assignedData.map((a) => {
-            if (a.assignedTime == assignedTime && a.drillId === drillId) {
+            if (a.assignedTime == mergeTime && a.drillId === drillId) {
               return { ...a, completed: false };
             }
             return a;

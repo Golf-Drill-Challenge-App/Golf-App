@@ -60,6 +60,8 @@ async function completeAssigned(
 
   if (docSnap.exists()) {
     const assignedData = docSnap.data()["assigned_data"];
+    console.log("assignedData", assignedData);
+    console.log("assignedTime", assignedTime);
     const updatedAssignedData = assignedData.map((assignment) => {
       if (
         assignment.assignedTime == assignedTime &&

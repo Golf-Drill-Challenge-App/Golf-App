@@ -43,7 +43,8 @@ const AssignmentsList = ({
 
         if (!alreadyAddedData[mergeTime][drillId]) {
           alreadyAddedData[mergeTime][drillId] = {
-            assignedTime: mergeTime,
+            assignedTime,
+            mergeTime,
             drillId,
             players: [],
           };
@@ -70,7 +71,7 @@ const AssignmentsList = ({
   // Group the assigned drills by date
   const groupedData = useMemo(() => {
     return assigned_data.reduce((acc, curr) => {
-      const time = curr.assignedTime;
+      const time = curr.mergeTime;
 
       if (!acc[time]) {
         acc[time] = [];
@@ -117,7 +118,7 @@ const AssignmentsList = ({
             pathname: "content/assignments/players",
             params: {
               drillId: assignment.drillId,
-              assignedTime: assignment.assignedTime,
+              mergeTime: assignment.mergeTime,
             },
           });
         }
@@ -204,7 +205,7 @@ const AssignmentsList = ({
         title: date,
         data: groupedData[date],
       }))}
-      keyExtractor={(item) => `${item.assignedTime}-${item.drillId}`}
+      keyExtractor={(item) => `${item.mergeTime}-${item.drillId}`}
       ListHeaderComponent={children}
       renderItem={({ item: assignment }) => {
         const assignmentCompleted = singleUser
@@ -216,7 +217,7 @@ const AssignmentsList = ({
         });
         return (
           <TouchableOpacity
-            key={`${assignment.assignedTime}-${assignment.drillId}`}
+            key={`${assignment.mergeTime}-${assignment.drillId}`}
             onPress={() => cardPressHandler(assignment)}
             disabled={disabled}
           >
