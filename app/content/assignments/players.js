@@ -305,87 +305,90 @@ function Index() {
           }}
         >
           <List.Section style={{ backgroundColor: themeColors.background }}>
-            {assignmentList.map((assignment) => {
-              return (
-                <List.Item
-                  key={`${assignment.uid}`}
-                  onPress={async () => {
-                    if (editing) {
-                      //toggle markedForDelete
-                      setAssignmentList((prevAssignmentList) => {
-                        return prevAssignmentList.map((prevAssignment) => {
-                          if (prevAssignment.uid === assignment.uid) {
-                            return {
-                              ...prevAssignment,
-                              markedForDelete: !prevAssignment.markedForDelete,
-                            };
-                          }
-                          return prevAssignment;
+            {assignmentList
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((assignment) => {
+                return (
+                  <List.Item
+                    key={`${assignment.uid}`}
+                    onPress={async () => {
+                      if (editing) {
+                        //toggle markedForDelete
+                        setAssignmentList((prevAssignmentList) => {
+                          return prevAssignmentList.map((prevAssignment) => {
+                            if (prevAssignment.uid === assignment.uid) {
+                              return {
+                                ...prevAssignment,
+                                markedForDelete:
+                                  !prevAssignment.markedForDelete,
+                              };
+                            }
+                            return prevAssignment;
+                          });
                         });
-                      });
-                    } else {
-                      await handleAssignmentPress(assignment);
+                      } else {
+                        await handleAssignmentPress(assignment);
+                      }
+                    }}
+                    disabled={
+                      !editing && (!assignment.completed || !drillInfo.hasStats)
                     }
-                  }}
-                  disabled={
-                    !editing && (!assignment.completed || !drillInfo.hasStats)
-                  }
-                  style={{
-                    paddingLeft: 20,
-                  }}
-                  left={() => (
-                    <ProfilePicture
-                      userInfo={assignment}
-                      style={{
-                        width: 24,
-                        height: 24,
-                        borderRadius: 12,
-                      }}
-                    />
-                  )}
-                  right={() => (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      {editing ? (
-                        assignment.markedForDelete ? (
-                          <Icon
-                            source="checkbox-outline"
-                            size={20}
-                            color={"black"}
-                          />
+                    style={{
+                      paddingLeft: 20,
+                    }}
+                    left={() => (
+                      <ProfilePicture
+                        userInfo={assignment}
+                        style={{
+                          width: 24,
+                          height: 24,
+                          borderRadius: 12,
+                        }}
+                      />
+                    )}
+                    right={() => (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        {editing ? (
+                          assignment.markedForDelete ? (
+                            <Icon
+                              source="checkbox-outline"
+                              size={20}
+                              color={"black"}
+                            />
+                          ) : (
+                            <Icon
+                              source="checkbox-blank-outline"
+                              size={20}
+                              color={"black"}
+                            />
+                          )
                         ) : (
-                          <Icon
-                            source="checkbox-blank-outline"
-                            size={20}
-                            color={"black"}
-                          />
-                        )
-                      ) : (
-                        assignment.completed && (
-                          <>
-                            <Text
-                              style={{
-                                color: "green",
-                              }}
-                            >
-                              Completed
-                            </Text>
-                            {drillInfo.hasStats && (
-                              <Icon size={20} source="chevron-right" />
-                            )}
-                          </>
-                        )
-                      )}
-                    </View>
-                  )}
-                  title={assignment.name}
-                />
-              );
-            })}
+                          assignment.completed && (
+                            <>
+                              <Text
+                                style={{
+                                  color: "green",
+                                }}
+                              >
+                                Completed
+                              </Text>
+                              {drillInfo.hasStats && (
+                                <Icon size={20} source="chevron-right" />
+                              )}
+                            </>
+                          )
+                        )}
+                      </View>
+                    )}
+                    title={assignment.name}
+                  />
+                );
+              })}
           </List.Section>
         </View>
       </ScrollView>

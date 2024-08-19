@@ -72,9 +72,11 @@ export default function Index() {
       <Header title="Assigned Drills" />
       <AssignmentsList
         role={userInfo["role"]}
+        singleUser={userInfo["role"] === "player"}
         playerInfo={userInfo["role"] === "player" ? [userInfo] : playerInfo}
         invalidateKeys={invalidateKeys}
         drillInfo={drillInfo}
+        disableCriteria={({ completed, hasStats }) => completed && !hasStats}
       />
     </SafeAreaView>
   );
