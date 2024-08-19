@@ -1,3 +1,4 @@
+import { KeyboardAvoiderScrollView } from "@good-react-native/keyboard-avoider";
 import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
@@ -16,7 +17,6 @@ import {
 } from "firebase/firestore";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, View, useWindowDimensions } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Button, Divider, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { once } from "underscore";
@@ -927,7 +927,7 @@ export default function Input({ setToggleResult, setOutputData }) {
             }
           />
 
-          <KeyboardAwareScrollView>
+          <KeyboardAvoiderScrollView>
             {/* Shot Number / Total shots */}
             <View style={styles.shotNumContainer}>
               <Text style={styles.shotNumber}>
@@ -1021,7 +1021,7 @@ export default function Input({ setToggleResult, setOutputData }) {
                 <DrillDescription drillInfo={drillInfo} />
               </BottomSheetView>
             </BottomSheetWrapper>
-          </KeyboardAwareScrollView>
+          </KeyboardAvoiderScrollView>
           {/* Navigation */}
           <View style={styles.navigationContainer}>
             <Text
