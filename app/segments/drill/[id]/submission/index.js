@@ -65,12 +65,14 @@ export default function Index() {
         content={"All inputs will be lost."}
         visible={leaveDialogVisible}
         onHide={hideLeaveDialog}
-        buttons={["Cancel", "Leave Drill"]}
-        buttonsFunctions={[
-          hideLeaveDialog,
-          () => {
-            hideLeaveDialog();
-            navigation.dispatch(exitAction);
+        buttons={[
+          { children: "Cancel", pressHandler: hideLeaveDialog },
+          {
+            children: "Leave Drill",
+            pressHandler: () => {
+              hideLeaveDialog();
+              navigation.dispatch(exitAction);
+            },
           },
         ]}
       />
