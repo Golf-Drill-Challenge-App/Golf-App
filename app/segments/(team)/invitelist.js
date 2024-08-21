@@ -150,6 +150,11 @@ export function Invitelist() {
           padding: 5,
           paddingLeft: 20,
           paddingRight: 35,
+          borderStyle: "solid",
+          borderWidth: 1,
+          borderRadius: 5,
+          borderColor: themeColors.border,
+          backgroundColor: themeColors.highlight,
         }}
       >
         <TextInput
