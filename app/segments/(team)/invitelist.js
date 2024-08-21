@@ -12,6 +12,7 @@ import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -99,48 +100,55 @@ export function Invitelist() {
             borderRadius: 5,
           }}
         >
-          {Object.keys(invitelist).map((inviteId) => {
-            return (
-              <List.Item
-                title={invitelist[inviteId].email}
-                key={inviteId}
-                right={() => (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingLeft: 10,
-                    }}
-                  >
-                    <Button
-                      onPress={async () => {
-                        setRemoveLoading({
-                          ...removeLoading,
-                          [inviteId]: true,
-                        });
-                        await removeInvitelist(currentTeamId, inviteId);
-                        await invalidateMultipleKeys(
-                          queryClient,
-                          invalidateKeys,
-                        );
-                        setRemoveCounter((prev) => prev + 1);
-                        setSnackbarVisible(true);
-                        setRemoveLoading({
-                          ...removeLoading,
-                          [inviteId]: false,
-                        });
+          {Object.keys(invitelist).length === 0 ? (
+            <EmptyScreen
+              invalidateKeys={invalidateKeys}
+              text={"No invites found"}
+            />
+          ) : (
+            Object.keys(invitelist).map((inviteId) => {
+              return (
+                <List.Item
+                  title={invitelist[inviteId].email}
+                  key={inviteId}
+                  right={() => (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingLeft: 10,
                       }}
-                      height={38} //so the button doesn't change size because of the spinner
-                      textColor={themeColors.accent}
-                      loading={removeLoading[inviteId]}
                     >
-                      Remove
-                    </Button>
-                  </View>
-                )}
-              />
-            );
-          })}
+                      <Button
+                        onPress={async () => {
+                          setRemoveLoading({
+                            ...removeLoading,
+                            [inviteId]: true,
+                          });
+                          await removeInvitelist(currentTeamId, inviteId);
+                          await invalidateMultipleKeys(
+                            queryClient,
+                            invalidateKeys,
+                          );
+                          setRemoveCounter((prev) => prev + 1);
+                          setSnackbarVisible(true);
+                          setRemoveLoading({
+                            ...removeLoading,
+                            [inviteId]: false,
+                          });
+                        }}
+                        height={38} //so the button doesn't change size because of the spinner
+                        textColor={themeColors.accent}
+                        loading={removeLoading[inviteId]}
+                      >
+                        Remove
+                      </Button>
+                    </View>
+                  )}
+                />
+              );
+            })
+          )}
         </List.Section>
       </ScrollView>
       <Text>{statusText}</Text>

@@ -5,6 +5,7 @@ import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -57,48 +58,55 @@ function Blacklist() {
           borderRadius: 5,
         }}
       >
-        {Object.keys(blacklist).map((userId) => {
-          return (
-            <List.Item
-              title={blacklist[userId].email}
-              key={userId}
-              right={() => (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingLeft: 10,
-                  }}
-                >
-                  <Button
-                    onPress={async () => {
-                      try {
-                        if (unbanLoading[userId]) return;
-                        setUnbanLoading({ ...unbanLoading, [userId]: true });
-                        await removeBlacklist(currentTeamId, userId);
-                        await invalidateMultipleKeys(
-                          queryClient,
-                          invalidateKeys,
-                        );
-                        setUnbanCounter((prev) => prev + 1);
-                        setSnackbarVisible(true);
-                        setUnbanLoading({ ...unbanLoading, [userId]: false });
-                      } catch (e) {
-                        console.log(e);
-                        setUnbanLoading({ ...unbanLoading, [userId]: false });
-                        showDialog("Error", getErrorString(e));
-                      }
+        {Object.keys(blacklist).length === 0 ? (
+          <EmptyScreen
+            invalidateKeys={invalidateKeys}
+            text={"No users found on blacklist"}
+          />
+        ) : (
+          Object.keys(blacklist).map((userId) => {
+            return (
+              <List.Item
+                title={blacklist[userId].email}
+                key={userId}
+                right={() => (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingLeft: 10,
                     }}
-                    textColor={themeColors.accent}
-                    loading={unbanLoading[userId]}
                   >
-                    Unban
-                  </Button>
-                </View>
-              )}
-            />
-          );
-        })}
+                    <Button
+                      onPress={async () => {
+                        try {
+                          if (unbanLoading[userId]) return;
+                          setUnbanLoading({ ...unbanLoading, [userId]: true });
+                          await removeBlacklist(currentTeamId, userId);
+                          await invalidateMultipleKeys(
+                            queryClient,
+                            invalidateKeys,
+                          );
+                          setUnbanCounter((prev) => prev + 1);
+                          setSnackbarVisible(true);
+                          setUnbanLoading({ ...unbanLoading, [userId]: false });
+                        } catch (e) {
+                          console.log(e);
+                          setUnbanLoading({ ...unbanLoading, [userId]: false });
+                          showDialog("Error", getErrorString(e));
+                        }
+                      }}
+                      textColor={themeColors.accent}
+                      loading={unbanLoading[userId]}
+                    >
+                      Unban
+                    </Button>
+                  </View>
+                )}
+              />
+            );
+          })
+        )}
       </List.Section>
     </ScrollView>
   );
