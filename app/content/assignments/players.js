@@ -149,6 +149,7 @@ function Index() {
         await invalidateMultipleKeys(queryClient, invalidateKeys);
         showSnackBar("Assignments Deleted");
         setLoadingDelete(false);
+        setEditing(false);
       } catch (e) {
         console.log("Error deleting assignments: ", e);
         showDialog("Error", getErrorString(e));
