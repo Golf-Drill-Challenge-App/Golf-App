@@ -59,22 +59,24 @@ function Index() {
           time: assignment.assignedTime,
           rounded: true,
         }).getTime() == mergeTime && assignment.drillId === drillId;
-      setAssignmentList(
-        Object.values(userInfo)
-          .filter((user) => user.assigned_data.some(critera))
-          .map((user) => {
-            const assignment = user.assigned_data.find(critera);
-            return {
-              name: user.name,
-              pfp: user.pfp,
-              role: user.role,
-              uid: user.uid,
-              completed: assignment.completed,
-              attemptId: assignment.attemptId,
-              markedForDelete: false,
-            };
-          }),
-      );
+      const updatedAssignmentList = Object.values(userInfo)
+        .filter((user) => user.assigned_data.some(critera))
+        .map((user) => {
+          const assignment = user.assigned_data.find(critera);
+          return {
+            name: user.name,
+            pfp: user.pfp,
+            role: user.role,
+            uid: user.uid,
+            completed: assignment.completed,
+            attemptId: assignment.attemptId,
+            markedForDelete: false,
+          };
+        });
+
+      updatedAssignmentList.length === 0
+        ? navigation.goBack()
+        : setAssignmentList(updatedAssignmentList);
     }
   }, [
     userInfo,
