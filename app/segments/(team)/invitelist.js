@@ -91,66 +91,74 @@ export function Invitelist() {
           setRemoveCounter(0);
         }}
       />
-      <ScrollView
-        refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
-      >
-        <List.Section
-          style={{
-            margin: 5,
-            borderRadius: 5,
-          }}
+
+      {Object.keys(invitelist).length === 0 ? (
+        <EmptyScreen
+          invalidateKeys={invalidateKeys}
+          text={"No invites found"}
+        />
+      ) : (
+        <ScrollView
+          refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
         >
-          {Object.keys(invitelist).length === 0 ? (
-            <EmptyScreen
-              invalidateKeys={invalidateKeys}
-              text={"No invites found"}
-            />
-          ) : (
-            Object.keys(invitelist).map((inviteId) => {
-              return (
-                <List.Item
-                  title={invitelist[inviteId].email}
-                  key={inviteId}
-                  right={() => (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <Button
-                        onPress={async () => {
-                          setRemoveLoading({
-                            ...removeLoading,
-                            [inviteId]: true,
-                          });
-                          await removeInvitelist(currentTeamId, inviteId);
-                          await invalidateMultipleKeys(
-                            queryClient,
-                            invalidateKeys,
-                          );
-                          setRemoveCounter((prev) => prev + 1);
-                          setSnackbarVisible(true);
-                          setRemoveLoading({
-                            ...removeLoading,
-                            [inviteId]: false,
-                          });
+          <List.Section
+            style={{
+              margin: 5,
+              borderRadius: 5,
+            }}
+          >
+            {Object.keys(invitelist).length === 0 ? (
+              <EmptyScreen
+                invalidateKeys={invalidateKeys}
+                text={"No invites found"}
+              />
+            ) : (
+              Object.keys(invitelist).map((inviteId) => {
+                return (
+                  <List.Item
+                    title={invitelist[inviteId].email}
+                    key={inviteId}
+                    right={() => (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          paddingLeft: 10,
                         }}
-                        height={38} //so the button doesn't change size because of the spinner
-                        textColor={themeColors.accent}
-                        loading={removeLoading[inviteId]}
                       >
-                        Remove
-                      </Button>
-                    </View>
-                  )}
-                />
-              );
-            })
-          )}
-        </List.Section>
-      </ScrollView>
+                        <Button
+                          onPress={async () => {
+                            setRemoveLoading({
+                              ...removeLoading,
+                              [inviteId]: true,
+                            });
+                            await removeInvitelist(currentTeamId, inviteId);
+                            await invalidateMultipleKeys(
+                              queryClient,
+                              invalidateKeys,
+                            );
+                            setRemoveCounter((prev) => prev + 1);
+                            setSnackbarVisible(true);
+                            setRemoveLoading({
+                              ...removeLoading,
+                              [inviteId]: false,
+                            });
+                          }}
+                          height={38} //so the button doesn't change size because of the spinner
+                          textColor={themeColors.accent}
+                          loading={removeLoading[inviteId]}
+                        >
+                          Remove
+                        </Button>
+                      </View>
+                    )}
+                  />
+                );
+              })
+            )}
+          </List.Section>
+        </ScrollView>
+      )}
       <Text>{statusText}</Text>
       <View
         style={{
