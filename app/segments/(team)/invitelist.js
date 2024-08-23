@@ -95,7 +95,7 @@ export function Invitelist() {
       {Object.keys(invitelist).length === 0 ? (
         <EmptyScreen
           invalidateKeys={invalidateKeys}
-          text={"No invites found"}
+          text={"No invites found. \n Use the input below to invite users."}
         />
       ) : (
         <ScrollView

@@ -47,7 +47,9 @@ function Waitlist() {
     return (
       <EmptyScreen
         invalidateKeys={invalidateKeys}
-        text={"No users found on waitlist"}
+        text={
+          "No users found on waitlist. \n Users will be added upon signing up and \n clicking  'Request to Join Team'"
+        }
       />
     );
   }
