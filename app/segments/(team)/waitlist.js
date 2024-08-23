@@ -43,6 +43,15 @@ function Waitlist() {
 
   const invalidateKeys = [["waitlist"], ["userInfo"]];
 
+  if (Object.keys(waitlist).length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No users found on waitlist"}
+      />
+    );
+  }
+
   return (
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
@@ -62,91 +71,84 @@ function Waitlist() {
           borderRadius: 5,
         }}
       >
-        {Object.keys(waitlist).length === 0 ? (
-          <EmptyScreen
-            invalidateKeys={invalidateKeys}
-            text={"No users found on waitlist"}
-          />
-        ) : (
-          Object.keys(waitlist).map((userId) => {
-            console.log("waitlist", waitlist[userId]);
-            return (
-              <List.Item
-                title={waitlist[userId].email}
-                key={userId}
-                right={() => (
-                  <View
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                    height={38} //so the button doesn't change size because of the spinner
-                    width={100}
-                  >
-                    {loading[userId] ? (
-                      <ActivityIndicator color={themeColors.accent} />
-                    ) : (
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          paddingLeft: 10,
+        {Object.keys(waitlist).map((userId) => {
+          console.log("waitlist", waitlist[userId]);
+          return (
+            <List.Item
+              title={waitlist[userId].email}
+              key={userId}
+              right={() => (
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  height={38} //so the button doesn't change size because of the spinner
+                  width={100}
+                >
+                  {loading[userId] ? (
+                    <ActivityIndicator color={themeColors.accent} />
+                  ) : (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <Button
+                        onPress={async () => {
+                          setLoading({ ...loading, [userId]: true });
+                          await addToTeam(
+                            currentTeamId,
+                            userId,
+                            waitlist[userId],
+                          );
+                          await removeWaitlist(currentTeamId, userId);
+                          await invalidateMultipleKeys(
+                            queryClient,
+                            invalidateKeys,
+                          );
+                          if (lastDecision !== "Accepted") {
+                            setLastDecision("Accepted");
+                            setSnackbarCounter(1);
+                          } else {
+                            setSnackbarCounter((prev) => prev + 1);
+                          }
+                          setSnackbarVisible(true);
+                          setLoading({ ...loading, [userId]: false });
                         }}
+                        textColor={"green"}
                       >
-                        <Button
-                          onPress={async () => {
-                            setLoading({ ...loading, [userId]: true });
-                            await addToTeam(
-                              currentTeamId,
-                              userId,
-                              waitlist[userId],
-                            );
-                            await removeWaitlist(currentTeamId, userId);
-                            await invalidateMultipleKeys(
-                              queryClient,
-                              invalidateKeys,
-                            );
-                            if (lastDecision !== "Accepted") {
-                              setLastDecision("Accepted");
-                              setSnackbarCounter(1);
-                            } else {
-                              setSnackbarCounter((prev) => prev + 1);
-                            }
-                            setSnackbarVisible(true);
-                            setLoading({ ...loading, [userId]: false });
-                          }}
-                          textColor={"green"}
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          onPress={async () => {
-                            setLoading({ ...loading, [userId]: true });
-                            await removeWaitlist(currentTeamId, userId);
-                            await invalidateMultipleKeys(
-                              queryClient,
-                              invalidateKeys,
-                            );
-                            if (lastDecision !== "Rejected") {
-                              setLastDecision("Rejected");
-                              setSnackbarCounter(1);
-                            } else {
-                              setSnackbarCounter((prev) => prev + 1);
-                            }
-                            setSnackbarVisible(true);
-                            setLoading({ ...loading, [userId]: false });
-                          }}
-                          textColor={"red"}
-                        >
-                          Reject
-                        </Button>
-                      </View>
-                    )}
-                  </View>
-                )}
-              />
-            );
-          })
-        )}
+                        Accept
+                      </Button>
+                      <Button
+                        onPress={async () => {
+                          setLoading({ ...loading, [userId]: true });
+                          await removeWaitlist(currentTeamId, userId);
+                          await invalidateMultipleKeys(
+                            queryClient,
+                            invalidateKeys,
+                          );
+                          if (lastDecision !== "Rejected") {
+                            setLastDecision("Rejected");
+                            setSnackbarCounter(1);
+                          } else {
+                            setSnackbarCounter((prev) => prev + 1);
+                          }
+                          setSnackbarVisible(true);
+                          setLoading({ ...loading, [userId]: false });
+                        }}
+                        textColor={"red"}
+                      >
+                        Reject
+                      </Button>
+                    </View>
+                  )}
+                </View>
+              )}
+            />
+          );
+        })}
       </List.Section>
     </ScrollView>
   );

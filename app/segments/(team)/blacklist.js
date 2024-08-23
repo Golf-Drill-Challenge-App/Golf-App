@@ -39,6 +39,15 @@ function Blacklist() {
 
   if (blacklistError) return <ErrorComponent errorList={[blacklistError]} />;
 
+  if (Object.keys(blacklist).length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={"No users found on blacklist"}
+      />
+    );
+  }
+
   return (
     <ScrollView
       refreshControl={<RefreshInvalidate invalidateKeys={invalidateKeys} />}
@@ -58,55 +67,48 @@ function Blacklist() {
           borderRadius: 5,
         }}
       >
-        {Object.keys(blacklist).length === 0 ? (
-          <EmptyScreen
-            invalidateKeys={invalidateKeys}
-            text={"No users found on blacklist"}
-          />
-        ) : (
-          Object.keys(blacklist).map((userId) => {
-            return (
-              <List.Item
-                title={blacklist[userId].email}
-                key={userId}
-                right={() => (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingLeft: 10,
+        {Object.keys(blacklist).map((userId) => {
+          return (
+            <List.Item
+              title={blacklist[userId].email}
+              key={userId}
+              right={() => (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingLeft: 10,
+                  }}
+                >
+                  <Button
+                    onPress={async () => {
+                      try {
+                        if (unbanLoading[userId]) return;
+                        setUnbanLoading({ ...unbanLoading, [userId]: true });
+                        await removeBlacklist(currentTeamId, userId);
+                        await invalidateMultipleKeys(
+                          queryClient,
+                          invalidateKeys,
+                        );
+                        setUnbanCounter((prev) => prev + 1);
+                        setSnackbarVisible(true);
+                        setUnbanLoading({ ...unbanLoading, [userId]: false });
+                      } catch (e) {
+                        console.log(e);
+                        setUnbanLoading({ ...unbanLoading, [userId]: false });
+                        showDialog("Error", getErrorString(e));
+                      }
                     }}
+                    textColor={themeColors.accent}
+                    loading={unbanLoading[userId]}
                   >
-                    <Button
-                      onPress={async () => {
-                        try {
-                          if (unbanLoading[userId]) return;
-                          setUnbanLoading({ ...unbanLoading, [userId]: true });
-                          await removeBlacklist(currentTeamId, userId);
-                          await invalidateMultipleKeys(
-                            queryClient,
-                            invalidateKeys,
-                          );
-                          setUnbanCounter((prev) => prev + 1);
-                          setSnackbarVisible(true);
-                          setUnbanLoading({ ...unbanLoading, [userId]: false });
-                        } catch (e) {
-                          console.log(e);
-                          setUnbanLoading({ ...unbanLoading, [userId]: false });
-                          showDialog("Error", getErrorString(e));
-                        }
-                      }}
-                      textColor={themeColors.accent}
-                      loading={unbanLoading[userId]}
-                    >
-                      Unban
-                    </Button>
-                  </View>
-                )}
-              />
-            );
-          })
-        )}
+                    Unban
+                  </Button>
+                </View>
+              )}
+            />
+          );
+        })}
       </List.Section>
     </ScrollView>
   );
