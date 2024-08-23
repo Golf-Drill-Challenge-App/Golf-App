@@ -43,7 +43,9 @@ function Blacklist() {
     return (
       <EmptyScreen
         invalidateKeys={invalidateKeys}
-        text={"No users found on blacklist"}
+        text={
+          "No users found on blacklist. \n To ban a user, select 'Ban' in the top right of their \n profile the from team page."
+        }
       />
     );
   }
