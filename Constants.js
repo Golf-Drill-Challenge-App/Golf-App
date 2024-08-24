@@ -40,6 +40,8 @@ const shortTitle = {
   proxHoleAverage: "PHA",
   sideLandingAverage: "SLA",
   sideLandingTotal: "SLT",
+  rightSideLandingAverage: "AMR",
+  leftSideLandingAverage: "AML",
 };
 
 const prettyRole = {
