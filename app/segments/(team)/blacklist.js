@@ -5,6 +5,7 @@ import { Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -37,6 +38,17 @@ function Blacklist() {
   if (blacklistIsLoading) return <Loading />;
 
   if (blacklistError) return <ErrorComponent errorList={[blacklistError]} />;
+
+  if (Object.keys(blacklist).length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={
+          "No users found on blacklist. \n To ban a user, select 'Ban' in the top right of their \n profile from the team page."
+        }
+      />
+    );
+  }
 
   return (
     <ScrollView
