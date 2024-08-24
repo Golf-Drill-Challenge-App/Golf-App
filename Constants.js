@@ -7,7 +7,7 @@ const themeColors = {
   highlight: "#fff",
 };
 
-const TESTING = true;
+const TESTING = false;
 
 const prettyTitle = {
   target: "Target",
