@@ -5,6 +5,7 @@ import { ActivityIndicator, Button, List } from "react-native-paper";
 import { themeColors } from "~/Constants";
 import { getErrorString } from "~/Utility";
 import DialogComponent from "~/components/dialog";
+import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
 import Loading from "~/components/loading";
 import RefreshInvalidate from "~/components/refreshInvalidate";
@@ -41,6 +42,17 @@ function Waitlist() {
   }
 
   const invalidateKeys = [["waitlist"], ["userInfo"]];
+
+  if (Object.keys(waitlist).length === 0) {
+    return (
+      <EmptyScreen
+        invalidateKeys={invalidateKeys}
+        text={
+          "No users found on waitlist. \n Users will be added upon signing up and \n clicking  'Request to Join Team'."
+        }
+      />
+    );
+  }
 
   return (
     <ScrollView
