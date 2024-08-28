@@ -28,6 +28,7 @@ import { themeColors } from "~/Constants";
 import { getErrorString, getPfpName } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
+import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -85,6 +86,10 @@ function Index() {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordCheck, setNewPasswordCheck] = useState("");
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [removeLoading, setRemoveLoading] = useState(false);
+  const [uploadDialogVisible, setUploadDialogVisible] = useState(false);
+  const hideUploadDialog = () => setUploadDialogVisible(false);
 
   const [imageUploading, setImageUploading] = useState(false);
 
@@ -300,6 +305,55 @@ function Index() {
 
   return (
     <BottomSheetModalProvider>
+      <DialogComponent
+        title={"Edit Profile Pic"}
+        content={"Upload New Pic, or Remove Current Pic"}
+        visible={uploadDialogVisible}
+        onHide={hideUploadDialog}
+        buttons={[
+          {
+            children: "Remove ",
+            pressHandler: async () => {
+              setRemoveLoading(true);
+              try {
+                await updateDoc(userRef, {
+                  pfp: "",
+                });
+                await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+              } catch (e) {
+                console.log(e);
+                showDialog("Error", getErrorString(e));
+              }
+              setRemoveLoading(false);
+              hideUploadDialog();
+            },
+            loading: removeLoading,
+          },
+          {
+            children: "Upload",
+            pressHandler: async () => {
+              setUploadLoading(true);
+              try {
+                await handleImageUpload(
+                  setImageUploading,
+                  showSnackBar,
+                  getPfpName(currentTeamId, userId),
+                  userRef,
+                  profilePicSize,
+                  profilePicSize,
+                );
+                await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+              } catch (e) {
+                console.log(e);
+                showDialog("Error", getErrorString(e));
+              }
+              setUploadLoading(false);
+              hideUploadDialog();
+            },
+            loading: uploadLoading,
+          },
+        ]}
+      />
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={"Personal Profile"}
@@ -328,21 +382,9 @@ function Index() {
               <View style={styles.modalContent}>
                 {/* Profile Picture */}
                 <TouchableOpacity
-                  onPress={async () => {
-                    try {
-                      await handleImageUpload(
-                        setImageUploading,
-                        showSnackBar,
-                        getPfpName(currentTeamId, userId),
-                        userRef,
-                        profilePicSize,
-                        profilePicSize,
-                      );
-                      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-                    } catch (e) {
-                      console.log(e);
-                      showDialog("Error", getErrorString(e));
-                    }
+                  onPress={() => {
+                    console.log("PFP Upload Pressed!");
+                    setUploadDialogVisible(true);
                   }}
                 >
                   <View style={styles.profilePictureContainer}>
