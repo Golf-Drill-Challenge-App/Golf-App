@@ -15,10 +15,12 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Modal,
   Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { ActivityIndicator, Appbar, Button, Switch } from "react-native-paper";
@@ -28,7 +30,6 @@ import { themeColors } from "~/Constants";
 import { getErrorString, getPfpName } from "~/Utility";
 import ProfilePicture from "~/components/ProfilePicture";
 import BottomSheetWrapper from "~/components/bottomSheetWrapper";
-import DialogComponent from "~/components/dialog";
 import DrillList from "~/components/drillList";
 import EmptyScreen from "~/components/emptyScreen";
 import ErrorComponent from "~/components/errorComponent";
@@ -42,6 +43,7 @@ import { useEmailInfo } from "~/dbOperations/hooks/useEmailInfo";
 import { useUserInfo } from "~/dbOperations/hooks/useUserInfo";
 import { handleImageUpload } from "~/dbOperations/imageUpload";
 import { invalidateMultipleKeys } from "~/dbOperations/invalidateMultipleKeys";
+import removePfp from "~/dbOperations/removePfp";
 import { db } from "~/firebaseConfig";
 
 function Index() {
@@ -88,8 +90,8 @@ function Index() {
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [removeLoading, setRemoveLoading] = useState(false);
-  const [uploadDialogVisible, setUploadDialogVisible] = useState(false);
-  const hideUploadDialog = () => setUploadDialogVisible(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const hideUploadModal = () => setModalVisible(false);
 
   const [imageUploading, setImageUploading] = useState(false);
 
@@ -296,6 +298,64 @@ function Index() {
       height: "100%",
       borderRadius: 60,
     },
+    outerTouchable: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", // Background dim
+    },
+    innerTouchable: {
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 15,
+      width: "80%",
+      alignItems: "center",
+    },
+    modalTitleText: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+    },
+    modalContentText: {
+      fontSize: 14,
+      marginBottom: 10,
+    },
+    buttonContainer: {
+      flexDirection: "row", // Arrange buttons in a row
+      width: "100%", // Takes full width of the modal
+      justifyContent: "space-between", // Evenly space buttons
+      marginTop: 20, // Add margin to separate buttons from content
+    },
+    button: {
+      flex: 1, // Each button takes up equal width
+      alignItems: "center", // Center button text horizontally
+      borderRadius: 12,
+      marginTop: 20,
+    },
+    uploadButtonText: {
+      fontSize: 16,
+      color: "white",
+      textAlign: "center",
+    },
+    removeButtonText: {
+      fontSize: 16,
+      color: themeColors.accent,
+      textAlign: "center",
+    },
+    headerContainer: {
+      flexDirection: "row", // Arrange the Cancel button in a row
+      justifyContent: "flex-start", // Align to the left
+      alignItems: "center", // Center vertically within the row
+      width: "100%", // Take up full width
+      marginBottom: 10, // Add margin to separate from title
+    },
+    closeButton: {
+      backgroundColor: "transparent", // Use transparent background or specific color if desired
+    },
+    closeButtonText: {
+      color: themeColors.accent,
+      fontSize: 16,
+    },
   });
   const profileHeader = (
     <View style={styles.profileContainer}>
@@ -305,55 +365,94 @@ function Index() {
 
   return (
     <BottomSheetModalProvider>
-      <DialogComponent
-        title={"Edit Profile Pic"}
-        content={"Upload New Pic, or Remove Current Pic"}
-        visible={uploadDialogVisible}
-        onHide={hideUploadDialog}
-        buttons={[
-          {
-            children: "Remove ",
-            pressHandler: async () => {
-              setRemoveLoading(true);
-              try {
-                await updateDoc(userRef, {
-                  pfp: "",
-                });
-                await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-              } catch (e) {
-                console.log(e);
-                showDialog("Error", getErrorString(e));
-              }
-              setRemoveLoading(false);
-              hideUploadDialog();
-            },
-            loading: removeLoading,
-          },
-          {
-            children: "Upload",
-            pressHandler: async () => {
-              setUploadLoading(true);
-              try {
-                await handleImageUpload(
-                  setImageUploading,
-                  showSnackBar,
-                  getPfpName(currentTeamId, userId),
-                  userRef,
-                  profilePicSize,
-                  profilePicSize,
-                );
-                await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-              } catch (e) {
-                console.log(e);
-                showDialog("Error", getErrorString(e));
-              }
-              setUploadLoading(false);
-              hideUploadDialog();
-            },
-            loading: uploadLoading,
-          },
-        ]}
-      />
+      <Modal transparent={true} visible={modalVisible} animationType="slide">
+        {/* Tapping outside of the modal will dismiss it */}
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.outerTouchable}>
+            {/* Prevents touch events from propagating to the parent when clicking inside the modal */}
+            <TouchableWithoutFeedback>
+              <View style={styles.innerTouchable}>
+                {/* Container for Cancel button at the top left */}
+                <View style={styles.headerContainer}>
+                  <Button
+                    style={styles.closeButton}
+                    onPress={() => setModalVisible(false)}
+                    buttonColor={themeColors.accent}
+                  >
+                    <Text style={styles.closeButtonText}>Close</Text>
+                  </Button>
+                </View>
+
+                {/* Content in the modal */}
+                <Text style={styles.modalTitleText}>Edit Profile Picture</Text>
+                <Text style={styles.modalContentText}>
+                  Upload New Pic or Remove Current Pic
+                </Text>
+
+                {/* Button Container at the Bottom */}
+                <View style={styles.buttonContainer}>
+                  <Button
+                    style={styles.button}
+                    onPress={async () => {
+                      setRemoveLoading(true);
+                      try {
+                        await updateDoc(userRef, {
+                          pfp: "",
+                        });
+                        await removePfp(getPfpName(currentTeamId, userId));
+                        await invalidateMultipleKeys(queryClient, [
+                          ["userInfo"],
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
+                      setRemoveLoading(false);
+                      hideUploadModal();
+                    }}
+                    loading={removeLoading}
+                    textColor={themeColors.accent}
+                  >
+                    <Text style={styles.removeButtonText}>Remove</Text>
+                  </Button>
+                  <Button
+                    style={styles.button}
+                    onPress={async () => {
+                      setUploadLoading(true);
+                      try {
+                        await handleImageUpload(
+                          setImageUploading,
+                          showSnackBar,
+                          getPfpName(currentTeamId, userId),
+                          userRef,
+                          profilePicSize,
+                          profilePicSize,
+                        );
+                        await invalidateMultipleKeys(queryClient, [
+                          ["userInfo"],
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
+                      setUploadLoading(false);
+                      hideUploadModal();
+                    }}
+                    loading={uploadLoading}
+                    buttonColor={themeColors.accent}
+                    textColor="white"
+                  >
+                    <Text style={styles.uploadButtonText}>
+                      {userData.pfp ? "Modify" : "Upload"}
+                    </Text>
+                  </Button>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={"Personal Profile"}
@@ -383,8 +482,8 @@ function Index() {
                 {/* Profile Picture */}
                 <TouchableOpacity
                   onPress={() => {
-                    console.log("PFP Upload Pressed!");
-                    setUploadDialogVisible(true);
+                    setModalVisible(true);
+                    // setUploadDialogVisible(true);
                   }}
                 >
                   <View style={styles.profilePictureContainer}>
