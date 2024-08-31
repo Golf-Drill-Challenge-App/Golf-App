@@ -386,7 +386,8 @@ function Index() {
                 {/* Content in the modal */}
                 <Text style={styles.modalTitleText}>Edit Profile Picture</Text>
                 <Text style={styles.modalContentText}>
-                  Upload New Pic or Remove Current Pic
+                  Upload a new Profile Picture, or Remove the current Profile
+                  Picture
                 </Text>
 
                 {/* Button Container at the Bottom */}
