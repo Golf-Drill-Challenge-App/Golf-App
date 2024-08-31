@@ -483,7 +483,6 @@ function Index() {
                 <TouchableOpacity
                   onPress={() => {
                     setModalVisible(true);
-                    // setUploadDialogVisible(true);
                   }}
                 >
                   <View style={styles.profilePictureContainer}>
