@@ -303,34 +303,6 @@ function Index() {
       height: "100%",
       borderRadius: 60,
     },
-    outerTouchable: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.5)", // Background dim
-    },
-    innerTouchable: {
-      backgroundColor: "white",
-      borderRadius: 20,
-      padding: 15,
-      width: "80%",
-      alignItems: "center",
-    },
-    modalTitleText: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginBottom: 10,
-    },
-    modalContentText: {
-      fontSize: 14,
-      marginBottom: 10,
-    },
-    buttonContainer: {
-      flexDirection: "row", // Arrange buttons in a row
-      width: "100%", // Takes full width of the modal
-      justifyContent: "space-between", // Evenly space buttons
-      marginTop: 20, // Add margin to separate buttons from content
-    },
     button: {
       flex: 1, // Each button takes up equal width
       borderRadius: 12,
@@ -343,20 +315,6 @@ function Index() {
       fontSize: 16,
       color: themeColors.accent,
       textAlign: "center",
-    },
-    headerContainer: {
-      flexDirection: "row", // Arrange the Cancel button in a row
-      justifyContent: "flex-start", // Align to the left
-      alignItems: "center", // Center vertically within the row
-      width: "100%", // Take up full width
-      marginBottom: 10, // Add margin to separate from title
-    },
-    closeButton: {
-      backgroundColor: "transparent", // Use transparent background or specific color if desired
-    },
-    closeButtonText: {
-      color: themeColors.accent,
-      fontSize: 16,
     },
   });
   const profileHeader = (
