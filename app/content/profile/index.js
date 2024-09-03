@@ -13,7 +13,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -87,6 +87,7 @@ function Index() {
     ["userEmail", { userId }],
     ["drillInfo"],
   ];
+  const [listFlag, setListFlag] = useState(false);
   const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -103,6 +104,14 @@ function Index() {
   const [updateLoading, setUpdateLoading] = useState(false);
 
   const profilePicSize = 120;
+
+  const data = useMemo(
+    () =>
+      Array(5)
+        .fill(0)
+        .map((_, index) => `index-${index}`),
+    [],
+  );
 
   useEffect(() => {
     setNewName(userData ? userData.name : "");
@@ -313,13 +322,38 @@ function Index() {
     },
     removeButtonText: {
       fontSize: 16,
-      color: themeColors.accent,
+      color: userData.pfp ? themeColors.accent : "#808080",
       textAlign: "center",
+    },
+    editModal: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 20,
+      marginBottom: 30,
+    },
+    editButtons: {
+      // paddingVertical: 10,
+      marginBottom: 10,
+    },
+    editModalTitleText: {
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 20,
+    },
+    editModalContentText: {
+      marginBottom: 20,
     },
   });
   const profileHeader = (
     <View style={styles.profileContainer}>
       <ProfileCard user={userData} email={userEmail} />
+    </View>
+  );
+
+  const renderItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Text>{item}</Text>
     </View>
   );
 
@@ -403,159 +437,248 @@ function Index() {
             <Appbar.Action
               icon="cog"
               color={themeColors.accent}
-              onPress={() => bottomSheetModalRef.current?.present()}
+              onPress={() => {
+                bottomSheetModalRef.current?.present();
+                setListFlag(false);
+                console.log("BROO");
+              }}
               style={{ marginRight: 7 }}
             />
           }
         />
         <BottomSheetWrapper
           ref={bottomSheetModalRef}
-          closeFn={() => {
-            resetForm();
-            setNewName(userData.name);
-            setPasswordInputVisible(false);
-          }}
+          closeFn={
+            listFlag
+              ? () => {
+                  console.log("TEST");
+                  setListFlag(false);
+                }
+              : () => {
+                  console.log("BRUHHHHH");
+                  resetForm();
+                  setNewName(userData.name);
+                  setPasswordInputVisible(false);
+                }
+          }
+          closeButtonText={listFlag ? "< Back" : "Close"}
+          listFlag={listFlag}
         >
-          <BottomSheetScrollView
-            keyboardDismissMode="interactive"
-            keyboardShouldPersistTaps="handled"
-          >
-            <KeyboardAvoiderScrollView>
-              <View style={styles.modalContent}>
-                {/* Profile Picture */}
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(true);
-                  }}
-                >
-                  <View style={styles.profilePictureContainer}>
-                    {imageUploading ? (
-                      <ActivityIndicator
-                        animating={imageUploading}
-                        size="large"
-                        color={themeColors.accent}
-                        style={styles.activityIndicator}
-                      />
-                    ) : (
-                      <ProfilePicture
-                        userInfo={userData}
-                        style={styles.profilePicture}
-                      />
-                    )}
-                    <View style={styles.penIconContainer}>
-                      <MaterialIcons name="edit" size={24} color="black" />
+          {listFlag && (
+            <>
+              <BottomSheetScrollView>
+                <View style={styles.editModal}>
+                  <Text style={styles.editModalTitleText}>
+                    Edit Profile Picture
+                  </Text>
+                  <Text
+                    style={styles.editModalContentText}
+                  >{`${userData.pfp ? "Change the current" : "Upload a new"} Profile Picture or Remove the current Profile Picture`}</Text>
+                  <Button
+                    style={styles.editButtons}
+                    onPress={async () => {
+                      setUploadLoading(true);
+                      try {
+                        await handleImageUpload(
+                          setImageUploading,
+                          showSnackBar,
+                          getPfpName(currentTeamId, userId),
+                          userRef,
+                          profilePicSize,
+                          profilePicSize,
+                        );
+                        await invalidateMultipleKeys(queryClient, [
+                          ["userInfo"],
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
+                      setUploadLoading(false);
+                      hideUploadModal();
+                    }}
+                    loading={uploadLoading}
+                    mode="contained"
+                    labelStyle={styles.uploadButtonText}
+                    buttonColor={themeColors.accent}
+                    textColor="white"
+                  >
+                    {userData.pfp ? "Change" : "Upload"}
+                  </Button>
+                  <Button
+                    disabled={userData.pfp ? false : true}
+                    style={styles.editButtons}
+                    onPress={async () => {
+                      setRemoveLoading(true);
+                      try {
+                        await updateDoc(userRef, {
+                          pfp: "",
+                        });
+                        await removePfp(getPfpName(currentTeamId, userId));
+                        await invalidateMultipleKeys(queryClient, [
+                          ["userInfo"],
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                        showDialog("Error", getErrorString(e));
+                      }
+                      setRemoveLoading(false);
+                      hideUploadModal();
+                    }}
+                    labelStyle={styles.removeButtonText}
+                    loading={removeLoading}
+                    textColor={themeColors.accent}
+                  >
+                    Remove
+                  </Button>
+                </View>
+              </BottomSheetScrollView>
+            </>
+          )}
+
+          {!listFlag && (
+            <BottomSheetScrollView
+              keyboardDismissMode="interactive"
+              keyboardShouldPersistTaps="handled"
+            >
+              <KeyboardAvoiderScrollView>
+                <View style={styles.modalContent}>
+                  {/* Profile Picture */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log("HIIOI");
+                      setListFlag(true);
+                    }}
+                  >
+                    <View style={styles.profilePictureContainer}>
+                      {imageUploading ? (
+                        <ActivityIndicator
+                          animating={imageUploading}
+                          size="large"
+                          color={themeColors.accent}
+                          style={styles.activityIndicator}
+                        />
+                      ) : (
+                        <ProfilePicture
+                          userInfo={userData}
+                          style={styles.profilePicture}
+                        />
+                      )}
+                      <View style={styles.penIconContainer}>
+                        <MaterialIcons name="edit" size={24} color="black" />
+                      </View>
                     </View>
+                  </TouchableOpacity>
+                  {/* Display Name */}
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginBottom: 10,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {userData.name}
+                  </Text>
+
+                  {/* Display Email */}
+                  <View style={styles.emailContainer}>
+                    <Text style={styles.emailText}>{email}</Text>
                   </View>
-                </TouchableOpacity>
-                {/* Display Name */}
-                <Text
-                  style={{
-                    fontSize: 20,
-                    marginBottom: 10,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {userData.name}
-                </Text>
 
-                {/* Display Email */}
-                <View style={styles.emailContainer}>
-                  <Text style={styles.emailText}>{email}</Text>
-                </View>
-
-                {/* Name Update input field */}
-                <View style={{ width: "80%", marginBottom: 10 }}>
-                  <Text style={styles.changePasswordButton}>
-                    Update your name
-                  </Text>
-                </View>
-                <BottomSheetTextInput
-                  style={styles.input}
-                  value={newName}
-                  onChangeText={(text) => setNewName(text)}
-                  placeholder="Update your name"
-                />
-
-                {/* Change Password Button */}
-                <View
-                  style={{
-                    marginBottom: 20, // Increase margin bottom for more spacing
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: "80%",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={styles.changePasswordButton}>
-                    Change Password
-                  </Text>
-                  <Switch
-                    value={passwordInputVisible}
-                    onValueChange={(newValue) => {
-                      resetForm();
-                      setPasswordInputVisible(newValue);
-                    }}
-                    theme={{
-                      colors: {
-                        primary: themeColors.accent,
-                      },
-                    }}
+                  {/* Name Update input field */}
+                  <View style={{ width: "80%", marginBottom: 10 }}>
+                    <Text style={styles.changePasswordButton}>
+                      Update your name
+                    </Text>
+                  </View>
+                  <BottomSheetTextInput
+                    style={styles.input}
+                    value={newName}
+                    onChangeText={(text) => setNewName(text)}
+                    placeholder="Update your name"
                   />
+
+                  {/* Change Password Button */}
+                  <View
+                    style={{
+                      marginBottom: 20, // Increase margin bottom for more spacing
+                      flexDirection: "row",
+                      alignItems: "center",
+                      width: "80%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={styles.changePasswordButton}>
+                      Change Password
+                    </Text>
+                    <Switch
+                      value={passwordInputVisible}
+                      onValueChange={(newValue) => {
+                        resetForm();
+                        setPasswordInputVisible(newValue);
+                      }}
+                      theme={{
+                        colors: {
+                          primary: themeColors.accent,
+                        },
+                      }}
+                    />
+                  </View>
+
+                  {/* Password Input Field */}
+                  {passwordInputVisible && (
+                    <>
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={currentPassword}
+                        onChangeText={setCurrentPassword}
+                        placeholder="Enter your current password"
+                        secureTextEntry={true}
+                        // to get rid of ios password suggestions
+                        // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
+                        // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
+                        textContentType="oneTimeCode"
+                      />
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={newPassword}
+                        onChangeText={setNewPassword}
+                        placeholder="Enter your new password"
+                        secureTextEntry={true}
+                        textContentType="newPassword"
+                      />
+                      <BottomSheetTextInput
+                        style={styles.input}
+                        value={newPasswordCheck}
+                        onChangeText={setNewPasswordCheck}
+                        placeholder="Confirm your new password"
+                        secureTextEntry={true}
+                        textContentType="newPassword"
+                      />
+                    </>
+                  )}
+
+                  {/* Save Button */}
+                  <Button
+                    style={styles.saveChangesButton}
+                    onPress={handleUpdate}
+                    textColor={themeColors.highlight}
+                    labelStyle={{
+                      fontWeight: "bold",
+                    }}
+                    loading={updateLoading}
+                  >
+                    Update
+                  </Button>
+
+                  {/* Sign Out Button */}
+                  <Pressable onPress={handleSignOut}>
+                    <Text style={styles.signOutButton}>Sign Out</Text>
+                  </Pressable>
                 </View>
-
-                {/* Password Input Field */}
-                {passwordInputVisible && (
-                  <>
-                    <BottomSheetTextInput
-                      style={styles.input}
-                      value={currentPassword}
-                      onChangeText={setCurrentPassword}
-                      placeholder="Enter your current password"
-                      secureTextEntry={true}
-                      // to get rid of ios password suggestions
-                      // More info on onChangeText + ios password suggestions bug: https://github.com/facebook/react-native/issues/21261
-                      // Workaround ("oneTimeCode" textContentType): https://stackoverflow.com/a/68658035
-                      textContentType="oneTimeCode"
-                    />
-                    <BottomSheetTextInput
-                      style={styles.input}
-                      value={newPassword}
-                      onChangeText={setNewPassword}
-                      placeholder="Enter your new password"
-                      secureTextEntry={true}
-                      textContentType="newPassword"
-                    />
-                    <BottomSheetTextInput
-                      style={styles.input}
-                      value={newPasswordCheck}
-                      onChangeText={setNewPasswordCheck}
-                      placeholder="Confirm your new password"
-                      secureTextEntry={true}
-                      textContentType="newPassword"
-                    />
-                  </>
-                )}
-
-                {/* Save Button */}
-                <Button
-                  style={styles.saveChangesButton}
-                  onPress={handleUpdate}
-                  textColor={themeColors.highlight}
-                  labelStyle={{
-                    fontWeight: "bold",
-                  }}
-                  loading={updateLoading}
-                >
-                  Update
-                </Button>
-
-                {/* Sign Out Button */}
-                <Pressable onPress={handleSignOut}>
-                  <Text style={styles.signOutButton}>Sign Out</Text>
-                </Pressable>
-              </View>
-            </KeyboardAvoiderScrollView>
-          </BottomSheetScrollView>
+              </KeyboardAvoiderScrollView>
+            </BottomSheetScrollView>
+          )}
         </BottomSheetWrapper>
         {uniqueDrills.length > 0 && userData.role === "player" ? (
           <View style={{ flex: 1 }}>
