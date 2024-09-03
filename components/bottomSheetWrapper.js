@@ -5,7 +5,7 @@ import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 
 const BottomSheetWrapper = forwardRef(
-  ({ children, closeFn = () => {}, closeButtonText, listFlag }, ref) => {
+  ({ children, closeFn = () => {}, closeButtonText, editPicFlag }, ref) => {
     const insets = useContext(SafeAreaInsetsContext);
     return (
       <BottomSheetModal
@@ -29,8 +29,7 @@ const BottomSheetWrapper = forwardRef(
         {/* Close Button */}
         <Pressable
           onPress={() => {
-            console.log(listFlag);
-            if (!listFlag) {
+            if (!editPicFlag) {
               ref.current.close();
             }
             closeFn();

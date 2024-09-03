@@ -80,7 +80,7 @@ function Index() {
     ["userEmail", { userId }],
     ["drillInfo"],
   ];
-  const [listFlag, setListFlag] = useState(false);
+  const [editPicFlag, setEditPicFlag] = useState(false);
   const [newName, setNewName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -331,7 +331,7 @@ function Index() {
               color={themeColors.accent}
               onPress={() => {
                 bottomSheetModalRef.current?.present();
-                setListFlag(false);
+                setEditPicFlag(false);
               }}
               style={{ marginRight: 7 }}
             />
@@ -340,9 +340,9 @@ function Index() {
         <BottomSheetWrapper
           ref={bottomSheetModalRef}
           closeFn={
-            listFlag
+            editPicFlag
               ? () => {
-                  setListFlag(false);
+                  setEditPicFlag(false);
                 }
               : () => {
                   resetForm();
@@ -350,10 +350,10 @@ function Index() {
                   setPasswordInputVisible(false);
                 }
           }
-          closeButtonText={listFlag ? "< Back" : "Close"}
-          listFlag={listFlag}
+          closeButtonText={editPicFlag ? "< Back" : "Close"}
+          editPicFlag={editPicFlag}
         >
-          {listFlag && (
+          {editPicFlag && (
             <BottomSheetScrollView>
               <View style={styles.editModal}>
                 <Text style={styles.editModalTitleText}>
@@ -417,7 +417,7 @@ function Index() {
             </BottomSheetScrollView>
           )}
 
-          {!listFlag && (
+          {!editPicFlag && (
             <BottomSheetScrollView
               keyboardDismissMode="interactive"
               keyboardShouldPersistTaps="handled"
@@ -427,7 +427,7 @@ function Index() {
                   {/* Profile Picture */}
                   <TouchableOpacity
                     onPress={() => {
-                      setListFlag(true);
+                      setEditPicFlag(true);
                     }}
                   >
                     <View style={styles.profilePictureContainer}>
