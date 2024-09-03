@@ -339,19 +339,17 @@ function Index() {
         />
         <BottomSheetWrapper
           ref={bottomSheetModalRef}
-          closeFn={
-            editPicFlag
-              ? () => {
-                  setEditPicFlag(false);
-                }
-              : () => {
-                  resetForm();
-                  setNewName(userData.name);
-                  setPasswordInputVisible(false);
-                }
-          }
+          closeFn={() => {
+            if (editPicFlag) {
+              setEditPicFlag(false);
+            } else {
+              resetForm();
+              setNewName(userData.name);
+              setPasswordInputVisible(false);
+            }
+          }}
           closeButtonText={editPicFlag ? "< Back" : "Close"}
-          editPicFlag={editPicFlag}
+          preventDefaultClose={editPicFlag}
         >
           <BottomSheetScrollView
             keyboardDismissMode="interactive"
