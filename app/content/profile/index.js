@@ -354,73 +354,67 @@ function Index() {
           listFlag={listFlag}
         >
           {listFlag && (
-            <>
-              <BottomSheetScrollView>
-                <View style={styles.editModal}>
-                  <Text style={styles.editModalTitleText}>
-                    Edit Profile Picture
-                  </Text>
-                  <Text
-                    style={styles.editModalContentText}
-                  >{`${userData.pfp ? "Change the current" : "Upload a new"} Profile Picture or Remove the current Profile Picture`}</Text>
-                  <Button
-                    style={styles.editButtons}
-                    onPress={async () => {
-                      setUploadLoading(true);
-                      try {
-                        await handleImageUpload(
-                          setImageUploading,
-                          showSnackBar,
-                          getPfpName(currentTeamId, userId),
-                          userRef,
-                          profilePicSize,
-                          profilePicSize,
-                        );
-                        await invalidateMultipleKeys(queryClient, [
-                          ["userInfo"],
-                        ]);
-                      } catch (e) {
-                        console.log(e);
-                        showDialog("Error", getErrorString(e));
-                      }
-                      setUploadLoading(false);
-                    }}
-                    loading={uploadLoading}
-                    mode="contained"
-                    labelStyle={styles.uploadButtonText}
-                    buttonColor={themeColors.accent}
-                    textColor="white"
-                  >
-                    {userData.pfp ? "Change" : "Upload"}
-                  </Button>
-                  <Button
-                    disabled={userData.pfp ? false : true}
-                    style={styles.editButtons}
-                    onPress={async () => {
-                      setRemoveLoading(true);
-                      try {
-                        await updateDoc(userRef, {
-                          pfp: "",
-                        });
-                        await removePfp(getPfpName(currentTeamId, userId));
-                        await invalidateMultipleKeys(queryClient, [
-                          ["userInfo"],
-                        ]);
-                      } catch (e) {
-                        console.log(e);
-                        showDialog("Error", getErrorString(e));
-                      }
-                      setRemoveLoading(false);
-                    }}
-                    labelStyle={styles.removeButtonText}
-                    loading={removeLoading}
-                    textColor={themeColors.accent}
-                  >
-                    Remove
-                  </Button>
-                </View>
-              </BottomSheetScrollView>
-            </>
+            <BottomSheetScrollView>
+              <View style={styles.editModal}>
+                <Text style={styles.editModalTitleText}>
+                  Edit Profile Picture
+                </Text>
+                <Text
+                  style={styles.editModalContentText}
+                >{`${userData.pfp ? "Change the current" : "Upload a new"} Profile Picture or Remove the current Profile Picture`}</Text>
+                <Button
+                  style={styles.editButtons}
+                  onPress={async () => {
+                    setUploadLoading(true);
+                    try {
+                      await handleImageUpload(
+                        setImageUploading,
+                        showSnackBar,
+                        getPfpName(currentTeamId, userId),
+                        userRef,
+                        profilePicSize,
+                        profilePicSize,
+                      );
+                      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                    } catch (e) {
+                      console.log(e);
+                      showDialog("Error", getErrorString(e));
+                    }
+                    setUploadLoading(false);
+                  }}
+                  loading={uploadLoading}
+                  mode="contained"
+                  labelStyle={styles.uploadButtonText}
+                  buttonColor={themeColors.accent}
+                  textColor="white"
+                >
+                  {userData.pfp ? "Change" : "Upload"}
+                </Button>
+                <Button
+                  disabled={userData.pfp ? false : true}
+                  style={styles.editButtons}
+                  onPress={async () => {
+                    setRemoveLoading(true);
+                    try {
+                      await updateDoc(userRef, {
+                        pfp: "",
+                      });
+                      await removePfp(getPfpName(currentTeamId, userId));
+                      await invalidateMultipleKeys(queryClient, [["userInfo"]]);
+                    } catch (e) {
+                      console.log(e);
+                      showDialog("Error", getErrorString(e));
+                    }
+                    setRemoveLoading(false);
+                  }}
+                  labelStyle={styles.removeButtonText}
+                  loading={removeLoading}
+                  textColor={themeColors.accent}
+                >
+                  Remove
+                </Button>
+              </View>
+            </BottomSheetScrollView>
           )}
 
           {!listFlag && (
