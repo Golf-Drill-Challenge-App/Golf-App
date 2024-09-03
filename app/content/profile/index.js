@@ -13,7 +13,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -21,14 +21,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  ActivityIndicator,
-  Appbar,
-  Button,
-  Dialog,
-  Portal,
-  Switch,
-} from "react-native-paper";
+import { ActivityIndicator, Appbar, Button, Switch } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce } from "underscore";
 import { themeColors } from "~/Constants";
@@ -96,22 +89,9 @@ function Index() {
   const [passwordInputVisible, setPasswordInputVisible] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [removeLoading, setRemoveLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const hideUploadModal = () => setModalVisible(false);
-
   const [imageUploading, setImageUploading] = useState(false);
-
   const [updateLoading, setUpdateLoading] = useState(false);
-
   const profilePicSize = 120;
-
-  const data = useMemo(
-    () =>
-      Array(5)
-        .fill(0)
-        .map((_, index) => `index-${index}`),
-    [],
-  );
 
   useEffect(() => {
     setNewName(userData ? userData.name : "");
@@ -293,11 +273,6 @@ function Index() {
       marginBottom: 20,
       alignSelf: "center",
     },
-    saveChangesButtonText: {
-      color: "#FFF",
-      fontWeight: "bold",
-      alignSelf: "center",
-    },
     changePasswordButton: {
       color: "black",
       fontSize: 16,
@@ -311,11 +286,6 @@ function Index() {
       width: "100%",
       height: "100%",
       borderRadius: 60,
-    },
-    button: {
-      flex: 1, // Each button takes up equal width
-      borderRadius: 12,
-      marginTop: 20,
     },
     uploadButtonText: {
       fontSize: 16,
@@ -333,7 +303,6 @@ function Index() {
       marginBottom: 30,
     },
     editButtons: {
-      // paddingVertical: 10,
       marginBottom: 10,
     },
     editModalTitleText: {
@@ -351,85 +320,8 @@ function Index() {
     </View>
   );
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text>{item}</Text>
-    </View>
-  );
-
   return (
     <BottomSheetModalProvider>
-      <Portal>
-        <Dialog
-          visible={modalVisible}
-          onDismiss={() => setModalVisible(false)}
-          style={{ backgroundColor: "white" }}
-        >
-          <Dialog.Title style={{ fontWeight: "bold" }}>
-            Edit Profile Picture
-          </Dialog.Title>
-          <Dialog.Content>
-            <Text variant="bodyMedium">
-              {`Remove the current Profile Picture or ${userData.pfp ? "Change to" : "Upload"} a new Profile Picture`}
-            </Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button
-              style={styles.button}
-              onPress={async () => {
-                setRemoveLoading(true);
-                try {
-                  await updateDoc(userRef, {
-                    pfp: "",
-                  });
-                  await removePfp(getPfpName(currentTeamId, userId));
-                  await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-                } catch (e) {
-                  console.log(e);
-                  showDialog("Error", getErrorString(e));
-                }
-                setRemoveLoading(false);
-                hideUploadModal();
-              }}
-              labelStyle={styles.removeButtonText}
-              loading={removeLoading}
-              textColor={themeColors.accent}
-            >
-              Remove
-            </Button>
-            <Button
-              style={styles.button}
-              onPress={async () => {
-                setUploadLoading(true);
-                try {
-                  await handleImageUpload(
-                    setImageUploading,
-                    showSnackBar,
-                    getPfpName(currentTeamId, userId),
-                    userRef,
-                    profilePicSize,
-                    profilePicSize,
-                  );
-                  await invalidateMultipleKeys(queryClient, [["userInfo"]]);
-                } catch (e) {
-                  console.log(e);
-                  showDialog("Error", getErrorString(e));
-                }
-                setUploadLoading(false);
-                hideUploadModal();
-              }}
-              loading={uploadLoading}
-              mode="contained"
-              labelStyle={styles.uploadButtonText}
-              buttonColor={themeColors.accent}
-              textColor="white"
-            >
-              {userData.pfp ? "Change" : "Upload"}
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-
       <SafeAreaView style={{ flex: 1 }} edges={["right", "top", "left"]}>
         <Header
           title={"Personal Profile"}
@@ -440,7 +332,6 @@ function Index() {
               onPress={() => {
                 bottomSheetModalRef.current?.present();
                 setListFlag(false);
-                console.log("BROO");
               }}
               style={{ marginRight: 7 }}
             />
@@ -451,11 +342,9 @@ function Index() {
           closeFn={
             listFlag
               ? () => {
-                  console.log("TEST");
                   setListFlag(false);
                 }
               : () => {
-                  console.log("BRUHHHHH");
                   resetForm();
                   setNewName(userData.name);
                   setPasswordInputVisible(false);
@@ -495,7 +384,6 @@ function Index() {
                         showDialog("Error", getErrorString(e));
                       }
                       setUploadLoading(false);
-                      hideUploadModal();
                     }}
                     loading={uploadLoading}
                     mode="contained"
@@ -523,7 +411,6 @@ function Index() {
                         showDialog("Error", getErrorString(e));
                       }
                       setRemoveLoading(false);
-                      hideUploadModal();
                     }}
                     labelStyle={styles.removeButtonText}
                     loading={removeLoading}
@@ -546,7 +433,6 @@ function Index() {
                   {/* Profile Picture */}
                   <TouchableOpacity
                     onPress={() => {
-                      console.log("HIIOI");
                       setListFlag(true);
                     }}
                   >
