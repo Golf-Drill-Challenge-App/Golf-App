@@ -5,7 +5,15 @@ import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 import { themeColors } from "~/Constants";
 
 const BottomSheetWrapper = forwardRef(
-  ({ children, closeFn = () => {} }, ref) => {
+  (
+    {
+      children,
+      closeFn = () => {},
+      closeButtonText = "Close",
+      preventDefaultClose = false,
+    },
+    ref,
+  ) => {
     const insets = useContext(SafeAreaInsetsContext);
     return (
       <BottomSheetModal
@@ -29,7 +37,9 @@ const BottomSheetWrapper = forwardRef(
         {/* Close Button */}
         <Pressable
           onPress={() => {
-            ref.current.close();
+            if (!preventDefaultClose) {
+              ref.current.close();
+            }
             closeFn();
           }}
         >
@@ -40,7 +50,7 @@ const BottomSheetWrapper = forwardRef(
               marginLeft: 10,
             }}
           >
-            Close
+            {closeButtonText}
           </Text>
         </Pressable>
         {children}
