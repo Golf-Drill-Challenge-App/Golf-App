@@ -134,6 +134,10 @@ Needs a MacOS for building the project in XCode.
   - Runs Prettier + ESLint, but only reports formatting / linting issues and does not edit any files yet
   - Run via GitHub Actions in `.github/workflows/main.yml`, so that each PR gets its formatting / linting automatically checked before merge
 
+### Testing Mode
+
+- To enable testing mode, set `TESTING` to `TRUE` located in `Constants.js` 
+
 ### App Compilation Troubleshooting
 
 - Hot Reload is enabled by default whenever you edit a page on the app, and you can also manually trigger a reload by entering `r` into command line
