@@ -141,7 +141,7 @@ export default function BarChartScreen({
   const scaleY = scale
     .scaleLinear()
     .domain([yMin, yMax]) // Adjust scale based on your data
-    .range([chartHeight - 5, 0]);
+    .range([chartHeight - 5, 5]);
 
   const line = shape
     .line()
