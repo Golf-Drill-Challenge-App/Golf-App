@@ -97,6 +97,10 @@ function ChooseTeam() {
     setSignoutLoading(false);
   }
 
+  async function handleDeleteAccount() {
+    console.log("Deleting account");
+  }
+
   useEffect(() => {
     if (TESTING) {
       setVerified(true);
@@ -333,6 +337,25 @@ function ChooseTeam() {
               }}
             >
               Sign Out
+            </Text>
+          </Button>
+          <Button
+            onPress={handleDeleteAccount}
+            style={{
+              backgroundColor: themeColors.accent,
+              borderRadius: 12,
+              marginTop: 20,
+            }}
+            textColor={themeColors.highlight}
+          >
+            <Text
+              style={{
+                color: themeColors.highlight,
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Delete Account
             </Text>
           </Button>
         </View>

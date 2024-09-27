@@ -182,6 +182,10 @@ function Index() {
     ],
   );
 
+  async function handleDeleteAccount() {
+    console.log("Deleting account");
+  }
+
   if (userIsLoading || userEmailIsLoading || drillInfoIsLoading) {
     return <Loading />;
   }
@@ -557,6 +561,14 @@ function Index() {
                     {/* Sign Out Button */}
                     <Pressable onPress={handleSignOut}>
                       <Text style={styles.signOutButton}>Sign Out</Text>
+                    </Pressable>
+
+                    {/* Delete Account Button */}
+                    <Pressable
+                      onPress={handleDeleteAccount}
+                      style={{ marginTop: 10 }}
+                    >
+                      <Text style={styles.signOutButton}>Delete Account</Text>
                     </Pressable>
                   </>
                 )}
