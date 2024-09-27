@@ -136,7 +136,7 @@ Needs a MacOS for building the project in XCode.
 
 ### Testing Mode
 
-- To enable testing mode, set `TESTING` to `TRUE` located in `Constants.js` 
+- To enable testing mode, set `TESTING` to `TRUE` located in `Constants.js`
 
 ### App Compilation Troubleshooting
 
